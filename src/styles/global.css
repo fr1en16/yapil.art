@@ -51,6 +51,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: 1.45;
+  letter-spacing: -0.015em;
   text-rendering: optimizeLegibility;
 }
 
