@@ -1,0 +1,159 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+
+const entries = (await getCollection('vsyachina')).sort((a, b) => a.data.order - b.data.order);
+const items = await Promise.all(
+  entries.map(async (entry) => ({ entry, Content: (await render(entry)).Content })),
+);
+---
+
+<section class="vsyachina section" aria-labelledby="vsyachina-title">
+  <div class="container">
+    <span class="section-label">Другие работы</span>
+    <div class="vsyachina-heading">
+      <h2 class="display-title" id="vsyachina-title">Всячина</h2>
+      <p>Рекламные макеты, визуалы для соцсетей, полиграфия, видео.</p>
+    </div>
+
+    <div class="vsyachina-grid">
+      {items.map(({ entry, Content }, index) => {
+        const isVideo = /\.(mp4|webm)(?:\?|$)/i.test(entry.data.cover);
+        return (
+          <article class:list={['vsyachina-card', { 'vsyachina-card--landscape': index % 5 === 3 }] }>
+            <div class="vsyachina-media">
+              {isVideo ? (
+                <video
+                  src={entry.data.cover}
+                  muted
+                  loop
+                  playsinline
+                  controls
+                  preload="none"
+                  aria-label={`${entry.data.title}: видеоматериалы`}
+                ></video>
+              ) : (
+                <Image
+                  src={entry.data.cover}
+                  alt={`${entry.data.title}, ${entry.data.category}`}
+                  inferSize
+                  widths={[400, 800]}
+                  sizes="(max-width: 767px) calc(100vw - 2rem), 50vw"
+                  format="webp"
+                  quality={72}
+                  loading="lazy"
+                />
+              )}
+            </div>
+            <div class="vsyachina-caption">
+              <span>{String(entry.data.order).padStart(2, '0')} · {entry.data.category}</span>
+              <h3>{entry.data.title}</h3>
+              <div class="description"><Content /></div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .vsyachina {
+    color: white;
+    background: var(--accent-deep);
+  }
+
+  .vsyachina .section-label {
+    color: var(--accent-tint);
+  }
+
+  .vsyachina-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-bottom: clamp(2rem, 5vw, 4rem);
+  }
+
+  .vsyachina-heading .display-title,
+  .vsyachina-heading p {
+    margin-bottom: 0;
+  }
+
+  .vsyachina-heading p {
+    max-width: 29rem;
+    color: #f0cfc9;
+  }
+
+  .vsyachina-grid {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 5rem) 1rem;
+  }
+
+  .vsyachina-card {
+    min-width: 0;
+  }
+
+  .vsyachina-media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #7b2012;
+  }
+
+  .vsyachina-media :global(img),
+  .vsyachina-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .vsyachina-caption {
+    padding-top: 1rem;
+  }
+
+  .vsyachina-caption > span {
+    color: var(--accent-tint);
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.6vw, 2rem);
+    line-height: 1.08;
+  }
+
+  .description {
+    color: #f0cfc9;
+    font-size: 0.9rem;
+  }
+
+  .description :global(p) {
+    margin: 0.5rem 0 0;
+  }
+
+  @media (min-width: 40rem) {
+    .vsyachina-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap-inline: clamp(1.5rem, 4vw, 4rem);
+    }
+
+    .vsyachina-card:nth-child(even) {
+      margin-top: clamp(3rem, 8vw, 8rem);
+    }
+
+    .vsyachina-card--landscape {
+      grid-column: 1 / -1;
+      margin-top: 0;
+    }
+
+    .vsyachina-card--landscape .vsyachina-media {
+      aspect-ratio: 16 / 8;
+    }
+  }
+</style>
