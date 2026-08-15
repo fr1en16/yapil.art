@@ -1,0 +1,97 @@
+<section class="contacts section" id="contacts" aria-labelledby="contacts-title">
+  <div class="container contacts-grid">
+    <div>
+      <span class="section-label">Связаться с нами</span>
+      <h2 class="display-title" id="contacts-title">Пишите, куда удобно.</h2>
+    </div>
+
+    <ul class="contact-list">
+      <li>
+        <span>Telegram · отвечаем быстрее всего</span>
+        <a href="https://t.me/yakov_pil">@yakov_pil <span aria-hidden="true">↗</span></a>
+      </li>
+      <li>
+        <span>WhatsApp</span>
+        <a href="https://wa.me/77067436197">+7 (706) 743-61-97 <span aria-hidden="true">↗</span></a>
+      </li>
+      <li>
+        <span>Почта</span>
+        <a href="mailto:hi@yapil.art">hi@yapil.art <span aria-hidden="true">↗</span></a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contacts {
+    position: relative;
+    overflow: clip;
+  }
+
+  .contacts::after {
+    position: absolute;
+    z-index: -1;
+    right: -8rem;
+    bottom: -12rem;
+    width: min(34rem, 70vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--accent-tint);
+    content: '';
+  }
+
+  .contacts-grid {
+    display: grid;
+    gap: 2rem clamp(3rem, 8vw, 9rem);
+  }
+
+  .display-title {
+    max-width: 12ch;
+    margin-bottom: 0;
+  }
+
+  .contact-list {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--ink-primary);
+    list-style: none;
+  }
+
+  .contact-list li {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .contact-list li > span {
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+  }
+
+  .contact-list a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .contact-list a span {
+    color: var(--accent-deep);
+  }
+
+  .contact-list a:hover {
+    color: var(--accent-deep);
+  }
+
+  @media (min-width: 48rem) {
+    .contacts-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(24rem, 1fr);
+    }
+  }
+</style>

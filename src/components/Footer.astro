@@ -1,0 +1,88 @@
+<footer class="site-footer">
+  <div class="container footer-top">
+    <a class="footer-brand" href="/">Yapil</a>
+    <nav aria-label="Навигация в подвале">
+      <a href="/#about">О студии</a>
+      <a href="/#services">Услуги</a>
+      <a href="/#cases">Кейсы</a>
+      <a href="/#contacts">Связаться с нами</a>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <div class="socials">
+      <a href="https://t.me/yakov_pil">Telegram</a>
+      <a href="https://wa.me/77067436197">WhatsApp</a>
+      <a href="mailto:hi@yapil.art">hi@yapil.art</a>
+    </div>
+    <a href="/privacy">Конфиденциальность</a>
+    <span>© yapil.art</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(2.5rem, 6vw, 5rem) 2rem;
+    color: white;
+    background: var(--ink-primary);
+  }
+
+  .footer-top {
+    display: grid;
+    gap: 2rem;
+    padding-bottom: clamp(3rem, 7vw, 6rem);
+  }
+
+  .footer-brand {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 9vw, 8rem);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.08em;
+    text-decoration: none;
+  }
+
+  nav,
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+
+  nav a,
+  .socials a,
+  .footer-bottom > a {
+    text-decoration: none;
+  }
+
+  nav a:hover,
+  .socials a:hover,
+  .footer-bottom > a:hover {
+    color: var(--accent-tint);
+  }
+
+  .footer-bottom {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #444;
+    color: #bdbdbd;
+    font-size: 0.85rem;
+  }
+
+  @media (min-width: 48rem) {
+    .footer-top {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    nav {
+      max-width: 26rem;
+      justify-content: flex-end;
+    }
+
+    .footer-bottom {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+    }
+  }
+</style>
