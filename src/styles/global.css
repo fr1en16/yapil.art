@@ -1,37 +1,5 @@
 @import './tokens.css';
 
-@font-face {
-  font-family: 'Golos Text';
-  src: url('/fonts/GolosText-Regular.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Golos Text';
-  src: url('/fonts/GolosText-DemiBold.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Jura';
-  src: url('/fonts/Jura-Regular.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Jura';
-  src: url('/fonts/Jura-Bold.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-
 *,
 *::before,
 *::after {

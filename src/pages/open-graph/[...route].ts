@@ -18,18 +18,15 @@ export const { getStaticPaths, GET } = await OGImageRoute({
       width: 18,
       side: 'inline-start',
     },
-    fonts: [
-      './public/fonts/GolosText-Regular.woff2',
-      './public/fonts/GolosText-Bold.woff2',
-    ],
+    fonts: ['./public/fonts/InterTight-Variable.ttf'],
     font: {
       title: {
-        families: ['Golos Text'],
+        families: ['Inter Tight'],
         weight: 'Bold',
         size: 76,
       },
       description: {
-        families: ['Golos Text'],
+        families: ['Inter Tight'],
         size: 34,
         color: [247, 200, 191],
       },

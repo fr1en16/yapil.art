@@ -10,9 +10,9 @@
   --ink-muted: #737373;
   --border-subtle: #E6E6E6;
 
-  --font-body: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Jura', var(--font-body);
-  --font-accent: 'Inter Tight Variable', 'Arial Narrow', var(--font-body);
+  --font-body: 'Inter Tight Variable', 'Arial Narrow', sans-serif;
+  --font-display: var(--font-body);
+  --font-accent: var(--font-body);
 
   --text-hero: clamp(2.5rem, 6vw + 1rem, 5rem);
   --text-h2: clamp(1.75rem, 3vw + 1rem, 2.75rem);
