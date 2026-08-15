@@ -1,0 +1,20 @@
+:root {
+  --accent: #FD4B32;
+  --accent-hover: #E63A22;
+  --accent-deep: #A32A17;
+  --accent-tint: #F7C8BF;
+
+  --bg-primary: #FFFAF9;
+  --bg-card: #FFFFFF;
+  --ink-primary: #1D1D1D;
+  --ink-muted: #737373;
+  --border-subtle: #E6E6E6;
+
+  --font-body: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Jura', var(--font-body);
+  --font-accent: 'GoodVibesCyr', cursive;
+
+  --text-hero: clamp(2.5rem, 6vw + 1rem, 5rem);
+  --text-h2: clamp(1.75rem, 3vw + 1rem, 2.75rem);
+  --text-body: clamp(0.95rem, 0.2vw + 0.9rem, 1.05rem);
+}
