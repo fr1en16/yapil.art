@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import CaseCard from './CaseCard.astro';
+
+const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<section class="cases section" id="cases" aria-labelledby="cases-title">
+  <div class="container">
+    <span class="section-label">Портфолио</span>
+    <div class="cases-heading">
+      <h2 class="display-title" id="cases-title">Кейсы</h2>
+      <p>Каждый проект начинали с нуля.</p>
+    </div>
+
+    <div class="case-grid">
+      {cases.map((item, index) => (
+        <CaseCard
+          slug={item.id}
+          title={item.data.title}
+          year={item.data.year}
+          summary={item.data.summary}
+          services={item.data.services}
+          cover={item.data.cover}
+          index={index}
+        />
+      ))}
+    </div>
+
+    <p class="case-cta">
+      Нашли задачу, похожую на вашу? <a href="#contacts">Напишите, обсудим.</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .cases {
+    padding-top: 2rem;
+  }
+
+  .cases-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0 2rem;
+    margin-bottom: clamp(2rem, 5vw, 4rem);
+  }
+
+  .cases-heading .display-title {
+    margin-bottom: 0;
+  }
+
+  .cases-heading p {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+
+  .case-grid {
+    display: grid;
+    gap: 0 1rem;
+  }
+
+  .case-cta {
+    max-width: 25ch;
+    margin: clamp(3rem, 7vw, 7rem) auto 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    line-height: 1.08;
+    text-align: center;
+  }
+
+  .case-cta a {
+    color: var(--accent-deep);
+  }
+
+  @media (min-width: 40rem) {
+    .case-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 75rem) {
+    .case-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap-inline: 2rem;
+    }
+  }
+</style>
