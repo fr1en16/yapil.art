@@ -16,9 +16,30 @@ interface Props {
 const { c } = Astro.props;
 const { Content } = await render(c);
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.data.cover);
+const ogImage = new URL(`/open-graph/${c.id}.png`, Astro.site).href;
+const creativeWorkJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: c.data.title,
+  description: c.data.summary,
+  dateCreated: c.data.year,
+  image: c.data.cover,
+  creator: {
+    '@type': 'Organization',
+    name: 'Yapil',
+    url: 'https://yapil.art',
+  },
+  url: new URL(`/case/${c.id}`, Astro.site).href,
+};
 ---
 
-<Base title={c.data.title} description={c.data.summary}>
+<Base
+  title={c.data.title}
+  description={c.data.summary}
+  image={ogImage}
+  type="article"
+  jsonLd={creativeWorkJsonLd}
+>
   <article class="case-page">
     <header class="case-hero container">
       <a class="back-link" href="/#cases">← Все кейсы</a>

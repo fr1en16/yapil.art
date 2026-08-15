@@ -7,11 +7,21 @@ import Vsyachina from '../components/Vsyachina.astro';
 import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Yapil',
+  url: 'https://yapil.art',
+  email: 'hi@yapil.art',
+  sameAs: ['https://t.me/yakov_pil'],
+};
 ---
 
 <Base
   title="Yapil"
   description="Дизайн-студия Yapil: айдентика, сайты и полиграфия — от первой концепции до печати или релиза."
+  jsonLd={organizationJsonLd}
 >
   <Hero />
   <About />

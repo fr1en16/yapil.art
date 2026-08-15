@@ -5,10 +5,20 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title, description } = Astro.props;
+const {
+  title,
+  description,
+  image = 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2',
+  type = 'website',
+  jsonLd,
+} = Astro.props;
 const documentTitle = title === 'Yapil' ? 'Yapil — дизайн-студия' : `${title} — Yapil`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -19,6 +29,18 @@ const documentTitle = title === 'Yapil' ? 'Yapil — дизайн-студия' 
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#FFFAF9" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Yapil" />
+    <meta property="og:title" content={documentTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={documentTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <link
@@ -36,6 +58,7 @@ const documentTitle = title === 'Yapil' ? 'Yapil — дизайн-студия' 
       crossorigin="anonymous"
     />
     <title>{documentTitle}</title>
+    {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
     <a class="skip-link" href="#main-content">К основному содержанию</a>
