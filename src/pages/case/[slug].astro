@@ -1,0 +1,233 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Footer from '../../components/Footer.astro';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const cases = await getCollection('cases');
+  return cases.map((c) => ({ params: { slug: c.id }, props: { c } }));
+}
+
+interface Props {
+  c: CollectionEntry<'cases'>;
+}
+
+const { c } = Astro.props;
+const { Content } = await render(c);
+const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.data.cover);
+---
+
+<Base title={c.data.title} description={c.data.summary}>
+  <article class="case-page">
+    <header class="case-hero container">
+      <a class="back-link" href="/#cases">← Все кейсы</a>
+      <div class="case-heading">
+        <div>
+          <p class="case-kicker">{c.data.year} · {c.data.services.join(' · ')}</p>
+          <h1>{c.data.title}</h1>
+        </div>
+        <p class="case-summary">{c.data.summary}</p>
+      </div>
+    </header>
+
+    <div class="case-cover">
+      {isVideo ? (
+        <video
+          src={c.data.cover}
+          muted
+          loop
+          playsinline
+          controls
+          preload="none"
+          aria-label={`${c.data.title}: видео обложки проекта`}
+        ></video>
+      ) : (
+        <Image
+          src={c.data.cover}
+          alt={`${c.data.title} — ${c.data.summary}`}
+          inferSize
+          widths={[600, 1000, 1600]}
+          sizes="100vw"
+          format="webp"
+          quality={75}
+          loading="lazy"
+        />
+      )}
+    </div>
+
+    {(c.data.task || c.data.goal) && (
+      <div class="case-brief container">
+        {c.data.task && (
+          <section aria-labelledby="task-title">
+            <span>01</span>
+            <h2 id="task-title">Задача</h2>
+            <p>{c.data.task}</p>
+          </section>
+        )}
+        {c.data.goal && (
+          <section aria-labelledby="goal-title">
+            <span>02</span>
+            <h2 id="goal-title">Цель</h2>
+            <p>{c.data.goal}</p>
+          </section>
+        )}
+      </div>
+    )}
+
+    <div class="case-body container">
+      <Content />
+    </div>
+
+    <div class="case-next container">
+      <p>Нашли задачу, похожую на вашу?</p>
+      <a href="/#contacts">Напишите, обсудим. <span aria-hidden="true">↗</span></a>
+    </div>
+  </article>
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .case-hero {
+    padding-block: clamp(2rem, 7vw, 6rem);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: clamp(3rem, 8vw, 7rem);
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--accent-deep);
+  }
+
+  .case-heading {
+    display: grid;
+    gap: 1.5rem clamp(3rem, 8vw, 10rem);
+  }
+
+  .case-kicker {
+    margin-bottom: 1rem;
+    color: var(--accent-deep);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    line-height: 0.92;
+    letter-spacing: -0.065em;
+    overflow-wrap: anywhere;
+  }
+
+  .case-summary {
+    max-width: 34rem;
+    margin: 0;
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+  }
+
+  .case-cover {
+    width: 100%;
+    min-height: min(62vw, 52rem);
+    max-height: 58rem;
+    overflow: hidden;
+    background: var(--border-subtle);
+  }
+
+  .case-cover :global(img),
+  .case-cover video {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    max-height: inherit;
+    object-fit: cover;
+  }
+
+  .case-brief {
+    display: grid;
+    padding-block: clamp(4rem, 9vw, 9rem);
+  }
+
+  .case-brief section {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 0.5rem 1rem;
+    padding-block: 2rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .case-brief section:last-child {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .case-brief span {
+    grid-row: 1 / span 2;
+    color: var(--accent-deep);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .case-brief h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1;
+  }
+
+  .case-brief p {
+    max-width: 43rem;
+    margin: 0;
+    color: var(--ink-muted);
+  }
+
+  .case-body {
+    max-width: 54rem;
+  }
+
+  .case-body :global(:first-child) {
+    margin-top: 0;
+  }
+
+  .case-next {
+    padding-block: clamp(4rem, 10vw, 10rem);
+    text-align: center;
+  }
+
+  .case-next p {
+    margin-bottom: 0.5rem;
+    color: var(--ink-muted);
+  }
+
+  .case-next a {
+    color: var(--accent-deep);
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  @media (min-width: 48rem) {
+    .case-heading {
+      grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.55fr);
+      align-items: end;
+    }
+
+    .case-brief {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(2rem, 5vw, 6rem);
+    }
+
+    .case-brief section:last-child {
+      border-bottom: 0;
+    }
+  }
+</style>
