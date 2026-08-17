@@ -5,8 +5,21 @@
   import Lenis from 'lenis';
   import 'lenis/dist/lenis.css';
 
+  function isMobileOrReducedMotion() {
+    return (
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      window.matchMedia('(max-width: 768px)').matches ||
+      window.matchMedia('(pointer: coarse)').matches
+    );
+  }
+
   function initLenis() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (isMobileOrReducedMotion()) {
+      if ((window as any).__lenisInstance) {
+        (window as any).__lenisInstance.destroy();
+        (window as any).__lenisInstance = null;
+        (window as any).lenis = null;
+      }
       return;
     }
 
@@ -80,11 +93,23 @@
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
   }
 
+  const startSmoothScroll = () => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => initLenis(), { timeout: 1000 });
+    } else {
+      setTimeout(initLenis, 100);
+    }
+  };
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLenis);
+    document.addEventListener('DOMContentLoaded', startSmoothScroll);
   } else {
-    initLenis();
+    startSmoothScroll();
   }
 
-  document.addEventListener('astro:page-load', initLenis);
+  window.addEventListener('resize', () => {
+    initLenis();
+  }, { passive: true });
+
+  document.addEventListener('astro:page-load', startSmoothScroll);
 </script>

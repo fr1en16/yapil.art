@@ -79,7 +79,7 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
                             muted
                             loop
                             playsinline
-                            preload="metadata"
+                            preload="none"
                             aria-label={item.alt}
                           />
                         ) : (
@@ -429,10 +429,17 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
       });
     }
 
-    // High-Precision Animation Loop
+    // High-Precision Animation Loop with IntersectionObserver
     let lastTime = performance.now();
+    let animFrameId = 0;
+    let isSectionVisible = true;
 
     const tick = (now: number) => {
+      if (!isSectionVisible) {
+        animFrameId = 0;
+        return;
+      }
+
       const dt = Math.min(now - lastTime, 50);
       lastTime = now;
 
@@ -458,10 +465,39 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
         track.style.transform = `translate3d(${x.toFixed(3)}px, 0, 0)`;
       }
 
-      window.requestAnimationFrame(tick);
+      animFrameId = window.requestAnimationFrame(tick);
     };
 
-    window.requestAnimationFrame(tick);
+    const startAnimation = () => {
+      if (!animFrameId && isSectionVisible) {
+        lastTime = performance.now();
+        animFrameId = window.requestAnimationFrame(tick);
+      }
+    };
+
+    const stopAnimation = () => {
+      if (animFrameId) {
+        window.cancelAnimationFrame(animFrameId);
+        animFrameId = 0;
+      }
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          isSectionVisible = entry.isIntersecting;
+          if (isSectionVisible) {
+            startAnimation();
+          } else {
+            stopAnimation();
+          }
+        },
+        { rootMargin: '150px 0px' }
+      );
+      observer.observe(section);
+    } else {
+      startAnimation();
+    }
 
     // Lightbox Dialog Controls
     dialog?.querySelector('.lightbox-close')?.addEventListener('click', () => dialog.close());

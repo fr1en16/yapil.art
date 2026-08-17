@@ -1,5 +1,86 @@
 ---
-import AboutCompactUI from './ui/AboutCompact.tsx';
+const cards = [
+  {
+    id: 'experience',
+    title: '8\u00A0лет<br />в\u00A0дизайне',
+    text: 'Ведём проекты в\u00A0инфобизнесе и\u00A0в\u00A0корпоративном секторе. Лендинг для\u00A0трейдера и\u00A0полиграфия для\u00A0сети стрит-фуда требуют разного, мы\u00A0умеем и\u00A0то, и\u00A0другое.',
+    icon: 'award',
+  },
+  {
+    id: 'full-cycle',
+    title: 'Полный<br />цикл',
+    text: 'Один проект ведёт один дизайнер: от\u00A0первой концепции до\u00A0финальной правки в\u00A0типографии. Ничего не\u00A0отдаём на\u00A0аутсорс.',
+    icon: 'refresh-cw',
+  },
+  {
+    id: 'agency',
+    title: 'Опыт<br />агентства',
+    text: 'Яков\u00A0— сооснователь и\u00A0ключевой дизайнер thepeak.kz. Оттуда мы\u00A0принесли процессы, которые держат сроки на\u00A0больших проектах.',
+    icon: 'briefcase',
+  },
+  {
+    id: 'three-directions',
+    title: 'Три направления<br />в\u00A0одних руках',
+    text: 'Бренд, сайт и\u00A0печать делает одна команда, поэтому логотип не\u00A0разъезжается с\u00A0сайтом, а\u00A0сайт\u00A0— с\u00A0буклетом.',
+    icon: 'shapes',
+  },
+];
 ---
 
-<AboutCompactUI client:load />
+<section
+  id="about-compact"
+  aria-label="О студии в деталях"
+  class="relative z-10 pt-6 pb-16 md:pb-24 text-white"
+  style="background: linear-gradient(to top, #181818 0%, rgba(24, 24, 24, 0.96) 20%, rgba(24, 24, 24, 0.8) 42%, rgba(24, 24, 24, 0.45) 68%, rgba(24, 24, 24, 0.15) 86%, transparent 100%);"
+>
+  <div class="container">
+    <ol class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 md:gap-[var(--grid-gap)] list-none p-0 m-0">
+      {cards.map((card) => (
+        <li
+          class="group relative flex flex-col justify-between overflow-hidden rounded-none border border-white/10 bg-white/[0.04] p-7 sm:p-8 backdrop-blur-2xl transition-all duration-300 hover:border-white/25 hover:bg-white/[0.08] min-h-[20rem] sm:min-h-[26rem] lg:min-h-[30rem]"
+        >
+          <div class="flex flex-col gap-5 sm:gap-6">
+            <h3
+              class="m-0 p-0 text-2xl sm:text-[2rem] font-normal leading-[1.05] tracking-[-0.035em] text-white"
+              style="font-family: var(--font-display);"
+              set:html={card.title}
+            />
+            <p class="m-0 p-0 text-base leading-[1.3] text-white/80 text-pretty">
+              {card.text}
+            </p>
+          </div>
+
+          <div class="mt-auto pt-8 flex items-end">
+            {card.icon === 'award' && (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="size-6 sm:size-7 text-white transition-transform duration-300 group-hover:scale-110">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+              </svg>
+            )}
+            {card.icon === 'refresh-cw' && (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="size-6 sm:size-7 text-white transition-transform duration-300 group-hover:scale-110">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                <path d="M8 16H3v5" />
+              </svg>
+            )}
+            {card.icon === 'briefcase' && (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="size-6 sm:size-7 text-white transition-transform duration-300 group-hover:scale-110">
+                <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                <rect width="20" height="14" x="2" y="6" rx="2" />
+              </svg>
+            )}
+            {card.icon === 'shapes' && (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="size-6 sm:size-7 text-white transition-transform duration-300 group-hover:scale-110">
+                <path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3.1a.7.7 0 0 1 1.198 0l3.726 5.82A.7.7 0 0 1 15.7 10z" />
+                <circle cx="17.5" cy="17.5" r="4.5" />
+                <rect width="7" height="7" x="3" y="14" rx="1" />
+              </svg>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

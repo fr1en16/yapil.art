@@ -32,15 +32,7 @@ const positions = [
 
 <section class="portfolio" id="cases" aria-labelledby="portfolio-title">
   <div class="portfolio__header container">
-    <div class="portfolio__title-wrap">
-      <h2 id="portfolio-title">Избранные<br />проекты</h2>
-    </div>
-    <a class="portfolio__all" href="/cases">
-      <span class="portfolio__all-inner">
-        <span class="portfolio__all-text">Все работы</span>
-        <span class="portfolio__all-arrow" aria-hidden="true">→</span>
-      </span>
-    </a>
+    <h2 id="portfolio-title">Избранные<br />проекты</h2>
   </div>
 
   <div class="portfolio__grid container">
@@ -100,24 +92,7 @@ const positions = [
   }
 
   .portfolio__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 2rem;
     margin-bottom: clamp(3rem, 7vw, 6rem);
-  }
-
-  .portfolio__title-wrap {
-    transform-origin: left bottom;
-    transition: transform var(--duration-pushback, 450ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
-                opacity var(--duration-pushback, 450ms) ease;
-  }
-
-  /* 1. Inverse Parallax of Header Title when hovering "All Works" button */
-  .portfolio__header:has(.portfolio__all:hover) .portfolio__title-wrap,
-  .portfolio__header:has(.portfolio__all:focus-visible) .portfolio__title-wrap {
-    transform: scale(0.975) translateY(-2px);
-    opacity: 0.85;
   }
 
   h2 {
@@ -127,77 +102,6 @@ const positions = [
     font-weight: 400;
     line-height: 1;
     letter-spacing: -0.055em;
-  }
-
-  /* 2. Button Container Scaling */
-  .portfolio__all {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    padding: 0.6rem 1.15rem;
-    font-size: clamp(0.75rem, 0.9vw, 0.9rem);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-decoration: none;
-    text-transform: uppercase;
-    color: #f2f2f2;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: rgba(255, 255, 255, 0.03);
-    transform-origin: right center;
-    will-change: transform, background-color, border-color;
-    transition:
-      transform var(--duration-btn, 380ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
-      background-color 200ms ease,
-      border-color 200ms ease,
-      box-shadow var(--duration-btn, 380ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
-  }
-
-  .portfolio__all:hover,
-  .portfolio__all:focus-visible {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.45);
-    transform: scale(1.055) translateY(-1px);
-    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.4);
-  }
-
-  .portfolio__all:active {
-    transform: scale(0.99);
-    transition-duration: 90ms;
-  }
-
-  /* 3. Independent Inner Text & Icon Scaling */
-  .portfolio__all-inner {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    pointer-events: none;
-  }
-
-  .portfolio__all-text {
-    display: inline-block;
-    will-change: transform, letter-spacing;
-    transition:
-      transform var(--duration-btn-text, 260ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) 25ms,
-      letter-spacing var(--duration-btn-text, 260ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) 25ms;
-  }
-
-  .portfolio__all-arrow {
-    display: inline-block;
-    font-size: 1rem;
-    line-height: 1;
-    will-change: transform;
-    transition: transform var(--duration-btn-text, 260ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) 40ms;
-  }
-
-  .portfolio__all:hover .portfolio__all-text,
-  .portfolio__all:focus-visible .portfolio__all-text {
-    transform: scale(1.04);
-    letter-spacing: 0.11em;
-  }
-
-  .portfolio__all:hover .portfolio__all-arrow,
-  .portfolio__all:focus-visible .portfolio__all-arrow {
-    transform: translateX(4px) scale(1.15);
   }
 
   .portfolio__grid {
@@ -463,11 +367,6 @@ const positions = [
       font-size: clamp(2.6rem, 14vw, 4.2rem);
     }
 
-    .portfolio__all {
-      padding-bottom: 0.2rem;
-      font-size: 0.65rem;
-    }
-
     .portfolio__grid {
       display: flex;
       flex-direction: column;
@@ -528,11 +427,7 @@ const positions = [
     .project__image,
     .project__tags span,
     .project__action,
-    .project__marker,
-    .portfolio__title-wrap,
-    .portfolio__all,
-    .portfolio__all-text,
-    .portfolio__all-arrow {
+    .project__marker {
       transition: none !important;
       transform: none !important;
     }

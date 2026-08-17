@@ -126,14 +126,26 @@
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let shaderFrame = 0;
 
+        let lastFrameTime = 0;
+
         const resize = () => {
-          const dpr = Math.min(window.devicePixelRatio, 2);
+          const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+          const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 1.5);
           canvas.width = Math.max(1, Math.round(window.innerWidth * dpr));
           canvas.height = Math.max(1, Math.round(window.innerHeight * dpr));
           gl.viewport(0, 0, canvas.width, canvas.height);
         };
 
         const draw = (time: number) => {
+          const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+          const minFrameDelta = isMobile ? 40 : 16; // ~25fps on mobile, 60fps on desktop
+
+          if (time - lastFrameTime < minFrameDelta) {
+            if (!document.hidden && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
+            return;
+          }
+          lastFrameTime = time;
+
           gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
           gl.uniform1f(timeLocation, time * 0.002);
           gl.uniform1f(grainLocation, 0.3);
@@ -145,7 +157,7 @@
         };
 
         const startShader = () => {
-          if (!shaderFrame) shaderFrame = requestAnimationFrame(draw);
+          if (!shaderFrame && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
         };
 
         const stopShader = () => {
@@ -155,17 +167,40 @@
 
         window.addEventListener('resize', () => {
           resize();
-          if (reduceMotion) draw(0);
-        });
+          draw(0);
+        }, { passive: true });
 
         document.addEventListener('visibilitychange', () => {
           if (document.hidden) stopShader();
           else startShader();
         });
 
+        // Pause shader when scrolled past hero cover to save 100% GPU/CPU on long page
+        const heroSection = document.querySelector('.hero-cover');
+        if (heroSection && 'IntersectionObserver' in window) {
+          const heroObserver = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.isIntersecting) {
+                startShader();
+              } else {
+                stopShader();
+              }
+            },
+            { threshold: 0.01 }
+          );
+          heroObserver.observe(heroSection);
+        }
+
         resize();
-        if (reduceMotion) draw(0);
-        else startShader();
+        draw(0);
+
+        if (!reduceMotion) {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => startShader(), { timeout: 2000 });
+          } else {
+            setTimeout(startShader, 500);
+          }
+        }
       }
     }
   }

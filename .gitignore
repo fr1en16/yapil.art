@@ -30,6 +30,9 @@ pnpm-debug.log*
 /about-*.png
 /source-*.png
 /lh-*.json
+/design-qa.md
 
-# Standalone subprojects
+# Standalone subprojects and reference projects
 gallery/
+inspiring-home/
+
