@@ -1,147 +1,302 @@
----
-import { Image } from 'astro:assets';
-
-const heroImage = 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2';
----
-
-<section class="hero" aria-labelledby="hero-title">
-  <div class="container hero-grid">
-    <div class="hero-copy">
-      <p class="eyebrow">Дизайн-студия</p>
-      <h1 id="hero-title"><span>Yapil</span>, дизайн-студия</h1>
-      <p class="hero-description">
-        Делаем айдентику, сайты и полиграфию. Логотип, брендбук, многостраничный сайт,
-        презентация, рекламный макет: берём проект целиком и доводим до печати или до релиза.
-      </p>
-      <a class="hero-link" href="#cases">Смотреть кейсы <span aria-hidden="true">↘</span></a>
-    </div>
-
-    <div class="hero-visual" aria-label="Портрет дизайнера студии Yapil">
-      <span class="hero-note" aria-hidden="true">дизайн<br />с характером</span>
-      <Image
-        src={heroImage}
-        alt="Яков Пиль, дизайнер студии Yapil"
-        width={1000}
-        height={1200}
-        widths={[400, 700, 1000]}
-        sizes="(max-width: 767px) calc(100vw - 2rem), 45vw"
-        format="webp"
-        quality={72}
-        loading="eager"
-        fetchpriority="high"
-      />
-    </div>
+<section class="hero-cover" aria-labelledby="hero-title" data-hero-cover>
+  <div class="hero-copy">
+    <h1 id="hero-title" class="hero-layer hero-layer--title">Дизайн, который<br />работает на бизнес</h1>
+    <p class="hero-description hero-layer hero-layer--description">
+      Создаем айдентику и сайты, помогающие компаниям<br class="desktop-break" />
+      выделяться на рынке, вызывать доверие и масштабироваться.
+    </p>
+    <a class="hero-link hero-layer hero-layer--cta" href="#cases">
+      <span class="hero-link-inner">
+        <span class="hero-link-text">Смотреть кейсы</span>
+        <span class="hero-link-arrow" aria-hidden="true">↓</span>
+      </span>
+    </a>
   </div>
 </section>
 
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero-cover]');
+  if (hero && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let frame = 0;
+    let previousTime = 0;
+
+    const render = (time: number) => {
+      const delta = previousTime ? Math.min((time - previousTime) / 16.67, 2) : 1;
+      previousTime = time;
+      const inertia = 1 - Math.pow(0.93, delta);
+
+      currentX += (targetX - currentX) * inertia;
+      currentY += (targetY - currentY) * inertia;
+
+      hero.style.setProperty('--hero-rotate-x', `${currentY * -10}deg`);
+      hero.style.setProperty('--hero-rotate-y', `${currentX * 12}deg`);
+
+      const isMoving =
+        Math.abs(targetX - currentX) > 0.001 ||
+        Math.abs(targetY - currentY) > 0.001;
+
+      if (isMoving) {
+        frame = requestAnimationFrame(render);
+      } else {
+        currentX = targetX;
+        currentY = targetY;
+        previousTime = 0;
+        frame = 0;
+      }
+    };
+
+    const requestRender = () => {
+      if (!frame) frame = requestAnimationFrame(render);
+    };
+
+    window.addEventListener('pointermove', (event) => {
+      const bounds = hero.getBoundingClientRect();
+      const isOverCover =
+        event.clientX >= bounds.left &&
+        event.clientX <= bounds.right &&
+        event.clientY >= bounds.top &&
+        event.clientY <= bounds.bottom;
+
+      if (isOverCover) {
+        targetX = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width) * 2 - 1));
+        targetY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height) * 2 - 1));
+      } else {
+        targetX = 0;
+        targetY = 0;
+      }
+      requestRender();
+    });
+
+    window.addEventListener('blur', () => {
+      targetX = 0;
+      targetY = 0;
+      requestRender();
+    });
+  }
+</script>
+
 <style>
-  .hero {
-    min-height: calc(100svh - 4.5rem);
-    padding-block: clamp(2rem, 6vw, 5rem);
-    overflow: clip;
+  @font-face {
+    font-family: 'Hero Instrument';
+    src: url('/hero-cover/instrument.woff2') format('woff2');
+    font-display: swap;
   }
 
-  .hero-grid {
+  @font-face {
+    font-family: 'Hero DM Sans';
+    src: url('/hero-cover/dm-sans.woff2') format('woff2');
+    font-display: swap;
+  }
+
+  .hero-cover {
+    --hero-rotate-x: 0deg;
+    --hero-rotate-y: 0deg;
+    position: relative;
     display: grid;
-    align-items: center;
-    gap: clamp(2.5rem, 7vw, 8rem);
+    min-height: calc(100svh - 130px);
+    place-items: center;
+    overflow: clip;
+    color: #fff;
+    background: transparent;
+    perspective: 1100px;
+    perspective-origin: 50% 45%;
+    isolation: isolate;
   }
 
   .hero-copy {
-    position: relative;
-    z-index: 1;
+    width: min(calc(100% - 2rem), 68rem);
+    padding: clamp(5.5rem, 10vh, 7.5rem) 1rem clamp(2.5rem, 5vh, 4rem);
+    text-align: center;
+    transform: rotateX(var(--hero-rotate-x)) rotateY(var(--hero-rotate-y));
+    transform-origin: 50% 48%;
+    transform-style: preserve-3d;
+    will-change: transform;
   }
 
-  .eyebrow {
-    margin-bottom: clamp(2rem, 7vw, 5.5rem);
-    color: var(--ink-muted);
-    font-family: var(--font-display);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
+  /* 3D Layering and Inverse Parallax Transitions */
+  .hero-layer {
+    transform-style: preserve-3d;
+    transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+                opacity var(--duration-pushback, 1575ms) ease;
+  }
+
+  .hero-layer--title {
+    transform: translateZ(58px);
+  }
+
+  .hero-layer--description {
+    transform: translateZ(0);
+  }
+
+  .hero-layer--cta {
+    transform: translateZ(42px);
+  }
+
+  /* 1. Inverse Parallax (Push-back / Zoom-out) on button hover & focus */
+  .hero-copy:has(.hero-link:hover) .hero-layer--title,
+  .hero-copy:has(.hero-link:focus-visible) .hero-layer--title {
+    transform: translateZ(12px) scale(0.965);
+    opacity: 0.88;
+  }
+
+  .hero-copy:has(.hero-link:hover) .hero-layer--description,
+  .hero-copy:has(.hero-link:focus-visible) .hero-layer--description {
+    transform: translateZ(-52px) scale(0.955);
+    opacity: 0.72;
   }
 
   h1 {
-    max-width: 10ch;
-    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    margin: 0;
     font-family: var(--font-display);
-    font-size: var(--text-hero);
-    line-height: 0.94;
-    letter-spacing: -0.065em;
+    font-size: clamp(4rem, 7.3vw, 7rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.045em;
   }
 
-  h1 span {
-    color: var(--accent-deep);
+  h1 u {
+    text-decoration-color: #80efc9;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.11em;
   }
 
   .hero-description {
-    max-width: 42rem;
-    margin-bottom: 2rem;
-    font-size: clamp(1rem, 1.2vw, 1.25rem);
-    line-height: 1.45;
+    max-width: 59rem;
+    margin: clamp(2rem, 4.5vh, 3rem) auto clamp(2rem, 5vh, 3.25rem);
+    color: rgb(255 255 255 / 0.9);
+    font: 400 clamp(1rem, 0.9vw, 1.15rem) / 1.3 'Hero DM Sans', sans-serif;
   }
 
+  /* 2. Button Container Scaling & Elastic Spring Easing */
   .hero-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.85rem 0;
-    border-bottom: 2px solid var(--ink-primary);
-    font-family: var(--font-display);
-    font-weight: 700;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.85rem 1.65rem;
+    color: #ffffff;
+    background: #000;
+    font: 400 0.88rem/1 'Hero DM Sans', sans-serif;
     text-decoration: none;
+    transform-origin: center center;
+    will-change: transform, box-shadow, background-color;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      background-color var(--duration-btn-color, 770ms) ease,
+      box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
   }
 
-  .hero-link span {
-    color: var(--accent-deep);
-    font-size: 1.5rem;
+  .hero-copy:has(.hero-link:hover) .hero-layer--cta,
+  .hero-copy:has(.hero-link:focus-visible) .hero-layer--cta,
+  .hero-link:hover,
+  .hero-link:focus-visible {
+    transform: translateZ(82px) scale(1.07);
+    background: #444444;
+    box-shadow: 0 14px 34px -4px rgb(35 133 157 / 0.45), 0 0 2.2rem rgb(43 153 180 / 0.3);
   }
 
-  .hero-visual {
-    position: relative;
-    max-width: 34rem;
-    justify-self: center;
+  .hero-link:active {
+    transform: translateZ(64px) scale(1.02);
+    transition-duration: 90ms;
   }
 
-  .hero-visual::before {
-    position: absolute;
-    z-index: -1;
-    inset: 10% -12% -8% 18%;
-    border-radius: 48% 52% 45% 55% / 52% 38% 62% 48%;
-    background: var(--accent-tint);
-    content: '';
-    transform: rotate(-5deg);
+  /* 3. Independent Inner Text & Icon Scaling (Layer Separation & Stretch/Stagger) */
+  .hero-link-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    pointer-events: none;
+    transform-style: preserve-3d;
   }
 
-  .hero-visual :global(img) {
-    width: 100%;
-    height: auto;
-    border-radius: 50% 50% 42% 58% / 44% 45% 55% 56%;
-    object-fit: cover;
+  .hero-link-text {
+    display: inline-block;
+    letter-spacing: 0.01em;
+    transform: translateZ(4px) scale(1);
+    transform-origin: center center;
+    will-change: transform, letter-spacing;
+    transition:
+      transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+      letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
   }
 
-  .hero-note {
-    position: absolute;
-    z-index: 2;
-    right: -0.5rem;
-    bottom: 9%;
-    color: var(--accent-deep);
-    font-family: var(--font-accent);
-    font-size: clamp(1.7rem, 4vw, 3.5rem);
-    font-weight: 650;
-    line-height: 0.86;
-    letter-spacing: -0.07em;
-    transform: rotate(-8deg);
+  .hero-link-arrow {
+    display: inline-block;
+    font-size: 0.95rem;
+    line-height: 1;
+    transform: translateZ(4px) translateY(0);
+    will-change: transform;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
   }
 
-  @media (min-width: 48rem) {
-    .hero-grid {
-      grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.75fr);
+  .hero-link:hover .hero-link-text,
+  .hero-link:focus-visible .hero-link-text {
+    transform: translateZ(12px) scale(1.05) scaleX(1.03);
+    letter-spacing: 0.045em;
+  }
+
+  .hero-link:hover .hero-link-arrow,
+  .hero-link:focus-visible .hero-link-arrow {
+    transform: translateZ(12px) translateY(3px) scale(1.12);
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero-copy {
+      width: min(100% - 1.5rem, 35rem);
+      padding-inline: 0;
+      transform: none;
     }
 
-    .hero-copy {
-      padding-bottom: 2rem;
+    .hero-layer {
+      transform: none;
+    }
+
+    h1 {
+      font-size: clamp(3.4rem, 16vw, 5rem);
+      line-height: 1;
+    }
+
+    .hero-description {
+      max-width: 24rem;
+      padding-inline: 0.75rem;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .desktop-break {
+      display: none;
+    }
+
+    .hero-copy:has(.hero-link:hover) .hero-layer--title,
+    .hero-copy:has(.hero-link:focus-visible) .hero-layer--title,
+    .hero-copy:has(.hero-link:hover) .hero-layer--description,
+    .hero-copy:has(.hero-link:focus-visible) .hero-layer--description {
+      transform: scale(0.985);
+      opacity: 0.9;
+    }
+
+    .hero-copy:has(.hero-link:hover) .hero-layer--cta,
+    .hero-copy:has(.hero-link:focus-visible) .hero-layer--cta,
+    .hero-link:hover,
+    .hero-link:focus-visible {
+      transform: scale(1.04);
+    }
+  }
+
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    .hero-copy,
+    .hero-layer,
+    .hero-link,
+    .hero-link-text,
+    .hero-link-arrow {
+      transform: none !important;
+      transition: none !important;
     }
   }
 </style>

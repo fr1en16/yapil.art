@@ -1,0 +1,735 @@
+---
+import galleryItems from '../data/vsyachina-gallery.json';
+
+interface GalleryItem {
+  name: string;
+  width: number;
+  height: number;
+  isVideo: boolean;
+  url: string;
+  alt: string;
+  title: string;
+}
+
+const labels: Record<string, string> = {
+  '2gippo': 'Gippo',
+  BrewBox: 'BrewBox',
+  cadillac: 'Cadillac',
+  chevrolet: 'Chevrolet',
+  gippo: 'Gippo Family',
+  iroh: 'Iroh',
+  lukoil: 'Lukoil',
+  ONmacabim: 'ONmacabim',
+  puma: 'Puma',
+  RV: 'Sold Out',
+  RVgold: 'Rykunov & Kudryashov',
+  shanding: 'Shanding',
+  takara: 'Takara',
+};
+
+const grouped = new Map<string, GalleryItem[]>();
+for (const item of galleryItems as GalleryItem[]) {
+  const stem = item.name.replace(/\.[^.]+$/, '');
+  const prefix = stem.match(/^(.+?)-?\d+$/)?.[1] ?? stem;
+  grouped.set(prefix, [...(grouped.get(prefix) ?? []), item]);
+}
+
+const groups = Array.from(grouped, ([prefix, images]) => ({
+  prefix,
+  label: labels[prefix] ?? prefix,
+  images,
+}));
+
+const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
+---
+
+<section class="vsyachina-infinite-section" aria-label="Галерея проектов">
+  <div class="vsyachina-infinite-wrapper" data-infinite-wrapper>
+    <div class="infinite-track" data-infinite-track>
+      {[0, 1, 2].map((copyIndex) => (
+        <div class="infinite-set" data-set={copyIndex} aria-hidden={copyIndex > 0 ? 'true' : undefined}>
+          {groups.map((group, groupIndex) => {
+            const first = group.images[0];
+            return (
+              <article
+                class="infinite-item"
+                data-gallery-group={groupIndex}
+                style={`--media-ratio: ${first.width} / ${first.height}`}
+              >
+                <button
+                  class="gallery-card"
+                  type="button"
+                  tabindex={copyIndex > 0 ? -1 : 0}
+                  aria-label={`Открыть серию «${group.label}» (${group.images.length} материалов)`}
+                  style={`--media-ratio: ${first.width} / ${first.height}`}
+                >
+                  <span class="gallery-stack">
+                    {group.images.map((item, itemIndex) => (
+                      <span
+                        class:list={['gallery-slide', { 'is-active': itemIndex === 0 }]}
+                        data-gallery-slide={itemIndex}
+                        data-width={item.width}
+                        data-height={item.height}
+                      >
+                        {item.isVideo ? (
+                          <video
+                            src={item.url}
+                            width={item.width}
+                            height={item.height}
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                            aria-label={item.alt}
+                          />
+                        ) : (
+                          <img
+                            src={item.url}
+                            alt={item.alt}
+                            width={item.width}
+                            height={item.height}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )}
+                      </span>
+                    ))}
+                  </span>
+                  <span class="gallery-glare" aria-hidden="true" />
+                </button>
+              </article>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <dialog class="media-lightbox" data-infinite-lightbox aria-label="Полноэкранная медиагалерея">
+    <button class="lightbox-control lightbox-close" type="button" aria-label="Закрыть">×</button>
+    <button class="lightbox-control lightbox-prev" type="button" aria-label="Предыдущий материал">←</button>
+    <div class="lightbox-stage" data-lightbox-stage></div>
+    <button class="lightbox-control lightbox-next" type="button" aria-label="Следующий материал">→</button>
+    <div class="lightbox-caption" aria-live="polite">
+      <span data-lightbox-title></span>
+      <span data-lightbox-count></span>
+    </div>
+  </dialog>
+
+  <script is:inline type="application/json" data-infinite-groups-data set:html={serializedGroups}></script>
+</section>
+
+<script>
+  interface GalleryItem {
+    name: string;
+    width: number;
+    height: number;
+    isVideo: boolean;
+    url: string;
+    alt: string;
+    title: string;
+  }
+  interface GalleryGroup {
+    prefix: string;
+    label: string;
+    images: GalleryItem[];
+  }
+
+  const section = document.querySelector<HTMLElement>('.vsyachina-infinite-section');
+  if (section) {
+    const dataNode = section.querySelector<HTMLScriptElement>('[data-infinite-groups-data]');
+    const wrapper = section.querySelector<HTMLElement>('[data-infinite-wrapper]');
+    const track = section.querySelector<HTMLElement>('[data-infinite-track]');
+    const set0 = track?.querySelector<HTMLElement>('.infinite-set[data-set="0"]');
+    const dialog = section.querySelector<HTMLDialogElement>('[data-infinite-lightbox]');
+    const stage = dialog?.querySelector<HTMLElement>('[data-lightbox-stage]');
+    const title = dialog?.querySelector<HTMLElement>('[data-lightbox-title]');
+    const count = dialog?.querySelector<HTMLElement>('[data-lightbox-count]');
+    const galleryGroups: GalleryGroup[] = dataNode?.textContent ? JSON.parse(dataNode.textContent) : [];
+
+    let lightboxGroup = 0;
+    let lightboxIndex = 0;
+    let returnFocus: HTMLElement | null = null;
+
+    // Smooth dynamic morphing of aspect ratio across all clones of this group
+    const setActiveSlideForGroup = (groupIndex: number, nextIndex: number) => {
+      const items = section.querySelectorAll<HTMLElement>(`[data-gallery-group="${groupIndex}"]`);
+      items.forEach((item) => {
+        const card = item.querySelector<HTMLElement>('.gallery-card');
+        if (!card) return;
+        const slides = Array.from(card.querySelectorAll<HTMLElement>('[data-gallery-slide]'));
+        if (!slides.length) return;
+        const index = (nextIndex + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle('is-active', slideIndex === index);
+          const video = slide.querySelector('video');
+          if (slideIndex === index) {
+            void video?.play().catch(() => undefined);
+          } else {
+            video?.pause();
+          }
+        });
+        const active = slides[index];
+        card.dataset.activeIndex = String(index);
+        if (active.dataset.width && active.dataset.height) {
+          const ratio = `${active.dataset.width} / ${active.dataset.height}`;
+          card.style.setProperty('--media-ratio', ratio);
+          item.style.setProperty('--media-ratio', ratio);
+        }
+      });
+    };
+
+    const renderLightbox = () => {
+      if (!stage || !title || !count) return;
+      const group = galleryGroups[lightboxGroup];
+      const item = group?.images[lightboxIndex];
+      if (!group || !item) return;
+
+      stage.replaceChildren();
+      const media = document.createElement(item.isVideo ? 'video' : 'img');
+      media.className = 'lightbox-media';
+      if (media instanceof HTMLVideoElement) {
+        media.src = item.url;
+        media.autoplay = true;
+        media.controls = true;
+        media.playsInline = true;
+        media.volume = 0.3;
+      } else {
+        media.src = item.url;
+        media.alt = item.alt;
+        media.width = item.width;
+        media.height = item.height;
+      }
+      stage.append(media);
+      title.textContent = item.title;
+      count.textContent = `${String(lightboxIndex + 1).padStart(2, '0')} / ${String(group.images.length).padStart(2, '0')}`;
+      dialog?.querySelectorAll<HTMLElement>('.lightbox-prev, .lightbox-next').forEach((button) => {
+        button.hidden = group.images.length < 2;
+      });
+    };
+
+    const moveLightbox = (direction: -1 | 1) => {
+      const length = galleryGroups[lightboxGroup]?.images.length ?? 0;
+      if (!length) return;
+      lightboxIndex = (lightboxIndex + direction + length) % length;
+      renderLightbox();
+      setActiveSlideForGroup(lightboxGroup, lightboxIndex);
+    };
+
+    // Initialize slides, videos metadata, and periodic slide rotation
+    galleryGroups.forEach((group, groupIndex) => {
+      setActiveSlideForGroup(groupIndex, 0);
+
+      // Listen for video metadata to use exact native video dimensions
+      const firstGroupItem = section.querySelector<HTMLElement>(`[data-gallery-group="${groupIndex}"]`);
+      firstGroupItem?.querySelectorAll<HTMLVideoElement>('video').forEach((video) => {
+        const applyNativeDimensions = () => {
+          if (!video.videoWidth || !video.videoHeight) return;
+          const slide = video.closest<HTMLElement>('[data-gallery-slide]');
+          if (!slide) return;
+          slide.dataset.width = String(video.videoWidth);
+          slide.dataset.height = String(video.videoHeight);
+          video.width = video.videoWidth;
+          video.height = video.videoHeight;
+          if (slide.classList.contains('is-active')) {
+            const ratio = `${video.videoWidth} / ${video.videoHeight}`;
+            section.querySelectorAll<HTMLElement>(`[data-gallery-group="${groupIndex}"]`).forEach((it) => {
+              it.style.setProperty('--media-ratio', ratio);
+              it.querySelector<HTMLElement>('.gallery-card')?.style.setProperty('--media-ratio', ratio);
+            });
+          }
+        };
+        if (video.readyState >= HTMLMediaElement.HAVE_METADATA) applyNativeDimensions();
+        else video.addEventListener('loadedmetadata', applyNativeDimensions, { once: true });
+      });
+
+      if (group.images.length > 1) {
+        window.setInterval(() => {
+          const sampleCard = section.querySelector<HTMLElement>(`[data-gallery-group="${groupIndex}"] .gallery-card`);
+          if (!document.hidden && !sampleCard?.matches(':hover') && !dialog?.open) {
+            const current = Number(sampleCard?.dataset.activeIndex ?? 0);
+            setActiveSlideForGroup(groupIndex, current + 1);
+          }
+        }, 9500 + (groupIndex % 6) * 900);
+      }
+    });
+
+    // 3D Tilt on each card
+    const allCards = Array.from(section.querySelectorAll<HTMLElement>('.gallery-card'));
+    allCards.forEach((card) => {
+      let isCardHovered = false;
+      let animId = 0;
+      let currentTiltX = 0;
+      let currentTiltY = 0;
+      let targetTiltX = 0;
+      let targetTiltY = 0;
+      let currentGlareX = 50;
+      let currentGlareY = 50;
+      let targetGlareX = 50;
+      let targetGlareY = 50;
+      let cachedRect: DOMRect | null = null;
+
+      const updateTilt = () => {
+        currentTiltX += (targetTiltX - currentTiltX) * 0.12;
+        currentTiltY += (targetTiltY - currentTiltY) * 0.12;
+        currentGlareX += (targetGlareX - currentGlareX) * 0.12;
+        currentGlareY += (targetGlareY - currentGlareY) * 0.12;
+
+        card.style.setProperty('--tilt-x', `${currentTiltX.toFixed(2)}deg`);
+        card.style.setProperty('--tilt-y', `${currentTiltY.toFixed(2)}deg`);
+        card.style.setProperty('--glare-x', `${currentGlareX.toFixed(1)}%`);
+        card.style.setProperty('--glare-y', `${currentGlareY.toFixed(1)}%`);
+
+        const delta = Math.abs(targetTiltX - currentTiltX) + Math.abs(targetTiltY - currentTiltY);
+        if (isCardHovered || delta > 0.01) {
+          animId = window.requestAnimationFrame(updateTilt);
+        } else {
+          card.style.setProperty('--tilt-x', '0deg');
+          card.style.setProperty('--tilt-y', '0deg');
+          currentTiltX = 0;
+          currentTiltY = 0;
+          animId = 0;
+        }
+      };
+
+      const startTiltAnimation = () => {
+        if (!animId) animId = window.requestAnimationFrame(updateTilt);
+      };
+
+      card.addEventListener('pointerenter', () => {
+        isCardHovered = true;
+        cachedRect = card.getBoundingClientRect();
+        startTiltAnimation();
+      });
+
+      card.addEventListener('pointermove', (event) => {
+        if (!cachedRect) cachedRect = card.getBoundingClientRect();
+        if (!cachedRect.width || !cachedRect.height) return;
+
+        const x = Math.max(0, Math.min(1, (event.clientX - cachedRect.left) / cachedRect.width));
+        const y = Math.max(0, Math.min(1, (event.clientY - cachedRect.top) / cachedRect.height));
+
+        targetTiltX = (0.5 - y) * 14;
+        targetTiltY = (x - 0.5) * 14;
+        targetGlareX = x * 100;
+        targetGlareY = y * 100;
+
+        startTiltAnimation();
+      });
+
+      const stopTilting = () => {
+        isCardHovered = false;
+        cachedRect = null;
+        targetTiltX = 0;
+        targetTiltY = 0;
+        targetGlareX = 50;
+        targetGlareY = 50;
+        startTiltAnimation();
+      };
+
+      card.addEventListener('pointerleave', stopTilting);
+    });
+
+    // Zero-Stutter Seamless Physics Engine with Dynamic Aspect-Ratio Tracking
+    let setWidth = 0;
+    const measureSet = () => {
+      if (set0) {
+        setWidth = set0.getBoundingClientRect().width;
+      }
+    };
+
+    measureSet();
+    window.addEventListener('resize', measureSet);
+    window.addEventListener('load', measureSet);
+    if (set0 && 'ResizeObserver' in window) {
+      new ResizeObserver(() => measureSet()).observe(set0);
+    }
+    setTimeout(measureSet, 200);
+    setTimeout(measureSet, 800);
+
+    const baseSpeed = -0.065; // px per ms (approx -65px per second)
+    let currentVelocity = baseSpeed;
+    let x = 0;
+    let isHovered = false;
+    let isDragging = false;
+    let dragStartX = 0;
+    let lastDragX = 0;
+    let lastDragTime = 0;
+    let dragVelocity = 0;
+    let totalDragDist = 0;
+
+    if (wrapper && track) {
+      wrapper.addEventListener('pointerenter', () => {
+        isHovered = true;
+      });
+
+      wrapper.addEventListener('pointerleave', () => {
+        isHovered = false;
+        if (isDragging) {
+          isDragging = false;
+          wrapper.classList.remove('is-grabbing');
+        }
+      });
+
+      wrapper.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        isDragging = true;
+        wrapper.classList.add('is-grabbing');
+        dragStartX = e.clientX;
+        lastDragX = e.clientX;
+        lastDragTime = performance.now();
+        dragVelocity = 0;
+        totalDragDist = 0;
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const now = performance.now();
+        const dx = e.clientX - lastDragX;
+        const dt = Math.max(now - lastDragTime, 8);
+
+        totalDragDist += Math.abs(dx);
+        dragVelocity = dx / dt;
+        x += dx;
+
+        lastDragX = e.clientX;
+        lastDragTime = now;
+      });
+
+      window.addEventListener('pointerup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        wrapper.classList.remove('is-grabbing');
+        if (Math.abs(dragVelocity) > 0.05) {
+          currentVelocity = Math.max(Math.min(dragVelocity, 1.8), -1.8);
+        }
+      });
+
+      // Card click handling with drag threshold distinction
+      track.addEventListener('click', (e) => {
+        if (totalDragDist > 6) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+
+        const card = (e.target as HTMLElement).closest<HTMLElement>('.gallery-card');
+        const item = (e.target as HTMLElement).closest<HTMLElement>('.infinite-item');
+        if (!card || !item) return;
+
+        const groupIndex = Number(item.dataset.galleryGroup);
+        if (Number.isNaN(groupIndex) || !galleryGroups[groupIndex]) return;
+
+        returnFocus = card;
+        lightboxGroup = groupIndex;
+        lightboxIndex = Number(card.dataset.activeIndex ?? 0);
+        renderLightbox();
+        dialog?.showModal();
+        document.body.classList.add('has-open-lightbox');
+      });
+    }
+
+    // High-Precision Animation Loop
+    let lastTime = performance.now();
+
+    const tick = (now: number) => {
+      const dt = Math.min(now - lastTime, 50);
+      lastTime = now;
+
+      if (track) {
+        if (!isDragging) {
+          const target = isHovered || dialog?.open ? 0 : baseSpeed;
+          // Physical exponential friction (luxurious deceleration & acceleration with inertia)
+          const frictionFactor = 1 - Math.exp(-0.0035 * dt);
+          currentVelocity += (target - currentVelocity) * frictionFactor;
+          x += currentVelocity * dt;
+        }
+
+        // Subpixel seamless loop wrap
+        if (setWidth > 0) {
+          while (x <= -setWidth) {
+            x += setWidth;
+          }
+          while (x > 0) {
+            x -= setWidth;
+          }
+        }
+
+        track.style.transform = `translate3d(${x.toFixed(3)}px, 0, 0)`;
+      }
+
+      window.requestAnimationFrame(tick);
+    };
+
+    window.requestAnimationFrame(tick);
+
+    // Lightbox Dialog Controls
+    dialog?.querySelector('.lightbox-close')?.addEventListener('click', () => dialog.close());
+    dialog?.querySelector('.lightbox-prev')?.addEventListener('click', () => moveLightbox(-1));
+    dialog?.querySelector('.lightbox-next')?.addEventListener('click', () => moveLightbox(1));
+    dialog?.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog?.addEventListener('close', () => {
+      stage?.replaceChildren();
+      document.body.classList.remove('has-open-lightbox');
+      returnFocus?.focus();
+    });
+    dialog?.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') moveLightbox(-1);
+      if (event.key === 'ArrowRight') moveLightbox(1);
+    });
+  }
+</script>
+
+<style>
+  .vsyachina-infinite-section {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(1.5rem, 3.5vw, 3rem);
+    background: #0b0b0c;
+  }
+
+  .vsyachina-infinite-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
+    mask-image: linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%);
+  }
+
+  .vsyachina-infinite-wrapper.is-grabbing {
+    cursor: grabbing;
+  }
+
+  .infinite-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .infinite-set {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 1.2vw, 1.25rem);
+    padding-right: clamp(0.75rem, 1.2vw, 1.25rem);
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  .infinite-item {
+    position: relative;
+    height: clamp(280px, 38vh, 440px);
+    aspect-ratio: var(--media-ratio);
+    flex-shrink: 0;
+    perspective: 800px;
+    transform-style: preserve-3d;
+    transition: aspect-ratio 1200ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: aspect-ratio;
+  }
+
+  .gallery-card {
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
+    --glare-x: 50%;
+    --glare-y: 50%;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    color: white;
+    background: #141416;
+    cursor: zoom-in;
+    aspect-ratio: var(--media-ratio);
+    transform-style: preserve-3d;
+    transform: perspective(800px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    transition: aspect-ratio 1200ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms ease;
+    will-change: transform, aspect-ratio;
+  }
+
+  .gallery-card:hover {
+    z-index: 10;
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7);
+  }
+
+  .gallery-card:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+
+  .gallery-stack,
+  .gallery-slide {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery-slide {
+    opacity: 0;
+    transition: opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gallery-slide.is-active {
+    z-index: 1;
+    opacity: 1;
+  }
+
+  .gallery-slide img,
+  .gallery-slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .gallery-glare {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    background: radial-gradient(circle 240px at var(--glare-x) var(--glare-y), rgba(255, 255, 255, 0.26), transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+
+  .gallery-card:hover .gallery-glare {
+    opacity: 1;
+  }
+
+  /* Lightbox */
+  .media-lightbox {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: white;
+    background: rgb(0 0 0 / 96%);
+    overflow: hidden;
+  }
+
+  .media-lightbox[open] {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr) 5rem;
+    grid-template-rows: minmax(0, 1fr) auto;
+    place-items: center;
+  }
+
+  .media-lightbox::backdrop {
+    background: rgb(0 0 0 / 96%);
+  }
+
+  .lightbox-stage {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 2rem;
+    place-items: center;
+  }
+
+  .lightbox-stage :global(.lightbox-media) {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: calc(100dvh - 7rem);
+    object-fit: contain;
+  }
+
+  .lightbox-control {
+    z-index: 2;
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 24%);
+    color: white;
+    background: rgb(0 0 0 / 45%);
+    cursor: pointer;
+    font-size: 1.3rem;
+    line-height: 1;
+    place-items: center;
+  }
+
+  .lightbox-control:hover {
+    color: black;
+    background: white;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.8rem;
+  }
+
+  .lightbox-caption {
+    grid-column: 1 / -1;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0 1.5rem 1.25rem;
+    color: #b5b5b8;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  :global(body.has-open-lightbox) {
+    overflow: hidden;
+  }
+
+  @media (max-width: 47.99rem) {
+    .vsyachina-infinite-section {
+      padding-block: 0.75rem 1.5rem;
+    }
+
+    .infinite-item {
+      height: clamp(120px, 18vh, 180px);
+    }
+
+    .infinite-set {
+      gap: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .media-lightbox[open] {
+      grid-template-columns: 3.75rem minmax(0, 1fr) 3.75rem;
+    }
+
+    .lightbox-stage {
+      padding: 4.5rem 0.25rem 1rem;
+    }
+
+    .lightbox-stage :global(.lightbox-media) {
+      max-height: calc(100dvh - 9rem);
+    }
+
+    .lightbox-control {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-card,
+    .gallery-slide,
+    .infinite-item {
+      transition: none;
+    }
+    .gallery-card {
+      transform: none;
+    }
+  }
+</style>

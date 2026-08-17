@@ -1,0 +1,90 @@
+---
+---
+
+<script>
+  import Lenis from 'lenis';
+  import 'lenis/dist/lenis.css';
+
+  function initLenis() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    // Prevent duplicate instances on page reloads/transitions
+    if ((window as any).__lenisInstance) {
+      (window as any).__lenisInstance.destroy();
+    }
+
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.5,
+      infinite: false,
+    });
+
+    (window as any).__lenisInstance = lenis;
+    (window as any).lenis = lenis;
+
+    let rafId = 0;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+
+    rafId = requestAnimationFrame(raf);
+
+    // Smooth anchor navigation handling for #hash and /#hash
+    document.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement)?.closest('a');
+      if (!target) return;
+
+      const href = target.getAttribute('href');
+      if (!href) return;
+
+      const isCurrentPage =
+        window.location.pathname === '/' || window.location.pathname === '';
+
+      if (href.startsWith('#') && href.length > 1) {
+        const el = document.querySelector(href);
+        if (el) {
+          e.preventDefault();
+          lenis.scrollTo(el as HTMLElement, { offset: -20, duration: 1.2 });
+        }
+      } else if (href.startsWith('/#') && href.length > 2 && isCurrentPage) {
+        const el = document.querySelector(href.slice(1));
+        if (el) {
+          e.preventDefault();
+          lenis.scrollTo(el as HTMLElement, { offset: -20, duration: 1.2 });
+        }
+      }
+    });
+
+    // Pause momentum when lightbox or full-screen dialogs open
+    const observer = new MutationObserver(() => {
+      if (
+        document.body.classList.contains('has-open-lightbox') ||
+        document.body.classList.contains('overflow-hidden') ||
+        document.documentElement.classList.contains('overflow-hidden')
+      ) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    });
+
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLenis);
+  } else {
+    initLenis();
+  }
+
+  document.addEventListener('astro:page-load', initLenis);
+</script>

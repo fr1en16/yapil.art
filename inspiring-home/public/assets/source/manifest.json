@@ -1,0 +1,1229 @@
+{
+  "assets": [
+    {
+      "contentType": "font/woff2",
+      "id": "60012d73723c46bd",
+      "kind": "font",
+      "name": "5c285b27cdda1fe8-s.p.0yo6-5yoeeudq.woff2",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/60012d73723c46bd.woff2",
+      "url": "https://inspiring.nk.studio/_next/static/media/5c285b27cdda1fe8-s.p.0yo6-5yoeeudq.woff2?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "d57e0fbaffc7c019",
+      "kind": "font",
+      "name": "e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/d57e0fbaffc7c019.woff2",
+      "url": "https://inspiring.nk.studio/_next/static/media/e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "a94eeddaff9e03bf",
+      "kind": "image",
+      "name": "alan-buscaglia.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a94eeddaff9e03bf.jpg",
+      "url": "https://inspiring.nk.studio/mouse/alan-buscaglia.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "511ef4a6f6d4ab72",
+      "kind": "image",
+      "name": "alberto-kaiser-sosa.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/511ef4a6f6d4ab72.jpg",
+      "url": "https://inspiring.nk.studio/mouse/alberto-kaiser-sosa.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "cf88a6b65839504f",
+      "kind": "image",
+      "name": "alejandro-lazos.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/cf88a6b65839504f.jpg",
+      "url": "https://inspiring.nk.studio/mouse/alejandro-lazos.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "c3465bb68011f87b",
+      "kind": "image",
+      "name": "bianca-dubinsky.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c3465bb68011f87b.jpg",
+      "url": "https://inspiring.nk.studio/mouse/bianca-dubinsky.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "bd62645aaa371aca",
+      "kind": "image",
+      "name": "bel-gonzalez.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/bd62645aaa371aca.jpg",
+      "url": "https://inspiring.nk.studio/mouse/bel-gonzalez.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "a79a32115ef4c41e",
+      "kind": "image",
+      "name": "fernando-barbella.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a79a32115ef4c41e.jpg",
+      "url": "https://inspiring.nk.studio/mouse/fernando-barbella.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "f9a7621f64fcdae4",
+      "kind": "image",
+      "name": "daniel-perez.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f9a7621f64fcdae4.jpg",
+      "url": "https://inspiring.nk.studio/mouse/daniel-perez.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "26137725c0495021",
+      "kind": "image",
+      "name": "emiliano-tomas.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/26137725c0495021.jpg",
+      "url": "https://inspiring.nk.studio/mouse/emiliano-tomas.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "720bfab75db5917b",
+      "kind": "image",
+      "name": "dave-benton.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/720bfab75db5917b.jpg",
+      "url": "https://inspiring.nk.studio/mouse/dave-benton.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "ef2a7abe42bd4631",
+      "kind": "image",
+      "name": "fernando-vega-olmos.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ef2a7abe42bd4631.jpg",
+      "url": "https://inspiring.nk.studio/mouse/fernando-vega-olmos.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "7754cdc3675f4751",
+      "kind": "image",
+      "name": "gini-lustig.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/7754cdc3675f4751.jpg",
+      "url": "https://inspiring.nk.studio/mouse/gini-lustig.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "e123e1b7de401be4",
+      "kind": "image",
+      "name": "lucas-davison.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/e123e1b7de401be4.jpg",
+      "url": "https://inspiring.nk.studio/mouse/lucas-davison.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "ff6c69d231bb8cfd",
+      "kind": "image",
+      "name": "louis-paquet.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ff6c69d231bb8cfd.jpg",
+      "url": "https://inspiring.nk.studio/mouse/louis-paquet.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "2e677c4cc26a7d16",
+      "kind": "image",
+      "name": "liva-grinberga.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/2e677c4cc26a7d16.jpg",
+      "url": "https://inspiring.nk.studio/mouse/liva-grinberga.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "ec2ae4e2de97827e",
+      "kind": "image",
+      "name": "hernan-puente.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ec2ae4e2de97827e.jpg",
+      "url": "https://inspiring.nk.studio/mouse/hernan-puente.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "f92c156debf18c3f",
+      "kind": "image",
+      "name": "lucas-llorente.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f92c156debf18c3f.jpg",
+      "url": "https://inspiring.nk.studio/mouse/lucas-llorente.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "17464723a6f74617",
+      "kind": "image",
+      "name": "flor-y-gina.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/17464723a6f74617.jpg",
+      "url": "https://inspiring.nk.studio/mouse/flor-y-gina.jpg"
+    },
+    {
+      "contentType": "",
+      "id": "bb5919b89bf9f9c5",
+      "kind": "stylesheet",
+      "name": "0c69u_vijy9ly.css",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/bb5919b89bf9f9c5.css",
+      "url": "https://inspiring.nk.studio/_next/static/chunks/0c69u_vijy9ly.css?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "",
+      "id": "f0f401e93c9cb77d",
+      "kind": "stylesheet",
+      "name": "0wiou3vsd67bv.css",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f0f401e93c9cb77d.css",
+      "url": "https://inspiring.nk.studio/_next/static/chunks/0wiou3vsd67bv.css?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "a7da1db9d00ce33d",
+      "kind": "image",
+      "name": "luciana-capriotti.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a7da1db9d00ce33d.jpg",
+      "url": "https://inspiring.nk.studio/mouse/luciana-capriotti.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "ec9192f72deed8d5",
+      "kind": "image",
+      "name": "marcelo-sapoznik.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ec9192f72deed8d5.jpg",
+      "url": "https://inspiring.nk.studio/mouse/marcelo-sapoznik.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "ffe7f50d4cfee158",
+      "kind": "image",
+      "name": "lucia-aguilar.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ffe7f50d4cfee158.jpg",
+      "url": "https://inspiring.nk.studio/mouse/lucia-aguilar.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "a9d2c15f2f9ad9e4",
+      "kind": "image",
+      "name": "miguel-simon.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a9d2c15f2f9ad9e4.jpg",
+      "url": "https://inspiring.nk.studio/mouse/miguel-simon.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "71c505dffb7b1fcf",
+      "kind": "image",
+      "name": "nicolas-bouvet.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/71c505dffb7b1fcf.jpg",
+      "url": "https://inspiring.nk.studio/mouse/nicolas-bouvet.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "197b7dcfe0610f06",
+      "kind": "image",
+      "name": "paula-scher.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/197b7dcfe0610f06.jpg",
+      "url": "https://inspiring.nk.studio/mouse/paula-scher.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "be6400a7082d66b8",
+      "kind": "image",
+      "name": "matias-massaccesi.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/be6400a7082d66b8.jpg",
+      "url": "https://inspiring.nk.studio/mouse/matias-massaccesi.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "b6777904ef890a23",
+      "kind": "image",
+      "name": "new-patricia-pomies.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/b6777904ef890a23.jpg",
+      "url": "https://inspiring.nk.studio/mouse/new-patricia-pomies.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "f773fabab3305988",
+      "kind": "image",
+      "name": "natalia-martinez.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f773fabab3305988.jpg",
+      "url": "https://inspiring.nk.studio/mouse/natalia-martinez.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "01ca9ff7741241cd",
+      "kind": "image",
+      "name": "rafael-fremd.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/01ca9ff7741241cd.jpg",
+      "url": "https://inspiring.nk.studio/mouse/rafael-fremd.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "d98f6f3c852941d5",
+      "kind": "image",
+      "name": "ramon-mansilla.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/d98f6f3c852941d5.jpg",
+      "url": "https://inspiring.nk.studio/mouse/ramon-mansilla.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "13c544d9ca60ff11",
+      "kind": "image",
+      "name": "uros-mikic.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/13c544d9ca60ff11.jpg",
+      "url": "https://inspiring.nk.studio/mouse/uros-mikic.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "f24fdbc75a7e0833",
+      "kind": "image",
+      "name": "rob-ford.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f24fdbc75a7e0833.jpg",
+      "url": "https://inspiring.nk.studio/mouse/rob-ford.jpg"
+    },
+    {
+      "contentType": "image/png",
+      "id": "3409d67a0e28143d",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/3409d67a0e28143d",
+      "url": "https://inspiring.nk.studio/_next/image?url=%2FtestDetail%2Ftestface.png&w=256&q=75&dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "8e4727dc815b5292",
+      "kind": "image",
+      "name": "exit.svg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/8e4727dc815b5292.svg",
+      "url": "https://inspiring.nk.studio/icons/exit.svg?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "df19ef4ff3be3b46",
+      "kind": "image",
+      "name": "noise.svg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/df19ef4ff3be3b46.svg",
+      "url": "https://inspiring.nk.studio/images/home/noise.svg"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "cfffdff46626fc07",
+      "kind": "image",
+      "name": "arrow-right.svg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/cfffdff46626fc07.svg",
+      "url": "https://inspiring.nk.studio/icons/arrow-right.svg?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "478c2d84f50f7787",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/478c2d84f50f7787",
+      "url": "https://inspiring.nk.studio/_next/image?url=%2FtestDetail%2Ftestface.png&w=96&q=75&dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "fd3ab886edc4fe9f",
+      "kind": "image",
+      "name": "hamburger.svg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/fd3ab886edc4fe9f.svg",
+      "url": "https://inspiring.nk.studio/icons/hamburger.svg?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/png",
+      "id": "d391cee467de9e73",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/d391cee467de9e73",
+      "url": "https://inspiring.nk.studio/_next/image?url=%2Fhero%2Fcard-hover5-eng.png&w=128&q=75&dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/png",
+      "id": "0bfb3c81646d4152",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0bfb3c81646d4152",
+      "url": "https://inspiring.nk.studio/_next/image?url=%2Fhero%2Fcard-hover1-eng.png&w=128&q=75&dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/png",
+      "id": "72301fe58c4720ef",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/72301fe58c4720ef",
+      "url": "https://inspiring.nk.studio/_next/image?url=%2Fhero%2Fcard-hover2-eng.png&w=128&q=75&dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/png",
+      "id": "0ff6d21b56f92cb4",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0ff6d21b56f92cb4",
+      "url": "https://inspiring.nk.studio/_next/image?url=%2Fhero%2Fcard-hover3-eng.png&w=128&q=75&dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/png",
+      "id": "b8c4945bbd8598fc",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/b8c4945bbd8598fc",
+      "url": "https://inspiring.nk.studio/_next/image?url=%2Fhero%2Fcard-hover4-eng.png&w=128&q=75&dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/png",
+      "id": "5ad8093a265f74cb",
+      "kind": "image",
+      "name": "mm-imagen.png",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/5ad8093a265f74cb.png",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/mm-imagen.png"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "c0681761e2ea0f72",
+      "kind": "image",
+      "name": "Liva-Grinberga.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c0681761e2ea0f72.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Liva-Grinberga.gif"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "9c98e88623e1a5fd",
+      "kind": "image",
+      "name": "Fernando-Vega-Olmos.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/9c98e88623e1a5fd.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Fernando-Vega-Olmos.gif"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "af1427a2440b9dbe",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/af1427a2440b9dbe",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2F1770192905876.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "41315a8c0fe268fd",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/41315a8c0fe268fd",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Paz.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "c1b927002c9152c6",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c1b927002c9152c6",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Fernando-Vega-Olmos.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "180c6781a625fcd2",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/180c6781a625fcd2",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Wesley.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "247de3df05129044",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/247de3df05129044",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Matias.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "f99e0d201b180988",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f99e0d201b180988",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2F468485162_10161163085003435_4621827150046379770_n.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "502352c18105e1df",
+      "kind": "image",
+      "name": "Uros-Mikic.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/502352c18105e1df.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Uros-Mikic.gif"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "a1f7d3f887da8c39",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a1f7d3f887da8c39",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Uros%2520Mikic.png&w=32&q=75"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "2f8c216d6737ee77",
+      "kind": "image",
+      "name": "nk-logo-black.svg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/2f8c216d6737ee77.svg",
+      "url": "https://inspiring.nk.studio/logos/nk-logo-black.svg?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "text/css",
+      "id": "fc33e8db06ddb045",
+      "kind": "stylesheet",
+      "name": "0cwjjjs_znegf.css",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/fc33e8db06ddb045.css",
+      "url": "https://inspiring.nk.studio/_next/static/chunks/0cwjjjs_znegf.css?dpl=dpl_FZzNsVweQ4o5G2B2s3uTQxPz9CX5"
+    },
+    {
+      "contentType": "image/vnd.microsoft.icon",
+      "id": "b946de1421d1bc5d",
+      "kind": "image",
+      "name": "favicon.ico",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/b946de1421d1bc5d.ico",
+      "url": "https://inspiring.nk.studio/favicon.ico?favicon.127f05b1h3x.4.ico"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "0dd5ae555d7c281b",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0dd5ae555d7c281b",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Luciana-Capriotti.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "c6aba6aa27dd9f5b",
+      "kind": "image",
+      "name": "Awwwards%202015%20-%20El%20primero.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c6aba6aa27dd9f5b.jpg",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/Awwwards%202015%20-%20El%20primero.jpg"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "0b9ae87cfe958df1",
+      "kind": "image",
+      "name": "Hernan-Puente.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0b9ae87cfe958df1.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Hernan-Puente.gif"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "270298ae4df7d79a",
+      "kind": "image",
+      "name": "Lucas-davison.jpeg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/270298ae4df7d79a.jpeg",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/Lucas-davison.jpeg"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "f692399816799ebf",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f692399816799ebf",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Hernan-Puente.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "428f990d12299f4c",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/428f990d12299f4c",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Ale-Lazos.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "135485fbfc331a08",
+      "kind": "image",
+      "name": "LucasL.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/135485fbfc331a08.jpg",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/LucasL.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "c48fd7c3484d5679",
+      "kind": "image",
+      "name": "grupo%20baile.jpeg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c48fd7c3484d5679.jpeg",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/grupo%20baile.jpeg"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "bf684bce90f0a92d",
+      "kind": "image",
+      "name": "Alan-Buscaglia.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/bf684bce90f0a92d.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Alan-Buscaglia.gif"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "4a417dc05f58fd39",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/4a417dc05f58fd39",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Ramon.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "85e1ae4f36da00e9",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/85e1ae4f36da00e9",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Emiliano-Tomas.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "bbca20fe5dcc7f4b",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/bbca20fe5dcc7f4b",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Lucia-Aguilar.jpeg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "b2bce306c79a4c6f",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/b2bce306c79a4c6f",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Alan.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "86bf2312b8a36314",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/86bf2312b8a36314",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Lucas-Llorente.png&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "ea33acc3cf4e6d5f",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ea33acc3cf4e6d5f",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Lucas-Davison.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "5613e8d2e732aa4e",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/5613e8d2e732aa4e",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Nati.png&w=32&q=75"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "bf5ae7b26c0faa4b",
+      "kind": "image",
+      "name": "Gini-Lustig.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/bf5ae7b26c0faa4b.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Gini-Lustig.gif"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "fe1a4732819d8e3e",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/fe1a4732819d8e3e",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Gini-Lustig.png&w=32&q=75"
+    },
+    {
+      "contentType": "image/png",
+      "id": "ea60e7391db483b5",
+      "kind": "image",
+      "name": "lego_lucasarts0111a%20copy.png",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ea60e7391db483b5.png",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/lego_lucasarts0111a%20copy.png"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "a762f24da091129e",
+      "kind": "image",
+      "name": "Dave-Benton.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a762f24da091129e.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Dave-Benton.gif"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "4c13000c0760c4a2",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/4c13000c0760c4a2",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Nicolas-Bouvet.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "596461b7b0f89a6d",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/596461b7b0f89a6d",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Bianca-Dubinsky.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "72068f3e9f45e600",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/72068f3e9f45e600",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2FRob_Ford_nuevo.png&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "032a250d895c29de",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/032a250d895c29de",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2FFyG.png&w=32&q=75"
+    },
+    {
+      "contentType": "image/png",
+      "id": "7475026541e00ab5",
+      "kind": "image",
+      "name": "Rafa-cover.png",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/7475026541e00ab5.png",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/Rafa-cover.png"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "8e193ba8483dda02",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/8e193ba8483dda02",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Dave-Benton.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "3bb4cc9cb60899aa",
+      "kind": "image",
+      "name": "33120531030131.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/3bb4cc9cb60899aa.jpg",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/33120531030131.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "91f17af8d7bd88e8",
+      "kind": "image",
+      "name": "Foto%20Pxl.jpeg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/91f17af8d7bd88e8.jpeg",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/Foto%20Pxl.jpeg"
+    },
+    {
+      "contentType": "image/gif",
+      "id": "6d1b93d2d6141e51",
+      "kind": "image",
+      "name": "Marcelo-Sapoznik.gif",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/6d1b93d2d6141e51.gif",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/gif/Marcelo-Sapoznik.gif"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "c74ca97b604bb281",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c74ca97b604bb281",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Fernando-Barbella.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "a3ec232463887a44",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a3ec232463887a44",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Marcelo-Sapoznik.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "d721d209c479d1a7",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/d721d209c479d1a7",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Kaiser-Sosa.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "93e177a4c7434668",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/93e177a4c7434668",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Louis-Paquet.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "7287d55a8c1d260c",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/7287d55a8c1d260c",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Rafael-Fremd.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "773fd661ed9c1389",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/773fd661ed9c1389",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Paula-Scher.png&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "d44489fd6e7bc89b",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/d44489fd6e7bc89b",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Miguel-Simon.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "39a46c56fb466141",
+      "kind": "image",
+      "name": "awwwards-conferences-01.jpg",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/39a46c56fb466141.jpg",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/awwwards-conferences-01.jpg"
+    },
+    {
+      "contentType": "image/png",
+      "id": "fd76e1a4de66a527",
+      "kind": "image",
+      "name": "Belu-cover.png",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/fd76e1a4de66a527.png",
+      "url": "https://estudionkcdn.sfo3.cdn.digitaloceanspaces.com/20years/assets/Belu-cover.png"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "b8c889b80cff8aa5",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/b8c889b80cff8aa5",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Bel-Gonzalez.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "bf18a513f093c36f",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/bf18a513f093c36f",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2Favatar-Daniel-Perez-Pinazo.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "bba119fc971f14c7",
+      "kind": "image",
+      "name": "image",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/bba119fc971f14c7",
+      "url": "https://inspiring.nk.studio/_next/image?url=https%3A%2F%2Festudionkcdn.sfo3.cdn.digitaloceanspaces.com%2F20years%2Favatar%2FPatricia_Pomies_Avatar.jpg&w=32&q=75"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "5b0e46fe658c80b9",
+      "kind": "image",
+      "name": "svg-1",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/5b0e46fe658c80b9.svg",
+      "url": "inline-svg:5b0e46fe658c80b9"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "a4f5f530b2512c3b",
+      "kind": "image",
+      "name": "svg-2",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a4f5f530b2512c3b.svg",
+      "url": "inline-svg:a4f5f530b2512c3b"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "9065d86fc8afbd66",
+      "kind": "image",
+      "name": "svg-3",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/9065d86fc8afbd66.svg",
+      "url": "inline-svg:9065d86fc8afbd66"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "d607f5331dc50b99",
+      "kind": "image",
+      "name": "svg-4",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/d607f5331dc50b99.svg",
+      "url": "inline-svg:d607f5331dc50b99"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "a04b2f18c09894b0",
+      "kind": "image",
+      "name": "svg-5",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a04b2f18c09894b0.svg",
+      "url": "inline-svg:a04b2f18c09894b0"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "2f0b40c879d4abb5",
+      "kind": "image",
+      "name": "svg-6",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/2f0b40c879d4abb5.svg",
+      "url": "inline-svg:2f0b40c879d4abb5"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "0f915d7949272a47",
+      "kind": "image",
+      "name": "svg-7",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0f915d7949272a47.svg",
+      "url": "inline-svg:0f915d7949272a47"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "be9f7c607ea1b166",
+      "kind": "image",
+      "name": "svg-8",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/be9f7c607ea1b166.svg",
+      "url": "inline-svg:be9f7c607ea1b166"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "d8e5ffdc226c99fb",
+      "kind": "image",
+      "name": "svg-9",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/d8e5ffdc226c99fb.svg",
+      "url": "inline-svg:d8e5ffdc226c99fb"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "0414eeb1bc523e38",
+      "kind": "image",
+      "name": "svg-10",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0414eeb1bc523e38.svg",
+      "url": "inline-svg:0414eeb1bc523e38"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "c6795ee7d42ff3c1",
+      "kind": "image",
+      "name": "svg-11",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c6795ee7d42ff3c1.svg",
+      "url": "inline-svg:c6795ee7d42ff3c1"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "6af756ab6ab9b335",
+      "kind": "image",
+      "name": "svg-12",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/6af756ab6ab9b335.svg",
+      "url": "inline-svg:6af756ab6ab9b335"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "af76437dcaf42336",
+      "kind": "image",
+      "name": "svg-13",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/af76437dcaf42336.svg",
+      "url": "inline-svg:af76437dcaf42336"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "4546e5ec10b3083f",
+      "kind": "image",
+      "name": "svg-14",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/4546e5ec10b3083f.svg",
+      "url": "inline-svg:4546e5ec10b3083f"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "e2d1356d1e2a2004",
+      "kind": "image",
+      "name": "svg-15",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/e2d1356d1e2a2004.svg",
+      "url": "inline-svg:e2d1356d1e2a2004"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "4c0225277398fa19",
+      "kind": "image",
+      "name": "svg-16",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/4c0225277398fa19.svg",
+      "url": "inline-svg:4c0225277398fa19"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "7e0cd17884f1a39a",
+      "kind": "image",
+      "name": "svg-17",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/7e0cd17884f1a39a.svg",
+      "url": "inline-svg:7e0cd17884f1a39a"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "2244b401c25ef7c4",
+      "kind": "image",
+      "name": "svg-18",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/2244b401c25ef7c4.svg",
+      "url": "inline-svg:2244b401c25ef7c4"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "a7960f471bbca94d",
+      "kind": "image",
+      "name": "svg-19",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a7960f471bbca94d.svg",
+      "url": "inline-svg:a7960f471bbca94d"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "ad1631aef3a2ef65",
+      "kind": "image",
+      "name": "svg-20",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ad1631aef3a2ef65.svg",
+      "url": "inline-svg:ad1631aef3a2ef65"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "63e5b5917952863a",
+      "kind": "image",
+      "name": "svg-21",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/63e5b5917952863a.svg",
+      "url": "inline-svg:63e5b5917952863a"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "1eb2607f5c1b8d90",
+      "kind": "image",
+      "name": "svg-22",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/1eb2607f5c1b8d90.svg",
+      "url": "inline-svg:1eb2607f5c1b8d90"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "97f158db2021b2ae",
+      "kind": "image",
+      "name": "svg-23",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/97f158db2021b2ae.svg",
+      "url": "inline-svg:97f158db2021b2ae"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "e2d5e0441a02a78c",
+      "kind": "image",
+      "name": "svg-24",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/e2d5e0441a02a78c.svg",
+      "url": "inline-svg:e2d5e0441a02a78c"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "f0b6379550fe998c",
+      "kind": "image",
+      "name": "svg-25",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f0b6379550fe998c.svg",
+      "url": "inline-svg:f0b6379550fe998c"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "0a7e84b62a8f3e75",
+      "kind": "image",
+      "name": "svg-26",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0a7e84b62a8f3e75.svg",
+      "url": "inline-svg:0a7e84b62a8f3e75"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "652cc0b5b42a2226",
+      "kind": "image",
+      "name": "svg-27",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/652cc0b5b42a2226.svg",
+      "url": "inline-svg:652cc0b5b42a2226"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "27e9a5bca03d630b",
+      "kind": "image",
+      "name": "svg-28",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/27e9a5bca03d630b.svg",
+      "url": "inline-svg:27e9a5bca03d630b"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "7c1b000f9ec8ee6a",
+      "kind": "image",
+      "name": "svg-29",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/7c1b000f9ec8ee6a.svg",
+      "url": "inline-svg:7c1b000f9ec8ee6a"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "985f7a5615756ff6",
+      "kind": "image",
+      "name": "svg-30",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/985f7a5615756ff6.svg",
+      "url": "inline-svg:985f7a5615756ff6"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "c2a5f375857a48b4",
+      "kind": "image",
+      "name": "svg-31",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c2a5f375857a48b4.svg",
+      "url": "inline-svg:c2a5f375857a48b4"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "e9c21ba161e0ca70",
+      "kind": "image",
+      "name": "svg-32",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/e9c21ba161e0ca70.svg",
+      "url": "inline-svg:e9c21ba161e0ca70"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "909924c6507095b1",
+      "kind": "image",
+      "name": "svg-33",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/909924c6507095b1.svg",
+      "url": "inline-svg:909924c6507095b1"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "66b72ab09facf423",
+      "kind": "image",
+      "name": "svg-34",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/66b72ab09facf423.svg",
+      "url": "inline-svg:66b72ab09facf423"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "27cf0c1607a460e0",
+      "kind": "image",
+      "name": "svg-35",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/27cf0c1607a460e0.svg",
+      "url": "inline-svg:27cf0c1607a460e0"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "dcd1a705d6284143",
+      "kind": "image",
+      "name": "svg-36",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/dcd1a705d6284143.svg",
+      "url": "inline-svg:dcd1a705d6284143"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "ba7edc06abca6b76",
+      "kind": "image",
+      "name": "svg-37",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ba7edc06abca6b76.svg",
+      "url": "inline-svg:ba7edc06abca6b76"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "3b36fc823f1b8b4a",
+      "kind": "image",
+      "name": "svg-38",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/3b36fc823f1b8b4a.svg",
+      "url": "inline-svg:3b36fc823f1b8b4a"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "27a15bfebe716e25",
+      "kind": "image",
+      "name": "svg-39",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/27a15bfebe716e25.svg",
+      "url": "inline-svg:27a15bfebe716e25"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "a9003e78c3423274",
+      "kind": "image",
+      "name": "svg-40",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a9003e78c3423274.svg",
+      "url": "inline-svg:a9003e78c3423274"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "5d03248e5f279690",
+      "kind": "image",
+      "name": "svg-41",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/5d03248e5f279690.svg",
+      "url": "inline-svg:5d03248e5f279690"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "a2fe6e141656981b",
+      "kind": "image",
+      "name": "svg-42",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a2fe6e141656981b.svg",
+      "url": "inline-svg:a2fe6e141656981b"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "0cc3640fdae77e44",
+      "kind": "image",
+      "name": "svg-43",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/0cc3640fdae77e44.svg",
+      "url": "inline-svg:0cc3640fdae77e44"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "c0aeb49b2f8bf4cf",
+      "kind": "image",
+      "name": "svg-44",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c0aeb49b2f8bf4cf.svg",
+      "url": "inline-svg:c0aeb49b2f8bf4cf"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "028f4c3fd4ea2cef",
+      "kind": "image",
+      "name": "svg-45",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/028f4c3fd4ea2cef.svg",
+      "url": "inline-svg:028f4c3fd4ea2cef"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "1892ac9418ab0253",
+      "kind": "image",
+      "name": "svg-46",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/1892ac9418ab0253.svg",
+      "url": "inline-svg:1892ac9418ab0253"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "a2f2f77a69a49a14",
+      "kind": "image",
+      "name": "svg-47",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/a2f2f77a69a49a14.svg",
+      "url": "inline-svg:a2f2f77a69a49a14"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "12ab2ba290e1636d",
+      "kind": "image",
+      "name": "svg-48",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/12ab2ba290e1636d.svg",
+      "url": "inline-svg:12ab2ba290e1636d"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "8b5204089c63fcc8",
+      "kind": "image",
+      "name": "svg-49",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/8b5204089c63fcc8.svg",
+      "url": "inline-svg:8b5204089c63fcc8"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "c1f4868d3ae7ece5",
+      "kind": "image",
+      "name": "svg-50",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/c1f4868d3ae7ece5.svg",
+      "url": "inline-svg:c1f4868d3ae7ece5"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "ed47744a5b21e10d",
+      "kind": "image",
+      "name": "svg-51",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/ed47744a5b21e10d.svg",
+      "url": "inline-svg:ed47744a5b21e10d"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "9a66b3f8cf1fb48a",
+      "kind": "image",
+      "name": "svg-52",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/9a66b3f8cf1fb48a.svg",
+      "url": "inline-svg:9a66b3f8cf1fb48a"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "f86be051e9dab878",
+      "kind": "image",
+      "name": "svg-53",
+      "path": "/var/folders/zg/067pss8x4cx8tmjgqbhz4l5h0000gn/T/browser-use/assets/2351585b-d169-4996-9f2c-3c75d18c462a/f86be051e9dab878.svg",
+      "url": "inline-svg:f86be051e9dab878"
+    }
+  ],
+  "failures": []
+}

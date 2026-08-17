@@ -1,9 +1,9 @@
 ---
 import Hero from '../components/Hero.astro';
-import About from '../components/About.astro';
 import Services from '../components/Services.astro';
-import CaseGrid from '../components/CaseGrid.astro';
-import Vsyachina from '../components/Vsyachina.astro';
+import ProduxPortfolio from '../components/ProduxPortfolio.astro';
+import VsyachinaInfinite from '../components/VsyachinaInfinite.astro';
+import AboutCompact from '../components/AboutCompact.astro';
 import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
@@ -24,10 +24,10 @@ const organizationJsonLd = {
   jsonLd={organizationJsonLd}
 >
   <Hero />
-  <About />
+  <AboutCompact />
   <Services />
-  <CaseGrid />
-  <Vsyachina />
+  <ProduxPortfolio />
+  <VsyachinaInfinite />
   <Contacts />
   <Footer slot="footer" />
 </Base>

@@ -1,97 +1,976 @@
 <section class="contacts section" id="contacts" aria-labelledby="contacts-title">
-  <div class="container contacts-grid">
-    <div>
-      <span class="section-label">Связаться с нами</span>
-      <h2 class="display-title" id="contacts-title">Пишите, куда удобно.</h2>
-    </div>
+  <div class="container">
+    <div class="contacts-grid">
+      <!-- Left side: Cover (columns 1-8) -->
+      <div class="contacts-cover" id="contacts-cover">
+        <div class="contacts-cover-inner">
+          <div class="contacts-cover-header">
+            <h2 class="display-title" id="contacts-title">Нашли задачу,<br />похожую на вашу?</h2>
+          </div>
+          <p class="contacts-cover-lead">
+            Расскажите о задаче или заполните форму — ответим в течение нескольких часов и подготовим предложение.
+          </p>
+          <div class="contacts-cover-links">
+            <a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
+              <span class="contact-link-label">Telegram</span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a href="https://wa.me/77067436197" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
+              <span class="contact-link-label">WhatsApp</span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a href="mailto:hi@yapil.art" class="contact-link-pill">
+              <span class="contact-link-label">hi@yapil.art</span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
 
-    <ul class="contact-list">
-      <li>
-        <span>Telegram · отвечаем быстрее всего</span>
-        <a href="https://t.me/yakov_pil">@yakov_pil <span aria-hidden="true">↗</span></a>
-      </li>
-      <li>
-        <span>WhatsApp</span>
-        <a href="https://wa.me/77067436197">+7 (706) 743-61-97 <span aria-hidden="true">↗</span></a>
-      </li>
-      <li>
-        <span>Почта</span>
-        <a href="mailto:hi@yapil.art">hi@yapil.art <span aria-hidden="true">↗</span></a>
-      </li>
-    </ul>
+      <!-- Right side: Feedback Form (columns 9-12) -->
+      <div class="feedback-panel">
+        <div class="feedback-card">
+          <form class="feedback-form" id="contact-feedback-form" novalidate>
+            <!-- 1. Name -->
+            <div class="form-group">
+              <label class="form-label" for="client-name">
+                Имя <span class="required-star" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="client-name"
+                name="name"
+                class="form-control"
+                placeholder="Как к вам обращаться"
+                required
+                autocomplete="name"
+              />
+              <span class="field-error" id="name-error" aria-live="polite"></span>
+            </div>
+
+            <!-- 2. Phone with automatic mask -->
+            <div class="form-group">
+              <label class="form-label" for="client-phone">
+                Номер телефона <span class="required-star" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="tel"
+                id="client-phone"
+                name="phone"
+                class="form-control"
+                placeholder="+7 (___) ___-__-__"
+                required
+                autocomplete="tel"
+                inputmode="tel"
+              />
+              <span class="field-error" id="phone-error" aria-live="polite"></span>
+            </div>
+
+            <!-- 3. What interests you (Service Chips) -->
+            <div class="form-group">
+              <label class="form-label" id="services-label">Что вас интересует?</label>
+              <div class="service-chips" role="group" aria-labelledby="services-label">
+                <label class="chip">
+                  <input type="checkbox" name="services" value="Сайты" />
+                  <span class="chip-label">Сайты</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="services" value="Айдентика" />
+                  <span class="chip-label">Айдентика</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="services" value="Полиграфия" />
+                  <span class="chip-label">Полиграфия</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="services" value="SMM" />
+                  <span class="chip-label">SMM</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="services" value="Презентации" />
+                  <span class="chip-label">Презентации</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="services" value="Дизайн-поддержка" />
+                  <span class="chip-label">Поддержка</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 4. Message (About task) -->
+            <div class="form-group">
+              <label class="form-label" for="client-message">О задаче</label>
+              <textarea
+                id="client-message"
+                name="message"
+                class="form-control form-textarea"
+                rows="3"
+                placeholder="Кратко расскажите о вашей задаче, пожеланиях по срокам или приложите ссылки"
+              ></textarea>
+            </div>
+
+            <!-- 5. Consent Checkbox -->
+            <div class="consent-group">
+              <label class="form-consent" for="privacy-consent">
+                <input
+                  type="checkbox"
+                  name="privacy"
+                  id="privacy-consent"
+                  class="consent-checkbox"
+                  checked
+                  required
+                />
+                <span class="consent-custom-box" aria-hidden="true">
+                  <svg class="consent-check-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square">
+                    <polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline>
+                  </svg>
+                </span>
+                <span class="form-disclaimer">
+                  Нажимая «Отправить заявку», вы соглашаетесь с условиями <a href="/privacy" target="_blank" rel="noopener noreferrer">конфиденциальности</a>.
+                </span>
+              </label>
+              <span class="field-error" id="privacy-error" aria-live="polite"></span>
+            </div>
+
+            <!-- 6. Submit Button -->
+            <div class="form-actions">
+              <button type="submit" class="submit-button" id="submit-button">
+                <span class="btn-inner">
+                  <span class="btn-text">Отправить заявку</span>
+                  <span class="btn-icon" aria-hidden="true">→</span>
+                </span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Success State Overlay -->
+          <div class="form-success-state" id="form-success-message" aria-hidden="true">
+            <div class="success-icon-wrap">
+              <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h4 class="success-title">Заявка успешно отправлена!</h4>
+            <p class="success-text">
+              Спасибо за обращение. Мы изучим вашу задачу и ответим в ближайшее время.
+            </p>
+            <button type="button" class="reset-button" id="reset-form-btn">
+              <span class="reset-btn-inner">
+                <span class="reset-btn-text">Отправить ещё одну заявку</span>
+                <span class="reset-btn-icon" aria-hidden="true">↺</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<script>
+  function setupPhoneMask(phoneInput: HTMLInputElement) {
+    const formatPhone = () => {
+      const digits = phoneInput.value.replace(/\D/g, '');
+      if (!digits) {
+        phoneInput.value = '';
+        return;
+      }
+
+      let raw = digits;
+      if (raw.startsWith('8') || raw.startsWith('7')) {
+        raw = '7' + raw.slice(1);
+      } else {
+        raw = '7' + raw;
+      }
+
+      raw = raw.slice(0, 11);
+
+      let res = '+7';
+      if (raw.length > 1) {
+        res += ' (' + raw.slice(1, 4);
+      }
+      if (raw.length > 4) {
+        res += ') ' + raw.slice(4, 7);
+      }
+      if (raw.length > 7) {
+        res += '-' + raw.slice(7, 9);
+      }
+      if (raw.length > 9) {
+        res += '-' + raw.slice(9, 11);
+      }
+
+      phoneInput.value = res;
+    };
+
+    phoneInput.addEventListener('input', formatPhone);
+
+    phoneInput.addEventListener('focus', () => {
+      if (!phoneInput.value) {
+        phoneInput.value = '+7 (';
+      }
+    });
+
+    phoneInput.addEventListener('blur', () => {
+      if (phoneInput.value === '+7' || phoneInput.value === '+7 (' || phoneInput.value === '+7 ()') {
+        phoneInput.value = '';
+      }
+    });
+
+    phoneInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && phoneInput.value.length <= 4) {
+        phoneInput.value = '';
+      }
+    });
+  }
+
+  function initContactForm() {
+    const form = document.getElementById('contact-feedback-form') as HTMLFormElement | null;
+    const successState = document.getElementById('form-success-message');
+    const resetBtn = document.getElementById('reset-form-btn');
+    const nameInput = document.getElementById('client-name') as HTMLInputElement | null;
+    const phoneInput = document.getElementById('client-phone') as HTMLInputElement | null;
+    const privacyCheckbox = document.getElementById('privacy-consent') as HTMLInputElement | null;
+    const nameError = document.getElementById('name-error');
+    const phoneError = document.getElementById('phone-error');
+    const privacyError = document.getElementById('privacy-error');
+    const submitBtn = document.getElementById('submit-button');
+
+    if (!form || !successState || !resetBtn || !nameInput || !phoneInput) return;
+
+    setupPhoneMask(phoneInput);
+
+    function clearErrors() {
+      if (nameError) nameError.textContent = '';
+      if (phoneError) phoneError.textContent = '';
+      if (privacyError) privacyError.textContent = '';
+      nameInput?.classList.remove('has-error');
+      phoneInput?.classList.remove('has-error');
+      privacyCheckbox?.classList.remove('has-error');
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearErrors();
+
+      let hasError = false;
+      const nameVal = nameInput.value.trim();
+      const phoneVal = phoneInput.value.trim();
+      const phoneDigits = phoneVal.replace(/\D/g, '');
+
+      if (!nameVal) {
+        if (nameError) nameError.textContent = 'Пожалуйста, укажите имя';
+        nameInput.classList.add('has-error');
+        nameInput.focus();
+        hasError = true;
+      }
+
+      if (!phoneVal || phoneDigits.length < 11) {
+        if (phoneError) phoneError.textContent = 'Пожалуйста, укажите полный номер телефона';
+        phoneInput.classList.add('has-error');
+        if (!hasError) phoneInput.focus();
+        hasError = true;
+      }
+
+      if (privacyCheckbox && !privacyCheckbox.checked) {
+        if (privacyError) privacyError.textContent = 'Необходимо согласие с условиями';
+        privacyCheckbox.classList.add('has-error');
+        if (!hasError) privacyCheckbox.focus();
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'true');
+        const btnText = submitBtn.querySelector('.btn-text');
+        if (btnText) btnText.textContent = 'Отправка...';
+      }
+
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        phone: formData.get('phone'),
+        services: formData.getAll('services'),
+        message: formData.get('message'),
+        date: new Date().toISOString(),
+      };
+
+      try {
+        const stored = JSON.parse(localStorage.getItem('yapil_inquiries') || '[]');
+        stored.push(data);
+        localStorage.setItem('yapil_inquiries', JSON.stringify(stored));
+      } catch (err) {
+        // ignore localStorage errors
+      }
+
+      setTimeout(() => {
+        if (submitBtn) {
+          submitBtn.removeAttribute('disabled');
+          const btnText = submitBtn.querySelector('.btn-text');
+          if (btnText) btnText.textContent = 'Отправить заявку';
+        }
+        form.style.display = 'none';
+        successState.classList.add('is-visible');
+        successState.setAttribute('aria-hidden', 'false');
+      }, 400);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      form.reset();
+      clearErrors();
+      form.style.display = 'flex';
+      successState.classList.remove('is-visible');
+      successState.setAttribute('aria-hidden', 'true');
+    });
+
+    nameInput.addEventListener('input', () => {
+      if (nameInput.classList.contains('has-error') && nameInput.value.trim()) {
+        nameInput.classList.remove('has-error');
+        if (nameError) nameError.textContent = '';
+      }
+    });
+
+    phoneInput.addEventListener('input', () => {
+      const phoneDigits = phoneInput.value.replace(/\D/g, '');
+      if (phoneInput.classList.contains('has-error') && phoneDigits.length === 11) {
+        phoneInput.classList.remove('has-error');
+        if (phoneError) phoneError.textContent = '';
+      }
+    });
+
+    privacyCheckbox?.addEventListener('change', () => {
+      if (privacyCheckbox.checked) {
+        privacyCheckbox.classList.remove('has-error');
+        if (privacyError) privacyError.textContent = '';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initContactForm);
+  initContactForm();
+</script>
 
 <style>
   .contacts {
     position: relative;
-    overflow: clip;
-  }
-
-  .contacts::after {
-    position: absolute;
-    z-index: -1;
-    right: -8rem;
-    bottom: -12rem;
-    width: min(34rem, 70vw);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--accent-tint);
-    content: '';
+    padding-block: clamp(4rem, 7vw, 7.5rem);
+    color: var(--ink-primary);
+    background:
+      radial-gradient(ellipse 90% 70% at 50% 50%, rgba(253, 75, 50, 0.28) 0%, rgba(163, 42, 23, 0.18) 45%, transparent 75%),
+      linear-gradient(to bottom, #0b0b0c 0%, #1c0a07 25%, #4a1309 50%, #1c0a07 75%, #0b0b0c 100%);
   }
 
   .contacts-grid {
     display: grid;
-    gap: 2rem clamp(3rem, 8vw, 9rem);
+    gap: var(--grid-gap, clamp(0.75rem, 1.2vw, 1.5rem));
+    align-items: stretch;
   }
 
-  .display-title {
-    max-width: 12ch;
-    margin-bottom: 0;
-  }
-
-  .contact-list {
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid var(--ink-primary);
-    list-style: none;
-  }
-
-  .contact-list li {
-    display: grid;
-    gap: 0.35rem;
-    padding-block: 1.5rem;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .contact-list li > span {
-    color: var(--ink-muted);
-    font-size: 0.8rem;
-  }
-
-  .contact-list a {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.15rem, 3vw, 2rem);
-    font-weight: 700;
-    line-height: 1.1;
-    text-decoration: none;
-  }
-
-  .contact-list a span {
-    color: var(--accent-deep);
-  }
-
-  .contact-list a:hover {
-    color: var(--accent-deep);
-  }
-
-  @media (min-width: 48rem) {
+  @media (min-width: 58rem) {
     .contacts-grid {
-      grid-template-columns: minmax(0, 0.8fr) minmax(24rem, 1fr);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .contacts-cover {
+      grid-column: 1 / span 8;
+    }
+
+    .feedback-panel {
+      grid-column: 9 / span 4;
+    }
+  }
+
+  /* Left Cover (cols 1-8) */
+  .contacts-cover {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: clamp(24rem, 38vw, 36rem);
+    padding: clamp(2rem, 4vw, 3.5rem);
+    background: #0B0B0C;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+                opacity var(--duration-pushback, 1575ms) ease;
+    transform-origin: left center;
+  }
+
+  /* Inverse Parallax on cover when hovering submit button */
+  .contacts-grid:has(.submit-button:hover:not(:disabled)) .contacts-cover,
+  .contacts-grid:has(.submit-button:focus-visible:not(:disabled)) .contacts-cover {
+    transform: scale(0.99) translateY(-2px);
+    opacity: 0.92;
+  }
+
+  .contacts-cover-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 2rem;
+  }
+
+  .contacts-cover-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contacts-cover .display-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4.5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: #FFFFFF;
+  }
+
+  .contacts-cover-lead {
+    margin: 0;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1.3;
+    color: #A0A0A0;
+    max-width: 32rem;
+  }
+
+  .contacts-cover-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem clamp(0.65rem, 1.2vw, 1rem);
+    margin-top: auto;
+    padding-top: 1.5rem;
+  }
+
+  .contact-link-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.15rem;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .contact-link-pill:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: #FFFFFF;
+    transform: translateY(-2px);
+  }
+
+  .contact-link-arrow {
+    color: var(--accent);
+    font-size: 0.95rem;
+    transition: transform 0.2s ease;
+  }
+
+  .contact-link-pill:hover .contact-link-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  /* Feedback Form Card (Light background, cols 9-12) */
+  .feedback-panel {
+    position: relative;
+    perspective: 1000px;
+    width: 100%;
+    display: flex;
+    container-type: inline-size;
+  }
+
+  .feedback-card {
+    position: relative;
+    background: #FFFFFF;
+    color: #1D1D1D;
+    padding: clamp(1.5rem, 2.5vw, 2.25rem);
+    border: 1px solid var(--ink-primary);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.12);
+    transform-style: preserve-3d;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .form-group,
+  .form-row,
+  .consent-group,
+  .form-disclaimer {
+    transform-origin: center center;
+    transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+                opacity var(--duration-pushback, 1575ms) ease;
+  }
+
+  .feedback-card:has(.submit-button:hover:not(:disabled)) .form-group,
+  .feedback-card:has(.submit-button:hover:not(:disabled)) .form-row,
+  .feedback-card:has(.submit-button:hover:not(:disabled)) .consent-group,
+  .feedback-card:has(.submit-button:focus-visible:not(:disabled)) .form-group,
+  .feedback-card:has(.submit-button:focus-visible:not(:disabled)) .form-row,
+  .feedback-card:has(.submit-button:focus-visible:not(:disabled)) .consent-group {
+    transform: scale(0.988) translateY(-1px);
+    opacity: 0.92;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-row {
+    display: grid;
+    gap: 1.15rem;
+    grid-template-columns: 1fr;
+  }
+
+  @container (min-width: 28rem) {
+    .form-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink-primary);
+  }
+
+  .required-star {
+    color: var(--accent);
+  }
+
+  /* Chips */
+  .service-chips {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  @container (max-width: 22rem) {
+    .service-chips {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .chip {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    width: 100%;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ink-primary);
+    background: #F6F4F2;
+    border: 1px solid #E2DED9;
+    transition: all 0.15s ease;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .chip:hover .chip-label {
+    border-color: var(--ink-primary);
+    background: #EDEAE6;
+  }
+
+  .chip input:checked + .chip-label {
+    background: var(--ink-primary);
+    color: #FFFFFF;
+    border-color: var(--ink-primary);
+  }
+
+  .chip input:focus-visible + .chip-label {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Input fields */
+  .form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink-primary);
+    background: #FFFFFF;
+    border: 1px solid #D5D2CE;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .form-control::placeholder {
+    color: #A09D98;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .form-control.has-error {
+    border-color: #DC2626;
+    background: #FFFBFB;
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 5.5rem;
+    line-height: 1.45;
+  }
+
+  .field-error {
+    font-size: 0.78rem;
+    color: #DC2626;
+    min-height: 1rem;
+  }
+
+  /* Form actions */
+  .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  /* 2. Submit Button Container Scaling & Elastic Spring Easing */
+  .submit-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.05rem 2.2rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    background: var(--ink-primary);
+    border: 1px solid var(--ink-primary);
+    cursor: pointer;
+    transform-origin: center center;
+    will-change: transform, box-shadow, background;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      background var(--duration-btn-color, 770ms) ease,
+      border-color var(--duration-btn-color, 770ms) ease,
+      box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .submit-button:hover:not(:disabled),
+  .submit-button:focus-visible:not(:disabled) {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.055) translateY(-2px);
+    box-shadow: 0 14px 28px -6px rgba(253, 75, 50, 0.36), 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .submit-button:active:not(:disabled) {
+    transform: scale(0.99) translateY(0);
+    transition-duration: 90ms;
+  }
+
+  .submit-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* 3. Independent Inner Text & Icon Scaling (Layer Separation & Stretch/Stagger) */
+  .btn-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    pointer-events: none;
+  }
+
+  .btn-text {
+    display: inline-block;
+    letter-spacing: -0.01em;
+    transform-origin: center center;
+    will-change: transform, letter-spacing;
+    transition:
+      transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+      letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
+  }
+
+  .btn-icon {
+    display: inline-block;
+    font-size: 1.15rem;
+    line-height: 1;
+    will-change: transform;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
+  }
+
+  .submit-button:hover:not(:disabled) .btn-text,
+  .submit-button:focus-visible:not(:disabled) .btn-text {
+    transform: scale(1.045) scaleX(1.02);
+    letter-spacing: 0.025em;
+  }
+
+  .submit-button:hover:not(:disabled) .btn-icon,
+  .submit-button:focus-visible:not(:disabled) .btn-icon {
+    transform: translateX(6px) scale(1.12);
+  }
+
+  /* Consent Checkbox & Legal Disclaimer */
+  .consent-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .form-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .consent-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .consent-custom-box {
+    position: relative;
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+    margin-top: 0.12rem;
+    background: #FFFFFF;
+    border: 1px solid #D5D2CE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .form-consent:hover .consent-custom-box {
+    border-color: var(--ink-primary);
+  }
+
+  .consent-checkbox:checked + .consent-custom-box {
+    background: var(--ink-primary);
+    border-color: var(--ink-primary);
+  }
+
+  .consent-check-icon {
+    width: 0.72rem;
+    height: 0.72rem;
+    color: #FFFFFF;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.15s ease, transform 0.15s var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .consent-checkbox:checked + .consent-custom-box .consent-check-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .consent-checkbox:focus-visible + .consent-custom-box {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .consent-checkbox.has-error + .consent-custom-box {
+    border-color: #DC2626;
+    background: #FFFBFB;
+  }
+
+  .form-disclaimer {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: var(--ink-muted);
+  }
+
+  .form-disclaimer a {
+    color: var(--accent-deep);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .form-disclaimer a:hover {
+    color: var(--accent);
+  }
+
+  /* Success State */
+  .form-success-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: clamp(2rem, 5vw, 3.5rem) 1rem;
+    gap: 1.25rem;
+  }
+
+  .form-success-state.is-visible {
+    display: flex;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .success-icon-wrap {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    color: #059669;
+  }
+
+  .success-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .success-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    line-height: 1;
+    color: var(--ink-primary);
+  }
+
+  .success-text {
+    margin: 0;
+    max-width: 28rem;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: var(--ink-muted);
+  }
+
+  /* Reset Button Micro-interactions */
+  .reset-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.75rem;
+    padding: 0.85rem 1.75rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink-primary);
+    background: #F6F4F2;
+    border: 1px solid #D5D2CE;
+    cursor: pointer;
+    transform-origin: center center;
+    will-change: transform, box-shadow, background;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      background var(--duration-btn-color, 770ms) ease,
+      border-color var(--duration-btn-color, 770ms) ease,
+      box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .reset-button:hover,
+  .reset-button:focus-visible {
+    background: #EDEAE6;
+    border-color: var(--ink-primary);
+    transform: scale(1.04) translateY(-1px);
+    box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  .reset-button:active {
+    transform: scale(0.99);
+    transition-duration: 90ms;
+  }
+
+  .reset-btn-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    pointer-events: none;
+  }
+
+  .reset-btn-text {
+    display: inline-block;
+    will-change: transform, letter-spacing;
+    transition:
+      transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+      letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
+  }
+
+  .reset-btn-icon {
+    display: inline-block;
+    font-size: 1rem;
+    will-change: transform;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
+  }
+
+  .reset-button:hover .reset-btn-text,
+  .reset-button:focus-visible .reset-btn-text {
+    transform: scale(1.03);
+    letter-spacing: 0.02em;
+  }
+
+  .reset-button:hover .reset-btn-icon,
+  .reset-button:focus-visible .reset-btn-icon {
+    transform: rotate(-45deg) scale(1.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contacts-header,
+    .contacts-cover,
+    .form-group,
+    .form-row,
+    .submit-button,
+    .btn-text,
+    .btn-icon,
+    .reset-button,
+    .reset-btn-text,
+    .reset-btn-icon {
+      transform: none !important;
+      transition: none !important;
     }
   }
 </style>

@@ -11,10 +11,27 @@
   --border-subtle: #E6E6E6;
 
   --font-body: 'Inter Tight Variable', 'Arial Narrow', sans-serif;
-  --font-display: var(--font-body);
+  --font-display: 'Oranienbaum', Georgia, serif;
   --font-accent: var(--font-body);
 
-  --text-hero: clamp(2.5rem, 6vw + 1rem, 5rem);
-  --text-h2: clamp(1.75rem, 3vw + 1rem, 2.75rem);
-  --text-body: clamp(0.95rem, 0.2vw + 0.9rem, 1.05rem);
+  --container-max: 88rem;
+  --container-inline-space: 2rem;
+  --grid-gap: clamp(0.5rem, 0.75vw, 0.75rem);
+
+  --text-hero: clamp(3rem, 7vw + 1rem, 5.5rem);
+  --text-h2: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  --text-body: clamp(1rem, 0.2vw + 0.95rem, 1.05rem);
+
+  /* Micro-interaction & Button Physics (Scaled 3.5x for ultra-smooth cinema feel) */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-elastic: cubic-bezier(0.16, 1, 0.3, 1.12);
+  --ease-text-stagger: cubic-bezier(0.16, 1, 0.3, 1.18);
+  --ease-pushback: cubic-bezier(0.2, 0.9, 0.3, 1);
+
+  --duration-btn: 1330ms;
+  --duration-btn-text: 910ms;
+  --duration-pushback: 1575ms;
+  --duration-btn-color: 770ms;
+  --delay-btn-text: 90ms;
+  --delay-btn-icon: 140ms;
 }

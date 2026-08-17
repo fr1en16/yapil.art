@@ -1,7 +1,19 @@
-<header class="site-header">
-  <div class="container nav-row">
-    <a class="brand" href="/" aria-label="Yapil — на главную">Yapil</a>
-    <nav aria-label="Основная навигация">
+---
+import Logo from './Logo.astro';
+
+interface Props {
+  overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props;
+---
+
+<header class:list={['site-header', { overlay }]} data-site-header>
+  <div class="container nav-row" data-nav-row>
+    <a class="brand" href="/" aria-label="Yapil — на главную" data-nav-brand>
+      <Logo class="brand-logo" data-nav-logo />
+    </a>
+    <nav aria-label="Основная навигация" data-nav-links>
       <a href="/#services">Услуги</a>
       <a href="/#cases">Кейсы</a>
       <a href="/#contacts">Связаться с нами</a>
@@ -9,12 +21,178 @@
   </div>
 </header>
 
+<script>
+  function initHeaderAndLogoTransition() {
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const navBrand = document.querySelector<HTMLElement>('[data-nav-brand]');
+    const navLinks = document.querySelector<HTMLElement>('[data-nav-links]');
+    const footerTarget = document.querySelector<HTMLElement>('[data-footer-logo-target]');
+
+    if (!header || !navBrand) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ticking = false;
+
+    // Cache origin rect (when header is in natural untransformed position at top)
+    let originRect: DOMRect | null = null;
+
+    function measureOrigin() {
+      const prevTransform = navBrand!.style.transform;
+      navBrand!.style.transform = 'none';
+      originRect = navBrand!.getBoundingClientRect();
+      navBrand!.style.transform = prevTransform;
+    }
+
+    measureOrigin();
+
+    function update() {
+      const currentScrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      const maxScroll = Math.max(0, docHeight - winHeight);
+
+      // 1. Calculate footer transition progress (p in [0, 1])
+      let p = 0;
+      let rawP = 0;
+      if (footerTarget && maxScroll > 100 && !reduceMotion) {
+        const distanceToBottom = maxScroll - currentScrollY;
+        const transitionRange = Math.min(winHeight * 0.85, 650);
+
+        if (distanceToBottom <= transitionRange) {
+          rawP = Math.max(0, Math.min(1, 1 - distanceToBottom / transitionRange));
+          // Cubic ease-in-out curve
+          p = rawP < 0.5
+            ? 4 * rawP * rawP * rawP
+            : 1 - Math.pow(-2 * rawP + 2, 3) / 2;
+        }
+      }
+
+      // Header is ALWAYS visible: toggle at-top vs is-scrolled
+      if (currentScrollY <= 20) {
+        header!.classList.add('at-top');
+        header!.classList.remove('is-scrolled');
+      } else {
+        header!.classList.remove('at-top');
+        header!.classList.add('is-scrolled');
+      }
+
+      // 2. Footer Docking vs Normal Header behavior
+      if (p > 0 && footerTarget && originRect) {
+        header!.classList.add('in-footer-transition');
+
+        // Current real-time target bounding box
+        const targetRect = footerTarget.getBoundingClientRect();
+        const originWidth = originRect.width || 1;
+        const scale = targetRect.width / originWidth;
+
+        const originLeft = originRect.left;
+        const originTop = originRect.top;
+        const targetLeft = targetRect.left;
+        const targetTop = targetRect.top;
+
+        const currentDx = (targetLeft - originLeft) * p;
+        const currentDy = (targetTop - originTop) * p;
+        const currentScale = 1 + (scale - 1) * p;
+
+        navBrand!.style.transform = `translate3d(${currentDx}px, ${currentDy}px, 0) scale(${currentScale})`;
+        navBrand!.style.transformOrigin = 'top left';
+
+        if (navLinks) {
+          navLinks.style.opacity = `${Math.max(0, 1 - rawP * 2.5)}`;
+          navLinks.style.pointerEvents = rawP > 0.35 ? 'none' : '';
+        }
+      } else {
+        // Normal navbar state
+        header!.classList.remove('in-footer-transition');
+        navBrand!.style.transform = '';
+        if (navLinks) {
+          navLinks.style.opacity = '';
+          navLinks.style.pointerEvents = '';
+        }
+      }
+
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      measureOrigin();
+      update();
+    }, { passive: true });
+
+    // Initial update
+    update();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeaderAndLogoTransition);
+  } else {
+    initHeaderAndLogoTransition();
+  }
+
+  // Support Astro view transitions / page swaps if present
+  document.addEventListener('astro:page-load', initHeaderAndLogoTransition);
+</script>
+
 <style>
   .site-header {
-    position: relative;
-    z-index: 10;
-    padding-block: 1rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--border-subtle), transparent 25%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 50;
+    padding-block: 1.1rem;
+    color: #fff;
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      backdrop-filter 0.25s ease;
+    overflow: visible;
+  }
+
+  /* When at top of page */
+  .site-header.at-top.overlay {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom-color: transparent;
+  }
+
+  .site-header.at-top:not(.overlay) {
+    background: rgba(18, 18, 18, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* When scrolled down - always visible with frosted glass */
+  .site-header.is-scrolled {
+    background: rgba(18, 18, 18, 0.78);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* When transitioning into footer */
+  .site-header.in-footer-transition {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom-color: transparent !important;
+    pointer-events: none;
+  }
+
+  .site-header.in-footer-transition .brand {
+    pointer-events: auto;
   }
 
   .nav-row {
@@ -22,14 +200,27 @@
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
+    position: relative;
   }
 
   .brand {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: -0.06em;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
+    transform-origin: top left;
+    will-change: transform;
+    z-index: 60;
+    color: #fff;
+  }
+
+  .brand :global(.brand-logo),
+  .brand :global(svg) {
+    height: clamp(1.4rem, 2.2vw, 1.75rem);
+    width: auto;
+    display: block;
+    object-fit: contain;
+    color: #fff;
+    fill: currentColor;
   }
 
   nav {
@@ -37,20 +228,32 @@
     align-items: center;
     justify-content: flex-end;
     gap: clamp(0.8rem, 3vw, 2.5rem);
+    transition: opacity 0.25s ease;
   }
 
   nav a {
     font-size: clamp(0.75rem, 1.6vw, 0.95rem);
     text-decoration: none;
+    color: #fff;
+    transition: color 0.2s ease;
   }
 
   nav a:hover {
-    color: var(--accent-deep);
+    color: #82f2c9;
   }
 
   @media (max-width: 34rem) {
     nav a:first-child {
       display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .brand,
+    nav {
+      transition: none !important;
+      transform: none !important;
     }
   }
 </style>

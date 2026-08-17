@@ -4,185 +4,246 @@ const cards = [
     number: '01',
     title: '8 лет в дизайне',
     text: 'Ведём проекты в инфобизнесе и в корпоративном секторе. Лендинг для трейдера и полиграфия для сети стрит-фуда требуют разного, мы умеем и то, и другое.',
+    image: '/about/experience.webp',
+    alt: 'Стопка проектных листов и чертёжный циркуль',
   },
   {
     number: '02',
     title: 'Полный цикл',
     text: 'Один проект ведёт один дизайнер: от первой концепции до финальной правки в типографии. Ничего не отдаём на аутсорс.',
+    image: '/about/full-cycle.webp',
+    alt: 'Единая система, соединяющая дизайн, сайт, упаковку и печать',
   },
   {
     number: '03',
     title: 'Опыт агентства',
     text: 'Яков — сооснователь и ключевой дизайнер thepeak.kz. Оттуда мы принесли процессы, которые держат сроки на больших проектах.',
+    image: '/about/agency-process.webp',
+    alt: 'Проектные экраны, механизм и контрольная точка процесса',
   },
   {
     number: '04',
     title: 'Три направления в одних руках',
     text: 'Бренд, сайт и печать делает одна команда, поэтому логотип не разъезжается с сайтом, а сайт — с буклетом.',
+    image: '/about/three-directions.webp',
+    alt: 'Айдентика, веб-дизайн и полиграфия, соединённые в одну систему',
   },
 ];
 ---
 
 <section class="about section" id="about" aria-labelledby="about-title">
   <div class="container">
-    <span class="section-label">О студии</span>
-    <div class="about-intro">
-      <h2 class="display-title" id="about-title">Работаем с 2018 года</h2>
-      <p>
-        Собирали визуальные системы для LUKOIL, Cadillac, PUMA, Dodo Pizza, FAW, УАЗ и Gippo,
-        а до этого выпустили бренды с нуля для Kenfasad, Boya и Compass.
-      </p>
-    </div>
+    <header class="about-header">
+      <div class="about-heading">
+        <span class="section-label">Студия</span>
+        <h2 id="about-title">О студии</h2>
+      </div>
+      <div class="about-intro">
+        <p class="about-lead">
+          Собирали визуальные системы для LUKOIL, Cadillac, PUMA, Dodo Pizza, FAW, УАЗ и Gippo,
+          а до этого выпустили бренды с нуля для Kenfasad, Boya и Compass.
+        </p>
+        <p class="about-since"><span>Работаем</span><strong>с 2018 года</strong></p>
+      </div>
+    </header>
 
     <ol class="about-cards">
       {cards.map((card) => (
         <li>
-          <span class="card-number" aria-hidden="true">{card.number}</span>
-          <h3>{card.title}</h3>
-          <p>{card.text}</p>
+          <div class="card-visual">
+            <img src={card.image} alt={card.alt} width="900" height="900" loading="lazy" />
+          </div>
+          <div class="card-copy">
+            <h3>{card.title}</h3>
+            <p>{card.text}</p>
+          </div>
         </li>
       ))}
     </ol>
-
-    <div class="directions" aria-labelledby="directions-title">
-      <p id="directions-title">Что делаем</p>
-      <ul>
-        <li>Айдентика</li>
-        <li>Сайты</li>
-        <li>Полиграфия</li>
-      </ul>
-    </div>
   </div>
 </section>
 
 <style>
   .about {
+    overflow: hidden;
     color: white;
     background: var(--ink-primary);
   }
 
+  .about-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid #343434;
+  }
+
+  .about-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    min-width: 0;
+  }
+
+  .about-heading h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 6.5vw, 6rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.065em;
+  }
+
   .about .section-label {
+    margin: 0;
     color: var(--accent-tint);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .about-intro {
     display: grid;
-    gap: 1rem;
-    margin-bottom: clamp(3rem, 7vw, 6rem);
+    align-content: space-between;
+    gap: clamp(1.75rem, 3vw, 2.5rem);
+    min-width: 0;
   }
 
-  .about-intro .display-title {
-    margin-bottom: 0;
-    color: white;
-  }
-
-  .about-intro > p {
-    max-width: 45rem;
+  .about-lead {
     margin: 0;
     color: #c9c9c9;
-    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    font-size: clamp(1.05rem, 1.55vw, 1.35rem);
+    line-height: 1.42;
+  }
+
+  .about-since {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.8rem;
+    margin: 0;
+    color: #8e8e8e;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .about-since strong {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
 
   .about-cards {
     display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gap, clamp(0.5rem, 0.75vw, 0.75rem));
     margin: 0;
     padding: 0;
-    border-top: 1px solid #444;
     list-style: none;
   }
 
   .about-cards li {
-    display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr);
-    gap: 0.5rem 1rem;
-    padding-block: 1.8rem;
-    border-bottom: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid #343434;
+    background: #141414;
+    transition: border-color 0.25s ease;
   }
 
-  .card-number {
-    grid-row: 1 / span 2;
-    color: var(--accent-tint);
-    font-family: var(--font-display);
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
+  .about-cards li:hover {
+    border-color: #555555;
+  }
+
+  .card-visual {
+    position: relative;
+    display: grid;
+    min-height: clamp(18rem, 22vw, 22rem);
+    place-items: center;
+    overflow: hidden;
+    background-image: url('/about/dot-grid.webp');
+    background-repeat: repeat;
+    background-size: 26rem;
+  }
+
+  .card-visual::after {
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: #343434;
+    content: '';
+  }
+
+  .card-visual img {
+    position: relative;
+    z-index: 1;
+    width: min(72%, 18rem);
+    height: auto;
+    mix-blend-mode: screen;
+    transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .about-cards li:hover .card-visual img {
+    transform: translateY(-0.6rem) scale(1.025);
+  }
+
+  .card-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    flex: 1;
+    padding: clamp(1.25rem, 1.8vw, 1.75rem);
   }
 
   h3 {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(1.2rem, 2.4vw, 1.75rem);
-    line-height: 1.15;
+    font-size: clamp(1.45rem, 2.35vw, 2rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.035em;
   }
 
   .about-cards p {
-    max-width: 40rem;
     margin: 0;
     color: #bdbdbd;
-  }
-
-  .directions {
-    display: grid;
-    gap: 1.5rem;
-    margin-top: clamp(4rem, 8vw, 8rem);
-    padding: clamp(1.5rem, 4vw, 3rem);
-    color: var(--ink-primary);
-    background: var(--accent-tint);
-  }
-
-  .directions > p {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .directions ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .directions li {
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 5vw, 4rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.05em;
-  }
-
-  .directions li:not(:last-child)::after {
-    margin-left: 1.5rem;
-    color: var(--accent-deep);
-    content: '×';
+    font-size: 1rem;
+    line-height: 1.48;
   }
 
   @media (min-width: 48rem) {
+    .about-header {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--grid-gap, clamp(0.5rem, 0.75vw, 0.75rem));
+      align-items: start;
+    }
+
+    .about-heading {
+      grid-column: 1 / span 6;
+    }
+
     .about-intro {
-      grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.8fr);
-      align-items: end;
+      grid-column: 7 / span 6;
     }
 
     .about-cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(12, minmax(0, 1fr));
     }
 
-    .about-cards li:nth-child(odd) {
-      padding-right: clamp(2rem, 5vw, 5rem);
-      border-right: 1px solid #444;
+    .about-cards li {
+      grid-column: span 6;
     }
+  }
 
-    .about-cards li:nth-child(even) {
-      padding-left: clamp(2rem, 5vw, 5rem);
-    }
-
-    .directions {
-      grid-template-columns: 10rem 1fr;
-      align-items: start;
+  @media (min-width: 75rem) {
+    .about-cards li {
+      grid-column: span 3;
     }
   }
 </style>

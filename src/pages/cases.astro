@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import CaseGrid from '../components/CaseGrid.astro';
+import Footer from '../components/Footer.astro';
+
+const casesJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Все кейсы Yapil',
+  url: 'https://yapil.art/cases',
+};
+---
+
+<Base
+  title="Все кейсы"
+  description="Сайты, айдентика, полиграфия и другие проекты дизайн-студии Yapil."
+  jsonLd={casesJsonLd}
+>
+  <CaseGrid />
+  <Footer slot="footer" />
+</Base>

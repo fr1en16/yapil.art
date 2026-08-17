@@ -5,9 +5,16 @@ import Base from '../layouts/Base.astro';
 
 <Base title="Страница не найдена" description="Запрошенная страница не найдена.">
   <section class="not-found container">
-    <p aria-hidden="true">404</p>
-    <h1>Страница не найдена</h1>
-    <a href="/">Вернуться на главную</a>
+    <div class="not-found-text">
+      <p aria-hidden="true" class="not-found-num">404</p>
+      <h1 class="not-found-title">Страница не найдена</h1>
+    </div>
+    <a href="/" class="not-found-btn">
+      <span class="not-found-btn-inner">
+        <span class="not-found-btn-arrow" aria-hidden="true">←</span>
+        <span class="not-found-btn-text">Вернуться на главную</span>
+      </span>
+    </a>
   </section>
   <Footer slot="footer" />
 </Base>
@@ -21,7 +28,20 @@ import Base from '../layouts/Base.astro';
     padding-block: 4rem;
   }
 
-  .not-found p {
+  .not-found-text {
+    transform-origin: left center;
+    transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+                opacity var(--duration-pushback, 1575ms) ease;
+  }
+
+  /* 1. Inverse Parallax (Push-back) of 404 number & title when hovering button */
+  .not-found:has(.not-found-btn:hover) .not-found-text,
+  .not-found:has(.not-found-btn:focus-visible) .not-found-text {
+    transform: scale(0.97) translateY(-4px);
+    opacity: 0.82;
+  }
+
+  .not-found-num {
     margin-bottom: 0;
     color: var(--accent-deep);
     font-family: var(--font-display);
@@ -31,13 +51,88 @@ import Base from '../layouts/Base.astro';
     letter-spacing: -0.1em;
   }
 
-  h1 {
+  .not-found-title {
     margin-block: 2rem;
     font-family: var(--font-display);
     font-size: var(--text-h2);
+    line-height: 1;
   }
 
-  a {
-    color: var(--accent-deep);
+  /* 2. Button Container Scaling with Spring Easing */
+  .not-found-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.9rem 1.8rem;
+    color: #FFFFFF;
+    background: var(--ink-primary);
+    border: 1px solid var(--ink-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transform-origin: left center;
+    will-change: transform, background-color, box-shadow;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      background-color var(--duration-btn-color, 770ms) ease,
+      border-color var(--duration-btn-color, 770ms) ease,
+      box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .not-found-btn:hover,
+  .not-found-btn:focus-visible {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.055) translateY(-2px);
+    box-shadow: 0 12px 28px -6px rgba(253, 75, 50, 0.35);
+  }
+
+  .not-found-btn:active {
+    transform: scale(0.99);
+    transition-duration: 90ms;
+  }
+
+  /* 3. Independent Inner Text & Arrow Scaling */
+  .not-found-btn-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    pointer-events: none;
+  }
+
+  .not-found-btn-text {
+    display: inline-block;
+    will-change: transform, letter-spacing;
+    transition:
+      transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+      letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
+  }
+
+  .not-found-btn-arrow {
+    display: inline-block;
+    font-size: 1.1rem;
+    line-height: 1;
+    will-change: transform;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
+  }
+
+  .not-found-btn:hover .not-found-btn-text,
+  .not-found-btn:focus-visible .not-found-btn-text {
+    transform: scale(1.04);
+    letter-spacing: 0.025em;
+  }
+
+  .not-found-btn:hover .not-found-btn-arrow,
+  .not-found-btn:focus-visible .not-found-btn-arrow {
+    transform: translateX(-4px) scale(1.15);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .not-found-text,
+    .not-found-btn,
+    .not-found-btn-text,
+    .not-found-btn-arrow {
+      transform: none !important;
+      transition: none !important;
+    }
   }
 </style>

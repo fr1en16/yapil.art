@@ -1,88 +1,209 @@
-<footer class="site-footer">
-  <div class="container footer-top">
-    <a class="footer-brand" href="/">Yapil</a>
-    <nav aria-label="Навигация в подвале">
-      <a href="/#about">О студии</a>
-      <a href="/#services">Услуги</a>
-      <a href="/#cases">Кейсы</a>
-      <a href="/#contacts">Связаться с нами</a>
-    </nav>
-  </div>
-  <div class="container footer-bottom">
-    <div class="socials">
-      <a href="https://t.me/yakov_pil">Telegram</a>
-      <a href="https://wa.me/77067436197">WhatsApp</a>
-      <a href="mailto:hi@yapil.art">hi@yapil.art</a>
-    </div>
-    <a href="/privacy">Конфиденциальность</a>
-    <span>© yapil.art</span>
-  </div>
-</footer>
+---
+import { RuixenGradientFooter } from './ui/ruixen-gradient-footer';
+import Logo from './Logo.astro';
+---
 
-<style>
+<RuixenGradientFooter
+  client:load
+  className="site-footer"
+  gradientHeight="clamp(20rem, 52vh, 38rem)"
+  blur={42}
+>
+  <div class="footer-content">
+    <div class="container footer-top">
+      <div class="footer-intro">
+        <a class="footer-brand" href="/" aria-label="YAPIL.art — на главную" data-footer-logo-target>
+          <Logo class="footer-logo" data-footer-logo />
+        </a>
+        <p>Дизайн-студия полного цикла.<br />От первой идеи до печати или релиза.</p>
+      </div>
+
+      <div class="footer-columns">
+        <nav aria-label="Навигация в подвале">
+          <h2>Студия</h2>
+          <a href="/#about">О студии</a>
+          <a href="/#services">Услуги</a>
+          <a href="/#cases">Кейсы</a>
+          <a href="/cases">Все работы</a>
+        </nav>
+
+        <nav aria-label="Контакты">
+          <h2>На связи</h2>
+          <a href="https://t.me/yakov_pil">Telegram ↗</a>
+          <a href="https://wa.me/77067436197">WhatsApp ↗</a>
+          <a href="mailto:hi@yapil.art">Email ↗</a>
+        </nav>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container footer-bottom">
+    <span>© {new Date().getFullYear()} yapil.art</span>
+    <a href="/privacy">Конфиденциальность</a>
+  </div>
+</RuixenGradientFooter>
+
+<style is:global>
   .site-footer {
-    padding-block: clamp(2.5rem, 6vw, 5rem) 2rem;
+    position: relative;
+    isolation: isolate;
+    padding-top: clamp(3.5rem, 7vw, 7rem);
     color: white;
-    background: var(--ink-primary);
+    background: #0b0b0c;
+  }
+
+  .footer-content {
+    position: relative;
+    z-index: 1;
   }
 
   .footer-top {
     display: grid;
-    gap: 2rem;
-    padding-bottom: clamp(3rem, 7vw, 6rem);
+    gap: clamp(3rem, 8vw, 8rem);
+    padding-bottom: clamp(4rem, 9vw, 8rem);
+  }
+
+  .footer-intro p {
+    max-width: 30rem;
+    margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+    color: #bdbdbd;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.3;
   }
 
   .footer-brand {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 9vw, 8rem);
-    font-weight: 700;
-    line-height: 0.8;
-    letter-spacing: -0.08em;
+    display: inline-block;
     text-decoration: none;
+    line-height: 0;
   }
 
-  nav,
-  .socials {
+  .footer-logo {
+    width: clamp(14rem, 28vw, 24rem);
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.35));
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .footer-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+  }
+
+  .footer-columns nav {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
   }
 
-  nav a,
-  .socials a,
-  .footer-bottom > a {
+  .footer-columns h2 {
+    margin: 0 0 0.7rem;
+    color: #8b8b8b;
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .footer-columns a,
+  .footer-bottom a {
     text-decoration: none;
   }
 
-  nav a:hover,
-  .socials a:hover,
-  .footer-bottom > a:hover {
+  .footer-columns a:hover,
+  .footer-bottom a:hover {
     color: var(--accent-tint);
   }
 
   .footer-bottom {
-    display: grid;
+    position: absolute;
+    z-index: 2;
+    bottom: clamp(1.25rem, 3vh, 2rem);
+    left: 50%;
+    display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #444;
-    color: #bdbdbd;
-    font-size: 0.85rem;
+    justify-content: space-between;
+    padding: 1.1rem 1.25rem;
+    border-top: 1px solid rgb(255 255 255 / 28%);
+    color: rgb(255 255 255 / 82%);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    transform: translateX(-50%);
+    text-transform: uppercase;
+  }
+
+  .footer-bottom > * {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .footer-bottom > :first-child {
+    margin-right: auto;
+  }
+
+  .ruixen-gradient-band {
+    position: fixed;
+    z-index: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    transform-origin: bottom;
+    will-change: transform;
+  }
+
+  .ruixen-gradient-band svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
   }
 
   @media (min-width: 48rem) {
     .footer-top {
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: end;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--grid-gap, clamp(0.5rem, 0.75vw, 0.75rem));
+      align-items: start;
     }
 
-    nav {
-      max-width: 26rem;
-      justify-content: flex-end;
+    .footer-intro {
+      grid-column: 1 / span 7;
+    }
+
+    .footer-columns {
+      grid-column: 9 / span 4;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gap, clamp(0.5rem, 0.75vw, 0.75rem));
     }
 
     .footer-bottom {
-      grid-template-columns: minmax(0, 1fr) auto auto;
       align-items: center;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .footer-bottom {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .footer-bottom > :first-child {
+      margin-right: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ruixen-gradient-band {
+      transform: scaleY(1) !important;
+      will-change: auto;
     }
   }
 </style>

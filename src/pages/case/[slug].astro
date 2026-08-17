@@ -42,10 +42,14 @@ const creativeWorkJsonLd = {
 >
   <article class="case-page">
     <header class="case-hero container">
-      <a class="back-link" href="/#cases">← Все кейсы</a>
+      <a class="back-link" href="/#cases">
+        <span class="back-link-inner">
+          <span class="back-link-arrow">←</span>
+          <span class="back-link-text">Все кейсы</span>
+        </span>
+      </a>
       <div class="case-heading">
         <div>
-          <p class="case-kicker">{c.data.year} · {c.data.services.join(' · ')}</p>
           <h1>{c.data.title}</h1>
         </div>
         <p class="case-summary">{c.data.summary}</p>
@@ -102,7 +106,12 @@ const creativeWorkJsonLd = {
 
     <div class="case-next container">
       <p>Нашли задачу, похожую на вашу?</p>
-      <a href="/#contacts">Напишите, обсудим. <span aria-hidden="true">↗</span></a>
+      <a href="/#contacts" class="case-next-link">
+        <span class="next-inner">
+          <span class="next-text">Напишите, обсудим.</span>
+          <span class="next-arrow" aria-hidden="true">↗</span>
+        </span>
+      </a>
     </div>
   </article>
   <Footer slot="footer" />
@@ -114,15 +123,48 @@ const creativeWorkJsonLd = {
   }
 
   .back-link {
-    display: inline-block;
+    display: inline-flex;
     margin-bottom: clamp(3rem, 8vw, 7rem);
     color: var(--ink-muted);
     font-size: 0.9rem;
     text-decoration: none;
+    will-change: transform;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      color 200ms ease;
   }
 
-  .back-link:hover {
+  .back-link-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .back-link-arrow {
+    display: inline-block;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18));
+  }
+
+  .back-link-text {
+    display: inline-block;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+                letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
+  }
+
+  .back-link:hover,
+  .back-link:focus-visible {
     color: var(--accent-deep);
+    transform: scale(1.04);
+  }
+
+  .back-link:hover .back-link-arrow,
+  .back-link:focus-visible .back-link-arrow {
+    transform: translateX(-3px) scale(1.15);
+  }
+
+  .back-link:hover .back-link-text,
+  .back-link:focus-visible .back-link-text {
+    letter-spacing: 0.02em;
   }
 
   .case-heading {
@@ -130,21 +172,11 @@ const creativeWorkJsonLd = {
     gap: 1.5rem clamp(3rem, 8vw, 10rem);
   }
 
-  .case-kicker {
-    margin-bottom: 1rem;
-    color: var(--accent-deep);
-    font-family: var(--font-display);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
   h1 {
     margin: 0;
     font-family: var(--font-display);
     font-size: var(--text-hero);
-    line-height: 0.92;
+    line-height: 1;
     letter-spacing: -0.065em;
     overflow-wrap: anywhere;
   }
@@ -153,6 +185,7 @@ const creativeWorkJsonLd = {
     max-width: 34rem;
     margin: 0;
     font-size: clamp(1.1rem, 2vw, 1.5rem);
+    line-height: 1.3;
   }
 
   .case-cover {
@@ -208,6 +241,7 @@ const creativeWorkJsonLd = {
     max-width: 43rem;
     margin: 0;
     color: var(--ink-muted);
+    line-height: 1.3;
   }
 
   .case-body {
@@ -226,14 +260,65 @@ const creativeWorkJsonLd = {
   .case-next p {
     margin-bottom: 0.5rem;
     color: var(--ink-muted);
+    transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+                opacity var(--duration-pushback, 1575ms) ease;
+    transform-origin: center bottom;
   }
 
-  .case-next a {
+  /* Inverse Parallax on prompt text when hovering CTA */
+  .case-next:has(.case-next-link:hover) p,
+  .case-next:has(.case-next-link:focus-visible) p {
+    transform: scale(0.965) translateY(-3px);
+    opacity: 0.82;
+  }
+
+  .case-next-link {
+    display: inline-block;
     color: var(--accent-deep);
     font-family: var(--font-display);
     font-size: clamp(1.8rem, 5vw, 4rem);
     font-weight: 700;
     line-height: 1;
+    text-decoration: none;
+    transform-origin: center center;
+    will-change: transform;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      color 200ms ease;
+  }
+
+  .case-next-link:hover,
+  .case-next-link:focus-visible {
+    color: var(--accent);
+    transform: scale(1.05) translateY(-2px);
+  }
+
+  .next-inner {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+  }
+
+  .next-text {
+    display: inline-block;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+                letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
+  }
+
+  .next-arrow {
+    display: inline-block;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
+  }
+
+  .case-next-link:hover .next-text,
+  .case-next-link:focus-visible .next-text {
+    transform: scale(1.03);
+    letter-spacing: 0.015em;
+  }
+
+  .case-next-link:hover .next-arrow,
+  .case-next-link:focus-visible .next-arrow {
+    transform: translate(4px, -4px) scale(1.15);
   }
 
   @media (min-width: 48rem) {
@@ -249,6 +334,19 @@ const creativeWorkJsonLd = {
 
     .case-brief section:last-child {
       border-bottom: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .back-link,
+    .back-link-arrow,
+    .back-link-text,
+    .case-next p,
+    .case-next-link,
+    .next-text,
+    .next-arrow {
+      transform: none !important;
+      transition: none !important;
     }
   }
 </style>

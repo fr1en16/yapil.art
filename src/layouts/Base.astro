@@ -1,5 +1,8 @@
 ---
 import Nav from '../components/Nav.astro';
+import SiteBackground from '../components/SiteBackground.astro';
+import GridOverlay from '../components/GridOverlay.astro';
+import SmoothScroll from '../components/SmoothScroll.astro';
 import '@fontsource-variable/inter-tight';
 import '../styles/global.css';
 
@@ -20,6 +23,7 @@ const {
 } = Astro.props;
 const documentTitle = title === 'Yapil' ? 'Yapil — дизайн-студия' : `${title} — Yapil`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const isHome = Astro.url.pathname === '/';
 ---
 
 <!doctype html>
@@ -30,6 +34,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#FFFAF9" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oranienbaum&display=swap" rel="stylesheet" />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content={type} />
     <meta property="og:locale" content="ru_RU" />
@@ -47,12 +54,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{documentTitle}</title>
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
-  <body>
+  <body class:list={{ 'is-home': isHome }}>
     <a class="skip-link" href="#main-content">К основному содержанию</a>
-    <Nav />
+    <SiteBackground />
+    <Nav overlay={isHome} />
     <main id="main-content">
       <slot />
     </main>
     <slot name="footer" />
+    <GridOverlay />
+    <SmoothScroll />
   </body>
 </html>

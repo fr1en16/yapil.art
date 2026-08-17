@@ -1,0 +1,540 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+const targetSlugs = [
+  'onmacabim',
+  'compass',
+  'rv',
+  'bebble',
+  'boya',
+  'shanding',
+  'yatut',
+];
+
+const allCases = await getCollection('cases');
+const caseMap = new Map(allCases.map((c) => [c.id, c]));
+
+const projects = targetSlugs
+  .map((slug) => caseMap.get(slug))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
+const positions = [
+  'project--lead',
+  'project--side',
+  'project--center',
+  'project--small',
+  'project--wide',
+  'project--lead',
+  'project--side',
+];
+---
+
+<section class="portfolio" id="cases" aria-labelledby="portfolio-title">
+  <div class="portfolio__header container">
+    <div class="portfolio__title-wrap">
+      <h2 id="portfolio-title">Избранные<br />проекты</h2>
+    </div>
+    <a class="portfolio__all" href="/cases">
+      <span class="portfolio__all-inner">
+        <span class="portfolio__all-text">Все работы</span>
+        <span class="portfolio__all-arrow" aria-hidden="true">→</span>
+      </span>
+    </a>
+  </div>
+
+  <div class="portfolio__grid container">
+    {projects.map((project, index) => {
+      const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(project.data.cover);
+
+      return (
+        <article class:list={['project', positions[index]]} data-slug={project.id}>
+          <a class="project__link" href={`/case/${project.id}`} aria-label={`${project.data.title}: открыть кейс`}>
+            <div class="project__media">
+              <div class="project__image">
+                {isVideo ? (
+                  <video src={project.data.cover} muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+                ) : (
+                  <Image
+                    src={project.data.cover}
+                    alt={`${project.data.title} — ${project.data.summary}`}
+                    inferSize
+                    widths={[640, 960, 1440]}
+                    sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) calc(100vw - 4rem), 70vw"
+                    format="webp"
+                    quality={78}
+                    loading="lazy"
+                  />
+                )}
+              </div>
+
+              <div class="project__tags" aria-hidden="true">
+                {project.data.services.map((service) => <span>{service}</span>)}
+              </div>
+            </div>
+
+            <div class="project__info">
+              <span class="project__marker" aria-hidden="true"></span>
+              <div class="project__copy">
+                <h3>{project.data.title}</h3>
+                <p>{project.data.summary}</p>
+              </div>
+              <div class="project__action" aria-hidden="true">
+                <span class="project__arrow">↗</span>
+                <span>Смотреть проект</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .portfolio {
+    overflow: hidden;
+    padding-block: clamp(5rem, 12vw, 10rem);
+    color: #f2f2f2;
+    background: #0b0b0c;
+  }
+
+  .portfolio__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(3rem, 7vw, 6rem);
+  }
+
+  .portfolio__title-wrap {
+    transform-origin: left bottom;
+    transition: transform var(--duration-pushback, 450ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+                opacity var(--duration-pushback, 450ms) ease;
+  }
+
+  /* 1. Inverse Parallax of Header Title when hovering "All Works" button */
+  .portfolio__header:has(.portfolio__all:hover) .portfolio__title-wrap,
+  .portfolio__header:has(.portfolio__all:focus-visible) .portfolio__title-wrap {
+    transform: scale(0.975) translateY(-2px);
+    opacity: 0.85;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.055em;
+  }
+
+  /* 2. Button Container Scaling */
+  .portfolio__all {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.15rem;
+    font-size: clamp(0.75rem, 0.9vw, 0.9rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #f2f2f2;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.03);
+    transform-origin: right center;
+    will-change: transform, background-color, border-color;
+    transition:
+      transform var(--duration-btn, 380ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      background-color 200ms ease,
+      border-color 200ms ease,
+      box-shadow var(--duration-btn, 380ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .portfolio__all:hover,
+  .portfolio__all:focus-visible {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.45);
+    transform: scale(1.055) translateY(-1px);
+    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.4);
+  }
+
+  .portfolio__all:active {
+    transform: scale(0.99);
+    transition-duration: 90ms;
+  }
+
+  /* 3. Independent Inner Text & Icon Scaling */
+  .portfolio__all-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: none;
+  }
+
+  .portfolio__all-text {
+    display: inline-block;
+    will-change: transform, letter-spacing;
+    transition:
+      transform var(--duration-btn-text, 260ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) 25ms,
+      letter-spacing var(--duration-btn-text, 260ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) 25ms;
+  }
+
+  .portfolio__all-arrow {
+    display: inline-block;
+    font-size: 1rem;
+    line-height: 1;
+    will-change: transform;
+    transition: transform var(--duration-btn-text, 260ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) 40ms;
+  }
+
+  .portfolio__all:hover .portfolio__all-text,
+  .portfolio__all:focus-visible .portfolio__all-text {
+    transform: scale(1.04);
+    letter-spacing: 0.11em;
+  }
+
+  .portfolio__all:hover .portfolio__all-arrow,
+  .portfolio__all:focus-visible .portfolio__all-arrow {
+    transform: translateX(4px) scale(1.15);
+  }
+
+  .portfolio__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(4rem, 11vw, 9rem) var(--grid-gap, clamp(0.5rem, 0.75vw, 0.75rem));
+  }
+
+  .project {
+    min-width: 0;
+    align-self: start;
+    transition: filter 400ms ease, opacity 400ms ease, transform 400ms ease;
+  }
+
+  .project--lead {
+    grid-column: 1 / span 7;
+  }
+
+  .project--side {
+    grid-column: 9 / span 4;
+    align-self: end;
+  }
+
+  .project--center {
+    grid-column: 2 / span 10;
+  }
+
+  .project--small {
+    grid-column: 1 / span 4;
+  }
+
+  .project--wide {
+    grid-column: 6 / span 7;
+  }
+
+  .project__link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .project__media {
+    position: relative;
+    height: clamp(20rem, 49vh, 39rem);
+    overflow: hidden;
+    background: #1d1d1f;
+  }
+
+  .project--side .project__media,
+  [data-slug="compass"] .project__media,
+  [data-slug="yatut"] .project__media {
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .project--small .project__media,
+  [data-slug="bebble"] .project__media {
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .project--center .project__media,
+  [data-slug="rv"] .project__media {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .project__image {
+    position: absolute;
+    inset: -5% 0;
+    transition: transform 800ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .project__image :global(img),
+  .project__image video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project__link:hover .project__image,
+  .project__link:focus-visible .project__image {
+    transform: scale(1.055);
+  }
+
+  .project__tags {
+    position: absolute;
+    right: clamp(0.75rem, 1.4vw, 1.5rem);
+    bottom: clamp(0.75rem, 1.4vw, 1.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+  }
+
+  .project__tags span {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid rgb(255 255 255 / 8%);
+    color: #f2f2f2;
+    background: rgb(0 0 0 / 48%);
+    backdrop-filter: blur(10px);
+    font-size: clamp(0.62rem, 0.75vw, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.035em;
+    opacity: 0;
+    text-transform: uppercase;
+    transform: translateY(1rem);
+    transition: opacity 300ms ease, transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .project__link:hover .project__tags span,
+  .project__link:focus-visible .project__tags span {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .project__tags span:nth-child(2) {
+    transition-delay: 50ms;
+  }
+
+  .project__tags span:nth-child(3) {
+    transition-delay: 100ms;
+  }
+
+  .project__info {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.75rem;
+    padding-top: clamp(1rem, 1.6vw, 1.5rem);
+  }
+
+  .project__marker {
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.65rem;
+    border: 1px solid #5e5e62;
+    transition: width 300ms ease, margin 300ms ease, opacity 250ms ease;
+  }
+
+  .project__copy h3 {
+    margin: 0 0 0.45rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.1vw, 2.25rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .project__copy p {
+    max-width: 32rem;
+    margin: 0;
+    color: #8e8e93;
+    font-size: clamp(1rem, 0.9vw, 1.05rem);
+    line-height: 1.3;
+  }
+
+  .project__action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.2rem;
+    overflow: hidden;
+    font-size: clamp(0.65rem, 0.75vw, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    text-transform: uppercase;
+    transform: translateX(-0.75rem);
+    transition: opacity 300ms ease, transform 350ms cubic-bezier(0.25, 1, 0.5, 1);
+    white-space: nowrap;
+  }
+
+  .project__arrow {
+    display: grid;
+    width: 1.5rem;
+    height: 1.5rem;
+    place-items: center;
+    color: #0b0b0c;
+    background: #f2f2f2;
+    font-size: 0.85rem;
+  }
+
+  .project__link:hover .project__marker,
+  .project__link:focus-visible .project__marker {
+    width: 0;
+    margin-inline: -0.375rem 0;
+    opacity: 0;
+  }
+
+  .project__link:hover .project__action,
+  .project__link:focus-visible .project__action {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .portfolio__grid:has(.project:hover) .project:not(:hover) {
+    filter: blur(4px);
+    opacity: 0.35;
+    transform: scale(0.985);
+  }
+
+  @media (max-width: 63.99rem) {
+    .portfolio__grid {
+      gap-block: clamp(4rem, 9vw, 6rem);
+    }
+
+    .project--lead,
+    .project--side,
+    .project--center,
+    .project--small,
+    .project--wide {
+      grid-column: 1 / -1;
+    }
+
+    .project--side,
+    .project--small {
+      width: 62%;
+    }
+
+    .project--side {
+      justify-self: end;
+    }
+
+    .project__media,
+    .project--lead .project__media,
+    .project--wide .project__media {
+      height: auto;
+      aspect-ratio: 16 / 10;
+    }
+
+    .project--side .project__media,
+    [data-slug="compass"] .project__media,
+    [data-slug="yatut"] .project__media {
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .project--small .project__media,
+    [data-slug="bebble"] .project__media {
+      height: auto;
+      aspect-ratio: 4 / 5;
+    }
+
+    .project--center .project__media,
+    [data-slug="rv"] .project__media {
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @media (max-width: 39.99rem) {
+    .portfolio {
+      padding-block: 4.5rem 6rem;
+    }
+
+    .portfolio__header {
+      align-items: flex-end;
+      margin-bottom: 3.5rem;
+    }
+
+    h2 {
+      font-size: clamp(2.6rem, 14vw, 4.2rem);
+    }
+
+    .portfolio__all {
+      padding-bottom: 0.2rem;
+      font-size: 0.65rem;
+    }
+
+    .portfolio__grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .project--side,
+    .project--small {
+      width: 100%;
+    }
+
+    .project__media {
+      aspect-ratio: 4 / 5;
+    }
+
+    .project--side .project__media,
+    [data-slug="compass"] .project__media,
+    [data-slug="yatut"] .project__media {
+      height: auto;
+      aspect-ratio: 1 / 1 !important;
+    }
+
+    .project--center .project__media,
+    [data-slug="rv"] .project__media {
+      height: auto;
+      aspect-ratio: 16 / 9 !important;
+    }
+
+    .project--small .project__media,
+    [data-slug="bebble"] .project__media {
+      height: auto;
+      aspect-ratio: 4 / 5 !important;
+    }
+
+    .project__tags,
+    .project__action,
+    .project__marker {
+      display: none;
+    }
+
+    .project__info {
+      display: block;
+    }
+
+    .project__copy h3 {
+      font-size: 1.65rem;
+    }
+
+    .portfolio__grid:has(.project:hover) .project:not(:hover) {
+      filter: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project,
+    .project__image,
+    .project__tags span,
+    .project__action,
+    .project__marker,
+    .portfolio__title-wrap,
+    .portfolio__all,
+    .portfolio__all-text,
+    .portfolio__all-arrow {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>
