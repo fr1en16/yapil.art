@@ -93,7 +93,119 @@
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
   }
 
-  const startSmoothScroll = () => {
+  function initParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const containers = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax-media]'));
+    if (!containers.length) return;
+
+    interface ParallaxItem {
+      container: HTMLElement;
+      target: HTMLElement;
+      currentY: number;
+      targetY: number;
+      isVisible: boolean;
+    }
+
+    const items: ParallaxItem[] = [];
+
+    containers.forEach((container) => {
+      const target = container.querySelector<HTMLElement>('[data-parallax-target]');
+      if (target) {
+        items.push({
+          container,
+          target,
+          currentY: 0,
+          targetY: 0,
+          isVisible: false,
+        });
+      }
+    });
+
+    if (!items.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const item = items.find((it) => it.container === entry.target);
+          if (item) {
+            item.isVisible = entry.isIntersecting;
+            if (item.isVisible) {
+              requestTick();
+            }
+          }
+        });
+      },
+      { rootMargin: '100px 0px' }
+    );
+
+    items.forEach((it) => observer.observe(it.container));
+
+    let isRunning = false;
+    const lerpFactor = 0.085; // Organic physical inertia smoothing
+
+    function update() {
+      let isMoving = false;
+      const windowHeight = window.innerHeight;
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (!item.isVisible) continue;
+
+        const rect = item.container.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const progress = (cardCenter - windowHeight / 2) / (windowHeight / 2 + rect.height / 2);
+        const clampedProgress = Math.max(-1.15, Math.min(1.15, progress));
+
+        const maxShift = rect.height * 0.12;
+        item.targetY = clampedProgress * maxShift;
+
+        const diff = item.targetY - item.currentY;
+        if (Math.abs(diff) > 0.04) {
+          item.currentY += diff * lerpFactor;
+          isMoving = true;
+        } else {
+          item.currentY = item.targetY;
+        }
+
+        item.target.style.transform = `translate3d(0, ${item.currentY.toFixed(2)}px, 0)`;
+      }
+
+      if (isMoving) {
+        requestAnimationFrame(update);
+      } else {
+        isRunning = false;
+      }
+    }
+
+    function requestTick() {
+      if (!isRunning) {
+        isRunning = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    window.addEventListener('scroll', requestTick, { passive: true });
+    window.addEventListener('resize', requestTick, { passive: true });
+
+    // Connect with Lenis instance
+    const checkLenis = () => {
+      const lenis = (window as any).lenis;
+      if (lenis?.on) {
+        lenis.on('scroll', requestTick);
+      } else {
+        setTimeout(checkLenis, 250);
+      }
+    };
+    checkLenis();
+
+    requestTick();
+  }
+
+  const startEffects = () => {
+    initParallax();
     if ('requestIdleCallback' in window) {
       requestIdleCallback(() => initLenis(), { timeout: 1000 });
     } else {
@@ -102,14 +214,14 @@
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startSmoothScroll);
+    document.addEventListener('DOMContentLoaded', startEffects);
   } else {
-    startSmoothScroll();
+    startEffects();
   }
 
   window.addEventListener('resize', () => {
     initLenis();
   }, { passive: true });
 
-  document.addEventListener('astro:page-load', startSmoothScroll);
+  document.addEventListener('astro:page-load', startEffects);
 </script>

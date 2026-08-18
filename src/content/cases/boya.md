@@ -3,7 +3,7 @@ title: "Boya"
 year: "2022–2024"
 summary: "Лакокрасочные материалы"
 services: ["Сайт","Брендинг"]
-cover: "https://media.yapil.art/case/Boya.9a06e469ae3718a1.webp?v=2"
+cover: "/case/boya.webp"
 order: 9
 featured: false
 task: "Собрать бренд производителя лакокрасочных материалов и сайт с каталогом продукции."

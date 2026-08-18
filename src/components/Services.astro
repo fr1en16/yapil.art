@@ -1,6 +1,12 @@
 ---
 import ServicesAnimatedModal from './ui/services-animated-modal.tsx';
+
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
 ---
 
-<ServicesAnimatedModal client:visible />
+<ServicesAnimatedModal client:visible theme={theme} />
 

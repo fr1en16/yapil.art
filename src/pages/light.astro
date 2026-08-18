@@ -1,0 +1,34 @@
+---
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import ProduxPortfolio from '../components/ProduxPortfolio.astro';
+import VsyachinaInfinite from '../components/VsyachinaInfinite.astro';
+import AboutCompact from '../components/AboutCompact.astro';
+import Contacts from '../components/Contacts.astro';
+import Footer from '../components/Footer.astro';
+import Base from '../layouts/Base.astro';
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Yapil',
+  url: 'https://yapil.art/light',
+  email: 'hi@yapil.art',
+  sameAs: ['https://t.me/yakov_pil'],
+};
+---
+
+<Base
+  title="Yapil"
+  description="Дизайн-студия Yapil: айдентика, сайты и полиграфия — от первой концепции до печати или релиза."
+  jsonLd={organizationJsonLd}
+  theme="light"
+>
+  <Hero theme="light" />
+  <AboutCompact theme="light" />
+  <Services theme="light" />
+  <ProduxPortfolio theme="light" />
+  <VsyachinaInfinite theme="light" />
+  <Contacts theme="light" />
+  <Footer slot="footer" theme="light" />
+</Base>

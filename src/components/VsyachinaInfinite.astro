@@ -1,6 +1,13 @@
 ---
 import galleryItems from '../data/vsyachina-gallery.json';
 
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+const isLight = theme === 'light';
+
 interface GalleryItem {
   name: string;
   width: number;
@@ -43,7 +50,7 @@ const groups = Array.from(grouped, ([prefix, images]) => ({
 const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
 ---
 
-<section class="vsyachina-infinite-section" aria-label="Галерея проектов">
+<section class:list={['vsyachina-infinite-section', { 'theme-light': isLight }]} aria-label="Галерея проектов">
   <div class="vsyachina-infinite-wrapper" data-infinite-wrapper>
     <div class="infinite-track" data-infinite-track>
       {[0, 1, 2].map((copyIndex) => (
@@ -524,6 +531,25 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
     overflow: hidden;
     padding-block: clamp(1.5rem, 3.5vw, 3rem);
     background: #0b0b0c;
+  }
+
+  .vsyachina-infinite-section.theme-light {
+    background: #EAE5DF;
+  }
+
+  .vsyachina-infinite-section.theme-light .gallery-card {
+    background: #FFFFFF;
+    color: #1D1D1D;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+
+  .vsyachina-infinite-section.theme-light .gallery-card:hover {
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.16);
+  }
+
+  .vsyachina-infinite-section.theme-light .gallery-card:focus-visible {
+    outline: 2px solid #FD4B32;
+    outline-offset: 2px;
   }
 
   .vsyachina-infinite-wrapper {

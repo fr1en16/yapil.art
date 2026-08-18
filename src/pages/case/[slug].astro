@@ -67,6 +67,13 @@ const creativeWorkJsonLd = {
           preload="none"
           aria-label={`${c.data.title}: видео обложки проекта`}
         ></video>
+      ) : c.data.cover.startsWith('/') ? (
+        <img
+          src={c.data.cover}
+          alt={`${c.data.title} — ${c.data.summary}`}
+          loading="lazy"
+          decoding="async"
+        />
       ) : (
         <Image
           src={c.data.cover}

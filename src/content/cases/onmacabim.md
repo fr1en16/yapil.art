@@ -2,8 +2,10 @@
 title: "ONmacabim"
 year: "2024"
 summary: "Профессиональная уходовая израильская косметика"
-services: ["Поддержка","Полиграфия"]
-cover: "https://media.yapil.art/case/onmacabim.d880b38bbd259603.webp?v=2"
+services:
+  - "Поддержка"
+  - "Полиграфия"
+cover: "/case/onmacabim.webp"
 order: 1
 featured: false
 task: "Держать визуал израильского бренда уходовой косметики в одном ключе: макеты для соцсетей, полиграфия, промо новых линеек."

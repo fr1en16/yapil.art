@@ -3,20 +3,22 @@ import Logo from './Logo.astro';
 
 interface Props {
   overlay?: boolean;
+  theme?: 'dark' | 'light';
 }
 
-const { overlay = false } = Astro.props;
+const { overlay = false, theme = 'dark' } = Astro.props;
+const homePath = theme === 'light' ? '/light' : '/';
 ---
 
-<header class:list={['site-header', { overlay }]} data-site-header>
+<header class:list={['site-header', { overlay, 'theme-light': theme === 'light' }]} data-site-header data-theme={theme}>
   <div class="container nav-row" data-nav-row>
-    <a class="brand" href="/" aria-label="Yapil — на главную" data-nav-brand>
+    <a class="brand" href={homePath} aria-label="Yapil — на главную" data-nav-brand>
       <Logo class="brand-logo" data-nav-logo />
     </a>
     <nav aria-label="Основная навигация" data-nav-links>
-      <a href="/#services">Услуги</a>
-      <a href="/#cases">Кейсы</a>
-      <a href="/#contacts">Связаться с нами</a>
+      <a href={`${homePath}#services`}>Услуги</a>
+      <a href={`${homePath}#cases`}>Кейсы</a>
+      <a href={`${homePath}#contacts`}>Связаться с нами</a>
     </nav>
   </div>
 </header>
@@ -182,6 +184,35 @@ const { overlay = false } = Astro.props;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
+  /* Light Theme Overrides */
+  .site-header.theme-light.is-scrolled {
+    background: rgba(247, 245, 242, 0.88);
+    border-bottom: 1px solid rgba(29, 29, 29, 0.08);
+    color: #1D1D1D;
+  }
+
+  .site-header.theme-light.is-scrolled .brand,
+  .site-header.theme-light.is-scrolled .brand :global(.brand-logo),
+  .site-header.theme-light.is-scrolled .brand :global(svg) {
+    color: #1D1D1D;
+    fill: currentColor;
+  }
+
+  .site-header.theme-light.is-scrolled nav a {
+    color: #1D1D1D;
+  }
+
+  .site-header.theme-light.is-scrolled nav a:hover {
+    color: var(--accent);
+  }
+
+  .site-header.theme-light.in-footer-transition .brand,
+  .site-header.theme-light.in-footer-transition .brand :global(.brand-logo),
+  .site-header.theme-light.in-footer-transition .brand :global(svg) {
+    color: #1D1D1D;
+    fill: currentColor;
+  }
+
   /* When transitioning into footer */
   .site-header.in-footer-transition {
     background: transparent !important;
@@ -240,6 +271,10 @@ const { overlay = false } = Astro.props;
 
   nav a:hover {
     color: #82f2c9;
+  }
+
+  .site-header.theme-light.at-top nav a:hover {
+    color: #FFDBD7;
   }
 
   @media (max-width: 34rem) {

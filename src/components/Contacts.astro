@@ -1,4 +1,13 @@
-<section class="contacts section" id="contacts" aria-labelledby="contacts-title">
+---
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+const isLight = theme === 'light';
+---
+
+<section class:list={['contacts section', { 'theme-light': isLight }]} id="contacts" aria-labelledby="contacts-title">
   <div class="container">
     <div class="contacts-grid">
       <!-- Left side: Cover (columns 1-8) -->
@@ -358,6 +367,48 @@
     background:
       radial-gradient(ellipse 90% 70% at 50% 50%, rgba(253, 75, 50, 0.28) 0%, rgba(163, 42, 23, 0.18) 45%, transparent 75%),
       linear-gradient(to bottom, #0b0b0c 0%, #1c0a07 25%, #4a1309 50%, #1c0a07 75%, #0b0b0c 100%);
+  }
+
+  .contacts.theme-light {
+    color: var(--ink-primary);
+    background:
+      radial-gradient(ellipse 90% 70% at 50% 50%, rgba(253, 75, 50, 0.16) 0%, rgba(253, 75, 50, 0.05) 45%, transparent 75%),
+      linear-gradient(to bottom, #EAE5DF 0%, #F5EFEB 25%, #FFF0EB 50%, #F5EFEB 75%, #EAE5DF 100%);
+  }
+
+  .contacts.theme-light .contacts-cover {
+    background: #FFFFFF;
+    color: #1D1D1D;
+    border: 1px solid #D5D2CE;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06);
+  }
+
+  .contacts.theme-light .contacts-cover .display-title {
+    color: #1D1D1D;
+  }
+
+  .contacts.theme-light .contacts-cover-lead {
+    color: #66635F;
+  }
+
+  .contacts.theme-light .contact-link-pill {
+    background: #F6F4F2;
+    border: 1px solid #E2DED9;
+    color: #1D1D1D;
+  }
+
+  .contacts.theme-light .contact-link-pill:hover {
+    background: #EDEAE6;
+    border-color: #1D1D1D;
+    color: #1D1D1D;
+  }
+
+  .contacts.theme-light .contact-link-arrow {
+    color: var(--accent);
+  }
+
+  .contacts.theme-light .feedback-card {
+    border: 1px solid #D5D2CE;
   }
 
   .contacts-grid {

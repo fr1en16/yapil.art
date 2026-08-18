@@ -3,7 +3,7 @@ title: "Compass"
 year: "2022–2023"
 summary: "Консалтинговая компания в Узбекистане"
 services: ["Сайт","Брендинг"]
-cover: "https://media.yapil.art/case/Compass.3635b3f1a8822370.webp?v=2"
+cover: "/case/compass.webp"
 order: 2
 featured: false
 task: "Показать консалтинговую компанию из Узбекистана как надёжного партнёра: собрать бренд с нуля и сайт под него."

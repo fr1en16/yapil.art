@@ -1,3 +1,12 @@
+---
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+const casesHref = theme === 'light' ? '/light#cases' : '#cases';
+---
+
 <section class="hero-cover" aria-labelledby="hero-title" data-hero-cover>
   <div class="hero-copy">
     <h1 id="hero-title" class="hero-layer hero-layer--title">Дизайн, который<br />работает на бизнес</h1>
@@ -5,7 +14,7 @@
       Создаем айдентику и сайты, помогающие компаниям<br class="desktop-break" />
       выделяться на рынке, вызывать доверие и масштабироваться.
     </p>
-    <a class="hero-link hero-layer hero-layer--cta" href="#cases">
+    <a class="hero-link hero-layer hero-layer--cta" href={casesHref}>
       <span class="hero-link-inner">
         <span class="hero-link-text">Смотреть кейсы</span>
         <span class="hero-link-arrow" aria-hidden="true">↓</span>

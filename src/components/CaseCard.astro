@@ -15,23 +15,34 @@ const { slug, title, year, summary, services, cover, index } = Astro.props;
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
 ---
 
-<article class:list={['case-card', { 'case-card--wide': index % 7 === 2 }] }>
+<article class="case-card">
   <a href={`/case/${slug}`} aria-label={`${title}: открыть кейс`}>
-    <div class="case-media">
-      {isVideo ? (
-        <video src={cover} muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
-      ) : (
-        <Image
-          src={cover}
-          alt={`${title} — ${summary}`}
-          inferSize
-          widths={[400, 800]}
-          sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) 50vw, 33vw"
-          format="webp"
-          quality={70}
-          loading="lazy"
-        />
-      )}
+    <div class="case-media" data-parallax-media>
+      <div class="case-parallax" data-parallax-target>
+        <div class="case-image">
+          {isVideo ? (
+            <video src={cover} muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+          ) : cover.startsWith('/') ? (
+            <img
+              src={cover}
+              alt={`${title} — ${summary}`}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <Image
+              src={cover}
+              alt={`${title} — ${summary}`}
+              inferSize
+              widths={[400, 800]}
+              sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) 50vw, 33vw"
+              format="webp"
+              quality={70}
+              loading="lazy"
+            />
+          )}
+        </div>
+      </div>
       <span class="case-arrow" aria-hidden="true">↗</span>
     </div>
     <div class="case-info">
@@ -59,21 +70,44 @@ const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
 
   .case-media {
     position: relative;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     background: var(--border-subtle);
   }
 
-  .case-media :global(img),
-  .case-media video {
+  @media (min-width: 40rem) {
+    .case-media {
+      aspect-ratio: 5 / 4;
+    }
+  }
+
+  .case-parallax {
+    position: absolute;
+    inset: -14% 0;
+    width: 100%;
+    height: 128%;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .case-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .case-image :global(img),
+  .case-image img,
+  .case-image video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 450ms cubic-bezier(0.2, 0.75, 0.2, 1);
   }
 
-  a:hover .case-media :global(img),
-  a:hover .case-media video {
+  a:hover .case-image :global(img),
+  a:hover .case-image img,
+  a:hover .case-image video {
     transform: scale(1.025);
   }
 
@@ -125,13 +159,14 @@ const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
     gap: 0.5rem 1rem;
   }
 
-  @media (min-width: 75rem) {
-    .case-card--wide {
-      grid-column: span 2;
-    }
-
-    .case-card--wide .case-media {
-      aspect-ratio: 2 / 1;
+  @media (prefers-reduced-motion: reduce) {
+    .case-parallax,
+    .case-image :global(img),
+    .case-image img,
+    .case-image video,
+    .case-arrow {
+      transition: none !important;
+      transform: none !important;
     }
   }
 </style>

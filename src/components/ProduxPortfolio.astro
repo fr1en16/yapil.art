@@ -2,14 +2,21 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+const isLight = theme === 'light';
+
 const targetSlugs = [
   'onmacabim',
   'compass',
+  'yatut',
   'rv',
-  'bebble',
   'boya',
   'shanding',
-  'yatut',
+  'bebble',
 ];
 
 const allCases = await getCollection('cases');
@@ -30,7 +37,7 @@ const positions = [
 ];
 ---
 
-<section class="portfolio" id="cases" aria-labelledby="portfolio-title">
+<section class:list={['portfolio', { 'theme-light': isLight }]} id="cases" aria-labelledby="portfolio-title">
   <div class="portfolio__header container">
     <h2 id="portfolio-title">Избранные<br />проекты</h2>
   </div>
@@ -42,22 +49,31 @@ const positions = [
       return (
         <article class:list={['project', positions[index]]} data-slug={project.id}>
           <a class="project__link" href={`/case/${project.id}`} aria-label={`${project.data.title}: открыть кейс`}>
-            <div class="project__media">
-              <div class="project__image">
-                {isVideo ? (
-                  <video src={project.data.cover} muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
-                ) : (
-                  <Image
-                    src={project.data.cover}
-                    alt={`${project.data.title} — ${project.data.summary}`}
-                    inferSize
-                    widths={[640, 960, 1440]}
-                    sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) calc(100vw - 4rem), 70vw"
-                    format="webp"
-                    quality={78}
-                    loading="lazy"
-                  />
-                )}
+            <div class="project__media" data-parallax-media>
+              <div class="project__parallax" data-parallax-target>
+                <div class="project__image">
+                  {isVideo ? (
+                    <video src={project.data.cover} muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+                  ) : project.data.cover.startsWith('/') ? (
+                    <img
+                      src={project.data.cover}
+                      alt={`${project.data.title} — ${project.data.summary}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <Image
+                      src={project.data.cover}
+                      alt={`${project.data.title} — ${project.data.summary}`}
+                      inferSize
+                      widths={[640, 960, 1440]}
+                      sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) calc(100vw - 4rem), 70vw"
+                      format="webp"
+                      quality={78}
+                      loading="lazy"
+                    />
+                  )}
+                </div>
               </div>
 
               <div class="project__tags" aria-hidden="true">
@@ -89,6 +105,57 @@ const positions = [
     padding-block: clamp(5rem, 12vw, 10rem);
     color: #f2f2f2;
     background: #0b0b0c;
+  }
+
+  .portfolio.theme-light {
+    color: #1D1D1D;
+    background: #EAE5DF;
+  }
+
+  .portfolio.theme-light h2 {
+    color: #1D1D1D;
+  }
+
+  .portfolio.theme-light .project__media {
+    background: #D8D2CA;
+  }
+
+  .portfolio.theme-light .project__tags span {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #1D1D1D;
+    background: rgba(255, 255, 255, 0.88);
+  }
+
+  .portfolio.theme-light .project__marker {
+    border: 1px solid #A8A29A;
+  }
+
+  .portfolio.theme-light .project__copy h3 {
+    color: #1D1D1D;
+  }
+
+  .portfolio.theme-light .project__copy p {
+    color: #66635F;
+  }
+
+  .portfolio.theme-light .project__action {
+    color: #1D1D1D;
+  }
+
+  .portfolio.theme-light .project__arrow {
+    color: #FFFFFF;
+    background: #1D1D1D;
+  }
+
+  .portfolio.theme-light .project__link:hover .project__arrow,
+  .portfolio.theme-light .project__link:focus-visible .project__arrow {
+    background: #FD4B32;
+  }
+
+  .portfolio.theme-light .portfolio__grid:has(.project:hover) .project:not(:hover) {
+    filter: blur(3px);
+    opacity: 0.45;
+    transform: scale(0.985);
   }
 
   .portfolio__header {
@@ -145,37 +212,30 @@ const positions = [
 
   .project__media {
     position: relative;
-    height: clamp(20rem, 49vh, 39rem);
+    width: 100%;
+    aspect-ratio: 5 / 4;
     overflow: hidden;
     background: #1d1d1f;
   }
 
-  .project--side .project__media,
-  [data-slug="compass"] .project__media,
-  [data-slug="yatut"] .project__media {
-    height: auto;
-    aspect-ratio: 1 / 1;
-  }
-
-  .project--small .project__media,
-  [data-slug="bebble"] .project__media {
-    height: auto;
-    aspect-ratio: 4 / 5;
-  }
-
-  .project--center .project__media,
-  [data-slug="rv"] .project__media {
-    height: auto;
-    aspect-ratio: 16 / 9;
+  .project__parallax {
+    position: absolute;
+    inset: -14% 0;
+    width: 100%;
+    height: 128%;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
   }
 
   .project__image {
-    position: absolute;
-    inset: -5% 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
     transition: transform 800ms cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .project__image :global(img),
+  .project__image img,
   .project__image video {
     width: 100%;
     height: 100%;
@@ -326,30 +386,9 @@ const positions = [
       justify-self: end;
     }
 
-    .project__media,
-    .project--lead .project__media,
-    .project--wide .project__media {
+    .project__media {
       height: auto;
-      aspect-ratio: 16 / 10;
-    }
-
-    .project--side .project__media,
-    [data-slug="compass"] .project__media,
-    [data-slug="yatut"] .project__media {
-      height: auto;
-      aspect-ratio: 1 / 1;
-    }
-
-    .project--small .project__media,
-    [data-slug="bebble"] .project__media {
-      height: auto;
-      aspect-ratio: 4 / 5;
-    }
-
-    .project--center .project__media,
-    [data-slug="rv"] .project__media {
-      height: auto;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 5 / 4;
     }
   }
 
@@ -379,26 +418,7 @@ const positions = [
     }
 
     .project__media {
-      aspect-ratio: 4 / 5;
-    }
-
-    .project--side .project__media,
-    [data-slug="compass"] .project__media,
-    [data-slug="yatut"] .project__media {
-      height: auto;
-      aspect-ratio: 1 / 1 !important;
-    }
-
-    .project--center .project__media,
-    [data-slug="rv"] .project__media {
-      height: auto;
-      aspect-ratio: 16 / 9 !important;
-    }
-
-    .project--small .project__media,
-    [data-slug="bebble"] .project__media {
-      height: auto;
-      aspect-ratio: 4 / 5 !important;
+      aspect-ratio: 1 / 1;
     }
 
     .project__tags,
@@ -424,6 +444,7 @@ const positions = [
 
   @media (prefers-reduced-motion: reduce) {
     .project,
+    .project__parallax,
     .project__image,
     .project__tags span,
     .project__action,

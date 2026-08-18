@@ -1,18 +1,35 @@
 ---
 import { RuixenGradientFooter } from './ui/ruixen-gradient-footer';
 import Logo from './Logo.astro';
+
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+const isLight = theme === 'light';
+const homePath = isLight ? '/light' : '/';
+
+const lightStops = [
+  { offset: 0, color: '#FD4B32' },
+  { offset: 0.25, color: '#FE6852' },
+  { offset: 0.5, color: '#FFA08E' },
+  { offset: 0.75, color: '#FFC8BE' },
+  { offset: 1, color: '#FFF0ED' },
+];
 ---
 
 <RuixenGradientFooter
   client:load
-  className="site-footer"
+  className={isLight ? 'site-footer theme-light' : 'site-footer'}
   gradientHeight="clamp(20rem, 52vh, 38rem)"
   blur={42}
+  stops={isLight ? lightStops : undefined}
 >
   <div class="footer-content">
     <div class="container footer-top">
       <div class="footer-intro">
-        <a class="footer-brand" href="/" aria-label="YAPIL.art — на главную" data-footer-logo-target>
+        <a class="footer-brand" href={homePath} aria-label="YAPIL.art — на главную" data-footer-logo-target>
           <Logo class="footer-logo" data-footer-logo />
         </a>
         <p>Дизайн-студия полного цикла.<br />От первой идеи до печати или релиза.</p>
@@ -21,9 +38,9 @@ import Logo from './Logo.astro';
       <div class="footer-columns">
         <nav aria-label="Навигация в подвале">
           <h2>Студия</h2>
-          <a href="/#about">О студии</a>
-          <a href="/#services">Услуги</a>
-          <a href="/#cases">Кейсы</a>
+          <a href={`${homePath}#about`}>О студии</a>
+          <a href={`${homePath}#services`}>Услуги</a>
+          <a href={`${homePath}#cases`}>Кейсы</a>
           <a href="/cases">Все работы</a>
         </nav>
 
@@ -51,6 +68,36 @@ import Logo from './Logo.astro';
     padding-top: clamp(3.5rem, 7vw, 7rem);
     color: white;
     background: #0b0b0c;
+  }
+
+  .site-footer.theme-light {
+    color: #1D1D1D;
+    background: #EAE5DF;
+  }
+
+  .site-footer.theme-light .footer-intro p {
+    color: #66635F;
+  }
+
+  .site-footer.theme-light .footer-columns h2 {
+    color: #8C8882;
+  }
+
+  .site-footer.theme-light .footer-columns a {
+    color: #1D1D1D;
+  }
+
+  .site-footer.theme-light .footer-columns a:hover,
+  .site-footer.theme-light .footer-bottom a:hover {
+    color: var(--accent);
+  }
+
+  .site-footer.theme-light .footer-bottom {
+    color: rgba(29, 29, 29, 0.7);
+  }
+
+  .site-footer.theme-light .footer-bottom a {
+    color: rgba(29, 29, 29, 0.7);
   }
 
   .footer-content {
