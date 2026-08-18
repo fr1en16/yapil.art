@@ -5,15 +5,37 @@ import Footer from '../components/Footer.astro';
 
 const casesJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Все кейсы Yapil',
-  url: 'https://yapil.art/cases',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: 'Кейсы и портфолио дизайн-студии Yapil',
+      description: 'Портфолио проектов дизайн-студии Yapil: разработка сайтов, фирменный стиль, айдентика, упаковка и полиграфия для Puma, Cadillac, Dodo Pizza, Lukoil, УАЗ и др.',
+      url: 'https://yapil.art/cases',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Главная',
+          item: 'https://yapil.art',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Кейсы',
+          item: 'https://yapil.art/cases',
+        },
+      ],
+    },
+  ],
 };
 ---
 
 <Base
-  title="Все кейсы"
-  description="Сайты, айдентика, полиграфия и другие проекты дизайн-студии Yapil."
+  title="Кейсы и портфолио проектов"
+  description="Портфолио проектов дизайн-студии Yapil: разработка сайтов, брендинг, упаковка и полиграфия для бизнеса. 8+ лет опыта, более 24 реализованных проектов."
   jsonLd={casesJsonLd}
 >
   <CaseGrid />

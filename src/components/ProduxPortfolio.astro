@@ -394,7 +394,7 @@ const positions = [
     }
   }
 
-  @media (max-width: 39.99rem) {
+  @media (max-width: 47.99rem) {
     .portfolio {
       padding-block: 4.5rem 6rem;
     }
@@ -411,12 +411,36 @@ const positions = [
     .portfolio__grid {
       display: flex;
       flex-direction: column;
-      gap: 4rem;
+      gap: 3.5rem;
     }
 
+    .project,
+    .project--lead,
     .project--side,
-    .project--small {
-      width: 100%;
+    .project--center,
+    .project--small,
+    .project--wide {
+      width: 70%;
+      max-width: 70%;
+      min-width: 0;
+    }
+
+    .project:nth-child(odd) {
+      align-self: flex-start;
+      margin-left: 0;
+    }
+
+    .project:nth-child(even) {
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    .project:nth-child(3) {
+      margin-left: clamp(1rem, 7vw, 2.5rem);
+    }
+
+    .project:nth-child(7) {
+      margin-left: clamp(0.75rem, 5vw, 1.8rem);
     }
 
     .project__media {

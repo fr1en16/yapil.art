@@ -177,6 +177,8 @@ const isLight = theme === 'light';
 </section>
 
 <script>
+  import { submitLead } from '../lib/crmStore';
+
   function setupPhoneMask(phoneInput: HTMLInputElement) {
     const formatPhone = () => {
       const digits = phoneInput.value.replace(/\D/g, '');
@@ -296,19 +298,29 @@ const isLight = theme === 'light';
       }
 
       const formData = new FormData(form);
-      const data = {
-        name: formData.get('name'),
-        phone: formData.get('phone'),
-        services: formData.getAll('services'),
-        message: formData.get('message'),
-        date: new Date().toISOString(),
-      };
+      const services = formData.getAll('services') as string[];
+      const name = String(formData.get('name') || '').trim();
+      const phone = String(formData.get('phone') || '').trim();
+      const message = String(formData.get('message') || '').trim();
 
+      // Submit to central CRM lead receiver
+      submitLead({
+        name,
+        phone,
+        services: services.length > 0 ? services : ['Консультация'],
+        message,
+        source: 'contacts_form',
+        sourceDetails: 'Форма контактов на странице',
+      }).catch((err) => {
+        console.error('CRM submit error:', err);
+      });
+
+      // Legacy storage fallback
       try {
         const stored = JSON.parse(localStorage.getItem('yapil_inquiries') || '[]');
-        stored.push(data);
+        stored.push({ name, phone, services, message, date: new Date().toISOString() });
         localStorage.setItem('yapil_inquiries', JSON.stringify(stored));
-      } catch (err) {
+      } catch {
         // ignore localStorage errors
       }
 

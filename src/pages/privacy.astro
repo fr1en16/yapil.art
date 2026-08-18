@@ -4,9 +4,31 @@ import Base from '../layouts/Base.astro';
 
 const privacyJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  name: 'Конфиденциальность',
-  url: 'https://yapil.art/privacy',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      name: 'Конфиденциальность',
+      description: 'Информация о конфиденциальности и способах связи с дизайн-студией Yapil.',
+      url: 'https://yapil.art/privacy',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Главная',
+          item: 'https://yapil.art',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Конфиденциальность',
+          item: 'https://yapil.art/privacy',
+        },
+      ],
+    },
+  ],
 };
 ---
 

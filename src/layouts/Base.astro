@@ -13,6 +13,8 @@ interface Props {
   type?: 'website' | 'article';
   jsonLd?: Record<string, unknown>;
   theme?: 'dark' | 'light';
+  noindex?: boolean;
+  navOverlay?: boolean;
 }
 
 const {
@@ -22,10 +24,15 @@ const {
   type = 'website',
   jsonLd,
   theme = 'dark',
+  noindex = false,
+  navOverlay,
 } = Astro.props;
-const documentTitle = title === 'Yapil' ? 'Yapil — дизайн-студия' : `${title} — Yapil`;
+const documentTitle = title.includes('Yapil')
+  ? title
+  : `${title} — Дизайн-студия Yapil`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/light' || Astro.url.pathname === '/light/';
+const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
 ---
 
 <!doctype html>
@@ -35,6 +42,11 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/light' || 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
+    <meta name="theme-color" content={theme === 'light' ? '#F7F5F2' : '#0B0B0C'} />
     <link rel="preload" href="/fonts/oranienbaum-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/hero-cover/dm-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
@@ -45,9 +57,11 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/light' || 
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={documentTitle} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={documentTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" sizes="any" />
     <title>{documentTitle}</title>
@@ -56,12 +70,12 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/light' || 
   <body class:list={{ 'is-home': isHome, 'theme-light': theme === 'light' }} data-theme={theme}>
     <a class="skip-link" href="#main-content">К основному содержанию</a>
     <SiteBackground />
-    <Nav overlay={isHome} theme={theme} />
+    <Nav overlay={isNavOverlay} theme={theme} />
     <main id="main-content">
       <slot />
     </main>
     <slot name="footer" />
-    <GridOverlay />
+    {import.meta.env.DEV && <GridOverlay />}
     <SmoothScroll />
   </body>
 </html>

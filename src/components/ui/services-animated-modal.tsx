@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight, Check, X, RotateCcw, Clock, UserCheck, ShieldCheck } from 'lucide-react';
+import { submitLead } from '../../lib/crmStore';
 
 export interface ServiceItem {
   id: string;
@@ -490,18 +491,27 @@ function ServiceApplicationModal({
 
     setIsSubmitting(true);
 
-    const inquiryData = {
+    submitLead({
       name: name.trim(),
       phone: phone.trim(),
       services: selectedServices.length > 0 ? selectedServices : [service.title],
       message: message.trim(),
-      sourceService: service.title,
-      date: new Date().toISOString(),
-    };
+      source: 'service_modal',
+      sourceDetails: `Модальное окно: ${service.title}`,
+    }).catch((err) => {
+      console.error('CRM submit error:', err);
+    });
 
     try {
       const stored = JSON.parse(localStorage.getItem('yapil_inquiries') || '[]');
-      stored.push(inquiryData);
+      stored.push({
+        name: name.trim(),
+        phone: phone.trim(),
+        services: selectedServices.length > 0 ? selectedServices : [service.title],
+        message: message.trim(),
+        sourceService: service.title,
+        date: new Date().toISOString(),
+      });
       localStorage.setItem('yapil_inquiries', JSON.stringify(stored));
     } catch {
       // ignore localStorage errors

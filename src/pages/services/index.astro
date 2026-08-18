@@ -1,0 +1,303 @@
+---
+import Base from '../../layouts/Base.astro';
+import Contacts from '../../components/Contacts.astro';
+import Footer from '../../components/Footer.astro';
+import { servicesList } from '../../data/servicesData';
+
+const servicesPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: 'Услуги дизайн-студии Yapil',
+      description: 'Комплексные услуги дизайн-студии Yapil: разработка сайтов, создание айдентики, брендинг, полиграфия, дизайн презентаций, SMM и абонентское дизайн-сопровождение.',
+      url: 'https://yapil.art/services',
+      provider: {
+        '@type': 'ProfessionalService',
+        name: 'Yapil',
+        url: 'https://yapil.art',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Главная',
+          item: 'https://yapil.art',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Услуги',
+          item: 'https://yapil.art/services',
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Base
+  title="Услуги дизайн-студии Yapil — сайты, айдентика, полиграфия, презентации, SMM"
+  description="Комплексные услуги дизайн-студии Yapil: разработка сайтов под ключ, айдентика и фирменный стиль, полиграфия и упаковка, инвест-презентации, SMM и сопровождение."
+  jsonLd={servicesPageJsonLd}
+>
+  <main class="services-index-page">
+    <header class="services-index-hero container">
+      <nav class="breadcrumb-row" aria-label="Хлебные крошки">
+        <a class="back-link" href="/">
+          <span class="back-link-inner">
+            <span class="back-link-arrow">←</span>
+            <span class="back-link-text">На главную</span>
+          </span>
+        </a>
+      </nav>
+
+      <div class="hero-header-box">
+        <h1 class="hero-title">Услуги студии</h1>
+        <p class="hero-lead">
+          Создаем визуальные системы, сайты и печатные материалы, помогающие бизнесу привлекать клиентов, вызывать доверие и масштабироваться.
+        </p>
+      </div>
+    </header>
+
+    <!-- Services Grid -->
+    <section class="services-catalog-section container" aria-label="Каталог услуг">
+      <div class="services-catalog-grid">
+        {servicesList.map((service) => (
+          <article class="service-catalog-card">
+            <a class="service-catalog-link" href={`/services/${service.slug}`}>
+              <div class="service-card-header">
+                <span class="service-card-num">{service.number}</span>
+                <span class="service-card-arrow">↗</span>
+              </div>
+
+              <div class="service-card-main">
+                <h2 class="service-card-title">{service.name}</h2>
+                <p class="service-card-desc">{service.heroH1}</p>
+              </div>
+
+              <div class="service-card-footer">
+                <div class="service-metrics-mini">
+                  {service.metrics.slice(0, 2).map((m) => (
+                    <span class="metric-pill">
+                      <strong>{m.label}:</strong> {m.text}
+                    </span>
+                  ))}
+                </div>
+                <span class="service-detail-btn">Подробнее об услуге →</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Contacts & Footer -->
+    <Contacts />
+  </main>
+
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .services-index-page {
+    padding-top: clamp(2rem, 5vw, 4rem);
+    color: var(--ink-primary);
+  }
+
+  .services-index-hero {
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .breadcrumb-row {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .back-link {
+    display: inline-flex;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.9rem;
+    will-change: transform;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      color 200ms ease;
+  }
+
+  .back-link-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .back-link-arrow {
+    display: inline-block;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18));
+  }
+
+  .back-link-text {
+    display: inline-block;
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+                letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
+  }
+
+  .back-link:hover,
+  .back-link:focus-visible {
+    color: #ffffff;
+    transform: scale(1.04);
+  }
+
+  .hero-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    line-height: 1;
+    letter-spacing: -0.055em;
+    color: #ffffff;
+  }
+
+  .hero-lead {
+    max-width: 44rem;
+    margin: 0;
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Catalog Grid (Block 2 - Rich Black Gradient Transition) */
+  .services-catalog-section {
+    position: relative;
+    padding-block: clamp(4rem, 8vw, 8rem);
+    border-bottom: 1px solid var(--border-subtle);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(253, 75, 50, 0.14) 0%, transparent 60%),
+      linear-gradient(to bottom, transparent 0%, rgba(11, 11, 12, 0.82) 14%, #0B0B0C 32%, #141417 65%, #0B0B0C 100%);
+  }
+
+  .services-catalog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .services-catalog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gap, 1.5rem);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .services-catalog-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .service-catalog-card {
+    min-height: 22rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%), #0e0e10;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .service-catalog-card:hover {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%), #141417;
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.55);
+  }
+
+  .service-catalog-link {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: clamp(2rem, 3vw, 2.75rem);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .service-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .service-card-num {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .service-card-arrow {
+    font-size: 1.25rem;
+    color: var(--accent-tint, #F7C8BF);
+    transition: transform 0.25s ease;
+  }
+
+  .service-catalog-link:hover .service-card-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  .service-card-title {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+  }
+
+  .service-card-desc {
+    margin: 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.35;
+  }
+
+  .service-card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .service-metrics-mini {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .metric-pill {
+    font-size: 0.78rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .metric-pill strong {
+    color: var(--accent-tint, #F7C8BF);
+    font-weight: 600;
+  }
+
+  .service-detail-btn {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent-tint, #F7C8BF);
+    transition: color 0.2s ease;
+  }
+
+  .service-catalog-link:hover .service-detail-btn {
+    color: #ffffff;
+  }
+</style>

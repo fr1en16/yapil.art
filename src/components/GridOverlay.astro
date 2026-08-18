@@ -1,5 +1,8 @@
 ---
 // Interactive Dev Grid Overlay for Yapil
+if (!import.meta.env.DEV) {
+  return;
+}
 ---
 
 <div id="yapil-grid-overlay" class="grid-overlay" aria-hidden="true">
@@ -290,11 +293,12 @@
     applyState();
   }
 
-  // Support Astro view transitions / initial load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGridOverlay);
-  } else {
-    initGridOverlay();
+  if (import.meta.env.DEV) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGridOverlay);
+    } else {
+      initGridOverlay();
+    }
   }
 </script>
 

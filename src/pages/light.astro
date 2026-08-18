@@ -10,17 +10,44 @@ import Base from '../layouts/Base.astro';
 
 const organizationJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': ['ProfessionalService', 'Organization'],
   name: 'Yapil',
-  url: 'https://yapil.art/light',
+  alternateName: 'Дизайн-студия Yapil',
+  url: 'https://yapil.art',
+  logo: 'https://yapil.art/favicon.svg',
+  image: 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2',
+  description: 'Дизайн-студия Yapil: разработка сайтов, создание айдентики, брендинг, полиграфия, презентации и дизайн-сопровождение для бизнеса.',
   email: 'hi@yapil.art',
-  sameAs: ['https://t.me/yakov_pil'],
+  telephone: '+77067436197',
+  sameAs: [
+    'https://t.me/yakov_pil',
+    'https://wa.me/77067436197',
+  ],
+  founder: {
+    '@type': 'Person',
+    name: 'Яков Пиль',
+    jobTitle: 'Ведущий дизайнер, сооснователь thepeak.kz',
+  },
+  knowsAbout: [
+    'Веб-дизайн',
+    'Разработка сайтов',
+    'Айдентика',
+    'Брендинг',
+    'Полиграфия',
+    'Дизайн упаковки',
+    'SMM',
+    'Дизайн презентаций',
+    'Pitch Deck',
+    'Дизайн-сопровождение',
+  ],
+  areaServed: ['KZ', 'UZ', 'RU', 'Worldwide'],
+  priceRange: '$$$',
 };
 ---
 
 <Base
-  title="Yapil"
-  description="Дизайн-студия Yapil: айдентика, сайты и полиграфия — от первой концепции до печати или релиза."
+  title="Дизайн-студия Yapil — сайты, айдентика и полиграфия для бизнеса"
+  description="Дизайн-студия Yapil: разработка сайтов, создание айдентики, брендинг и полиграфия для бизнеса — от первой концепции до релиза и печати."
   jsonLd={organizationJsonLd}
   theme="light"
 >

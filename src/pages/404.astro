@@ -3,74 +3,197 @@ import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="Страница не найдена" description="Запрошенная страница не найдена.">
-  <section class="not-found container">
-    <div class="not-found-text">
-      <p aria-hidden="true" class="not-found-num">404</p>
-      <h1 class="not-found-title">Страница не найдена</h1>
+<Base
+  title="Страница не найдена — Yapil"
+  description="Запрошенная страница не найдена."
+  noindex={true}
+  navOverlay={true}
+>
+  <section class="hero-cover not-found-cover" aria-labelledby="not-found-title" data-hero-cover>
+    <div class="hero-copy not-found-copy">
+      <p aria-hidden="true" class="hero-layer hero-layer--num not-found-num">404</p>
+      <h1 id="not-found-title" class="hero-layer hero-layer--title not-found-title">Страница не найдена</h1>
+      <a class="hero-link hero-layer hero-layer--cta not-found-btn" href="/">
+        <span class="hero-link-inner">
+          <span class="hero-link-arrow" aria-hidden="true">←</span>
+          <span class="hero-link-text">Вернуться на главную</span>
+        </span>
+      </a>
     </div>
-    <a href="/" class="not-found-btn">
-      <span class="not-found-btn-inner">
-        <span class="not-found-btn-arrow" aria-hidden="true">←</span>
-        <span class="not-found-btn-text">Вернуться на главную</span>
-      </span>
-    </a>
   </section>
+
   <Footer slot="footer" />
 </Base>
 
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero-cover]');
+  if (hero && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let frame = 0;
+    let previousTime = 0;
+
+    const render = (time: number) => {
+      const delta = previousTime ? Math.min((time - previousTime) / 16.67, 2) : 1;
+      previousTime = time;
+      const inertia = 1 - Math.pow(0.93, delta);
+
+      currentX += (targetX - currentX) * inertia;
+      currentY += (targetY - currentY) * inertia;
+
+      hero.style.setProperty('--hero-rotate-x', `${currentY * -10}deg`);
+      hero.style.setProperty('--hero-rotate-y', `${currentX * 12}deg`);
+
+      const isMoving =
+        Math.abs(targetX - currentX) > 0.001 ||
+        Math.abs(targetY - currentY) > 0.001;
+
+      if (isMoving) {
+        frame = requestAnimationFrame(render);
+      } else {
+        currentX = targetX;
+        currentY = targetY;
+        previousTime = 0;
+        frame = 0;
+      }
+    };
+
+    const requestRender = () => {
+      if (!frame) frame = requestAnimationFrame(render);
+    };
+
+    window.addEventListener('pointermove', (event) => {
+      const bounds = hero.getBoundingClientRect();
+      const isOverCover =
+        event.clientX >= bounds.left &&
+        event.clientX <= bounds.right &&
+        event.clientY >= bounds.top &&
+        event.clientY <= bounds.bottom;
+
+      if (isOverCover) {
+        targetX = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width) * 2 - 1));
+        targetY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height) * 2 - 1));
+      } else {
+        targetX = 0;
+        targetY = 0;
+      }
+      requestRender();
+    });
+
+    window.addEventListener('blur', () => {
+      targetX = 0;
+      targetY = 0;
+      requestRender();
+    });
+  }
+</script>
+
 <style>
-  .not-found {
+  @font-face {
+    font-family: 'Hero DM Sans';
+    src: url('/hero-cover/dm-sans.woff2') format('woff2');
+    font-display: swap;
+  }
+
+  .not-found-cover {
+    --hero-rotate-x: 0deg;
+    --hero-rotate-y: 0deg;
+    position: relative;
     display: grid;
-    min-height: 65svh;
-    align-content: center;
-    justify-items: start;
-    padding-block: 4rem;
+    min-height: calc(100svh - 130px);
+    place-items: center;
+    overflow: clip;
+    color: #fff;
+    background: transparent;
+    perspective: 1100px;
+    perspective-origin: 50% 45%;
+    isolation: isolate;
   }
 
-  .not-found-text {
-    transform-origin: left center;
-    transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
-                opacity var(--duration-pushback, 1575ms) ease;
+  .not-found-copy {
+    width: min(calc(100% - 2rem), 60rem);
+    padding: clamp(6.5rem, 12vh, 8.5rem) 1rem clamp(3rem, 6vh, 4.5rem);
+    text-align: center;
+    transform: rotateX(var(--hero-rotate-x)) rotateY(var(--hero-rotate-y));
+    transform-origin: 50% 48%;
+    transform-style: preserve-3d;
+    will-change: transform;
   }
 
-  /* 1. Inverse Parallax (Push-back) of 404 number & title when hovering button */
-  .not-found:has(.not-found-btn:hover) .not-found-text,
-  .not-found:has(.not-found-btn:focus-visible) .not-found-text {
-    transform: scale(0.97) translateY(-4px);
-    opacity: 0.82;
+  /* 3D Layering and Inverse Parallax Transitions */
+  .hero-layer {
+    transform-style: preserve-3d;
+    transition:
+      transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      opacity var(--duration-pushback, 1575ms) ease;
   }
 
+  .hero-layer--num {
+    transform: translateZ(58px);
+  }
+
+  .hero-layer--title {
+    transform: translateZ(32px);
+  }
+
+  .hero-layer--cta {
+    transform: translateZ(42px);
+  }
+
+  /* Inverse Parallax on CTA Hover */
+  .not-found-copy:has(.hero-link:hover) .hero-layer--num,
+  .not-found-copy:has(.hero-link:focus-visible) .hero-layer--num {
+    transform: translateZ(14px) scale(0.965);
+    opacity: 0.85;
+  }
+
+  .not-found-copy:has(.hero-link:hover) .hero-layer--title,
+  .not-found-copy:has(.hero-link:focus-visible) .hero-layer--title {
+    transform: translateZ(8px) scale(0.97);
+    opacity: 0.88;
+  }
+
+  /* Number */
   .not-found-num {
-    margin-bottom: 0;
-    color: var(--accent-deep);
+    margin: 0;
+    color: #ffffff;
     font-family: var(--font-display);
-    font-size: clamp(5rem, 24vw, 18rem);
-    font-weight: 700;
-    line-height: 0.72;
-    letter-spacing: -0.1em;
+    font-size: clamp(6rem, 20vw, 15rem);
+    font-weight: 400;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    user-select: none;
   }
 
+  /* Heading */
   .not-found-title {
-    margin-block: 2rem;
+    margin: clamp(1.25rem, 2.8vh, 2.25rem) 0 clamp(2.25rem, 4.8vh, 3.5rem);
+    color: #ffffff;
     font-family: var(--font-display);
-    font-size: var(--text-h2);
-    line-height: 1;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
   }
 
-  /* 2. Button Container Scaling with Spring Easing */
-  .not-found-btn {
+  /* CTA Button */
+  .hero-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    padding: 0.9rem 1.8rem;
-    color: #FFFFFF;
-    background: var(--ink-primary);
-    border: 1px solid var(--ink-primary);
-    font-weight: 600;
-    font-size: 0.95rem;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.85rem 1.75rem;
+    color: #ffffff;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font: 400 0.9rem / 1 'Hero DM Sans', sans-serif;
     text-decoration: none;
-    transform-origin: left center;
-    will-change: transform, background-color, box-shadow;
+    cursor: pointer;
+    transform-origin: center center;
+    will-change: transform, box-shadow, background-color, border-color;
     transition:
       transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
       background-color var(--duration-btn-color, 770ms) ease,
@@ -78,61 +201,105 @@ import Base from '../layouts/Base.astro';
       box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
   }
 
-  .not-found-btn:hover,
-  .not-found-btn:focus-visible {
-    background: var(--accent);
-    border-color: var(--accent);
-    transform: scale(1.055) translateY(-2px);
-    box-shadow: 0 12px 28px -6px rgba(253, 75, 50, 0.35);
+  .not-found-copy:has(.hero-link:hover) .hero-layer--cta,
+  .not-found-copy:has(.hero-link:focus-visible) .hero-layer--cta,
+  .hero-link:hover,
+  .hero-link:focus-visible {
+    transform: translateZ(82px) scale(1.07);
+    background: #1e1e20;
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 14px 34px -4px rgba(0, 0, 0, 0.45), 0 0 2.2rem rgba(253, 75, 50, 0.25);
   }
 
-  .not-found-btn:active {
-    transform: scale(0.99);
+  .hero-link:active {
+    transform: translateZ(64px) scale(1.01);
     transition-duration: 90ms;
   }
 
-  /* 3. Independent Inner Text & Arrow Scaling */
-  .not-found-btn-inner {
+  .hero-link-inner {
     display: inline-flex;
     align-items: center;
-    gap: 0.65rem;
+    justify-content: center;
+    gap: 0.6rem;
     pointer-events: none;
+    transform-style: preserve-3d;
   }
 
-  .not-found-btn-text {
+  .hero-link-text {
     display: inline-block;
+    letter-spacing: 0.015em;
+    transform: translateZ(4px) scale(1);
+    transform-origin: center center;
     will-change: transform, letter-spacing;
     transition:
       transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
       letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
   }
 
-  .not-found-btn-arrow {
+  .hero-link-arrow {
     display: inline-block;
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1;
+    transform: translateZ(4px) translateX(0);
     will-change: transform;
     transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
   }
 
-  .not-found-btn:hover .not-found-btn-text,
-  .not-found-btn:focus-visible .not-found-btn-text {
-    transform: scale(1.04);
-    letter-spacing: 0.025em;
+  .hero-link:hover .hero-link-text,
+  .hero-link:focus-visible .hero-link-text {
+    transform: translateZ(12px) scale(1.04);
+    letter-spacing: 0.035em;
   }
 
-  .not-found-btn:hover .not-found-btn-arrow,
-  .not-found-btn:focus-visible .not-found-btn-arrow {
-    transform: translateX(-4px) scale(1.15);
+  .hero-link:hover .hero-link-arrow,
+  .hero-link:focus-visible .hero-link-arrow {
+    transform: translateZ(12px) translateX(-3px) scale(1.12);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .not-found-text,
-    .not-found-btn,
-    .not-found-btn-text,
-    .not-found-btn-arrow {
+  @media (max-width: 47.99rem) {
+    .not-found-copy {
+      width: min(100% - 1.5rem, 35rem);
+      padding-inline: 0;
+      padding-top: 6.5rem;
+      transform: none;
+    }
+
+    .hero-layer {
+      transform: none !important;
+    }
+
+    .not-found-num {
+      font-size: clamp(4.5rem, 24vw, 7.5rem);
+    }
+
+    .not-found-title {
+      font-size: clamp(1.85rem, 7.5vw, 2.6rem);
+    }
+
+    .not-found-copy:has(.hero-link:hover) .hero-layer--num,
+    .not-found-copy:has(.hero-link:focus-visible) .hero-layer--num,
+    .not-found-copy:has(.hero-link:hover) .hero-layer--title,
+    .not-found-copy:has(.hero-link:focus-visible) .hero-layer--title {
+      transform: scale(0.985) !important;
+      opacity: 0.9;
+    }
+
+    .hero-link:hover,
+    .hero-link:focus-visible {
+      transform: scale(1.03) !important;
+    }
+  }
+
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    .not-found-copy,
+    .hero-layer,
+    .hero-link,
+    .hero-link-text,
+    .hero-link-arrow {
       transform: none !important;
       transition: none !important;
     }
   }
 </style>
+
+
