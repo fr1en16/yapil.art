@@ -35,7 +35,7 @@ const cards = [
         агентства
       </>
     ),
-    text: 'Яков\u00A0— сооснователь и\u00A0ключевой дизайнер thepeak.kz. Оттуда мы\u00A0принесли процессы, которые держат сроки на\u00A0больших проектах.',
+    text: 'Яков был ключевым дизайнером в\u00A0thePeak, которое делало визуал для LUKOIL, Cadillac и\u00A0PUMA, Gippo. Оттуда\u00A0— процессы, по\u00A0которым мы\u00A0держим сроки на\u00A0больших проектах.',
   },
   {
     id: 'three-directions',
@@ -75,12 +75,12 @@ export default function AboutCompact() {
               >
                 {/* Top: Title and description (Headings perfectly aligned along the same horizontal line) */}
                 <div className="flex flex-col gap-5 sm:gap-6">
-                  <h3
+                  <h2
                     className="m-0 p-0 text-2xl sm:text-[2rem] font-normal leading-[1.05] tracking-[-0.035em] text-white"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
                     {card.title}
-                  </h3>
+                  </h2>
                   <p className="m-0 p-0 text-base leading-[1.3] text-white/80 text-pretty">
                     {card.text}
                   </p>

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
+import PdfSlider from '../../components/PdfSlider.astro';
 
 export async function getStaticPaths() {
   const cases = await getCollection('cases');
@@ -56,36 +57,38 @@ const creativeWorkJsonLd = {
       </div>
     </header>
 
-    <div class="case-cover">
-      {isVideo ? (
-        <video
-          src={c.data.cover}
-          muted
-          loop
-          playsinline
-          controls
-          preload="none"
-          aria-label={`${c.data.title}: видео обложки проекта`}
-        ></video>
-      ) : c.data.cover.startsWith('/') ? (
-        <img
-          src={c.data.cover}
-          alt={`${c.data.title} — ${c.data.summary}`}
-          loading="lazy"
-          decoding="async"
-        />
-      ) : (
-        <Image
-          src={c.data.cover}
-          alt={`${c.data.title} — ${c.data.summary}`}
-          inferSize
-          widths={[600, 1000, 1600]}
-          sizes="100vw"
-          format="webp"
-          quality={75}
-          loading="lazy"
-        />
-      )}
+    <div class="case-cover" data-parallax-media>
+      <div class="case-cover-parallax" data-parallax-target>
+        {isVideo ? (
+          <video
+            src={c.data.cover}
+            muted
+            loop
+            playsinline
+            autoplay
+            preload="none"
+            aria-label={`${c.data.title}: видео обложки проекта`}
+          ></video>
+        ) : c.data.cover.startsWith('/') ? (
+          <img
+            src={c.data.cover}
+            alt={`${c.data.title} — ${c.data.summary}`}
+            loading="eager"
+            decoding="async"
+          />
+        ) : (
+          <Image
+            src={c.data.cover}
+            alt={`${c.data.title} — ${c.data.summary}`}
+            inferSize
+            widths={[600, 1000, 1600]}
+            sizes="100vw"
+            format="webp"
+            quality={75}
+            loading="eager"
+          />
+        )}
+      </div>
     </div>
 
     {(c.data.task || c.data.goal) && (
@@ -109,6 +112,7 @@ const creativeWorkJsonLd = {
 
     <div class="case-body container">
       <Content />
+      <PdfSlider />
     </div>
 
     <div class="case-next container">
@@ -132,7 +136,7 @@ const creativeWorkJsonLd = {
   .back-link {
     display: inline-flex;
     margin-bottom: clamp(3rem, 8vw, 7rem);
-    color: var(--ink-muted);
+    color: rgba(255, 255, 255, 0.75);
     font-size: 0.9rem;
     text-decoration: none;
     will-change: transform;
@@ -160,7 +164,7 @@ const creativeWorkJsonLd = {
 
   .back-link:hover,
   .back-link:focus-visible {
-    color: var(--accent-deep);
+    color: #ffffff;
     transform: scale(1.04);
   }
 
@@ -185,6 +189,7 @@ const creativeWorkJsonLd = {
     font-size: var(--text-hero);
     line-height: 1;
     letter-spacing: -0.065em;
+    color: #ffffff;
     overflow-wrap: anywhere;
   }
 
@@ -192,23 +197,42 @@ const creativeWorkJsonLd = {
     max-width: 34rem;
     margin: 0;
     font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 400;
+    font-variation-settings: 'wght' 400;
     line-height: 1.3;
+    color: rgba(255, 255, 255, 0.85);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .case-cover {
+    position: relative;
     width: 100%;
-    min-height: min(62vw, 52rem);
-    max-height: 58rem;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     background: var(--border-subtle);
   }
 
-  .case-cover :global(img),
-  .case-cover video {
+  @media (min-width: 48rem) {
+    .case-cover {
+      aspect-ratio: 5 / 4;
+    }
+  }
+
+  .case-cover-parallax {
+    position: absolute;
+    inset: -14% 0;
+    width: 100%;
+    height: 128%;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .case-cover-parallax :global(img),
+  .case-cover-parallax img,
+  .case-cover-parallax video {
     width: 100%;
     height: 100%;
-    min-height: inherit;
-    max-height: inherit;
     object-fit: cover;
   }
 
@@ -231,7 +255,7 @@ const creativeWorkJsonLd = {
 
   .case-brief span {
     grid-row: 1 / span 2;
-    color: var(--accent-deep);
+    color: var(--accent-tint, #F7C8BF);
     font-family: var(--font-display);
     font-size: 0.75rem;
     font-weight: 700;
@@ -242,13 +266,18 @@ const creativeWorkJsonLd = {
     font-family: var(--font-display);
     font-size: clamp(1.5rem, 3vw, 2.5rem);
     line-height: 1;
+    color: #ffffff;
   }
 
   .case-brief p {
     max-width: 43rem;
     margin: 0;
-    color: var(--ink-muted);
+    font-weight: 400;
+    font-variation-settings: 'wght' 400;
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.3;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .case-body {
@@ -259,6 +288,96 @@ const creativeWorkJsonLd = {
     margin-top: 0;
   }
 
+  .case-body :global(p) {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.05rem, 1.25vw, 1.25rem);
+    font-weight: 400;
+    font-variation-settings: 'wght' 400;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: -0.015em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .case-body :global(h2) {
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    margin-bottom: 1.25rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+    line-height: 1.1;
+    color: #ffffff;
+    letter-spacing: -0.035em;
+  }
+
+  .case-body :global(h3) {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    line-height: 1.15;
+    color: #ffffff;
+    letter-spacing: -0.025em;
+  }
+
+  .case-body :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--border-subtle);
+    margin-block: clamp(3rem, 6vw, 5rem);
+  }
+
+  .case-body :global(.media-grid) {
+    display: grid;
+    gap: 1.5rem;
+    margin-block: 2.5rem;
+  }
+
+  .case-body :global(.media-grid-2) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 48rem) {
+    .case-body :global(.media-grid-2) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .case-body :global(figure) {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .case-body :global(figure img),
+  .case-body :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--border-subtle);
+    background: var(--border-subtle);
+  }
+
+  .case-body :global(figcaption) {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.35;
+  }
+
+  .case-body :global(.video-container) {
+    width: 100%;
+    margin-block: 2.5rem;
+    border: 1px solid var(--border-subtle);
+    background: #000;
+    overflow: hidden;
+  }
+
+  .case-body :global(video) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
   .case-next {
     padding-block: clamp(4rem, 10vw, 10rem);
     text-align: center;
@@ -266,7 +385,7 @@ const creativeWorkJsonLd = {
 
   .case-next p {
     margin-bottom: 0.5rem;
-    color: var(--ink-muted);
+    color: rgba(255, 255, 255, 0.75);
     transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
                 opacity var(--duration-pushback, 1575ms) ease;
     transform-origin: center bottom;
@@ -281,7 +400,7 @@ const creativeWorkJsonLd = {
 
   .case-next-link {
     display: inline-block;
-    color: var(--accent-deep);
+    color: #ffffff;
     font-family: var(--font-display);
     font-size: clamp(1.8rem, 5vw, 4rem);
     font-weight: 700;
@@ -296,7 +415,7 @@ const creativeWorkJsonLd = {
 
   .case-next-link:hover,
   .case-next-link:focus-visible {
-    color: var(--accent);
+    color: var(--accent-tint, #F7C8BF);
     transform: scale(1.05) translateY(-2px);
   }
 

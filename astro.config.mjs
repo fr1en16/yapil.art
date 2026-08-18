@@ -10,6 +10,9 @@ export default defineConfig({
   integrations: [sitemap(), react()],
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'framer-motion', 'lucide-react', 'gsap'],
+    },
   },
   image: {
     remotePatterns: [{ protocol: 'https', hostname: 'media.yapil.art' }],

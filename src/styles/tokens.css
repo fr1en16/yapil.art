@@ -1,37 +1,71 @@
 :root {
+  /* 1. Colors & Accents */
   --accent: #FD4B32;
   --accent-hover: #E63A22;
   --accent-deep: #A32A17;
   --accent-tint: #F7C8BF;
+  --accent-soft: #FFDBD7;
+  --accent-cyan: #80EFC9;
 
-  --bg-primary: #FFFAF9;
-  --bg-card: #FFFFFF;
-  --ink-primary: #1D1D1D;
-  --ink-muted: #737373;
-  --border-subtle: #E6E6E6;
+  /* 2. Dark Theme Semantics (Default) */
+  --bg-primary: #120908;
+  --bg-section-dark: #0B0B0C;
+  --bg-section-grad: #181818;
+  --bg-card: rgba(255, 255, 255, 0.08);
+  --bg-card-faint: rgba(255, 255, 255, 0.04);
+  --ink-primary: #FFFFFF;
+  --ink-muted: rgba(255, 255, 255, 0.72);
+  --ink-tertiary: rgba(255, 255, 255, 0.40);
+  --border-subtle: rgba(255, 255, 255, 0.16);
+  --border-faint: rgba(255, 255, 255, 0.08);
 
+  /* 3. Typography Families */
   --font-body: 'Inter Tight Variable', 'Arial Narrow', sans-serif;
   --font-display: 'Oranienbaum', Georgia, serif;
+  --font-hero-sans: 'Hero DM Sans', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-accent: var(--font-body);
 
+  /* 4. Layout & Grid System */
   --container-max: 88rem;
   --container-inline-space: 2rem;
   --grid-gap: clamp(0.5rem, 0.75vw, 0.75rem);
+  --section-padding-y: clamp(4.5rem, 9vw, 9rem);
 
-  --text-hero: clamp(3rem, 7vw + 1rem, 5.5rem);
-  --text-h2: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  /* 5. Fluid Typography Scale */
+  --text-hero: clamp(4rem, 7.3vw, 7rem);
+  --text-h2: clamp(2.75rem, 7vw, 5.5rem);
+  --text-h3: clamp(1.5rem, 2.1vw, 2.25rem);
+  --text-lead: clamp(1rem, 1.4vw, 1.15rem);
   --text-body: clamp(1rem, 0.2vw + 0.95rem, 1.05rem);
+  --text-caption: clamp(0.62rem, 0.75vw, 0.78rem);
 
-  /* Micro-interaction & Button Physics (Scaled 3.5x for ultra-smooth cinema feel) */
+  /* 6. Cinema Micro-interaction & Motion Physics (Scaled 3.5x for ultra-smooth feel) */
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-elastic: cubic-bezier(0.16, 1, 0.3, 1.12);
   --ease-text-stagger: cubic-bezier(0.16, 1, 0.3, 1.18);
   --ease-pushback: cubic-bezier(0.2, 0.9, 0.3, 1);
+  --ease-media-zoom: cubic-bezier(0.25, 1, 0.5, 1);
 
   --duration-btn: 1330ms;
   --duration-btn-text: 910ms;
   --duration-pushback: 1575ms;
   --duration-btn-color: 770ms;
+  --duration-media-zoom: 800ms;
   --delay-btn-text: 90ms;
   --delay-btn-icon: 140ms;
+}
+
+/* 7. Light Theme Semantics */
+body.theme-light,
+[data-theme='light'] {
+  --bg-primary: #FFFAF9;
+  --bg-section-light: #EAE5DF;
+  --bg-gradient-top: #F7F5F2;
+  --bg-card: #FFFFFF;
+  --ink-primary: #1D1D1D;
+  --ink-muted: #66635F;
+  --ink-tertiary: #8C8882;
+  --border-subtle: #D5D2CE;
+  --border-faint: rgba(0, 0, 0, 0.08);
 }

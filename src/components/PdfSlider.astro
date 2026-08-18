@@ -1,0 +1,470 @@
+---
+interface Props {
+  src?: string;
+  title?: string;
+}
+
+const { src, title = '' } = Astro.props;
+---
+
+{src ? (
+  <div class="pdf-slider" data-url={src} data-title={title}></div>
+) : null}
+
+<script>
+  let pdfjsPromise: Promise<any> | null = null;
+
+  function loadPdfJs(): Promise<any> {
+    if ((window as any).pdfjsLib) {
+      return Promise.resolve((window as any).pdfjsLib);
+    }
+    if (pdfjsPromise) {
+      return pdfjsPromise;
+    }
+
+    pdfjsPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.async = true;
+      script.onload = () => {
+        const lib = (window as any).pdfjsLib;
+        if (lib) {
+          lib.GlobalWorkerOptions.workerSrc =
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          resolve(lib);
+        } else {
+          reject(new Error('PDF.js failed to initialize'));
+        }
+      };
+      script.onerror = () => {
+        pdfjsPromise = null;
+        reject(new Error('Failed to load PDF.js script from CDN'));
+      };
+      document.head.appendChild(script);
+    });
+
+    return pdfjsPromise;
+  }
+
+  function setupSlider(el: HTMLElement) {
+    if (el.hasAttribute('data-pdf-initialized')) return;
+    el.setAttribute('data-pdf-initialized', 'true');
+
+    const url = el.getAttribute('data-url') || el.getAttribute('src');
+    const title = el.getAttribute('data-title') || el.getAttribute('title') || 'Документ';
+
+    if (!url) return;
+
+    el.innerHTML = `
+      <div class="pdf-slider-wrapper">
+        <div class="pdf-slider-stage">
+          <div class="pdf-slider-loading">
+            <div class="pdf-spinner" aria-hidden="true"></div>
+            <span class="pdf-loading-text">Загрузка документа...</span>
+          </div>
+          <canvas class="pdf-slider-canvas"></canvas>
+          <button type="button" class="pdf-nav-btn pdf-nav-prev" aria-label="Предыдущая страница" disabled>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" class="pdf-nav-btn pdf-nav-next" aria-label="Следующая страница" disabled>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+        <div class="pdf-slider-footer">
+          <div class="pdf-slider-info">
+            <span class="pdf-badge">PDF</span>
+            <span class="pdf-title">${title}</span>
+          </div>
+          <div class="pdf-slider-actions">
+            <span class="pdf-page-count">— / —</span>
+            <a href="${url}" target="_blank" rel="noopener noreferrer" class="pdf-open-link" title="Открыть PDF в новой вкладке">
+              <span>Открыть PDF</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const stageEl = el.querySelector('.pdf-slider-stage') as HTMLElement;
+    const canvasEl = el.querySelector('.pdf-slider-canvas') as HTMLCanvasElement;
+    const loadingEl = el.querySelector('.pdf-slider-loading') as HTMLElement;
+    const prevBtn = el.querySelector('.pdf-nav-prev') as HTMLButtonElement;
+    const nextBtn = el.querySelector('.pdf-nav-next') as HTMLButtonElement;
+    const pageCountEl = el.querySelector('.pdf-page-count') as HTMLElement;
+
+    let pdfDoc: any = null;
+    let currentPage = 1;
+    let totalPages = 0;
+    let currentRenderTask: any = null;
+    let isHovered = false;
+
+    function updateNavState() {
+      if (!pdfDoc) return;
+      pageCountEl.textContent = `${currentPage} / ${totalPages}`;
+      prevBtn.disabled = currentPage <= 1;
+      nextBtn.disabled = currentPage >= totalPages;
+    }
+
+    async function renderPage(num: number) {
+      if (!pdfDoc || !canvasEl) return;
+
+      if (currentRenderTask) {
+        try {
+          currentRenderTask.cancel();
+        } catch {}
+      }
+
+      try {
+        const page = await pdfDoc.getPage(num);
+        const ctx = canvasEl.getContext('2d');
+        if (!ctx) return;
+
+        const containerWidth = stageEl.clientWidth || 800;
+        const unscaledViewport = page.getViewport({ scale: 1 });
+        const scale = containerWidth / unscaledViewport.width;
+        const viewport = page.getViewport({ scale });
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvasEl.width = Math.floor(viewport.width * dpr);
+        canvasEl.height = Math.floor(viewport.height * dpr);
+        canvasEl.style.width = `${viewport.width}px`;
+        canvasEl.style.height = `${viewport.height}px`;
+
+        ctx.resetTransform();
+        ctx.scale(dpr, dpr);
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport,
+        };
+
+        currentRenderTask = page.render(renderContext);
+        await currentRenderTask.promise;
+        currentRenderTask = null;
+
+        loadingEl.style.display = 'none';
+        canvasEl.style.opacity = '1';
+        updateNavState();
+      } catch (err: any) {
+        if (err?.name !== 'RenderingCancelledException') {
+          console.error('PDF Page Render Error:', err);
+        }
+      }
+    }
+
+    async function loadDocument() {
+      try {
+        const pdfjs = await loadPdfJs();
+        const loadingTask = pdfjs.getDocument(url);
+        pdfDoc = await loadingTask.promise;
+        totalPages = pdfDoc.numPages;
+        currentPage = 1;
+        updateNavState();
+        await renderPage(currentPage);
+      } catch (err) {
+        console.error('Error loading PDF document:', err);
+        loadingEl.innerHTML = `
+          <span style="color: var(--accent-deep); font-size: 13px;">Не удалось загрузить PDF-файл.</span>
+          <a href="${url}" target="_blank" rel="noopener noreferrer" style="margin-top: 8px; font-size: 12px; color: var(--accent); text-decoration: underline;">Открыть напрямую ↗</a>
+        `;
+      }
+    }
+
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderPage(currentPage);
+      }
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    stageEl.addEventListener('touchstart', (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    stageEl.addEventListener('touchend', (e: TouchEvent) => {
+      const diffX = e.changedTouches[0].clientX - touchStartX;
+      const diffY = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX < 0 && currentPage < totalPages) {
+          currentPage++;
+          renderPage(currentPage);
+        } else if (diffX > 0 && currentPage > 1) {
+          currentPage--;
+          renderPage(currentPage);
+        }
+      }
+    }, { passive: true });
+
+    // Keyboard support when hovering
+    stageEl.addEventListener('mouseenter', () => { isHovered = true; });
+    stageEl.addEventListener('mouseleave', () => { isHovered = false; });
+
+    const keyHandler = (e: KeyboardEvent) => {
+      if (!isHovered) return;
+      if (e.key === 'ArrowLeft' && currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+      } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+        currentPage++;
+        renderPage(currentPage);
+      }
+    };
+    window.addEventListener('keydown', keyHandler);
+
+    // Responsive resize handler
+    let resizeTimer: any = null;
+    const resizeObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (pdfDoc) {
+          renderPage(currentPage);
+        }
+      }, 150);
+    });
+    resizeObserver.observe(stageEl);
+
+    // IntersectionObserver for lazy loading
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadDocument();
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin: '800px 0px' }
+    );
+    observer.observe(el);
+  }
+
+  function initAllPdfSliders() {
+    const sliders = document.querySelectorAll<HTMLElement>('.pdf-slider, pdf-slider');
+    sliders.forEach(setupSlider);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllPdfSliders);
+  } else {
+    initAllPdfSliders();
+  }
+
+  document.addEventListener('astro:page-load', initAllPdfSliders);
+</script>
+
+<style is:global>
+  .pdf-slider,
+  pdf-slider {
+    display: block;
+    width: 100%;
+    margin-block: 2.5rem;
+  }
+
+  .pdf-slider-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pdf-slider-stage {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    user-select: none;
+    touch-action: pan-y;
+  }
+
+  .pdf-slider-canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .pdf-slider-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: var(--bg-card, #ffffff);
+    color: var(--ink-muted);
+    z-index: 2;
+  }
+
+  .pdf-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(0, 0, 0, 0.08);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: pdf-spin 0.8s linear infinite;
+  }
+
+  .pdf-loading-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @keyframes pdf-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .pdf-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity 0.25s ease,
+      background 0.2s ease,
+      transform 0.2s ease;
+    z-index: 10;
+  }
+
+  .pdf-slider-stage:hover .pdf-nav-btn:not(:disabled) {
+    opacity: 1;
+  }
+
+  .pdf-nav-btn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  .pdf-nav-prev {
+    left: 14px;
+  }
+
+  .pdf-nav-next {
+    right: 14px;
+  }
+
+  .pdf-nav-btn:disabled {
+    opacity: 0 !important;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  @media (max-width: 48rem) {
+    .pdf-nav-btn:not(:disabled) {
+      opacity: 0.85;
+      width: 38px;
+      height: 38px;
+    }
+    .pdf-nav-prev {
+      left: 8px;
+    }
+    .pdf-nav-next {
+      right: 8px;
+    }
+  }
+
+  .pdf-slider-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-inline: 0.25rem;
+    flex-wrap: wrap;
+  }
+
+  .pdf-slider-info {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+  }
+
+  .pdf-slider-info .pdf-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: var(--font-body);
+    color: #ffffff;
+    background: var(--accent);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .pdf-slider-info .pdf-title {
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.25;
+  }
+
+  .pdf-slider-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-left: auto;
+  }
+
+  .pdf-page-count {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.05em;
+  }
+
+  .pdf-open-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .pdf-open-link:hover {
+    color: var(--accent-tint, #F7C8BF);
+  }
+</style>

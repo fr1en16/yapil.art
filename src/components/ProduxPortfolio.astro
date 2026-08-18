@@ -48,12 +48,14 @@ const positions = [
 
       return (
         <article class:list={['project', positions[index]]} data-slug={project.id}>
-          <a class="project__link" href={`/case/${project.id}`} aria-label={`${project.data.title}: открыть кейс`}>
+          <a class="project__link" href={`/case/${project.id}`}>
             <div class="project__media" data-parallax-media>
               <div class="project__parallax" data-parallax-target>
                 <div class="project__image">
                   {isVideo ? (
-                    <video src={project.data.cover} muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+                    <video src={project.data.cover} muted loop playsinline autoplay preload="none" aria-hidden="true">
+                      <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
+                    </video>
                   ) : project.data.cover.startsWith('/') ? (
                     <img
                       src={project.data.cover}

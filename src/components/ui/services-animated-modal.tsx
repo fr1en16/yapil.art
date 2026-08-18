@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, ArrowRight, Check, X, RotateCcw } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, Check, X, RotateCcw, Clock, UserCheck, ShieldCheck } from 'lucide-react';
 
 export interface ServiceItem {
   id: string;
@@ -65,9 +66,34 @@ export const services: ServiceItem[] = [
     image: 'https://media.yapil.art/services/%D0%BF%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D0%B8.webp',
     color: '#141416',
   },
+  {
+    id: 'support',
+    number: '06',
+    title: 'Сопровождение',
+    description: 'Работаем как ваш внешний арт-отдел: закрываем регулярные задачи, готовим промо, держим стиль по гайдлайну.',
+    caseBadge: 'Кейс // ONmacabim',
+    caseLink: '/case/onmacabim',
+    image: '/services/support.webp',
+    color: '#141416',
+  },
 ];
 
-const ALL_SERVICE_CHIPS = ['Сайты', 'Айдентика', 'Полиграфия', 'SMM', 'Презентации', 'Поддержка'];
+const ALL_SERVICE_CHIPS = ['Сайты', 'Айдентика', 'Полиграфия', 'SMM', 'Презентации', 'Сопровождение'];
+
+const SERVICE_CTA_DESCRIPTIONS: Record<string, string> = {
+  websites:
+    'Опишите задачу или оставьте контакты. На созвоне подберём стек под неё и посчитаем сроки со сметой.',
+  identity:
+    'Расскажите о бренде или оставьте контакты. Разберём стиль, соберём ТЗ и посчитаем этапы работы.',
+  print:
+    'Укажите тираж и материалы или оставьте контакты. Подгоним макет под типографию и посчитаем стоимость.',
+  smm:
+    'Расскажите о ваших соцсетях. Разберём позиционирование и предложим план публикаций.',
+  presentations:
+    'Расскажите о цели презентации. Соберём структуру и упакуем данные в инфографику, сроки назовём сразу на созвоне.',
+  support:
+    'Опишите ваши задачи по дизайну или оставьте контакты. Подберём формат сопровождения, объём и график под них.',
+};
 
 const scaleAnimation = {
   initial: { scale: 0, x: '-50%', y: '-50%' },
@@ -91,12 +117,17 @@ export default function ServicesAnimatedModal({
   theme?: 'dark' | 'light';
 }) {
   const isLight = theme === 'light';
+  const [mounted, setMounted] = useState(false);
   const [hoverModal, setHoverModal] = useState<{ active: boolean; index: number }>({
     active: false,
     index: 0,
   });
   const [activeServiceModal, setActiveServiceModal] = useState<ServiceItem | null>(null);
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleOpenModal = (service: ServiceItem) => {
     setHoverModal((prev) => ({ ...prev, active: false }));
@@ -126,7 +157,7 @@ export default function ServicesAnimatedModal({
           <div className="col-span-1 md:col-span-7">
             <h2
               id="services-title"
-              className={`text-[clamp(2.75rem,7vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.045em] m-0 ${
+              className={`text-[clamp(2.75rem,7vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.04em] m-0 ${
                 isLight ? 'text-[#1D1D1D]' : 'text-white'
               }`}
               style={{ fontFamily: 'var(--font-display)' }}
@@ -150,14 +181,15 @@ export default function ServicesAnimatedModal({
           role="list"
         >
           {services.map((item, index) => (
-            <ServiceRow
-              key={item.id}
-              item={item}
-              index={index}
-              isLight={isLight}
-              setHoverModal={setHoverModal}
-              onOpenModal={handleOpenModal}
-            />
+            <div key={item.id} role="listitem" className="w-full">
+              <ServiceRow
+                item={item}
+                index={index}
+                isLight={isLight}
+                setHoverModal={setHoverModal}
+                onOpenModal={handleOpenModal}
+              />
+            </div>
           ))}
         </div>
 
@@ -167,16 +199,21 @@ export default function ServicesAnimatedModal({
         )}
       </div>
 
-      {/* Pop-up Service Application Modal */}
-      <AnimatePresence>
-        {activeServiceModal && (
-          <ServiceApplicationModal
-            service={activeServiceModal}
-            isLight={isLight}
-            onClose={handleCloseModal}
-          />
+      {/* Pop-up Service Application Modal Portal (rendered into body above header) */}
+      {mounted &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {activeServiceModal && (
+              <ServiceApplicationModal
+                service={activeServiceModal}
+                isLight={isLight}
+                onClose={handleCloseModal}
+              />
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </section>
   );
 }
@@ -205,7 +242,6 @@ function ServiceRow({
       }`}
       onMouseEnter={() => setHoverModal({ active: true, index })}
       onMouseLeave={() => setHoverModal({ active: false, index })}
-      aria-label={`Услуга: ${item.title}. Нажмите, чтобы открыть форму заявки`}
       aria-haspopup="dialog"
     >
       {/* Left side: Number & Title */}
@@ -487,81 +523,132 @@ function ServiceApplicationModal({
     setIsSubmitted(false);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   return (
-    <div
-      className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-5 md:p-8 overflow-y-auto"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      style={{
+        backdropFilter: 'blur(30px)',
+        WebkitBackdropFilter: 'blur(30px)',
+      }}
+      className={`fixed inset-0 w-screen h-screen z-[9990] overflow-y-auto overscroll-contain transition-colors duration-300 ${
+        isLight
+          ? 'bg-black/10 text-[#1D1D1D]'
+          : 'bg-black/10 text-white'
+      }`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-service-title"
       onClick={onClose}
     >
-      {/* Backdrop */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.25 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-md pointer-events-none"
-        aria-hidden="true"
-      />
-
-      {/* Modal Dialog Card */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className={`relative z-10 w-full max-w-xl md:max-w-2xl max-h-[92vh] flex flex-col overflow-hidden my-auto overscroll-contain ${
-          isLight
-            ? 'bg-[#FAF8F5] border border-black/15 text-[#1D1D1D] shadow-[0_30px_90px_rgba(0,0,0,0.35)]'
-            : 'bg-[#121214] border border-white/20 text-white shadow-[0_30px_90px_rgba(0,0,0,0.95)]'
-        }`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Accent Glow Top Border */}
-        <div className="h-1 w-full bg-gradient-to-r from-[#FD4B32] via-[#FD4B32]/70 to-[#FD4B32]" />
-
-        {/* Scrollable Container */}
-        <div className="overflow-y-auto p-6 sm:p-8 md:p-10 space-y-6 overscroll-contain">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-baseline gap-3 sm:gap-4">
-              <span className="font-mono text-base sm:text-lg text-[#FD4B32]">
-                {service.number}
-              </span>
-              <h3
+      {/* 12-Column Grid Container */}
+      <div className="container min-h-screen py-12 md:py-20 flex flex-col justify-center relative">
+        <div className="grid grid-cols-1 md:grid-cols-12 md:gap-[var(--grid-gap)] items-stretch w-full my-auto gap-y-12">
+          {/* Left Part: Title & CTA (Columns 1-4) */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="col-span-1 md:col-start-1 md:col-span-4 flex flex-col justify-between h-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top section: Title and Description with generous breathing room */}
+            <div>
+              <h2
                 id="modal-service-title"
-                className={`text-3xl sm:text-4xl md:text-5xl font-normal tracking-[-0.04em] m-0 ${
+                className={`text-4xl sm:text-5xl md:text-6xl font-normal tracking-[-0.04em] m-0 leading-[1.05] mb-8 sm:mb-10 md:mb-12 ${
                   isLight ? 'text-[#1D1D1D]' : 'text-white'
                 }`}
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                {service.title}
-              </h3>
+                Оставьте заявку
+              </h2>
+
+              <p
+                className={`text-base sm:text-lg leading-relaxed m-0 ${
+                  isLight ? 'text-[#1D1D1D]/75' : 'text-white/75'
+                }`}
+              >
+                {SERVICE_CTA_DESCRIPTIONS[service.id] ||
+                  'Расскажите о задаче или оставьте контактные данные — мы свяжемся с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.'}
+              </p>
             </div>
 
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={onClose}
-              className={`p-2 sm:p-2.5 -mr-2 -mt-2 transition-colors border border-transparent cursor-pointer ${
-                isLight
-                  ? 'text-black/50 hover:text-black hover:bg-black/10 hover:border-black/10'
-                  : 'text-white/50 hover:text-white hover:bg-white/10 hover:border-white/20'
-              }`}
-              aria-label="Закрыть окно"
-            >
-              <X className="size-5 sm:size-6" />
-            </button>
-          </div>
+            {/* Bottom section: CTAs aligned to bottom with standalone icons */}
+            <div className="pt-12 md:pt-16 mt-10 md:mt-auto space-y-6">
+              <div className="flex items-start gap-3.5">
+                <Clock className="size-5 text-[#FD4B32] shrink-0 mt-0.5" />
+                <div className="text-sm leading-snug">
+                  <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
+                    Ответ в течение 2 часов
+                  </span>
+                  <span className={`block text-xs mt-0.5 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                    свяжемся в Telegram, WhatsApp или по телефону
+                  </span>
+                </div>
+              </div>
 
+              <div className="flex items-start gap-3.5">
+                <UserCheck className="size-5 text-[#FD4B32] shrink-0 mt-0.5" />
+                <div className="text-sm leading-snug">
+                  <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
+                    Прямой диалог
+                  </span>
+                  <span className={`block text-xs mt-0.5 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                    проект сразу ведёт и оценивает ключевой дизайнер
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5">
+                <ShieldCheck className="size-5 text-[#FD4B32] shrink-0 mt-0.5" />
+                <div className="text-sm leading-snug">
+                  <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
+                    Прозрачная смета
+                  </span>
+                  <span className={`block text-xs mt-0.5 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                    фиксируем этапы и финальную стоимость до старта
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Part: Form Input Fields (Columns 8-12) */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
+            className="col-span-1 md:col-start-8 md:col-span-5 flex flex-col space-y-6"
+            onClick={(e) => e.stopPropagation()}
+          >
           {isSubmitted ? (
             /* Success State */
-            <div className="py-8 sm:py-10 text-center space-y-5">
-              <div className="size-16 sm:size-20 mx-auto bg-[#FD4B32]/15 border border-[#FD4B32] text-[#FD4B32] flex items-center justify-center">
+            <div className="py-10 sm:py-12 text-center space-y-6">
+              <div className="size-16 sm:size-20 mx-auto rounded-none border border-[#FD4B32]/40 bg-[#FD4B32]/10 backdrop-blur-2xl text-[#FD4B32] flex items-center justify-center">
                 <Check className="size-8 sm:size-10 stroke-[2.5]" />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h4
                   className={`text-2xl sm:text-3xl font-normal m-0 ${
                     isLight ? 'text-[#1D1D1D]' : 'text-white'
@@ -579,39 +666,43 @@ function ServiceApplicationModal({
                 </p>
               </div>
 
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3.5">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-full sm:w-auto px-6 py-3 bg-[#FD4B32] hover:bg-[#E63A22] text-white font-medium text-sm transition-colors cursor-pointer border-0"
+                  className="form-cta-button sm:!w-auto !min-h-[3rem] !py-3 !px-7 text-sm"
                 >
-                  Отлично, закрыть
+                  <span className="btn-inner">
+                    <span className="btn-text">Отлично, закрыть</span>
+                  </span>
                 </button>
                 <button
                   type="button"
                   onClick={handleReset}
-                  className={`w-full sm:w-auto px-6 py-3 font-medium text-sm transition-colors cursor-pointer inline-flex items-center justify-center gap-2 ${
+                  className={`form-secondary-button backdrop-blur-2xl !py-3 !px-7 text-sm ${
                     isLight
-                      ? 'bg-black/[0.05] hover:bg-black/10 text-[#1D1D1D]/75 hover:text-[#1D1D] border border-black/15'
-                      : 'bg-white/[0.05] hover:bg-white/10 text-white/75 hover:text-white border border-white/15'
+                      ? 'border-black/[0.08] bg-white/80 text-[#1D1D1D]/75 hover:border-[#FD4B32]/50 hover:bg-white hover:text-[#1D1D1D]'
+                      : 'border-white/10 bg-white/[0.04] text-white/75 hover:border-white/25 hover:bg-white/[0.08] hover:text-white'
                   }`}
                 >
-                  <RotateCcw className="size-3.5" />
-                  <span>Отправить ещё</span>
+                  <span className="btn-inner">
+                    <RotateCcw className="btn-icon size-3.5" />
+                    <span className="btn-text">Отправить ещё</span>
+                  </span>
                 </button>
               </div>
             </div>
           ) : (
             /* Application Form */
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-7" noValidate>
 
               {/* Name & Phone in grid on sm+ */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                 {/* Name */}
-                <div className="space-y-1.5">
+                <div className="space-y-2.5">
                   <label
                     htmlFor="service-name-input"
-                    className={`block text-xs font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                    className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
                     Имя <span className="text-[#FD4B32]">*</span>
                   </label>
@@ -627,14 +718,19 @@ function ServiceApplicationModal({
                       }
                     }}
                     placeholder="Как к вам обращаться"
-                    className={`w-full px-3.5 py-2.5 border text-sm focus:outline-none focus:border-[#FD4B32] transition-colors ${
+                    style={{ outline: 'none' }}
+                    className={`w-full px-4 py-3 sm:py-3.5 rounded-none backdrop-blur-2xl border text-sm outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
                       isLight
-                        ? `bg-white ${
-                            errors.name ? 'border-red-500 bg-red-50' : 'border-black/15'
-                          } text-[#1D1D1D] placeholder-black/30`
-                        : `bg-white/[0.04] ${
-                            errors.name ? 'border-red-500 bg-red-950/10' : 'border-white/15'
-                          } text-white placeholder-white/30`
+                        ? `${
+                            errors.name
+                              ? 'border-red-500 bg-red-50 text-[#1D1D1D]'
+                              : 'border-black/[0.08] bg-white/80 text-[#1D1D1D] placeholder-black/35 hover:border-[#FD4B32]/50 hover:bg-white focus:border-[#FD4B32] focus:bg-white focus:shadow-[0_8px_20px_-4px_rgba(253,75,50,0.12)]'
+                          }`
+                        : `${
+                            errors.name
+                              ? 'border-red-500 bg-red-950/20 text-white'
+                              : 'border-white/10 bg-white/[0.04] text-white placeholder-white/30 hover:border-white/25 hover:bg-white/[0.08] focus:border-[#FD4B32] focus:bg-white/[0.08]'
+                          }`
                     }`}
                     required
                   />
@@ -644,10 +740,10 @@ function ServiceApplicationModal({
                 </div>
 
                 {/* Phone */}
-                <div className="space-y-1.5">
+                <div className="space-y-2.5">
                   <label
                     htmlFor="service-phone-input"
-                    className={`block text-xs font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                    className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
                     Телефон <span className="text-[#FD4B32]">*</span>
                   </label>
@@ -666,14 +762,19 @@ function ServiceApplicationModal({
                       }
                     }}
                     placeholder="+7 (___) ___-__-__"
-                    className={`w-full px-3.5 py-2.5 border text-sm focus:outline-none focus:border-[#FD4B32] transition-colors ${
+                    style={{ outline: 'none' }}
+                    className={`w-full px-4 py-3 sm:py-3.5 rounded-none backdrop-blur-2xl border text-sm outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
                       isLight
-                        ? `bg-white ${
-                            errors.phone ? 'border-red-500 bg-red-50' : 'border-black/15'
-                          } text-[#1D1D1D] placeholder-black/30`
-                        : `bg-white/[0.04] ${
-                            errors.phone ? 'border-red-500 bg-red-950/10' : 'border-white/15'
-                          } text-white placeholder-white/30`
+                        ? `${
+                            errors.phone
+                              ? 'border-red-500 bg-red-50 text-[#1D1D1D]'
+                              : 'border-black/[0.08] bg-white/80 text-[#1D1D1D] placeholder-black/35 hover:border-[#FD4B32]/50 hover:bg-white focus:border-[#FD4B32] focus:bg-white focus:shadow-[0_8px_20px_-4px_rgba(253,75,50,0.12)]'
+                          }`
+                        : `${
+                            errors.phone
+                              ? 'border-red-500 bg-red-950/20 text-white'
+                              : 'border-white/10 bg-white/[0.04] text-white placeholder-white/30 hover:border-white/25 hover:bg-white/[0.08] focus:border-[#FD4B32] focus:bg-white/[0.08]'
+                          }`
                     }`}
                     required
                     inputMode="tel"
@@ -685,15 +786,15 @@ function ServiceApplicationModal({
               </div>
 
               {/* Service Selection Chips */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label
                   id="service-select-label"
-                  className={`block text-xs font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                  className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                 >
                   Интересующие направления
                 </label>
                 <div
-                  className="flex flex-wrap gap-2"
+                  className="flex flex-wrap gap-2.5 sm:gap-3"
                   role="group"
                   aria-labelledby="service-select-label"
                 >
@@ -704,12 +805,13 @@ function ServiceApplicationModal({
                         key={chip}
                         type="button"
                         onClick={() => handleToggleService(chip)}
-                        className={`px-3 py-1.5 text-xs font-medium transition-all cursor-pointer border ${
+                        style={{ borderRadius: '100px' }}
+                        className={`px-4 py-2 text-xs sm:text-sm font-medium rounded-[100px] backdrop-blur-2xl transition-all duration-300 cursor-pointer border outline-none focus:outline-none focus-visible:outline-none ${
                           isSelected
-                            ? 'bg-[#FD4B32] text-white border-[#FD4B32]'
+                            ? 'bg-[#FD4B32] text-white border-[#FD4B32] shadow-[0_4px_14px_rgba(253,75,50,0.35)]'
                             : isLight
-                              ? 'bg-black/[0.04] text-[#1D1D1D]/75 border-black/10 hover:border-black/30 hover:text-[#1D1D]'
-                              : 'bg-white/[0.04] text-white/70 border-white/15 hover:border-white/30 hover:text-white'
+                              ? 'bg-white/80 text-[#1D1D1D]/75 border-black/[0.08] hover:border-[#FD4B32]/50 hover:bg-white hover:text-[#1D1D1D] hover:shadow-[0_8px_20px_-4px_rgba(0,0,0,0.06)]'
+                              : 'bg-white/[0.04] text-white/75 border-white/10 hover:border-white/25 hover:bg-white/[0.08] hover:text-white'
                         }`}
                       >
                         {chip}
@@ -720,10 +822,10 @@ function ServiceApplicationModal({
               </div>
 
               {/* Message */}
-              <div className="space-y-1.5">
+              <div className="space-y-2.5">
                 <label
                   htmlFor="service-message-input"
-                  className={`block text-xs font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                  className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                 >
                   О задаче (необязательно)
                 </label>
@@ -733,17 +835,18 @@ function ServiceApplicationModal({
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Опишите задачу, примерные сроки или оставьте ссылку на материалы"
                   rows={3}
-                  className={`w-full px-3.5 py-2.5 border text-sm focus:outline-none focus:border-[#FD4B32] transition-colors resize-none ${
+                  style={{ outline: 'none' }}
+                  className={`w-full px-4 py-3 sm:py-3.5 rounded-none backdrop-blur-2xl border text-sm outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 resize-none leading-relaxed ${
                     isLight
-                      ? 'bg-white border-black/15 text-[#1D1D1D] placeholder-black/30'
-                      : 'bg-white/[0.04] border-white/15 text-white placeholder-white/30'
+                      ? 'border-black/[0.08] bg-white/80 text-[#1D1D1D] placeholder-black/35 hover:border-[#FD4B32]/50 hover:bg-white focus:border-[#FD4B32] focus:bg-white focus:shadow-[0_8px_20px_-4px_rgba(253,75,50,0.12)]'
+                      : 'border-white/10 bg-white/[0.04] text-white placeholder-white/30 hover:border-white/25 hover:bg-white/[0.08] focus:border-[#FD4B32] focus:bg-white/[0.08]'
                   }`}
                 />
               </div>
 
               {/* Privacy Consent */}
-              <div className="space-y-1">
-                <label className="flex items-start gap-2.5 cursor-pointer select-none">
+              <div className="space-y-1.5 pt-1">
+                <label className="flex items-start gap-3 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={privacy}
@@ -756,18 +859,18 @@ function ServiceApplicationModal({
                     className="sr-only"
                   />
                   <div
-                    className={`size-4 mt-0.5 border flex items-center justify-center transition-colors shrink-0 ${
+                    className={`size-4 mt-0.5 rounded-none border flex items-center justify-center transition-all duration-300 shrink-0 ${
                       privacy
                         ? 'bg-[#FD4B32] border-[#FD4B32] text-white'
                         : isLight
-                          ? 'border-black/30 bg-white'
-                          : 'border-white/30 bg-white/[0.04]'
+                          ? 'border-black/[0.15] bg-white/80 hover:border-[#FD4B32]/50 hover:bg-white'
+                          : 'border-white/20 bg-white/[0.04] hover:border-white/35 hover:bg-white/[0.08]'
                     }`}
                   >
                     {privacy && <Check className="size-3 stroke-[3]" />}
                   </div>
                   <span
-                    className={`text-xs leading-normal ${
+                    className={`text-xs sm:text-sm leading-normal ${
                       isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'
                     }`}
                   >
@@ -789,22 +892,25 @@ function ServiceApplicationModal({
               </div>
 
               {/* Submit Button */}
-              <div className="pt-2">
+              <div className="pt-3 sm:pt-4">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3.5 px-6 bg-[#FD4B32] hover:bg-[#E63A22] disabled:opacity-60 text-white font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer border-0"
+                  className="form-cta-button"
                 >
-                  <span>{isSubmitting ? 'Отправка...' : 'Отправить заявку'}</span>
-                  {!isSubmitting && (
-                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  )}
+                  <span className="btn-inner">
+                    <span className="btn-text">{isSubmitting ? 'Отправка...' : 'Отправить заявку'}</span>
+                    {!isSubmitting && (
+                      <ArrowRight className="btn-icon size-4.5" />
+                    )}
+                  </span>
                 </button>
               </div>
             </form>
           )}
+          </motion.div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 }

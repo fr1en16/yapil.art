@@ -125,20 +125,23 @@
         const brandColors = ['#FF6044', '#FD4B32', '#A32A17', '#310B06'].flatMap(hexToRgb);
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let shaderFrame = 0;
-
         let lastFrameTime = 0;
+        let cachedWidth = 1;
+        let cachedHeight = 1;
+        let isMobileDevice = false;
 
         const resize = () => {
-          const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
-          const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 1.5);
-          canvas.width = Math.max(1, Math.round(window.innerWidth * dpr));
-          canvas.height = Math.max(1, Math.round(window.innerHeight * dpr));
-          gl.viewport(0, 0, canvas.width, canvas.height);
+          isMobileDevice = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+          const dpr = isMobileDevice ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+          cachedWidth = Math.max(1, Math.round(window.innerWidth * dpr));
+          cachedHeight = Math.max(1, Math.round(window.innerHeight * dpr));
+          canvas.width = cachedWidth;
+          canvas.height = cachedHeight;
+          gl.viewport(0, 0, cachedWidth, cachedHeight);
         };
 
         const draw = (time: number) => {
-          const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
-          const minFrameDelta = isMobile ? 40 : 16; // ~25fps on mobile, 60fps on desktop
+          const minFrameDelta = isMobileDevice ? 40 : 16; // ~25fps on mobile, 60fps on desktop
 
           if (time - lastFrameTime < minFrameDelta) {
             if (!document.hidden && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
@@ -146,7 +149,7 @@
           }
           lastFrameTime = time;
 
-          gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+          gl.uniform2f(resolutionLocation, cachedWidth, cachedHeight);
           gl.uniform1f(timeLocation, time * 0.002);
           gl.uniform1f(grainLocation, 0.3);
           gl.uniform3f(backgroundLocation, ...brandBackground);

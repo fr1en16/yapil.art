@@ -87,8 +87,10 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
                             loop
                             playsinline
                             preload="none"
-                            aria-label={item.alt}
-                          />
+                            aria-hidden="true"
+                          >
+                            <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
+                          </video>
                         ) : (
                           <img
                             src={item.url}

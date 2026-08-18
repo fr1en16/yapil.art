@@ -16,12 +16,14 @@ const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
 ---
 
 <article class="case-card">
-  <a href={`/case/${slug}`} aria-label={`${title}: открыть кейс`}>
+  <a href={`/case/${slug}`} aria-label={`${title} — смотреть кейс`}>
     <div class="case-media" data-parallax-media>
       <div class="case-parallax" data-parallax-target>
         <div class="case-image">
           {isVideo ? (
-            <video src={cover} muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+            <video src={cover} muted loop playsinline autoplay preload="none" aria-hidden="true">
+              <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
+            </video>
           ) : cover.startsWith('/') ? (
             <img
               src={cover}
