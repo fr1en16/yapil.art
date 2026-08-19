@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import ReviewForm from '../components/ui/ReviewForm';
+import { getWhatsAppUrl } from '../utils/messengerLinks';
+
+const title = 'Оставить отзыв о сотрудничестве — Студия Yapil';
+const description = 'Форма обратной связи для клиентов дизайн-студии Yapil. Поделитесь вашими впечатлениями о совместной работе и результатах проекта.';
+
+const currentUrl = new URL(Astro.url.pathname, Astro.site).href;
+const whatsappHref = getWhatsAppUrl({
+  pageTitle: 'Форма отзыва клиента',
+  pageUrl: currentUrl,
+  sourceContext: 'review_page',
+});
+---
+
+<Base title={title} description={description} navOverlay={false}>
+  <div class="review-page-container">
+    <div class="container py-12 md:py-20 lg:py-24">
+      {/* 12-Column Grid Layout */}
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-[var(--grid-gap)] items-start">
+        
+        {/* Left Column: Editorial Intro & Quick Contacts (Columns 1-4) */}
+        <aside class="lg:col-span-4 flex flex-col justify-between gap-8 lg:sticky lg:top-28">
+          <div>
+            {/* Section Tag */}
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-[#FD4B32] text-sm font-bold select-none" aria-hidden="true">+</span>
+              <span class="text-xs font-semibold tracking-wider uppercase text-white/90 font-mono">
+                Обратная связь
+              </span>
+            </div>
+
+            {/* Display Title */}
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-normal tracking-[-0.04em] text-white m-0 mb-6 leading-[0.95]"
+              style="font-family: var(--font-display);"
+            >
+              Поделитесь<br />впечатлениями<br />о проекте
+            </h1>
+
+            {/* Lead description */}
+            <p class="text-base sm:text-lg text-white/70 leading-relaxed max-w-md m-0 mb-6">
+              Для нас важна каждая деталь совместной работы. Ваш отзыв помогает нам становиться лучше, а будущим клиентам — видеть реальный опыт работы со студией.
+            </p>
+
+            {/* Timing Badge */}
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-white/10 bg-white/[0.03] text-xs text-white/80 font-mono mb-8">
+              <span class="size-2 rounded-full bg-[#FD4B32] animate-pulse"></span>
+              <span>Время заполнения: ~2–3 минуты</span>
+            </div>
+
+            {/* Direct Contact Notice */}
+            <div class="p-5 border border-white/10 bg-white/[0.02]">
+              <h2 class="text-sm font-semibold text-white mb-2">Предпочитаете аудио или личный диалог?</h2>
+              <p class="text-xs text-white/60 leading-normal mb-4">
+                Вы всегда можете отправить голосовое сообщение или текстовый комментарий напрямую Якову:
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <a
+                  href="https://t.me/yakov_pil"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-[#FD4B32] border border-white/15 text-white text-xs font-medium transition-all no-underline"
+                >
+                  <span>Telegram</span>
+                  <span class="text-[#FD4B32] group-hover:text-white">↗</span>
+                </a>
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-[#FD4B32] border border-white/15 text-white text-xs font-medium transition-all no-underline"
+                >
+                  <span>WhatsApp</span>
+                  <span class="text-[#FD4B32] group-hover:text-white">↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Right Column: Review Form (Columns 5-12) */}
+        <div class="lg:col-span-8 w-full mt-6 lg:mt-0">
+          <ReviewForm client:load theme="dark" />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .review-page-container {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 5rem);
+    background: #0B0B0C;
+    color: white;
+  }
+</style>

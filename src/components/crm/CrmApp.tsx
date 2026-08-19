@@ -31,6 +31,11 @@ import {
   LogOut,
   ShieldCheck,
   KeyRound,
+  Star,
+  MessageSquare,
+  Link as LinkIcon,
+  Share2,
+  Sparkles,
 } from 'lucide-react';
 import type {
   Lead,
@@ -65,6 +70,19 @@ import {
   clearAdminSession,
   type AdminSession,
 } from '../../lib/crmStore';
+import type {
+  ClientReview,
+  ReviewStatus,
+  ReviewStats,
+} from '../../lib/reviewTypes';
+import {
+  getStoredReviews,
+  saveStoredReviews,
+  updateReviewStatus,
+  deleteReview,
+  calculateReviewStats,
+  generateReviewTypeScriptSnippet,
+} from '../../lib/reviewStore';
 
 const STATUS_CONFIG: Record<
   LeadStatus,
@@ -114,6 +132,47 @@ const STATUS_CONFIG: Record<
   },
 };
 
+const REVIEW_STATUS_CONFIG: Record<
+  ReviewStatus,
+  { label: string; bg: string; text: string; border: string; badgeClass: string }
+> = {
+  new: {
+    label: 'Новый',
+    bg: 'rgba(253, 75, 50, 0.12)',
+    text: '#FD4B32',
+    border: 'rgba(253, 75, 50, 0.35)',
+    badgeClass: 'bg-[#FD4B32]/15 text-[#FD4B32] border-[#FD4B32]/40',
+  },
+  reviewed: {
+    label: 'Проверен',
+    bg: 'rgba(99, 102, 241, 0.12)',
+    text: '#818CF8',
+    border: 'rgba(99, 102, 241, 0.35)',
+    badgeClass: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/40',
+  },
+  approved: {
+    label: 'Одобрен',
+    bg: 'rgba(245, 158, 11, 0.12)',
+    text: '#FBBF24',
+    border: 'rgba(245, 158, 11, 0.35)',
+    badgeClass: 'bg-amber-500/15 text-amber-400 border-amber-500/40',
+  },
+  published: {
+    label: 'Опубликован',
+    bg: 'rgba(128, 239, 201, 0.12)',
+    text: '#80EFC9',
+    border: 'rgba(128, 239, 201, 0.35)',
+    badgeClass: 'bg-emerald-500/15 text-[#80EFC9] border-emerald-500/40',
+  },
+  archived: {
+    label: 'В архиве',
+    bg: 'rgba(156, 163, 175, 0.08)',
+    text: '#9CA3AF',
+    border: 'rgba(156, 163, 175, 0.25)',
+    badgeClass: 'bg-gray-500/15 text-gray-400 border-gray-500/30',
+  },
+};
+
 const PRIORITY_CONFIG: Record<LeadPriority, { label: string; color: string; badge: string }> = {
   normal: { label: 'Обычный', color: '#9CA3AF', badge: 'border-white/10 text-white/70' },
   high: { label: 'Высокий', color: '#F59E0B', badge: 'border-amber-500/30 text-amber-400 bg-amber-500/10' },
@@ -133,11 +192,12 @@ export function CrmApp() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [reviews, setReviews] = useState<ClientReview[]>([]);
   const [settings, setSettings] = useState<CrmSettings>(getCrmSettings());
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [serviceFilter, setServiceFilter] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<'kanban' | 'table' | 'analytics'>('kanban');
+  const [viewMode, setViewMode] = useState<'kanban' | 'table' | 'analytics' | 'reviews'>('kanban');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isNewLeadModalOpen, setIsNewLeadModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -145,6 +205,18 @@ export function CrmApp() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [noteInput, setNoteInput] = useState('');
   const [telegramTestStatus, setTelegramTestStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+
+  // Reviews view filters and link generator modal
+  const [reviewSearchQuery, setReviewSearchQuery] = useState('');
+  const [reviewStatusFilter, setReviewStatusFilter] = useState<string>('all');
+  const [reviewRatingFilter, setReviewRatingFilter] = useState<string>('all');
+  const [copiedReviewSnippetId, setCopiedReviewSnippetId] = useState<string | null>(null);
+  const [isGenerateLinkModalOpen, setIsGenerateLinkModalOpen] = useState(false);
+  const [linkClientName, setLinkClientName] = useState('');
+  const [linkClientCompany, setLinkClientCompany] = useState('');
+  const [linkClientRole, setLinkClientRole] = useState('');
+  const [linkClientServices, setLinkClientServices] = useState<string[]>(['Сайты']);
+  const [copiedLinkSuccess, setCopiedLinkSuccess] = useState(false);
 
   // Check auth session
   useEffect(() => {
@@ -161,11 +233,12 @@ export function CrmApp() {
     return () => window.removeEventListener('yapil_admin_auth_changed', handleAuthChange);
   }, []);
 
-  // Load leads and subscribe to real-time events when authenticated
+  // Load leads and reviews and subscribe to real-time events when authenticated
   useEffect(() => {
     if (!session && isSupabaseConfigured) return;
 
     setLeads(getLeads());
+    setReviews(getStoredReviews());
     setSettings(getCrmSettings());
 
     // Sync with Supabase on mount
@@ -186,6 +259,15 @@ export function CrmApp() {
       }
     };
 
+    const handleReviewsChanged = (e: Event) => {
+      const customEvent = e as CustomEvent<ClientReview[]>;
+      if (customEvent.detail) {
+        setReviews(customEvent.detail);
+      } else {
+        setReviews(getStoredReviews());
+      }
+    };
+
     const handleStorage = (e: StorageEvent) => {
       if (e.key === 'yapil_crm_leads_v1' && e.newValue) {
         try {
@@ -194,13 +276,22 @@ export function CrmApp() {
           // ignore
         }
       }
+      if (e.key === 'yapil_crm_reviews_v1' && e.newValue) {
+        try {
+          setReviews(JSON.parse(e.newValue));
+        } catch {
+          // ignore
+        }
+      }
     };
 
     window.addEventListener('yapil_crm_leads_changed', handleLeadsChanged);
+    window.addEventListener('yapil_reviews_changed', handleReviewsChanged);
     window.addEventListener('storage', handleStorage);
 
     // Cross-tab broadcast listener
     let channel: BroadcastChannel | null = null;
+    let revChannel: BroadcastChannel | null = null;
     if (typeof BroadcastChannel !== 'undefined') {
       try {
         channel = new BroadcastChannel('yapil_crm_channel');
@@ -211,6 +302,13 @@ export function CrmApp() {
             setSettings(msg.data.settings);
           }
         };
+
+        revChannel = new BroadcastChannel('yapil_reviews_channel');
+        revChannel.onmessage = (msg) => {
+          if (msg.data?.type === 'reviews_updated' && msg.data.reviews) {
+            setReviews(msg.data.reviews);
+          }
+        };
       } catch {
         // ignore
       }
@@ -218,8 +316,10 @@ export function CrmApp() {
 
     return () => {
       window.removeEventListener('yapil_crm_leads_changed', handleLeadsChanged);
+      window.removeEventListener('yapil_reviews_changed', handleReviewsChanged);
       window.removeEventListener('storage', handleStorage);
       if (channel) channel.close();
+      if (revChannel) revChannel.close();
     };
   }, [session]);
 
@@ -283,6 +383,59 @@ export function CrmApp() {
   }, [leads, searchQuery, statusFilter, serviceFilter]);
 
   const stats: CrmStats = useMemo(() => calculateStats(leads), [leads]);
+
+  // Filtered Reviews
+  const filteredReviews = useMemo(() => {
+    return reviews.filter((rev) => {
+      const matchesSearch =
+        !reviewSearchQuery ||
+        rev.author.toLowerCase().includes(reviewSearchQuery.toLowerCase()) ||
+        rev.company.toLowerCase().includes(reviewSearchQuery.toLowerCase()) ||
+        rev.quote.toLowerCase().includes(reviewSearchQuery.toLowerCase()) ||
+        rev.role.toLowerCase().includes(reviewSearchQuery.toLowerCase());
+
+      const matchesStatus = reviewStatusFilter === 'all' || rev.status === reviewStatusFilter;
+      const matchesRating = reviewRatingFilter === 'all' || String(rev.rating) === reviewRatingFilter;
+
+      return matchesSearch && matchesStatus && matchesRating;
+    });
+  }, [reviews, reviewSearchQuery, reviewStatusFilter, reviewRatingFilter]);
+
+  const reviewStats = useMemo(() => calculateReviewStats(reviews), [reviews]);
+  const newReviewsCount = useMemo(() => reviews.filter((r) => r.status === 'new').length, [reviews]);
+
+  const handleCopyReviewSnippet = (rev: ClientReview) => {
+    const code = generateReviewTypeScriptSnippet(rev);
+    navigator.clipboard.writeText(code);
+    setCopiedReviewSnippetId(rev.id);
+    setTimeout(() => setCopiedReviewSnippetId(null), 2500);
+  };
+
+  const handleReviewStatusChange = (id: string, newStatus: ReviewStatus) => {
+    const updated = updateReviewStatus(id, newStatus);
+    if (updated) {
+      setReviews(getStoredReviews());
+    }
+  };
+
+  const handleDeleteReview = (id: string) => {
+    if (window.confirm('Удалить этот отзыв безвозвратно?')) {
+      deleteReview(id);
+      setReviews(getStoredReviews());
+    }
+  };
+
+  const generateShareLink = () => {
+    if (typeof window === 'undefined') return '';
+    const base = `${window.location.origin}/review`;
+    const params = new URLSearchParams();
+    if (linkClientName.trim()) params.set('name', linkClientName.trim());
+    if (linkClientCompany.trim()) params.set('company', linkClientCompany.trim());
+    if (linkClientRole.trim()) params.set('role', linkClientRole.trim());
+    if (linkClientServices.length > 0) params.set('services', linkClientServices.join(','));
+    const qs = params.toString();
+    return qs ? `${base}?${qs}` : base;
+  };
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -505,6 +658,22 @@ export function CrmApp() {
               <BarChart3 className="size-3.5" />
               <span className="hidden sm:inline">Аналитика</span>
             </button>
+            <button
+              onClick={() => setViewMode('reviews')}
+              className={`px-3.5 py-1.5 text-xs font-medium flex items-center gap-2 transition-all ${
+                viewMode === 'reviews'
+                  ? 'bg-[#FD4B32] text-white shadow-sm'
+                  : isDarkTheme ? 'text-white/60 hover:text-white' : 'text-black/60 hover:text-black'
+              }`}
+            >
+              <Star className="size-3.5" />
+              <span className="hidden sm:inline">Отзывы</span>
+              {newReviewsCount > 0 && (
+                <span className="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#FD4B32] text-white rounded-full leading-none">
+                  {newReviewsCount}
+                </span>
+              )}
+            </button>
           </div>
 
           {/* Action Tools */}
@@ -580,138 +749,142 @@ export function CrmApp() {
 
       {/* Main Content Area */}
       <main className="container py-6 space-y-6">
-        {/* KPI / Pipeline Health Ribbon */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div className={`p-4 border ${cardBg}`}>
-            <span className="text-xs text-white/50 block mb-1">Всего заявок</span>
-            <div className="flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-mono font-bold" style={{ fontFamily: 'var(--font-display)' }}>
-                {stats.totalLeads}
-              </span>
-              <span className="text-xs font-mono text-white/40">100%</span>
+        {viewMode !== 'reviews' && (
+          <>
+            {/* KPI / Pipeline Health Ribbon */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-white/50 block mb-1">Всего заявок</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold" style={{ fontFamily: 'var(--font-display)' }}>
+                    {stats.totalLeads}
+                  </span>
+                  <span className="text-xs font-mono text-white/40">100%</span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-[#FD4B32] flex items-center gap-1 mb-1">
+                  <span className="size-1.5 rounded-full bg-[#FD4B32] animate-ping" />
+                  Новые (ждут ответа)
+                </span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-[#FD4B32]" style={{ fontFamily: 'var(--font-display)' }}>
+                    {stats.newLeads}
+                  </span>
+                  <span className="text-xs font-mono text-white/40">
+                    {stats.totalLeads > 0 ? Math.round((stats.newLeads / stats.totalLeads) * 100) : 0}%
+                  </span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-indigo-400 block mb-1">В работе / Встречи</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-indigo-400" style={{ fontFamily: 'var(--font-display)' }}>
+                    {stats.inProgressLeads}
+                  </span>
+                  <span className="text-xs font-mono text-white/40">
+                    {stats.totalLeads > 0 ? Math.round((stats.inProgressLeads / stats.totalLeads) * 100) : 0}%
+                  </span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-[#80EFC9] block mb-1">Сделки закрыты</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-[#80EFC9]" style={{ fontFamily: 'var(--font-display)' }}>
+                    {stats.wonLeads}
+                  </span>
+                  <span className="text-xs font-mono text-emerald-400 font-semibold">
+                    {stats.conversionRate}% CR
+                  </span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-amber-400 block mb-1">Оценка пайплайна</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-lg sm:text-xl font-mono font-bold text-amber-400 truncate" title={`${stats.totalEstimatedBudget.toLocaleString()} ₸`}>
+                    {stats.totalEstimatedBudget > 0 ? `${(stats.totalEstimatedBudget / 1000000).toFixed(1)}M ₸` : '0 ₸'}
+                  </span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-white/50 block mb-1">За сегодня</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
+                    +{stats.todayLeadsCount}
+                  </span>
+                  <span className="text-xs font-mono text-white/40">сегодня</span>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className={`p-4 border ${cardBg}`}>
-            <span className="text-xs text-[#FD4B32] flex items-center gap-1 mb-1">
-              <span className="size-1.5 rounded-full bg-[#FD4B32] animate-ping" />
-              Новые (ждут ответа)
-            </span>
-            <div className="flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-mono font-bold text-[#FD4B32]" style={{ fontFamily: 'var(--font-display)' }}>
-                {stats.newLeads}
-              </span>
-              <span className="text-xs font-mono text-white/40">
-                {stats.totalLeads > 0 ? Math.round((stats.newLeads / stats.totalLeads) * 100) : 0}%
-              </span>
+            {/* Filter & Search Bar */}
+            <div className={`p-4 border flex flex-wrap items-center justify-between gap-3.5 ${cardBg}`}>
+              <div className="relative flex-1 min-w-[240px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/40" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Поиск по имени, номеру телефона (+7...), услуге, сообщению или #ID..."
+                  className={`w-full pl-9 pr-8 py-2 text-xs sm:text-sm border outline-none transition-colors ${
+                    isDarkTheme
+                      ? 'bg-black/30 border-white/10 text-white placeholder-white/30 focus:border-[#FD4B32]'
+                      : 'bg-black/[0.02] border-black/10 text-black placeholder-black/30 focus:border-[#FD4B32]'
+                  }`}
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-white/40 hidden sm:inline">Услуга:</span>
+                <select
+                  value={serviceFilter}
+                  onChange={(e) => setServiceFilter(e.target.value)}
+                  className={`px-3 py-2 text-xs border outline-none cursor-pointer ${
+                    isDarkTheme ? 'bg-black/40 border-white/15 text-white' : 'bg-white border-black/15 text-black'
+                  }`}
+                >
+                  <option value="all">Все услуги ({leads.length})</option>
+                  {AVAILABLE_SERVICES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-white/40 hidden sm:inline">Этап:</span>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className={`px-3 py-2 text-xs border outline-none cursor-pointer ${
+                    isDarkTheme ? 'bg-black/40 border-white/15 text-white' : 'bg-white border-black/15 text-black'
+                  }`}
+                >
+                  <option value="all">Все этапы</option>
+                  {Object.entries(STATUS_CONFIG).map(([st, cfg]) => (
+                    <option key={st} value={st}>
+                      {cfg.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
-
-          <div className={`p-4 border ${cardBg}`}>
-            <span className="text-xs text-indigo-400 block mb-1">В работе / Встречи</span>
-            <div className="flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-mono font-bold text-indigo-400" style={{ fontFamily: 'var(--font-display)' }}>
-                {stats.inProgressLeads}
-              </span>
-              <span className="text-xs font-mono text-white/40">
-                {stats.totalLeads > 0 ? Math.round((stats.inProgressLeads / stats.totalLeads) * 100) : 0}%
-              </span>
-            </div>
-          </div>
-
-          <div className={`p-4 border ${cardBg}`}>
-            <span className="text-xs text-[#80EFC9] block mb-1">Сделки закрыты</span>
-            <div className="flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-mono font-bold text-[#80EFC9]" style={{ fontFamily: 'var(--font-display)' }}>
-                {stats.wonLeads}
-              </span>
-              <span className="text-xs font-mono text-emerald-400 font-semibold">
-                {stats.conversionRate}% CR
-              </span>
-            </div>
-          </div>
-
-          <div className={`p-4 border ${cardBg}`}>
-            <span className="text-xs text-amber-400 block mb-1">Оценка пайплайна</span>
-            <div className="flex items-baseline justify-between">
-              <span className="text-lg sm:text-xl font-mono font-bold text-amber-400 truncate" title={`${stats.totalEstimatedBudget.toLocaleString()} ₸`}>
-                {stats.totalEstimatedBudget > 0 ? `${(stats.totalEstimatedBudget / 1000000).toFixed(1)}M ₸` : '0 ₸'}
-              </span>
-            </div>
-          </div>
-
-          <div className={`p-4 border ${cardBg}`}>
-            <span className="text-xs text-white/50 block mb-1">За сегодня</span>
-            <div className="flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-mono font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
-                +{stats.todayLeadsCount}
-              </span>
-              <span className="text-xs font-mono text-white/40">сегодня</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter & Search Bar */}
-        <div className={`p-4 border flex flex-wrap items-center justify-between gap-3.5 ${cardBg}`}>
-          <div className="relative flex-1 min-w-[240px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/40" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск по имени, номеру телефона (+7...), услуге, сообщению или #ID..."
-              className={`w-full pl-9 pr-8 py-2 text-xs sm:text-sm border outline-none transition-colors ${
-                isDarkTheme
-                  ? 'bg-black/30 border-white/10 text-white placeholder-white/30 focus:border-[#FD4B32]'
-                  : 'bg-black/[0.02] border-black/10 text-black placeholder-black/30 focus:border-[#FD4B32]'
-              }`}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
-              >
-                <X className="size-3.5" />
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/40 hidden sm:inline">Услуга:</span>
-            <select
-              value={serviceFilter}
-              onChange={(e) => setServiceFilter(e.target.value)}
-              className={`px-3 py-2 text-xs border outline-none cursor-pointer ${
-                isDarkTheme ? 'bg-black/40 border-white/15 text-white' : 'bg-white border-black/15 text-black'
-              }`}
-            >
-              <option value="all">Все услуги ({leads.length})</option>
-              {AVAILABLE_SERVICES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/40 hidden sm:inline">Этап:</span>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className={`px-3 py-2 text-xs border outline-none cursor-pointer ${
-                isDarkTheme ? 'bg-black/40 border-white/15 text-white' : 'bg-white border-black/15 text-black'
-              }`}
-            >
-              <option value="all">Все этапы</option>
-              {Object.entries(STATUS_CONFIG).map(([st, cfg]) => (
-                <option key={st} value={st}>
-                  {cfg.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+          </>
+        )}
 
         {/* --- VIEW 1: KANBAN BOARD --- */}
         {viewMode === 'kanban' && (
@@ -1002,6 +1175,336 @@ export function CrmApp() {
                 })}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* --- VIEW 4: CLIENT REVIEWS DASHBOARD --- */}
+        {viewMode === 'reviews' && (
+          <div className="space-y-6">
+            {/* Reviews KPI Ribbon */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-white/50 block mb-1">Всего отзывов</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold" style={{ fontFamily: 'var(--font-display)' }}>
+                    {reviewStats.total}
+                  </span>
+                  <span className="text-xs font-mono text-white/40">100%</span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-[#FD4B32] flex items-center gap-1 mb-1">
+                  {reviewStats.newCount > 0 && <span className="size-1.5 rounded-full bg-[#FD4B32] animate-ping" />}
+                  Новые (не проверены)
+                </span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-[#FD4B32]" style={{ fontFamily: 'var(--font-display)' }}>
+                    {reviewStats.newCount}
+                  </span>
+                  <span className="text-xs font-mono text-white/40">
+                    {reviewStats.total > 0 ? Math.round((reviewStats.newCount / reviewStats.total) * 100) : 0}%
+                  </span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-[#80EFC9] block mb-1">Опубликованы</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-[#80EFC9]" style={{ fontFamily: 'var(--font-display)' }}>
+                    {reviewStats.publishedCount}
+                  </span>
+                  <span className="text-xs font-mono text-emerald-400 font-semibold">
+                    на сайте
+                  </span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-amber-400 block mb-1">Средняя оценка</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-amber-400">
+                    {reviewStats.avgRating} ★
+                  </span>
+                  <span className="text-xs font-mono text-white/40">из 5.0</span>
+                </div>
+              </div>
+
+              <div className={`p-4 border ${cardBg}`}>
+                <span className="text-xs text-white/50 block mb-1">Доля 5★ отзывов</span>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
+                    {reviewStats.fiveStarPercent}%
+                  </span>
+                  <span className="text-xs font-mono text-[#FD4B32]">максимум</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Reviews Search & Action Bar */}
+            <div className={`p-4 border flex flex-wrap items-center justify-between gap-3.5 ${cardBg}`}>
+              <div className="relative flex-1 min-w-[240px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/40" />
+                <input
+                  type="text"
+                  value={reviewSearchQuery}
+                  onChange={(e) => setReviewSearchQuery(e.target.value)}
+                  placeholder="Поиск по автору, компании, цитате или должности..."
+                  className={`w-full pl-9 pr-8 py-2 text-xs sm:text-sm border outline-none transition-colors ${
+                    isDarkTheme
+                      ? 'bg-black/30 border-white/10 text-white placeholder-white/30 focus:border-[#FD4B32]'
+                      : 'bg-black/[0.02] border-black/10 text-black placeholder-black/30 focus:border-[#FD4B32]'
+                  }`}
+                />
+                {reviewSearchQuery && (
+                  <button
+                    onClick={() => setReviewSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white cursor-pointer"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-white/40 hidden sm:inline">Статус:</span>
+                <select
+                  value={reviewStatusFilter}
+                  onChange={(e) => setReviewStatusFilter(e.target.value)}
+                  className={`px-3 py-2 text-xs border outline-none cursor-pointer ${
+                    isDarkTheme ? 'bg-black/40 border-white/15 text-white' : 'bg-white border-black/15 text-black'
+                  }`}
+                >
+                  <option value="all">Все статусы ({reviews.length})</option>
+                  {Object.entries(REVIEW_STATUS_CONFIG).map(([st, cfg]) => (
+                    <option key={st} value={st}>
+                      {cfg.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-white/40 hidden sm:inline">Оценка:</span>
+                <select
+                  value={reviewRatingFilter}
+                  onChange={(e) => setReviewRatingFilter(e.target.value)}
+                  className={`px-3 py-2 text-xs border outline-none cursor-pointer ${
+                    isDarkTheme ? 'bg-black/40 border-white/15 text-white' : 'bg-white border-black/15 text-black'
+                  }`}
+                >
+                  <option value="all">Любая оценка</option>
+                  <option value="5">5 звезд ★★★★★</option>
+                  <option value="4">4 звезды ★★★★☆</option>
+                  <option value="3">3 звезды ★★★☆☆</option>
+                  <option value="2">2 звезды ★★☆☆☆</option>
+                  <option value="1">1 звезда ★☆☆☆☆</option>
+                </select>
+              </div>
+
+              {/* Action: Generate Client Share Link */}
+              <button
+                type="button"
+                onClick={() => setIsGenerateLinkModalOpen(true)}
+                className="px-3.5 py-2 text-xs font-semibold bg-[#FD4B32] hover:bg-[#E63A22] text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+              >
+                <Share2 className="size-3.5" />
+                <span>Ссылка для клиента</span>
+              </button>
+
+              {/* Action: Open Live Review Page */}
+              <a
+                href="/review"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`px-3.5 py-2 text-xs border flex items-center gap-1.5 transition-colors no-underline ${
+                  isDarkTheme ? 'border-white/15 text-white/80 hover:text-white hover:border-white/30' : 'border-black/15 text-black/80 hover:text-black'
+                }`}
+              >
+                <span>Открыть /review</span>
+                <ArrowUpRight className="size-3.5" />
+              </a>
+            </div>
+
+            {/* Reviews Grid */}
+            {filteredReviews.length === 0 ? (
+              <div className={`p-12 border text-center font-mono text-xs ${cardBg} text-white/40`}>
+                Отзывов по заданным фильтрам не найдено
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {filteredReviews.map((rev) => {
+                  const isCopied = copiedReviewSnippetId === rev.id;
+
+                  return (
+                    <div
+                      key={rev.id}
+                      className={`p-6 border flex flex-col justify-between gap-5 transition-all ${cardBg} ${
+                        rev.status === 'new' ? 'border-[#FD4B32]/40 ring-1 ring-[#FD4B32]/30' : ''
+                      }`}
+                    >
+                      {/* Top Row: Author Info, Status, Rating */}
+                      <div>
+                        <div className="flex items-start justify-between gap-4 mb-4">
+                          <div className="flex items-center gap-3.5">
+                            {rev.avatar ? (
+                              <img
+                                src={rev.avatar}
+                                alt={rev.author}
+                                className="size-12 rounded-none object-cover border border-white/15 bg-white/5 shrink-0"
+                              />
+                            ) : (
+                              <div className="size-12 border border-white/15 bg-white/5 flex items-center justify-center font-bold text-white/60 font-mono text-sm shrink-0">
+                                {rev.author.slice(0, 2).toUpperCase()}
+                              </div>
+                            )}
+
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="text-base sm:text-lg font-bold text-white m-0">
+                                  {rev.author}
+                                </h4>
+                                {rev.allowPublish ? (
+                                  <span className="text-[10px] px-1.5 py-0.2 font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" title="Разрешено публиковать на сайте">
+                                    Публичный
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] px-1.5 py-0.2 font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30" title="Только для внутреннего анализа">
+                                    Приватный
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-white/60 m-0 mt-0.5">
+                                {rev.role}{rev.company ? ` · ${rev.company}` : ''}
+                              </p>
+                              {rev.contact && (
+                                <span className="text-[11px] font-mono text-[#FD4B32] mt-0.5 block">
+                                  {rev.contact}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Stars & Date */}
+                          <div className="flex flex-col items-end gap-1">
+                            <div className="flex items-center text-[#FD4B32]">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className="size-4"
+                                  fill={i < rev.rating ? 'currentColor' : 'none'}
+                                  stroke="currentColor"
+                                />
+                              ))}
+                            </div>
+                            <span className="text-[11px] font-mono text-white/40">
+                              {new Date(rev.createdAt).toLocaleDateString('ru-RU')}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Services Tags */}
+                        {rev.services && rev.services.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mb-4">
+                            {rev.services.map((s) => (
+                              <span key={s} className="px-2 py-0.5 text-[11px] font-mono border border-white/10 bg-white/5 text-white/75">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Quote Block */}
+                        <blockquote className="m-0 p-3.5 bg-white/[0.03] border-l-2 border-[#FD4B32] text-sm text-white/90 italic leading-relaxed mb-4">
+                          «{rev.quote}»
+                        </blockquote>
+
+                        {/* Breakdown Answers */}
+                        <div className="space-y-3 text-xs text-white/70 border-t border-white/10 pt-3">
+                          {rev.likedMost && (
+                            <div>
+                              <span className="font-semibold text-white/90 block mb-0.5">👍 Что понравилось:</span>
+                              <p className="m-0 whitespace-pre-line leading-relaxed text-white/75">{rev.likedMost}</p>
+                            </div>
+                          )}
+
+                          {rev.likedSpecial && (
+                            <div>
+                              <span className="font-semibold text-[#FD4B32] block mb-0.5">🔥 Что особенно понравилось:</span>
+                              <p className="m-0 whitespace-pre-line leading-relaxed text-white/75">{rev.likedSpecial}</p>
+                            </div>
+                          )}
+
+                          {rev.toImprove && (
+                            <div>
+                              <span className="font-semibold text-amber-400 block mb-0.5">💡 Что улучшить:</span>
+                              <p className="m-0 whitespace-pre-line leading-relaxed text-white/75">{rev.toImprove}</p>
+                            </div>
+                          )}
+
+                          {rev.businessResults && (
+                            <div>
+                              <span className="font-semibold text-emerald-400 block mb-0.5">📈 Результаты бизнеса:</span>
+                              <p className="m-0 whitespace-pre-line leading-relaxed text-white/75">{rev.businessResults}</p>
+                            </div>
+                          )}
+
+                          {rev.fullReviewText && (
+                            <div>
+                              <span className="font-semibold text-white/90 block mb-0.5">📝 Полный текст:</span>
+                              <p className="m-0 whitespace-pre-line leading-relaxed text-white/75">{rev.fullReviewText}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Footer Actions: Status Select, Copy Code, Delete */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 mt-auto">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-white/40">Статус:</span>
+                          <select
+                            value={rev.status}
+                            onChange={(e) => handleReviewStatusChange(rev.id, e.target.value as ReviewStatus)}
+                            className="px-2.5 py-1 text-xs border border-white/15 bg-black/60 text-white outline-none cursor-pointer"
+                          >
+                            {Object.entries(REVIEW_STATUS_CONFIG).map(([st, cfg]) => (
+                              <option key={st} value={st}>
+                                {cfg.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleCopyReviewSnippet(rev)}
+                            className={`px-3 py-1 text-xs font-mono font-semibold border flex items-center gap-1.5 transition-all cursor-pointer ${
+                              isCopied
+                                ? 'bg-emerald-500 text-white border-emerald-500'
+                                : 'border-[#FD4B32]/40 text-[#FD4B32] hover:bg-[#FD4B32] hover:text-white bg-[#FD4B32]/10'
+                            }`}
+                            title="Скопировать готовый TypeScript объект для reviewsData.ts"
+                          >
+                            {isCopied ? <Check className="size-3" /> : <Copy className="size-3" />}
+                            <span>{isCopied ? 'Скопировано!' : 'Код для reviewsData.ts'}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteReview(rev.id)}
+                            className="p-1 text-white/40 hover:text-red-400 transition-colors cursor-pointer"
+                            title="Удалить отзыв"
+                          >
+                            <Trash2 className="size-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </main>
@@ -1565,10 +2068,129 @@ export function CrmApp() {
               <button
                 type="button"
                 onClick={() => setIsSettingsModalOpen(false)}
-                className="px-5 py-2 bg-[#FD4B32] text-white text-xs font-semibold"
+                className="px-5 py-2 bg-[#FD4B32] text-white text-xs font-semibold cursor-pointer"
               >
                 Готово
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- MODAL 4: GENERATE CLIENT REVIEW LINK --- */}
+      {isGenerateLinkModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+          onClick={() => setIsGenerateLinkModalOpen(false)}
+        >
+          <div
+            className={`w-full max-w-lg border p-6 sm:p-8 space-y-5 animate-in zoom-in-95 duration-150 ${
+              isDarkTheme ? 'bg-[#121214] border-white/15 text-white' : 'bg-white border-black/15 text-[#1D1D1D]'
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center gap-2">
+                <Share2 className="size-5 text-[#FD4B32]" />
+                <h3 className="text-lg font-bold m-0" style={{ fontFamily: 'var(--font-display)' }}>
+                  Персональная ссылка для клиента
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsGenerateLinkModalOpen(false)}
+                className="p-1 border border-white/10 hover:border-white/30 text-white/60 hover:text-white cursor-pointer"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-white/60 leading-relaxed m-0">
+              Заполните данные клиента, чтобы при переходе по ссылке поля с именем, компанией и услугами были уже предзаполнены.
+            </p>
+
+            <div className="space-y-3.5 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">Имя клиента</label>
+                <input
+                  type="text"
+                  value={linkClientName}
+                  onChange={(e) => setLinkClientName(e.target.value)}
+                  placeholder="Например: Сайёра Аюпова или Роман"
+                  className="w-full px-3 py-2 border border-white/15 bg-black/40 text-white outline-none focus:border-[#FD4B32]"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold block mb-1">Компания / Бренд</label>
+                <input
+                  type="text"
+                  value={linkClientCompany}
+                  onChange={(e) => setLinkClientCompany(e.target.value)}
+                  placeholder="Например: Compass"
+                  className="w-full px-3 py-2 border border-white/15 bg-black/40 text-white outline-none focus:border-[#FD4B32]"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold block mb-1">Должность / Роль</label>
+                <input
+                  type="text"
+                  value={linkClientRole}
+                  onChange={(e) => setLinkClientRole(e.target.value)}
+                  placeholder="Например: Управляющий партнер"
+                  className="w-full px-3 py-2 border border-white/15 bg-black/40 text-white outline-none focus:border-[#FD4B32]"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold block mb-2">Услуги</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {AVAILABLE_SERVICES.map((s) => {
+                    const sel = linkClientServices.includes(s);
+                    return (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() =>
+                          setLinkClientServices((prev) =>
+                            prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+                          )
+                        }
+                        className={`px-2.5 py-1 rounded-full border text-[11px] cursor-pointer transition-colors ${
+                          sel ? 'bg-[#FD4B32] text-white border-[#FD4B32]' : 'bg-white/5 border-white/15 text-white/70 hover:text-white'
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-white/10">
+                <label className="font-semibold block mb-1 text-white/90">Готовая ссылка для отправки клиенту:</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={generateShareLink()}
+                    className="w-full px-3 py-2 border border-white/15 bg-black/60 text-white font-mono text-[11px] select-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(generateShareLink());
+                      setCopiedLinkSuccess(true);
+                      setTimeout(() => setCopiedLinkSuccess(false), 2500);
+                    }}
+                    className="px-4 py-2 bg-[#FD4B32] hover:bg-[#E63A22] text-white font-semibold flex items-center gap-1.5 cursor-pointer shrink-0"
+                  >
+                    {copiedLinkSuccess ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+                    <span>{copiedLinkSuccess ? 'Скопировано!' : 'Копировать'}</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
