@@ -38,11 +38,16 @@ const homePath = theme === 'light' ? '/light' : '/';
   function initHeaderAndNav() {
     const header = document.querySelector<HTMLElement>('[data-site-header]');
     const navLinks = document.querySelector<HTMLElement>('[data-nav-links]');
-    const footer = document.querySelector<HTMLElement>('.site-footer, footer');
 
     if (!header) return;
 
     let ticking = false;
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    let accumulatedUp = 0;
+    let accumulatedDown = 0;
+    const SCROLL_UP_THRESHOLD = 30; // 30px upward scroll to reveal
+    const SCROLL_DOWN_THRESHOLD = 10; // 10px downward scroll to hide
+    const TOP_THRESHOLD = 80; // Always visible when near top
 
     // Cache section elements for active link tracking
     const trackedSections = [
@@ -95,8 +100,12 @@ const homePath = theme === 'light' ? '/light' : '/';
       const winHeight = window.innerHeight;
       const maxScroll = Math.max(0, docHeight - winHeight);
 
-      // Header is ALWAYS visible: toggle at-top vs is-scrolled (threshold: 500px)
-      if (currentScrollY <= 500) {
+      // Clamp scroll position to handle Mac rubber-band bounce safely
+      const clampedScrollY = Math.max(0, Math.min(currentScrollY, maxScroll));
+      const delta = clampedScrollY - lastScrollY;
+
+      // Header top style: toggle at-top vs is-scrolled (threshold: 500px)
+      if (clampedScrollY <= 500) {
         header!.classList.add('at-top');
         header!.classList.remove('is-scrolled');
       } else {
@@ -104,19 +113,34 @@ const homePath = theme === 'light' ? '/light' : '/';
         header!.classList.add('is-scrolled');
       }
 
-      // Hide header when reaching the footer
-      if (footer) {
-        const footerRect = footer.getBoundingClientRect();
-        const headerHeight = header!.offsetHeight || 60;
-        if (footerRect.top <= headerHeight) {
-          header!.classList.add('is-hidden-at-footer');
-        } else {
-          header!.classList.remove('is-hidden-at-footer');
+      // Hide on scroll down, reveal on 30px scroll up
+      if (clampedScrollY <= TOP_THRESHOLD) {
+        // At the very top: always visible
+        header!.classList.remove('is-hidden');
+        accumulatedUp = 0;
+        accumulatedDown = 0;
+      } else {
+        if (delta > 0) {
+          // Scrolling down
+          accumulatedUp = 0;
+          accumulatedDown += delta;
+          if (accumulatedDown >= SCROLL_DOWN_THRESHOLD) {
+            header!.classList.add('is-hidden');
+          }
+        } else if (delta < 0) {
+          // Scrolling up
+          accumulatedDown = 0;
+          accumulatedUp += Math.abs(delta);
+          if (accumulatedUp >= SCROLL_UP_THRESHOLD) {
+            header!.classList.remove('is-hidden');
+          }
         }
       }
 
+      lastScrollY = clampedScrollY;
+
       // Active section indicator update
-      updateActiveNav(currentScrollY, winHeight, maxScroll);
+      updateActiveNav(clampedScrollY, winHeight, maxScroll);
 
       ticking = false;
     }
@@ -159,12 +183,12 @@ const homePath = theme === 'light' ? '/light' : '/';
     transform: translateY(0);
     opacity: 1;
     transition:
-      transform 1200ms cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+      transform 2000ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 2000ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Smooth hide when reaching footer */
-  .site-header.is-hidden-at-footer {
+  /* Smooth hide on scroll down */
+  .site-header.is-hidden {
     transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
@@ -183,7 +207,7 @@ const homePath = theme === 'light' ? '/light' : '/';
     mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
     opacity: 0;
-    transition: opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 2000ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* When at top of page (overlay hero mode) */
