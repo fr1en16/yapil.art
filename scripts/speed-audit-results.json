@@ -1,0 +1,290 @@
+[
+  {
+    "page": "Homepage (/)",
+    "path": "/",
+    "mobile": {
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "1.4 s",
+        "LCP": "2.1 s",
+        "TBT": "0 ms",
+        "CLS": "0",
+        "SI": "1.4 s",
+        "TTFB": "Root document took 20 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 421 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    },
+    "desktop": {
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "0.5 s",
+        "LCP": "0.6 s",
+        "TBT": "0 ms",
+        "CLS": "0.003",
+        "SI": "0.5 s",
+        "TTFB": "Root document took 10 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 1,443 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    }
+  },
+  {
+    "page": "Services Index (/services)",
+    "path": "/services",
+    "mobile": {
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "1.8 s",
+        "LCP": "2.1 s",
+        "TBT": "0 ms",
+        "CLS": "0.032",
+        "SI": "1.8 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 163 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    },
+    "desktop": {
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "0.5 s",
+        "LCP": "0.5 s",
+        "TBT": "0 ms",
+        "CLS": "0.022",
+        "SI": "0.5 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 163 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    }
+  },
+  {
+    "page": "Service Detail (/services/websites)",
+    "path": "/services/websites",
+    "mobile": {
+      "scores": {
+        "performance": 98,
+        "accessibility": 96,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "1.8 s",
+        "LCP": "2.1 s",
+        "TBT": "0 ms",
+        "CLS": "0.008",
+        "SI": "1.8 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 168 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    },
+    "desktop": {
+      "scores": {
+        "performance": 100,
+        "accessibility": 96,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "0.5 s",
+        "LCP": "0.5 s",
+        "TBT": "0 ms",
+        "CLS": "0.01",
+        "SI": "0.5 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 200 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    }
+  },
+  {
+    "page": "Cases Index (/cases)",
+    "path": "/cases",
+    "mobile": {
+      "scores": {
+        "performance": 92,
+        "accessibility": 96,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "1.1 s",
+        "LCP": "2.1 s",
+        "TBT": "0 ms",
+        "CLS": "0.164",
+        "SI": "1.1 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 553 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    },
+    "desktop": {
+      "scores": {
+        "performance": 99,
+        "accessibility": 96,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "0.4 s",
+        "LCP": "0.8 s",
+        "TBT": "0 ms",
+        "CLS": "0.001",
+        "SI": "0.4 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 3,258 KiB",
+      "opportunities": [],
+      "diagnostics": [
+        {
+          "id": "total-byte-weight",
+          "title": "Avoid enormous network payloads",
+          "displayValue": "Total size was 3,258 KiB",
+          "score": 0.5,
+          "details": "{\"type\":\"table\",\"headings\":[{\"key\":\"url\",\"valueType\":\"url\",\"label\":\"URL\"},{\"key\":\"totalBytes\",\"valueType\":\"bytes\",\"label\":\"Transfer Size\"}],\"items\":[{\"url\":\"http://127.0.0.1:4399/case/rv.mp4\",\"totalBytes\":2277342},{\"url\":\"http://127.0.0.1:4399/case/onmacabim.webp\",\"totalBytes\":149141},{\"url\":\"http://127.0.0.1:4399/case/boya.webp\",\"totalBytes\":104432},{\"url\":\"http://127.0.0.1:4399/case/rv.webp\",\"to"
+        }
+      ]
+    }
+  },
+  {
+    "page": "Case Detail (/case/onmacabim)",
+    "path": "/case/onmacabim",
+    "mobile": {
+      "scores": {
+        "performance": 98,
+        "accessibility": 96,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "1.2 s",
+        "LCP": "2.3 s",
+        "TBT": "0 ms",
+        "CLS": "0.019",
+        "SI": "1.2 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 5,842 KiB",
+      "opportunities": [],
+      "diagnostics": [
+        {
+          "id": "total-byte-weight",
+          "title": "Avoid enormous network payloads",
+          "displayValue": "Total size was 5,842 KiB",
+          "score": 0.5,
+          "details": "{\"type\":\"table\",\"headings\":[{\"key\":\"url\",\"valueType\":\"url\",\"label\":\"URL\"},{\"key\":\"totalBytes\",\"valueType\":\"bytes\",\"label\":\"Transfer Size\"}],\"items\":[{\"url\":\"http://127.0.0.1:4399/case/onmacabim/ONmacabim6.mp4\",\"totalBytes\":2613343},{\"url\":\"http://127.0.0.1:4399/case/onmacabim/price-citrus.webp\",\"totalBytes\":478986},{\"url\":\"http://127.0.0.1:4399/case/onmacabim/skin-scan.webp\",\"totalBytes\":370115},{"
+        }
+      ]
+    },
+    "desktop": {
+      "scores": {
+        "performance": 99,
+        "accessibility": 96,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "0.5 s",
+        "LCP": "0.9 s",
+        "TBT": "0 ms",
+        "CLS": "0",
+        "SI": "0.5 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 5,521 KiB",
+      "opportunities": [],
+      "diagnostics": [
+        {
+          "id": "total-byte-weight",
+          "title": "Avoid enormous network payloads",
+          "displayValue": "Total size was 5,521 KiB",
+          "score": 0.5,
+          "details": "{\"type\":\"table\",\"headings\":[{\"key\":\"url\",\"valueType\":\"url\",\"label\":\"URL\"},{\"key\":\"totalBytes\",\"valueType\":\"bytes\",\"label\":\"Transfer Size\"}],\"items\":[{\"url\":\"http://127.0.0.1:4399/case/onmacabim/ONmacabim6.mp4\",\"totalBytes\":2613343},{\"url\":\"http://127.0.0.1:4399/case/onmacabim/price-citrus.webp\",\"totalBytes\":478986},{\"url\":\"http://127.0.0.1:4399/case/onmacabim/skin-scan.webp\",\"totalBytes\":370115},{"
+        }
+      ]
+    }
+  },
+  {
+    "page": "Solutions Index (/solutions)",
+    "path": "/solutions",
+    "mobile": {
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "1.8 s",
+        "LCP": "2.0 s",
+        "TBT": "0 ms",
+        "CLS": "0.016",
+        "SI": "1.8 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 163 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    },
+    "desktop": {
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "cwv": {
+        "FCP": "0.5 s",
+        "LCP": "0.5 s",
+        "TBT": "0 ms",
+        "CLS": "0.085",
+        "SI": "0.5 s",
+        "TTFB": "Root document took 0 ms"
+      },
+      "lcpElement": "",
+      "totalByteWeight": "Total size was 163 KiB",
+      "opportunities": [],
+      "diagnostics": []
+    }
+  }
+]

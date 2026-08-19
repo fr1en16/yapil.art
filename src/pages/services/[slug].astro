@@ -258,23 +258,12 @@ const serviceJsonLd = {
                                 <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
                               </video>
                             </>
-                          ) : project.data.cover.startsWith('/') ? (
+                          ) : (
                             <img
                               src={project.data.cover}
                               alt={`${project.data.title} — ${project.data.summary}`}
                               loading="lazy"
                               decoding="async"
-                            />
-                          ) : (
-                            <Image
-                              src={project.data.cover}
-                              alt={`${project.data.title} — ${project.data.summary}`}
-                              inferSize
-                              widths={[640, 960, 1440]}
-                              sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) calc(100vw - 4rem), 70vw"
-                              format="webp"
-                              quality={78}
-                              loading="lazy"
                             />
                           )}
                         </div>
@@ -355,7 +344,12 @@ const serviceJsonLd = {
     </section>
 
     <!-- 8. Contacts Section with prefill -->
-    <Contacts />
+    <Contacts
+      title={service.ctaTitle || 'Готовы обсудить задачу?'}
+      lead={service.ctaLead}
+      source="service_page"
+      sourceDetails={`Услуга: ${service.name}`}
+    />
   </article>
 
   <Footer slot="footer" />

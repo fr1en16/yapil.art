@@ -1,5 +1,6 @@
 ---
 import type { LeadSource } from '../lib/crmTypes';
+import { getWhatsAppUrl } from '../utils/messengerLinks';
 
 interface Props {
   theme?: 'dark' | 'light';
@@ -17,6 +18,14 @@ const {
   sourceDetails = 'Форма контактов на странице',
 } = Astro.props;
 const isLight = theme === 'light';
+
+const currentPath = Astro.url.pathname;
+const currentUrl = new URL(currentPath, Astro.site).href;
+const whatsappHref = getWhatsAppUrl({
+  pageTitle: sourceDetails,
+  pageUrl: currentUrl,
+  sourceContext: source,
+});
 ---
 
 <section class:list={['contacts section', { 'theme-light': isLight }]} id="contacts" aria-labelledby="contacts-title">
@@ -38,7 +47,7 @@ const isLight = theme === 'light';
               <span class="contact-link-label">Telegram</span>
               <span class="contact-link-arrow" aria-hidden="true">↗</span>
             </a>
-            <a href="https://wa.me/77067436197" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
+            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="contact-link-pill">
               <span class="contact-link-label">WhatsApp</span>
               <span class="contact-link-arrow" aria-hidden="true">↗</span>
             </a>
@@ -402,24 +411,15 @@ const isLight = theme === 'light';
 <style>
   .contacts {
     position: relative;
-    padding-block: clamp(4rem, 7vw, 7.5rem);
+    padding-top: clamp(4rem, 7vw, 7.5rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
     color: var(--ink-primary);
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0, 0, 0, 0.12) 15%,
-      rgba(0, 0, 0, 0.45) 32%,
-      rgba(0, 0, 0, 0.8) 55%,
-      rgba(0, 0, 0, 0.96) 78%,
-      #000000 100%
-    );
+    background: #0B0B0C;
   }
 
   .contacts.theme-light {
     color: var(--ink-primary);
-    background:
-      radial-gradient(ellipse 90% 70% at 50% 50%, rgba(253, 75, 50, 0.16) 0%, rgba(253, 75, 50, 0.05) 45%, transparent 75%),
-      linear-gradient(to bottom, #EAE5DF 0%, #F5EFEB 25%, #FFF0EB 50%, #F5EFEB 75%, #EAE5DF 100%);
+    background: #EAE5DF;
   }
 
   .contacts.theme-light .contacts-cover {

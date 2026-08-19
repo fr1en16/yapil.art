@@ -1,5 +1,6 @@
 ---
 import { RuixenGradientFooter } from './ui/ruixen-gradient-footer';
+import { getWhatsAppUrl } from '../utils/messengerLinks';
 
 interface Props {
   theme?: 'dark' | 'light';
@@ -8,6 +9,14 @@ interface Props {
 const { theme = 'dark' } = Astro.props;
 const isLight = theme === 'light';
 const homePath = isLight ? '/light' : '/';
+
+const currentPath = Astro.url.pathname;
+const currentUrl = new URL(currentPath, Astro.site).href;
+const whatsappHref = getWhatsAppUrl({
+  pageTitle: 'Футер сайта',
+  pageUrl: currentUrl,
+  sourceContext: 'footer_link',
+});
 
 const lightStops = [
   { offset: 0, color: '#FD4B32' },
@@ -19,7 +28,7 @@ const lightStops = [
 ---
 
 <RuixenGradientFooter
-  client:load
+  client:visible
   className={isLight ? 'site-footer theme-light' : 'site-footer'}
   gradientHeight="clamp(20rem, 52vh, 38rem)"
   blur={42}
@@ -27,19 +36,27 @@ const lightStops = [
 >
   <div class="footer-content">
     <div class="container footer-top">
+      <div class="footer-meta">
+        <a class="footer-brand" href={homePath} aria-label="Yapil.art — на главную">
+          <span class="footer-brand-name">Yapil.art</span>
+        </a>
+        <p class="footer-brand-desc">Дизайн-студия полного цикла.<br />От первой концепции до печати или релиза.</p>
+      </div>
+
       <div class="footer-columns">
         <nav aria-label="Навигация в подвале">
           <h2>Студия</h2>
           <a href={`${homePath}#about`}>О студии</a>
           <a href="/services">Услуги</a>
+          <a href="/solutions">Отрасли</a>
           <a href={`${homePath}#cases`}>Кейсы</a>
           <a href="/cases">Все работы</a>
         </nav>
 
         <nav aria-label="Контакты">
           <h2>На связи</h2>
-          <a href="https://t.me/yakov_pil">Telegram ↗</a>
-          <a href="https://wa.me/77067436197">WhatsApp ↗</a>
+          <a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+          <a href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
           <a href="mailto:hi@yapil.art">Email ↗</a>
         </nav>
       </div>
@@ -61,7 +78,7 @@ const lightStops = [
   .site-footer {
     position: relative;
     isolation: isolate;
-    padding-top: clamp(3.5rem, 7vw, 7rem);
+    padding-top: 0;
     color: white;
     background: #0b0b0c;
   }
@@ -98,14 +115,67 @@ const lightStops = [
   }
 
   .footer-top {
-    display: grid;
-    padding-bottom: clamp(4rem, 9vw, 8rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2.5rem clamp(2rem, 5vw, 6rem);
+    padding-top: clamp(2rem, 4vw, 3.5rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .footer-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 280px;
+    max-width: 32rem;
+  }
+
+  .footer-brand {
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .footer-brand-name {
+    font-family: var(--font-body);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: #fff;
+    transition: color 0.2s ease;
+  }
+
+  .footer-brand:hover .footer-brand-name {
+    color: #82f2c9;
+  }
+
+  .site-footer.theme-light .footer-brand-name {
+    color: #1D1D1D;
+  }
+
+  .site-footer.theme-light .footer-brand:hover .footer-brand-name {
+    color: var(--accent, #FD4B32);
+  }
+
+  .footer-brand-desc {
+    color: #8B8B8B;
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    line-height: 1.5;
+    margin: 0;
+    white-space: normal;
+    word-break: keep-all;
+    hyphens: none;
+  }
+
+  .site-footer.theme-light .footer-brand-desc {
+    color: #66635F;
   }
 
   .footer-columns {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem clamp(2rem, 5vw, 5rem);
+    grid-template-columns: repeat(2, minmax(7rem, 1fr));
+    gap: 2rem clamp(2.5rem, 5vw, 5.5rem);
   }
 
   .footer-columns nav {
@@ -199,19 +269,6 @@ const lightStops = [
   }
 
   @media (min-width: 48rem) {
-    .footer-top {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: var(--grid-gap, clamp(0.5rem, 0.75vw, 0.75rem));
-      align-items: start;
-    }
-
-    .footer-columns {
-      grid-column: 9 / span 4;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--grid-gap, clamp(0.5rem, 0.75vw, 0.75rem));
-    }
-
     .footer-bottom {
       align-items: center;
     }

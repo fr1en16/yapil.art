@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CaseGrid from '../components/CaseGrid.astro';
+import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 
 const casesJsonLd = {
@@ -39,5 +40,6 @@ const casesJsonLd = {
   jsonLd={casesJsonLd}
 >
   <CaseGrid />
+  <Contacts title="Хотите обсудить проект?" sourceDetails="Страница Все кейсы" />
   <Footer slot="footer" />
 </Base>

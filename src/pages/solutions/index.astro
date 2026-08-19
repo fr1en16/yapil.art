@@ -1,0 +1,298 @@
+---
+import Base from "../../layouts/Base.astro";
+import Contacts from "../../components/Contacts.astro";
+import Footer from "../../components/Footer.astro";
+import { solutionsList } from "../../data/solutionsData";
+
+const solutionsPageJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      name: "Отраслевые решения дизайн-студии Yapil",
+      description: "Готовые дизайн- и веб-решения под специфику конкретных отраслей: HoReCa, ритейл, автобизнес, B2B, недвижимость, косметика и инфобизнес.",
+      url: "https://yapil.art/solutions",
+      provider: {
+        "@type": "ProfessionalService",
+        name: "Yapil",
+        url: "https://yapil.art",
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Главная",
+          item: "https://yapil.art",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Отраслевые решения",
+          item: "https://yapil.art/solutions",
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Base
+  title="Отраслевые решения дизайн-студии Yapil — сайты, брендинг и упаковка по нишам"
+  description="Дизайн, разработка сайтов, айдентика и презентации с глубоким пониманием специфики вашей отрасли: рестораны, fashion, автобизнес, B2B, девелопмент, бьюти и онлайн-курсы."
+  jsonLd={solutionsPageJsonLd}
+>
+  <main class="solutions-index-page">
+    <header class="solutions-index-hero container">
+      <nav class="breadcrumb-row" aria-label="Хлебные крошки">
+        <a class="back-link" href="/">
+          <span class="back-link-inner">
+            <span class="back-link-arrow">←</span>
+            <span class="back-link-text">На главную</span>
+          </span>
+        </a>
+      </nav>
+
+      <div class="hero-header-box">
+        <h1 class="hero-title">Отраслевые решения</h1>
+        <p class="hero-lead">
+          Упаковываем бизнес с учётом специфики, чеков и клиентского пути в вашей нише. Без типовых шаблонов, с опорой на реальный опыт и кейсы.
+        </p>
+      </div>
+    </header>
+
+    <!-- Solutions Grid -->
+    <section class="solutions-catalog-section container" aria-label="Каталог отраслевых решений">
+      <div class="solutions-catalog-grid">
+        {solutionsList.map((sol) => (
+          <article class="solution-catalog-card">
+            <a class="solution-catalog-link" href={`/solutions/${sol.slug}`}>
+              <div class="solution-card-header">
+                <span class="solution-card-num">{sol.number}</span>
+                <span class="solution-card-arrow">↗</span>
+              </div>
+
+              <div class="solution-card-main">
+                <h2 class="solution-card-title">{sol.name}</h2>
+                <p class="solution-card-desc">{sol.heroH1}</p>
+              </div>
+
+              <div class="solution-card-footer">
+                <div class="solution-metrics-mini">
+                  {sol.metrics.slice(0, 2).map((m) => (
+                    <span class="metric-pill">
+                      <strong>{m.label}:</strong> {m.text}
+                    </span>
+                  ))}
+                </div>
+                <span class="solution-detail-btn">Смотреть решение и кейсы →</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Contacts & Footer -->
+    <Contacts
+      title="Не нашли свою нишу?"
+      lead="Расскажите о вашей задаче — изучим рынок, предложим проверенные решения и рассчитаем смету."
+      source="solutions_index"
+      sourceDetails="Каталог отраслевых решений"
+    />
+  </main>
+
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .solutions-index-page {
+    padding-top: clamp(2rem, 5vw, 4rem);
+    color: var(--ink-primary);
+  }
+
+  .solutions-index-hero {
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .breadcrumb-row {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .back-link {
+    display: inline-flex;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.9rem;
+    will-change: transform;
+    transition: transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)), color 200ms ease;
+  }
+
+  .back-link-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .back-link-arrow {
+    display: inline-block;
+  }
+
+  .back-link:hover,
+  .back-link:focus-visible {
+    color: #ffffff;
+    transform: scale(1.04);
+  }
+
+  .hero-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    line-height: 1;
+    letter-spacing: -0.055em;
+    color: #ffffff;
+  }
+
+  .hero-lead {
+    max-width: 44rem;
+    margin: 0;
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .solutions-catalog-section {
+    position: relative;
+    padding-block: clamp(4rem, 8vw, 8rem);
+    border-bottom: 1px solid var(--border-subtle);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(253, 75, 50, 0.14) 0%, transparent 60%),
+      linear-gradient(to bottom, transparent 0%, rgba(11, 11, 12, 0.82) 14%, #0B0B0C 32%, #141417 65%, #0B0B0C 100%);
+  }
+
+  .solutions-catalog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .solutions-catalog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gap, 1.5rem);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .solutions-catalog-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .solution-catalog-card {
+    min-height: 22rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%), #0e0e10;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .solution-catalog-card:hover {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%), #141417;
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.55);
+  }
+
+  .solution-catalog-link {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: clamp(2rem, 3vw, 2.75rem);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .solution-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .solution-card-num {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .solution-card-arrow {
+    font-size: 1.25rem;
+    color: var(--accent-tint, #F7C8BF);
+    transition: transform 0.25s ease;
+  }
+
+  .solution-catalog-link:hover .solution-card-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  .solution-card-title {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+  }
+
+  .solution-card-desc {
+    margin: 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.35;
+  }
+
+  .solution-card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .solution-metrics-mini {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .metric-pill {
+    font-size: 0.78rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .metric-pill strong {
+    color: var(--accent-tint, #F7C8BF);
+    font-weight: 600;
+  }
+
+  .solution-detail-btn {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent-tint, #F7C8BF);
+    transition: color 0.2s ease;
+  }
+
+  .solution-catalog-link:hover .solution-detail-btn {
+    color: #ffffff;
+  }
+</style>

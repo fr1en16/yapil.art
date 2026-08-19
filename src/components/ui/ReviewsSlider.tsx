@@ -175,8 +175,8 @@ export default function ReviewsSlider({
         style={{
           paddingBlock: 'clamp(4.5rem, 8vw, 8rem)',
           background: isLight
-            ? 'linear-gradient(to bottom, #EAE5DF 0%, rgba(234, 229, 223, 0.96) 22%, rgba(234, 229, 223, 0.8) 45%, rgba(234, 229, 223, 0.45) 68%, rgba(234, 229, 223, 0.12) 85%, transparent 100%)'
-            : 'linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.96) 22%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.45) 68%, rgba(0, 0, 0, 0.12) 85%, transparent 100%)',
+            ? 'linear-gradient(to bottom, transparent 0%, #EAE5DF 100%)'
+            : 'linear-gradient(to bottom, transparent 0%, #0B0B0C 100%)',
         }}
       >
         <div className="container">

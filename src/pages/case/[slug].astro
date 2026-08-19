@@ -107,6 +107,7 @@ const creativeWorkJsonLd = {
               src={poster}
               alt={`${c.data.title} — ${c.data.summary}`}
               loading="eager"
+              fetchpriority="high"
               decoding="async"
               class="case-cover-poster"
             />
@@ -127,6 +128,7 @@ const creativeWorkJsonLd = {
             src={c.data.cover}
             alt={`${c.data.title} — ${c.data.summary}`}
             loading="eager"
+            fetchpriority="high"
             decoding="async"
           />
         ) : (
@@ -139,6 +141,7 @@ const creativeWorkJsonLd = {
             format="webp"
             quality={75}
             loading="eager"
+            fetchpriority="high"
           />
         )}
       </div>

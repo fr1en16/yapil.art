@@ -532,12 +532,13 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
   .vsyachina-infinite-section {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(1.5rem, 3.5vw, 3rem);
-    background: #0b0b0c;
+    padding-top: clamp(2rem, 4.5vw, 4rem);
+    padding-bottom: clamp(2rem, 4.5vw, 4rem);
+    background: transparent;
   }
 
   .vsyachina-infinite-section.theme-light {
-    background: #EAE5DF;
+    background: transparent;
   }
 
   .vsyachina-infinite-section.theme-light .gallery-card {

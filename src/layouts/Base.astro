@@ -46,10 +46,15 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
       name="robots"
       content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
     />
+    <meta name="author" content="Yapil" />
+    <meta name="format-detection" content="telephone=no" />
     <meta name="theme-color" content={theme === 'light' ? '#F7F5F2' : '#0B0B0C'} />
     <link rel="preload" href="/fonts/oranienbaum-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/hero-cover/dm-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="ru" href={canonical} />
+    <link rel="alternate" hreflang="ru-KZ" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
     <meta property="og:type" content={type} />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:site_name" content="Yapil" />

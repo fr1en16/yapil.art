@@ -1,0 +1,629 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Contacts from "../../components/Contacts.astro";
+import Footer from "../../components/Footer.astro";
+import { solutionsData, type SolutionData } from "../../data/solutionsData";
+
+export async function getStaticPaths() {
+  return Object.values(solutionsData).map((solution) => ({
+    params: { slug: solution.slug },
+    props: { solution },
+  }));
+}
+
+interface Props {
+  solution: SolutionData;
+}
+
+const { solution } = Astro.props;
+
+// Fetch cases associated with this solution
+const allCases = await getCollection("cases");
+const caseMap = new Map(allCases.map((c) => [c.id, c]));
+const solutionCases = solution.caseSlugs
+  .map((slug) => caseMap.get(slug))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
+// Schema.org JSON-LD (Service & FAQPage & BreadcrumbList)
+const solutionJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      name: solution.name,
+      serviceType: solution.seo.h1,
+      description: solution.seo.description,
+      provider: {
+        "@type": "ProfessionalService",
+        name: "Yapil",
+        url: "https://yapil.art",
+        telephone: "+77067436197",
+        email: "hi@yapil.art",
+      },
+      areaServed: ["KZ", "UZ", "RU", "Worldwide"],
+      url: new URL(`/solutions/${solution.slug}`, Astro.site).href,
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Главная",
+          item: "https://yapil.art",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Отраслевые решения",
+          item: "https://yapil.art/solutions",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: solution.name,
+          item: new URL(`/solutions/${solution.slug}`, Astro.site).href,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: solution.faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    },
+  ],
+};
+---
+
+<Base
+  title={solution.seo.title}
+  description={solution.seo.description}
+  jsonLd={solutionJsonLd}
+>
+  <article class="solution-page">
+    <!-- 1. Hero & Breadcrumbs -->
+    <header class="solution-hero container">
+      <nav class="breadcrumb-row" aria-label="Хлебные крошки">
+        <a class="back-link" href="/solutions">
+          <span class="back-link-inner">
+            <span class="back-link-arrow">←</span>
+            <span class="back-link-text">Все отраслевые решения</span>
+          </span>
+        </a>
+      </nav>
+
+      <div class="solution-hero-content">
+        <div class="hero-tag-badge">{solution.tag}</div>
+        <h1 class="solution-hero-title">{solution.heroH1}</h1>
+        <p class="solution-hero-lead">{solution.heroLead}</p>
+
+        <div class="solution-metrics-row">
+          {solution.metrics.map((m) => (
+            <div class="metric-card">
+              <span class="metric-num">{m.number}</span>
+              <span class="metric-label">{m.label}</span>
+              <p class="metric-text">{m.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. Challenges & Industry Specifics -->
+    <section class="section-block solution-challenges-section" aria-labelledby="challenges-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">Специфика ниши</span>
+          <h2 class="section-title" id="challenges-title">{solution.challengesTitle}</h2>
+        </div>
+
+        <div class="challenges-grid">
+          {solution.challenges.map((c, i) => (
+            <div class="challenge-card">
+              <span class="challenge-num">0{i + 1}</span>
+              <h3 class="challenge-title">{c.title}</h3>
+              <p class="challenge-desc">{c.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Deliverables -->
+    <section class="section-block solution-deliverables-section" aria-labelledby="deliverables-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">Состав решения</span>
+          <h2 class="section-title" id="deliverables-title">{solution.deliverablesTitle}</h2>
+        </div>
+
+        <div class="deliverables-grid">
+          {solution.deliverables.map((d, i) => (
+            <div class="deliverable-card">
+              <div class="deliverable-top">
+                <span class="deliverable-index">0{i + 1}</span>
+                <h3 class="deliverable-title">{d.title}</h3>
+              </div>
+              <p class="deliverable-text">{d.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Cases Showcase -->
+    {solutionCases.length > 0 && (
+      <section class="section-block solution-cases-section" aria-labelledby="cases-title">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-badge">Опыт и портфолио</span>
+            <h2 class="section-title" id="cases-title">{solution.casesTitle}</h2>
+          </div>
+
+          <div class="cases-showcase-grid">
+            {solutionCases.map((c) => (
+              <a class="case-showcase-card" href={`/case/${c.id}`}>
+                <div class="case-cover-wrapper">
+                  {/\\.(webm|mp4)(?:\\?|$)/i.test(c.data.cover) ? (
+                    <video
+                      src={c.data.cover}
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                      class="case-cover-media"
+                    />
+                  ) : (
+                    <img
+                      src={c.data.cover}
+                      alt={c.data.title}
+                      loading="lazy"
+                      class="case-cover-media"
+                    />
+                  )}
+                  <div class="case-card-overlay" />
+                </div>
+                <div class="case-info">
+                  <div class="case-meta">
+                    <span class="case-year">{c.data.year}</span>
+                    <span class="case-tag">{(c.data.services || []).join(", ")}</span>
+                  </div>
+                  <h3 class="case-name">{c.data.title}</h3>
+                  <p class="case-summary">{c.data.summary}</p>
+                  <span class="case-arrow-btn">Смотреть проект ↗</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- 5. FAQ Section -->
+    <section class="section-block solution-faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">FAQ</span>
+          <h2 class="section-title" id="faq-title">{solution.faqTitle}</h2>
+        </div>
+
+        <div class="faq-list">
+          {solution.faq.map((item) => (
+            <details class="faq-item">
+              <summary class="faq-question">
+                <span>{item.question}</span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-answer">
+                <p>{item.answer}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Contacts -->
+    <Contacts
+      title={solution.ctaTitle}
+      lead={solution.ctaLead}
+      source="solution_page"
+      sourceDetails={`Решение: ${solution.name}`}
+    />
+  </article>
+
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .solution-page {
+    position: relative;
+    padding-top: clamp(2rem, 5vw, 4rem);
+    color: var(--ink-primary);
+  }
+
+  .breadcrumb-row {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .back-link {
+    display: inline-flex;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.9rem;
+    will-change: transform;
+    transition: transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)), color 200ms ease;
+  }
+
+  .back-link-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .back-link:hover,
+  .back-link:focus-visible {
+    color: #ffffff;
+    transform: scale(1.04);
+  }
+
+  .solution-hero {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .hero-tag-badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-tint, #F7C8BF);
+    background: rgba(253, 75, 50, 0.12);
+    border: 1px solid rgba(253, 75, 50, 0.3);
+    border-radius: 100px;
+  }
+
+  .solution-hero-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5.2vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    max-width: 22ch;
+  }
+
+  .solution-hero-lead {
+    max-width: 48rem;
+    margin: 0 0 3.5rem;
+    font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .solution-metrics-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 48rem) {
+    .solution-metrics-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .metric-card {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .metric-num {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .metric-label {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .metric-text {
+    margin: 0.25rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .section-block {
+    padding-block: clamp(4rem, 8vw, 7rem);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .section-header {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .section-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+  }
+
+  /* Challenges Grid */
+  .challenges-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .challenges-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .challenges-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .challenge-card {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .challenge-num {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .challenge-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.25;
+  }
+
+  .challenge-desc {
+    margin: 0;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.45;
+  }
+
+  /* Deliverables Grid */
+  .deliverables-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .deliverables-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .deliverable-card {
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%), #0e0e10;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .deliverable-top {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .deliverable-index {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent-tint, #F7C8BF);
+    font-weight: 700;
+  }
+
+  .deliverable-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .deliverable-text {
+    margin: 0;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.45;
+  }
+
+  /* Cases Showcase */
+  .cases-showcase-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 48rem) {
+    .cases-showcase-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .case-showcase-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--border-subtle);
+    background: #0e0e10;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .case-showcase-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+
+  .case-cover-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #000000;
+  }
+
+  .case-cover-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .case-showcase-card:hover .case-cover-media {
+    transform: scale(1.03);
+  }
+
+  .case-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
+  }
+
+  .case-info {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .case-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .case-tag {
+    color: var(--accent-tint, #F7C8BF);
+  }
+
+  .case-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: #ffffff;
+  }
+
+  .case-summary {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .case-arrow-btn {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-tint, #F7C8BF);
+  }
+
+  /* FAQ Accordion */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 54rem;
+  }
+
+  .faq-item {
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.02);
+    transition: background 0.2s ease;
+  }
+
+  .faq-item[open] {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon {
+    font-size: 1.3rem;
+    color: var(--accent);
+    transition: transform 0.2s ease;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    padding: 0 1.5rem 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .faq-answer p {
+    margin: 0;
+  }
+</style>

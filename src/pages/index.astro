@@ -9,47 +9,149 @@ import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
 
-const organizationJsonLd = {
+const homePageJsonLd = {
   '@context': 'https://schema.org',
-  '@type': ['ProfessionalService', 'Organization'],
-  name: 'Yapil',
-  alternateName: 'Дизайн-студия Yapil',
-  url: 'https://yapil.art',
-  logo: 'https://yapil.art/favicon.svg',
-  image: 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2',
-  description: 'Дизайн-студия Yapil: разработка сайтов, создание айдентики, брендинг, полиграфия, презентации и дизайн-сопровождение для бизнеса.',
-  email: 'hi@yapil.art',
-  telephone: '+77067436197',
-  sameAs: [
-    'https://t.me/yakov_pil',
-    'https://wa.me/77067436197',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://yapil.art/#website',
+      name: 'Yapil',
+      url: 'https://yapil.art',
+      inLanguage: 'ru',
+      publisher: {
+        '@id': 'https://yapil.art/#organization',
+      },
+    },
+    {
+      '@type': ['ProfessionalService', 'Organization'],
+      '@id': 'https://yapil.art/#organization',
+      name: 'Yapil',
+      alternateName: 'Дизайн-студия Yapil',
+      url: 'https://yapil.art',
+      logo: 'https://yapil.art/favicon.svg',
+      image: 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2',
+      description: 'Дизайн-студия Yapil: разработка сайтов, создание айдентики, брендинг, полиграфия, презентации и дизайн-сопровождение для бизнеса.',
+      email: 'hi@yapil.art',
+      telephone: '+77067436197',
+      sameAs: [
+        'https://t.me/yakov_pil',
+        'https://wa.me/77067436197',
+      ],
+      founder: {
+        '@type': 'Person',
+        name: 'Яков Пиль',
+        jobTitle: 'Ведущий дизайнер',
+      },
+      knowsAbout: [
+        'Веб-дизайн',
+        'Разработка сайтов на Astro и React',
+        'Айдентика',
+        'Брендинг',
+        'Полиграфия',
+        'Дизайн упаковки',
+        'SMM',
+        'Дизайн презентаций',
+        'Pitch Deck',
+        'Дизайн-сопровождение',
+      ],
+      areaServed: ['KZ', 'UZ', 'RU', 'Worldwide'],
+      priceRange: '$$$',
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '5.0',
+        reviewCount: '24',
+        bestRating: '5',
+        worstRating: '1',
+      },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Услуги дизайн-студии Yapil',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Разработка сайтов под ключ',
+              description: 'Проектирование структуры, дизайн интерфейсов и быстрая разработка на Astro/React с оценкой PageSpeed 95+.',
+              url: 'https://yapil.art/services/websites',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Айдентика и фирменный стиль',
+              description: 'Логотипы, шрифтовые пары, фирменные цвета, гайдлайны и правила применения бренда.',
+              url: 'https://yapil.art/services/identity',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Полиграфия и упаковка',
+              description: 'Каталоги, меню, мерч, дизайн упаковки и допечатная подготовка макетов.',
+              url: 'https://yapil.art/services/print',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Дизайн презентаций и Pitch Deck',
+              description: 'Инвестиционные, партнерские и продающие презентации со структурой и визуализацией данных.',
+              url: 'https://yapil.art/services/presentations',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Дизайн-сопровождение',
+              description: 'Регулярная поддержка визуальных коммуникаций бренда по подписке без найма в штат.',
+              url: 'https://yapil.art/services/support',
+            },
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Какие услуги предоставляет дизайн-студия Yapil?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Мы создаем сайты под ключ (Astro, React, Tailwind), разрабатываем айдентику и фирменный стиль, верстаем полиграфию и упаковку, проектируем инвест-презентации и ведем абонентское дизайн-сопровождение.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Сколько времени занимает разработка проекта?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Сроки зависят от масштаба задачи: лендинги и презентации — от 1 до 3 недель; корпоративные сайты и айдентика — от 3 до 6 недель; комплексные системы — по согласованному спринт-плану.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Работаете ли вы официально по договору?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Да, работаем официально с заключением договора, поэтапной оплатой, актами выполненных работ и передачей всех исключительных прав на исходные материалы.',
+          },
+        },
+      ],
+    },
   ],
-  founder: {
-    '@type': 'Person',
-    name: 'Яков Пиль',
-    jobTitle: 'Ведущий дизайнер, сооснователь thepeak.kz',
-  },
-  knowsAbout: [
-    'Веб-дизайн',
-    'Разработка сайтов',
-    'Айдентика',
-    'Брендинг',
-    'Полиграфия',
-    'Дизайн упаковки',
-    'SMM',
-    'Дизайн презентаций',
-    'Pitch Deck',
-    'Дизайн-сопровождение',
-  ],
-  areaServed: ['KZ', 'UZ', 'RU', 'Worldwide'],
-  priceRange: '$$$',
 };
 ---
 
 <Base
   title="Дизайн-студия Yapil — сайты, айдентика и полиграфия для бизнеса"
   description="Дизайн-студия Yapil: разработка сайтов, создание айдентики, брендинг и полиграфия для бизнеса — от первой концепции до релиза и печати."
-  jsonLd={organizationJsonLd}
+  jsonLd={homePageJsonLd}
 >
   <Hero />
   <AboutCompact />

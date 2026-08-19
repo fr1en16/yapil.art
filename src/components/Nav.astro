@@ -174,14 +174,14 @@ const homePath = theme === 'light' ? '/light' : '/';
   .site-header::before {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: -6px 0 -22px 0;
     z-index: -1;
     pointer-events: none;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
     opacity: 0;
     transition: opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -203,9 +203,9 @@ const homePath = theme === 'light' ? '/light' : '/';
 
   /* Light Theme Overrides */
   .site-header.theme-light::before {
-    background: rgba(247, 245, 242, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(247, 245, 242, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
   .site-header.theme-light.is-scrolled {
