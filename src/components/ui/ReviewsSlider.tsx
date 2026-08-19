@@ -187,13 +187,7 @@ export default function ReviewsSlider({
             }`}
           >
             {/* Left: Section Tag (cols 1-3) */}
-            <div className="col-span-6 sm:col-span-5 md:col-start-1 md:col-span-3 flex items-center gap-2">
-              <span
-                className="text-[#FD4B32] text-sm md:text-base font-bold select-none"
-                aria-hidden="true"
-              >
-                +
-              </span>
+            <div className="col-span-6 sm:col-span-5 md:col-start-1 md:col-span-3 flex items-center">
               <span
                 className={`text-xs md:text-sm font-semibold tracking-wider uppercase ${
                   isLight ? 'text-[#1D1D1D]/90' : 'text-white/90'
