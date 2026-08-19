@@ -45,6 +45,9 @@ const positions = [
   <div class="portfolio__grid container">
     {projects.map((project, index) => {
       const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(project.data.cover);
+      const poster = isVideo
+        ? project.data.cover.replace(/\.(mp4|webm)(?:\?.*)?$/i, '.webp')
+        : project.data.cover;
 
       return (
         <article class:list={['project', positions[index]]} data-slug={project.id}>
@@ -53,9 +56,28 @@ const positions = [
               <div class="project__parallax" data-parallax-target>
                 <div class="project__image">
                   {isVideo ? (
-                    <video src={project.data.cover} muted loop playsinline autoplay preload="none" aria-hidden="true">
-                      <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
-                    </video>
+                    <>
+                      <img
+                        src={poster}
+                        alt={`${project.data.title} — ${project.data.summary}`}
+                        loading="lazy"
+                        decoding="async"
+                        class="project__poster"
+                      />
+                      <video
+                        data-lazy-video
+                        data-src={project.data.cover}
+                        poster={poster}
+                        muted
+                        loop
+                        playsinline
+                        preload="none"
+                        aria-hidden="true"
+                        class="project__video"
+                      >
+                        <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
+                      </video>
+                    </>
                   ) : project.data.cover.startsWith('/') ? (
                     <img
                       src={project.data.cover}
@@ -244,6 +266,17 @@ const positions = [
     object-fit: cover;
   }
 
+  .project__image video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+
+  .project__image video.is-playing {
+    opacity: 1;
+  }
+
   .project__link:hover .project__image,
   .project__link:focus-visible .project__image {
     transform: scale(1.055);
@@ -381,7 +414,7 @@ const positions = [
 
     .project--side,
     .project--small {
-      width: 62%;
+      width: 60%;
     }
 
     .project--side {
@@ -414,37 +447,53 @@ const positions = [
       gap: 3.5rem;
     }
 
-    .project,
-    .project--lead,
-    .project--side,
-    .project--center,
-    .project--small,
-    .project--wide {
-      width: 70%;
-      max-width: 70%;
+    .project {
       min-width: 0;
     }
 
-    .project:nth-child(odd) {
+    /* Крупные карточки (90%) */
+    .project--lead,
+    .project--center,
+    .project--wide {
+      width: 90%;
+      max-width: 90%;
+    }
+
+    /* Мелкие карточки (60%) */
+    .project--side,
+    .project--small {
+      width: 60%;
+      max-width: 60%;
+    }
+
+    /* Позиционирование и смещение карточек */
+    .project--lead {
       align-self: flex-start;
-      margin-left: 0;
+      margin-inline: 0 auto;
     }
 
-    .project:nth-child(even) {
+    .project--side {
       align-self: flex-end;
-      margin-left: auto;
+      margin-inline: auto 0;
     }
 
-    .project:nth-child(3) {
-      margin-left: clamp(1rem, 7vw, 2.5rem);
+    .project--center {
+      align-self: center;
+      margin-inline: auto;
     }
 
-    .project:nth-child(7) {
-      margin-left: clamp(0.75rem, 5vw, 1.8rem);
+    .project--small {
+      align-self: flex-start;
+      margin-inline: 0 auto;
+    }
+
+    .project--wide {
+      align-self: flex-end;
+      margin-inline: auto 0;
     }
 
     .project__media {
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 5 / 4;
     }
 
     .project__tags,

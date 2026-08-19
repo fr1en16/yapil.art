@@ -1,0 +1,11 @@
+---
+import ReviewsSliderComponent from './ui/ReviewsSlider';
+
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+---
+
+<ReviewsSliderComponent client:visible theme={theme} />

@@ -80,7 +80,8 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
                       >
                         {item.isVideo ? (
                           <video
-                            src={item.url}
+                            data-lazy-video
+                            data-src={item.url}
                             width={item.width}
                             height={item.height}
                             muted
@@ -783,6 +784,21 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
     .lightbox-control {
       width: 2.75rem;
       height: 2.75rem;
+    }
+
+    .lightbox-close {
+      border: none;
+      background: transparent;
+      font-size: 2.2rem;
+      width: auto;
+      height: auto;
+      padding: 0.5rem;
+      color: white;
+    }
+
+    .lightbox-close:hover {
+      background: transparent;
+      color: var(--accent);
     }
   }
 

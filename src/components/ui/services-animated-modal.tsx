@@ -533,22 +533,6 @@ function ServiceApplicationModal({
     setIsSubmitted(false);
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
-  useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, []);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -568,10 +552,28 @@ function ServiceApplicationModal({
       aria-modal="true"
       aria-labelledby="modal-service-title"
       onClick={onClose}
+      data-lenis-prevent="true"
     >
+      {/* Standalone close button without container */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        aria-label="Закрыть"
+        className={`fixed top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-[9999] p-2 bg-transparent border-0 outline-none cursor-pointer transition-colors duration-200 ${
+          isLight
+            ? 'text-[#1D1D1D] hover:text-[#FD4B32]'
+            : 'text-white hover:text-[#FD4B32]'
+        }`}
+      >
+        <X className="size-7 sm:size-8 stroke-[1.5]" />
+      </button>
+
       {/* 12-Column Grid Container */}
-      <div className="container min-h-screen py-12 md:py-20 flex flex-col justify-center relative">
-        <div className="grid grid-cols-1 md:grid-cols-12 md:gap-[var(--grid-gap)] items-stretch w-full my-auto gap-y-12">
+      <div className="container min-h-screen py-4 md:py-6 flex flex-col justify-center relative">
+        <div className="grid grid-cols-1 md:grid-cols-12 md:gap-[var(--grid-gap)] items-stretch w-full my-auto gap-y-10 md:gap-y-12">
           {/* Left Part: Title & CTA (Columns 1-4) */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -585,16 +587,16 @@ function ServiceApplicationModal({
             <div>
               <h2
                 id="modal-service-title"
-                className={`text-4xl sm:text-5xl md:text-6xl font-normal tracking-[-0.04em] m-0 leading-[1.05] mb-8 sm:mb-10 md:mb-12 ${
+                className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-[-0.04em] m-0 leading-[0.9] mb-6 sm:mb-8 md:mb-10 ${
                   isLight ? 'text-[#1D1D1D]' : 'text-white'
                 }`}
-                style={{ fontFamily: 'var(--font-display)' }}
+                style={{ fontFamily: 'var(--font-display)', lineHeight: '0.9' }}
               >
                 Оставьте заявку
               </h2>
 
               <p
-                className={`text-base sm:text-lg leading-relaxed m-0 ${
+                className={`text-base sm:text-lg md:text-xl leading-relaxed m-0 max-w-md ${
                   isLight ? 'text-[#1D1D1D]/75' : 'text-white/75'
                 }`}
               >
@@ -604,38 +606,38 @@ function ServiceApplicationModal({
             </div>
 
             {/* Bottom section: CTAs aligned to bottom with standalone icons */}
-            <div className="pt-12 md:pt-16 mt-10 md:mt-auto space-y-6">
-              <div className="flex items-start gap-3.5">
-                <Clock className="size-5 text-[#FD4B32] shrink-0 mt-0.5" />
-                <div className="text-sm leading-snug">
+            <div className="pt-12 md:pt-28 mt-10 md:mt-auto space-y-8">
+              <div className="flex items-start gap-4">
+                <Clock className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
+                <div className="text-base sm:text-lg leading-snug">
                   <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
                     Ответ в течение 2 часов
                   </span>
-                  <span className={`block text-xs mt-0.5 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                  <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
                     свяжемся в Telegram, WhatsApp или по телефону
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3.5">
-                <UserCheck className="size-5 text-[#FD4B32] shrink-0 mt-0.5" />
-                <div className="text-sm leading-snug">
+              <div className="flex items-start gap-4">
+                <UserCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
+                <div className="text-base sm:text-lg leading-snug">
                   <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
                     Прямой диалог
                   </span>
-                  <span className={`block text-xs mt-0.5 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                  <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
                     проект сразу ведёт и оценивает ключевой дизайнер
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3.5">
-                <ShieldCheck className="size-5 text-[#FD4B32] shrink-0 mt-0.5" />
-                <div className="text-sm leading-snug">
+              <div className="flex items-start gap-4">
+                <ShieldCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
+                <div className="text-base sm:text-lg leading-snug">
                   <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
                     Прозрачная смета
                   </span>
-                  <span className={`block text-xs mt-0.5 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                  <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
                     фиксируем этапы и финальную стоимость до старта
                   </span>
                 </div>
@@ -704,15 +706,15 @@ function ServiceApplicationModal({
             </div>
           ) : (
             /* Application Form */
-            <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-7" noValidate>
+            <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-9" noValidate>
 
               {/* Name & Phone in grid on sm+ */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                 {/* Name */}
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   <label
                     htmlFor="service-name-input"
-                    className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                    className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
                     Имя <span className="text-[#FD4B32]">*</span>
                   </label>
@@ -729,7 +731,7 @@ function ServiceApplicationModal({
                     }}
                     placeholder="Как к вам обращаться"
                     style={{ outline: 'none' }}
-                    className={`w-full px-4 py-3 sm:py-3.5 rounded-none backdrop-blur-2xl border text-sm outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
+                    className={`w-full px-5 py-4 sm:py-4.5 rounded-none backdrop-blur-2xl border text-sm sm:text-base outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
                       isLight
                         ? `${
                             errors.name
@@ -750,10 +752,10 @@ function ServiceApplicationModal({
                 </div>
 
                 {/* Phone */}
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   <label
                     htmlFor="service-phone-input"
-                    className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                    className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
                     Телефон <span className="text-[#FD4B32]">*</span>
                   </label>
@@ -773,7 +775,7 @@ function ServiceApplicationModal({
                     }}
                     placeholder="+7 (___) ___-__-__"
                     style={{ outline: 'none' }}
-                    className={`w-full px-4 py-3 sm:py-3.5 rounded-none backdrop-blur-2xl border text-sm outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
+                    className={`w-full px-5 py-4 sm:py-4.5 rounded-none backdrop-blur-2xl border text-sm sm:text-base outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
                       isLight
                         ? `${
                             errors.phone
@@ -796,15 +798,15 @@ function ServiceApplicationModal({
               </div>
 
               {/* Service Selection Chips */}
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <label
                   id="service-select-label"
-                  className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                  className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                 >
                   Интересующие направления
                 </label>
                 <div
-                  className="flex flex-wrap gap-2.5 sm:gap-3"
+                  className="flex flex-wrap gap-3 sm:gap-3.5"
                   role="group"
                   aria-labelledby="service-select-label"
                 >
@@ -816,7 +818,7 @@ function ServiceApplicationModal({
                         type="button"
                         onClick={() => handleToggleService(chip)}
                         style={{ borderRadius: '100px' }}
-                        className={`px-4 py-2 text-xs sm:text-sm font-medium rounded-[100px] backdrop-blur-2xl transition-all duration-300 cursor-pointer border outline-none focus:outline-none focus-visible:outline-none ${
+                        className={`px-5 py-3 text-sm sm:text-base font-medium rounded-[100px] backdrop-blur-2xl transition-all duration-300 cursor-pointer border outline-none focus:outline-none focus-visible:outline-none ${
                           isSelected
                             ? 'bg-[#FD4B32] text-white border-[#FD4B32] shadow-[0_4px_14px_rgba(253,75,50,0.35)]'
                             : isLight
@@ -832,10 +834,10 @@ function ServiceApplicationModal({
               </div>
 
               {/* Message */}
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 <label
                   htmlFor="service-message-input"
-                  className={`block text-xs sm:text-sm font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
+                  className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                 >
                   О задаче (необязательно)
                 </label>
@@ -844,9 +846,9 @@ function ServiceApplicationModal({
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Опишите задачу, примерные сроки или оставьте ссылку на материалы"
-                  rows={3}
+                  rows={4}
                   style={{ outline: 'none' }}
-                  className={`w-full px-4 py-3 sm:py-3.5 rounded-none backdrop-blur-2xl border text-sm outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 resize-none leading-relaxed ${
+                  className={`w-full px-5 py-4 sm:py-4.5 rounded-none backdrop-blur-2xl border text-sm sm:text-base outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 resize-none leading-relaxed ${
                     isLight
                       ? 'border-black/[0.08] bg-white/80 text-[#1D1D1D] placeholder-black/35 hover:border-[#FD4B32]/50 hover:bg-white focus:border-[#FD4B32] focus:bg-white focus:shadow-[0_8px_20px_-4px_rgba(253,75,50,0.12)]'
                       : 'border-white/10 bg-white/[0.04] text-white placeholder-white/30 hover:border-white/25 hover:bg-white/[0.08] focus:border-[#FD4B32] focus:bg-white/[0.08]'
@@ -855,8 +857,8 @@ function ServiceApplicationModal({
               </div>
 
               {/* Privacy Consent */}
-              <div className="space-y-1.5 pt-1">
-                <label className="flex items-start gap-3 cursor-pointer select-none">
+              <div className="space-y-2 pt-1">
+                <label className="flex items-start gap-3.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={privacy}
@@ -869,7 +871,7 @@ function ServiceApplicationModal({
                     className="sr-only"
                   />
                   <div
-                    className={`size-4 mt-0.5 rounded-none border flex items-center justify-center transition-all duration-300 shrink-0 ${
+                    className={`size-4.5 mt-0.5 rounded-none border flex items-center justify-center transition-all duration-300 shrink-0 ${
                       privacy
                         ? 'bg-[#FD4B32] border-[#FD4B32] text-white'
                         : isLight
@@ -902,16 +904,16 @@ function ServiceApplicationModal({
               </div>
 
               {/* Submit Button */}
-              <div className="pt-3 sm:pt-4">
+              <div className="pt-4 sm:pt-5">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="form-cta-button"
+                  className="form-cta-button !py-4.5 sm:!py-5 !text-base sm:!text-lg"
                 >
                   <span className="btn-inner">
                     <span className="btn-text">{isSubmitting ? 'Отправка...' : 'Отправить заявку'}</span>
                     {!isSubmitting && (
-                      <ArrowRight className="btn-icon size-4.5" />
+                      <ArrowRight className="btn-icon size-5" />
                     )}
                   </span>
                 </button>

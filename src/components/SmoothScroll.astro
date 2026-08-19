@@ -4,6 +4,7 @@
 <script>
   import Lenis from 'lenis';
   import 'lenis/dist/lenis.css';
+  import '../scripts/lazy-videos';
 
   function isMobileOrReducedMotion() {
     return (
@@ -58,8 +59,9 @@
       const href = target.getAttribute('href');
       if (!href) return;
 
-      const isCurrentPage =
-        window.location.pathname === '/' || window.location.pathname === '';
+      const pathname = window.location.pathname.replace(/\/$/, '') || '/';
+      const isRoot = pathname === '/';
+      const isLight = pathname === '/light';
 
       if (href.startsWith('#') && href.length > 1) {
         const el = document.querySelector(href);
@@ -67,8 +69,15 @@
           e.preventDefault();
           lenis.scrollTo(el as HTMLElement, { offset: -20, duration: 1.2 });
         }
-      } else if (href.startsWith('/#') && href.length > 2 && isCurrentPage) {
+      } else if (href.startsWith('/#') && href.length > 2 && isRoot) {
         const el = document.querySelector(href.slice(1));
+        if (el) {
+          e.preventDefault();
+          lenis.scrollTo(el as HTMLElement, { offset: -20, duration: 1.2 });
+        }
+      } else if (href.startsWith('/light#') && href.length > 7 && isLight) {
+        const hash = href.substring(href.indexOf('#'));
+        const el = document.querySelector(hash);
         if (el) {
           e.preventDefault();
           lenis.scrollTo(el as HTMLElement, { offset: -20, duration: 1.2 });

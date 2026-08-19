@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
 import PdfSlider from '../../components/PdfSlider.astro';
@@ -17,6 +18,9 @@ interface Props {
 const { c } = Astro.props;
 const { Content } = await render(c);
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.data.cover);
+const poster = isVideo
+  ? c.data.cover.replace(/\.(mp4|webm)(?:\?.*)?$/i, '.webp')
+  : c.data.cover;
 const ogImage = new URL(`/open-graph/${c.id}.png`, Astro.site).href;
 const caseCoverUrl = c.data.cover.startsWith('http')
   ? c.data.cover
@@ -98,15 +102,26 @@ const creativeWorkJsonLd = {
     <div class="case-cover" data-parallax-media>
       <div class="case-cover-parallax" data-parallax-target>
         {isVideo ? (
-          <video
-            src={c.data.cover}
-            muted
-            loop
-            playsinline
-            autoplay
-            preload="none"
-            aria-label={`${c.data.title}: видео обложки проекта`}
-          ></video>
+          <>
+            <img
+              src={poster}
+              alt={`${c.data.title} — ${c.data.summary}`}
+              loading="eager"
+              decoding="async"
+              class="case-cover-poster"
+            />
+            <video
+              data-lazy-video
+              data-src={c.data.cover}
+              poster={poster}
+              muted
+              loop
+              playsinline
+              preload="none"
+              aria-label={`${c.data.title}: видео обложки проекта`}
+              class="case-cover-video"
+            ></video>
+          </>
         ) : c.data.cover.startsWith('/') ? (
           <img
             src={c.data.cover}
@@ -153,15 +168,11 @@ const creativeWorkJsonLd = {
       <PdfSlider />
     </div>
 
-    <div class="case-next container">
-      <p>Нашли задачу, похожую на вашу?</p>
-      <a href="/#contacts" class="case-next-link">
-        <span class="next-inner">
-          <span class="next-text">Напишите, обсудим.</span>
-          <span class="next-arrow" aria-hidden="true">↗</span>
-        </span>
-      </a>
-    </div>
+    <Contacts
+      title="Понравился проект?"
+      source="case_inquiry"
+      sourceDetails={`Кейс: ${c.data.title}`}
+    />
   </article>
   <Footer slot="footer" />
 </Base>
@@ -272,6 +283,17 @@ const creativeWorkJsonLd = {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .case-cover-parallax video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+
+  .case-cover-parallax video.is-playing {
+    opacity: 1;
   }
 
   .case-brief {
@@ -416,75 +438,6 @@ const creativeWorkJsonLd = {
     display: block;
   }
 
-  .case-next {
-    padding-block: clamp(4rem, 10vw, 10rem);
-    text-align: center;
-  }
-
-  .case-next p {
-    margin-bottom: 0.5rem;
-    color: rgba(255, 255, 255, 0.75);
-    transition: transform var(--duration-pushback, 1575ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
-                opacity var(--duration-pushback, 1575ms) ease;
-    transform-origin: center bottom;
-  }
-
-  /* Inverse Parallax on prompt text when hovering CTA */
-  .case-next:has(.case-next-link:hover) p,
-  .case-next:has(.case-next-link:focus-visible) p {
-    transform: scale(0.965) translateY(-3px);
-    opacity: 0.82;
-  }
-
-  .case-next-link {
-    display: inline-block;
-    color: #ffffff;
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 5vw, 4rem);
-    font-weight: 700;
-    line-height: 1;
-    text-decoration: none;
-    transform-origin: center center;
-    will-change: transform;
-    transition:
-      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
-      color 200ms ease;
-  }
-
-  .case-next-link:hover,
-  .case-next-link:focus-visible {
-    color: var(--accent-tint, #F7C8BF);
-    transform: scale(1.05) translateY(-2px);
-  }
-
-  .next-inner {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.35em;
-  }
-
-  .next-text {
-    display: inline-block;
-    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
-                letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
-  }
-
-  .next-arrow {
-    display: inline-block;
-    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
-  }
-
-  .case-next-link:hover .next-text,
-  .case-next-link:focus-visible .next-text {
-    transform: scale(1.03);
-    letter-spacing: 0.015em;
-  }
-
-  .case-next-link:hover .next-arrow,
-  .case-next-link:focus-visible .next-arrow {
-    transform: translate(4px, -4px) scale(1.15);
-  }
-
   @media (min-width: 48rem) {
     .case-heading {
       grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.55fr);
@@ -504,11 +457,7 @@ const creativeWorkJsonLd = {
   @media (prefers-reduced-motion: reduce) {
     .back-link,
     .back-link-arrow,
-    .back-link-text,
-    .case-next p,
-    .case-next-link,
-    .next-text,
-    .next-arrow {
+    .back-link-text {
       transform: none !important;
       transition: none !important;
     }

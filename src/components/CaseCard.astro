@@ -13,6 +13,9 @@ interface Props {
 
 const { slug, title, year, summary, services, cover, index } = Astro.props;
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
+const poster = isVideo
+  ? cover.replace(/\.(mp4|webm)(?:\?.*)?$/i, '.webp')
+  : cover;
 ---
 
 <article class="case-card">
@@ -21,9 +24,28 @@ const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
       <div class="case-parallax" data-parallax-target>
         <div class="case-image">
           {isVideo ? (
-            <video src={cover} muted loop playsinline autoplay preload="none" aria-hidden="true">
-              <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
-            </video>
+            <>
+              <img
+                src={poster}
+                alt={`${title} — ${summary}`}
+                loading="lazy"
+                decoding="async"
+                class="case-poster"
+              />
+              <video
+                data-lazy-video
+                data-src={cover}
+                poster={poster}
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-hidden="true"
+                class="case-video"
+              >
+                <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
+              </video>
+            </>
           ) : cover.startsWith('/') ? (
             <img
               src={cover}
@@ -105,6 +127,17 @@ const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
     height: 100%;
     object-fit: cover;
     transition: transform 450ms cubic-bezier(0.2, 0.75, 0.2, 1);
+  }
+
+  .case-image video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 500ms ease, transform 450ms cubic-bezier(0.2, 0.75, 0.2, 1);
+  }
+
+  .case-image video.is-playing {
+    opacity: 1;
   }
 
   a:hover .case-image :global(img),

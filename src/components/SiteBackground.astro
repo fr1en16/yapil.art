@@ -178,12 +178,17 @@
           else startShader();
         });
 
-        // Pause shader when scrolled past hero cover to save 100% GPU/CPU on long page
-        const heroSection = document.querySelector('.hero-cover');
-        if (heroSection && 'IntersectionObserver' in window) {
-          const heroObserver = new IntersectionObserver(
-            ([entry]) => {
-              if (entry.isIntersecting) {
+        // Pause shader when not in view of transparent background sections to save GPU/CPU
+        const visibleSections = document.querySelectorAll('.hero-cover, #reviews, #contacts');
+        if (visibleSections.length > 0 && 'IntersectionObserver' in window) {
+          const activeMap = new Map();
+          const bgObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                activeMap.set(entry.target, entry.isIntersecting);
+              });
+              const anyVisible = Array.from(activeMap.values()).some(Boolean);
+              if (anyVisible) {
                 startShader();
               } else {
                 stopShader();
@@ -191,7 +196,7 @@
             },
             { threshold: 0.01 }
           );
-          heroObserver.observe(heroSection);
+          visibleSections.forEach((el) => bgObserver.observe(el));
         }
 
         resize();

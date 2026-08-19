@@ -1,9 +1,21 @@
 ---
+import type { LeadSource } from '../lib/crmTypes';
+
 interface Props {
   theme?: 'dark' | 'light';
+  title?: string;
+  lead?: string;
+  source?: LeadSource;
+  sourceDetails?: string;
 }
 
-const { theme = 'dark' } = Astro.props;
+const {
+  theme = 'dark',
+  title = 'Нашли задачу,<br />похожую на вашу?',
+  lead = 'Расскажите о задаче или заполните форму — ответим в течение 2 часов и подготовим предложение.',
+  source = 'contacts_form',
+  sourceDetails = 'Форма контактов на странице',
+} = Astro.props;
 const isLight = theme === 'light';
 ---
 
@@ -14,10 +26,12 @@ const isLight = theme === 'light';
       <div class="contacts-cover" id="contacts-cover">
         <div class="contacts-cover-inner">
           <div class="contacts-cover-header">
-            <h2 class="display-title" id="contacts-title">Нашли задачу,<br />похожую на вашу?</h2>
+            <h2 class="display-title" id="contacts-title">
+              <Fragment set:html={title} />
+            </h2>
           </div>
           <p class="contacts-cover-lead">
-            Расскажите о задаче или заполните форму — ответим в течение 2 часов и подготовим предложение.
+            {lead}
           </p>
           <div class="contacts-cover-links">
             <a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
@@ -39,7 +53,7 @@ const isLight = theme === 'light';
       <!-- Right side: Feedback Form (columns 9-12) -->
       <div class="feedback-panel">
         <div class="feedback-card">
-          <form class="feedback-form" id="contact-feedback-form" novalidate>
+          <form class="feedback-form" data-source={source} data-source-details={sourceDetails} novalidate>
             <!-- 1. Name -->
             <div class="form-group">
               <label class="form-label" for="client-name">
@@ -54,7 +68,7 @@ const isLight = theme === 'light';
                 required
                 autocomplete="name"
               />
-              <span class="field-error" id="name-error" aria-live="polite"></span>
+              <span class="field-error field-error-name" id="name-error" aria-live="polite"></span>
             </div>
 
             <!-- 2. Phone with automatic mask -->
@@ -72,7 +86,7 @@ const isLight = theme === 'light';
                 autocomplete="tel"
                 inputmode="tel"
               />
-              <span class="field-error" id="phone-error" aria-live="polite"></span>
+              <span class="field-error field-error-phone" id="phone-error" aria-live="polite"></span>
             </div>
 
             <!-- 3. What interests you (Service Chips) -->
@@ -138,12 +152,12 @@ const isLight = theme === 'light';
                   Нажимая «Отправить заявку», вы соглашаетесь с условиями <a href="/privacy" target="_blank" rel="noopener noreferrer">конфиденциальности</a>.
                 </span>
               </label>
-              <span class="field-error" id="privacy-error" aria-live="polite"></span>
+              <span class="field-error field-error-privacy" id="privacy-error" aria-live="polite"></span>
             </div>
 
             <!-- 6. Submit Button -->
             <div class="form-actions">
-              <button type="submit" class="submit-button" id="submit-button">
+              <button type="submit" class="submit-button">
                 <span class="btn-inner">
                   <span class="btn-text">Отправить заявку</span>
                   <span class="btn-icon" aria-hidden="true">→</span>
@@ -153,7 +167,7 @@ const isLight = theme === 'light';
           </form>
 
           <!-- Success State Overlay -->
-          <div class="form-success-state" id="form-success-message" aria-hidden="true">
+          <div class="form-success-state" aria-hidden="true">
             <div class="success-icon-wrap">
               <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -163,7 +177,7 @@ const isLight = theme === 'light';
             <p class="success-text">
               Спасибо за обращение. Мы изучим вашу задачу и ответим в течение 2 часов.
             </p>
-            <button type="button" class="reset-button" id="reset-form-btn">
+            <button type="button" class="reset-button">
               <span class="reset-btn-inner">
                 <span class="reset-btn-text">Отправить ещё одну заявку</span>
                 <span class="reset-btn-icon" aria-hidden="true">↺</span>
@@ -178,6 +192,7 @@ const isLight = theme === 'light';
 
 <script>
   import { submitLead } from '../lib/crmStore';
+  import type { LeadSource } from '../lib/crmTypes';
 
   function setupPhoneMask(phoneInput: HTMLInputElement) {
     const formatPhone = () => {
@@ -234,141 +249,154 @@ const isLight = theme === 'light';
     });
   }
 
-  function initContactForm() {
-    const form = document.getElementById('contact-feedback-form') as HTMLFormElement | null;
-    const successState = document.getElementById('form-success-message');
-    const resetBtn = document.getElementById('reset-form-btn');
-    const nameInput = document.getElementById('client-name') as HTMLInputElement | null;
-    const phoneInput = document.getElementById('client-phone') as HTMLInputElement | null;
-    const privacyCheckbox = document.getElementById('privacy-consent') as HTMLInputElement | null;
-    const nameError = document.getElementById('name-error');
-    const phoneError = document.getElementById('phone-error');
-    const privacyError = document.getElementById('privacy-error');
-    const submitBtn = document.getElementById('submit-button');
+  function initContactForms() {
+    const forms = document.querySelectorAll<HTMLFormElement>('.feedback-form');
+    forms.forEach((form) => {
+      if (form.dataset.initialized === 'true') return;
+      form.dataset.initialized = 'true';
 
-    if (!form || !successState || !resetBtn || !nameInput || !phoneInput) return;
+      const card = form.closest('.feedback-card') || form.parentElement;
+      const successState = card?.querySelector('.form-success-state') as HTMLElement | null;
+      const resetBtn = card?.querySelector('.reset-button') as HTMLButtonElement | null;
+      const nameInput = form.querySelector('input[name="name"]') as HTMLInputElement | null;
+      const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement | null;
+      const privacyCheckbox = form.querySelector('input[name="privacy"]') as HTMLInputElement | null;
+      const nameError = form.querySelector('.field-error-name, #name-error') as HTMLElement | null;
+      const phoneError = form.querySelector('.field-error-phone, #phone-error') as HTMLElement | null;
+      const privacyError = form.querySelector('.field-error-privacy, #privacy-error') as HTMLElement | null;
+      const submitBtn = form.querySelector('.submit-button') as HTMLButtonElement | null;
 
-    setupPhoneMask(phoneInput);
+      if (!nameInput || !phoneInput) return;
 
-    function clearErrors() {
-      if (nameError) nameError.textContent = '';
-      if (phoneError) phoneError.textContent = '';
-      if (privacyError) privacyError.textContent = '';
-      nameInput?.classList.remove('has-error');
-      phoneInput?.classList.remove('has-error');
-      privacyCheckbox?.classList.remove('has-error');
-    }
+      setupPhoneMask(phoneInput);
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      clearErrors();
-
-      let hasError = false;
-      const nameVal = nameInput.value.trim();
-      const phoneVal = phoneInput.value.trim();
-      const phoneDigits = phoneVal.replace(/\D/g, '');
-
-      if (!nameVal) {
-        if (nameError) nameError.textContent = 'Пожалуйста, укажите имя';
-        nameInput.classList.add('has-error');
-        nameInput.focus();
-        hasError = true;
+      function clearErrors() {
+        if (nameError) nameError.textContent = '';
+        if (phoneError) phoneError.textContent = '';
+        if (privacyError) privacyError.textContent = '';
+        nameInput?.classList.remove('has-error');
+        phoneInput?.classList.remove('has-error');
+        privacyCheckbox?.classList.remove('has-error');
       }
 
-      if (!phoneVal || phoneDigits.length < 11) {
-        if (phoneError) phoneError.textContent = 'Пожалуйста, укажите полный номер телефона';
-        phoneInput.classList.add('has-error');
-        if (!hasError) phoneInput.focus();
-        hasError = true;
-      }
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        clearErrors();
 
-      if (privacyCheckbox && !privacyCheckbox.checked) {
-        if (privacyError) privacyError.textContent = 'Необходимо согласие с условиями';
-        privacyCheckbox.classList.add('has-error');
-        if (!hasError) privacyCheckbox.focus();
-        hasError = true;
-      }
+        let hasError = false;
+        const nameVal = nameInput.value.trim();
+        const phoneVal = phoneInput.value.trim();
+        const phoneDigits = phoneVal.replace(/\D/g, '');
 
-      if (hasError) return;
+        if (!nameVal) {
+          if (nameError) nameError.textContent = 'Пожалуйста, укажите имя';
+          nameInput.classList.add('has-error');
+          nameInput.focus();
+          hasError = true;
+        }
 
-      if (submitBtn) {
-        submitBtn.setAttribute('disabled', 'true');
-        const btnText = submitBtn.querySelector('.btn-text');
-        if (btnText) btnText.textContent = 'Отправка...';
-      }
+        if (!phoneVal || phoneDigits.length < 11) {
+          if (phoneError) phoneError.textContent = 'Пожалуйста, укажите полный номер телефона';
+          phoneInput.classList.add('has-error');
+          if (!hasError) phoneInput.focus();
+          hasError = true;
+        }
 
-      const formData = new FormData(form);
-      const services = formData.getAll('services') as string[];
-      const name = String(formData.get('name') || '').trim();
-      const phone = String(formData.get('phone') || '').trim();
-      const message = String(formData.get('message') || '').trim();
+        if (privacyCheckbox && !privacyCheckbox.checked) {
+          if (privacyError) privacyError.textContent = 'Необходимо согласие с условиями';
+          privacyCheckbox.classList.add('has-error');
+          if (!hasError) privacyCheckbox.focus();
+          hasError = true;
+        }
 
-      // Submit to central CRM lead receiver
-      submitLead({
-        name,
-        phone,
-        services: services.length > 0 ? services : ['Консультация'],
-        message,
-        source: 'contacts_form',
-        sourceDetails: 'Форма контактов на странице',
-      }).catch((err) => {
-        console.error('CRM submit error:', err);
+        if (hasError) return;
+
+        if (submitBtn) {
+          submitBtn.setAttribute('disabled', 'true');
+          const btnText = submitBtn.querySelector('.btn-text');
+          if (btnText) btnText.textContent = 'Отправка...';
+        }
+
+        const formData = new FormData(form);
+        const services = formData.getAll('services') as string[];
+        const name = String(formData.get('name') || '').trim();
+        const phone = String(formData.get('phone') || '').trim();
+        const message = String(formData.get('message') || '').trim();
+        const source = (form.dataset.source || 'contacts_form') as LeadSource;
+        const sourceDetails = form.dataset.sourceDetails || 'Форма контактов на странице';
+
+        // Submit to central CRM lead receiver
+        submitLead({
+          name,
+          phone,
+          services: services.length > 0 ? services : ['Консультация'],
+          message,
+          source,
+          sourceDetails,
+        }).catch((err) => {
+          console.error('CRM submit error:', err);
+        });
+
+        // Legacy storage fallback
+        try {
+          const stored = JSON.parse(localStorage.getItem('yapil_inquiries') || '[]');
+          stored.push({ name, phone, services, message, date: new Date().toISOString() });
+          localStorage.setItem('yapil_inquiries', JSON.stringify(stored));
+        } catch {
+          // ignore localStorage errors
+        }
+
+        setTimeout(() => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+            const btnText = submitBtn.querySelector('.btn-text');
+            if (btnText) btnText.textContent = 'Отправить заявку';
+          }
+          form.style.display = 'none';
+          if (successState) {
+            successState.classList.add('is-visible');
+            successState.setAttribute('aria-hidden', 'false');
+          }
+        }, 400);
       });
 
-      // Legacy storage fallback
-      try {
-        const stored = JSON.parse(localStorage.getItem('yapil_inquiries') || '[]');
-        stored.push({ name, phone, services, message, date: new Date().toISOString() });
-        localStorage.setItem('yapil_inquiries', JSON.stringify(stored));
-      } catch {
-        // ignore localStorage errors
+      if (resetBtn && successState) {
+        resetBtn.addEventListener('click', () => {
+          form.reset();
+          clearErrors();
+          form.style.display = 'flex';
+          successState.classList.remove('is-visible');
+          successState.setAttribute('aria-hidden', 'true');
+        });
       }
 
-      setTimeout(() => {
-        if (submitBtn) {
-          submitBtn.removeAttribute('disabled');
-          const btnText = submitBtn.querySelector('.btn-text');
-          if (btnText) btnText.textContent = 'Отправить заявку';
+      nameInput.addEventListener('input', () => {
+        if (nameInput.classList.contains('has-error') && nameInput.value.trim()) {
+          nameInput.classList.remove('has-error');
+          if (nameError) nameError.textContent = '';
         }
-        form.style.display = 'none';
-        successState.classList.add('is-visible');
-        successState.setAttribute('aria-hidden', 'false');
-      }, 400);
-    });
+      });
 
-    resetBtn.addEventListener('click', () => {
-      form.reset();
-      clearErrors();
-      form.style.display = 'flex';
-      successState.classList.remove('is-visible');
-      successState.setAttribute('aria-hidden', 'true');
-    });
+      phoneInput.addEventListener('input', () => {
+        const phoneDigits = phoneInput.value.replace(/\D/g, '');
+        if (phoneInput.classList.contains('has-error') && phoneDigits.length === 11) {
+          phoneInput.classList.remove('has-error');
+          if (phoneError) phoneError.textContent = '';
+        }
+      });
 
-    nameInput.addEventListener('input', () => {
-      if (nameInput.classList.contains('has-error') && nameInput.value.trim()) {
-        nameInput.classList.remove('has-error');
-        if (nameError) nameError.textContent = '';
-      }
-    });
-
-    phoneInput.addEventListener('input', () => {
-      const phoneDigits = phoneInput.value.replace(/\D/g, '');
-      if (phoneInput.classList.contains('has-error') && phoneDigits.length === 11) {
-        phoneInput.classList.remove('has-error');
-        if (phoneError) phoneError.textContent = '';
-      }
-    });
-
-    privacyCheckbox?.addEventListener('change', () => {
-      if (privacyCheckbox.checked) {
-        privacyCheckbox.classList.remove('has-error');
-        if (privacyError) privacyError.textContent = '';
-      }
+      privacyCheckbox?.addEventListener('change', () => {
+        if (privacyCheckbox.checked) {
+          privacyCheckbox.classList.remove('has-error');
+          if (privacyError) privacyError.textContent = '';
+        }
+      });
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initContactForm);
-  initContactForm();
+  document.addEventListener('DOMContentLoaded', initContactForms);
+  initContactForms();
+  document.addEventListener('astro:page-load', initContactForms);
 </script>
 
 <style>
@@ -376,9 +404,15 @@ const isLight = theme === 'light';
     position: relative;
     padding-block: clamp(4rem, 7vw, 7.5rem);
     color: var(--ink-primary);
-    background:
-      radial-gradient(ellipse 90% 70% at 50% 50%, rgba(253, 75, 50, 0.28) 0%, rgba(163, 42, 23, 0.18) 45%, transparent 75%),
-      linear-gradient(to bottom, #0b0b0c 0%, #1c0a07 25%, #4a1309 50%, #1c0a07 75%, #0b0b0c 100%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.12) 15%,
+      rgba(0, 0, 0, 0.45) 32%,
+      rgba(0, 0, 0, 0.8) 55%,
+      rgba(0, 0, 0, 0.96) 78%,
+      #000000 100%
+    );
   }
 
   .contacts.theme-light {

@@ -225,6 +225,9 @@ const serviceJsonLd = {
                 'project--lead',
               ];
               const posClass = positions[index % positions.length];
+              const poster = isVideo
+                ? project.data.cover.replace(/\.(mp4|webm)(?:\?.*)?$/i, '.webp')
+                : project.data.cover;
 
               return (
                 <article class:list={['project', posClass]} data-slug={project.id}>
@@ -233,9 +236,28 @@ const serviceJsonLd = {
                       <div class="project__parallax" data-parallax-target>
                         <div class="project__image">
                           {isVideo ? (
-                            <video src={project.data.cover} muted loop playsinline autoplay preload="none" aria-hidden="true">
-                              <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
-                            </video>
+                            <>
+                              <img
+                                src={poster}
+                                alt={`${project.data.title} — ${project.data.summary}`}
+                                loading="lazy"
+                                decoding="async"
+                                class="project__poster"
+                              />
+                              <video
+                                data-lazy-video
+                                data-src={project.data.cover}
+                                poster={poster}
+                                muted
+                                loop
+                                playsinline
+                                preload="none"
+                                aria-hidden="true"
+                                class="project__video"
+                              >
+                                <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
+                              </video>
+                            </>
                           ) : project.data.cover.startsWith('/') ? (
                             <img
                               src={project.data.cover}
@@ -866,6 +888,17 @@ const serviceJsonLd = {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .project__image video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+
+  .project__image video.is-playing {
+    opacity: 1;
   }
 
   .project__link:hover .project__image,
