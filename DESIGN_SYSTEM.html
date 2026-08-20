@@ -1,0 +1,643 @@
+<title>Yapil Design System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oranienbaum&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --accent: #FD4B32;
+    --accent-hover: #E63A22;
+    --accent-deep: #A32A17;
+    --accent-cyan: #80EFC9;
+
+    --bg: #FFFAF9;
+    --bg-raised: #FFFFFF;
+    --bg-sunken: #EAE5DF;
+    --bg-code: #F0ECE7;
+    --ink: #1D1D1D;
+    --ink-muted: #66635F;
+    --ink-faint: #8C8882;
+    --border: #D5D2CE;
+    --border-faint: rgba(29,29,29,0.08);
+    --swatch-border: rgba(0,0,0,0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #120908;
+      --bg-raised: #17100E;
+      --bg-sunken: #0B0B0C;
+      --bg-code: #181818;
+      --ink: #F2F2F2;
+      --ink-muted: rgba(255,255,255,0.68);
+      --ink-faint: rgba(255,255,255,0.40);
+      --border: rgba(255,255,255,0.16);
+      --border-faint: rgba(255,255,255,0.08);
+      --swatch-border: rgba(255,255,255,0.14);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #120908;
+    --bg-raised: #17100E;
+    --bg-sunken: #0B0B0C;
+    --bg-code: #181818;
+    --ink: #F2F2F2;
+    --ink-muted: rgba(255,255,255,0.68);
+    --ink-faint: rgba(255,255,255,0.40);
+    --border: rgba(255,255,255,0.16);
+    --border-faint: rgba(255,255,255,0.08);
+    --swatch-border: rgba(255,255,255,0.14);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 1rem/1.55 'Inter Tight', 'Arial Narrow', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 78rem; margin: 0 auto; padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem) 6rem; }
+
+  h1, h2, h3, h4 { font-family: 'Oranienbaum', Georgia, serif; font-weight: 400; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+
+  code, .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; }
+
+  /* ---------- Header ---------- */
+  .doc-head { padding-bottom: 3rem; border-bottom: 1px solid var(--border-faint); margin-bottom: 4rem; }
+  .doc-head h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 0.98; max-width: 40rem; }
+  .doc-head p { max-width: 38rem; color: var(--ink-muted); font-size: 1.05rem; margin-top: 1.25rem; line-height: 1.5; }
+  .doc-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-top: 1.75rem; font: 500 0.8rem/1 'Inter Tight'; color: var(--ink-faint); }
+  .doc-meta span b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- TOC ---------- */
+  .toc { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1px; background: var(--border-faint); border: 1px solid var(--border-faint); margin-bottom: 5rem; }
+  .toc a { background: var(--bg); color: var(--ink); text-decoration: none; padding: 1rem 1.1rem; display: flex; align-items: baseline; gap: 0.6rem; font: 500 0.85rem/1.3 'Inter Tight'; transition: background 0.2s ease, color 0.2s ease; }
+  .toc a:hover, .toc a:focus-visible { background: var(--accent); color: #fff; }
+  .toc a .num { font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--accent); }
+  .toc a:hover .num, .toc a:focus-visible .num { color: rgba(255,255,255,0.75); }
+
+  /* ---------- Sections ---------- */
+  section.block { margin-bottom: 5.5rem; scroll-margin-top: 2rem; }
+  .block-head { margin-bottom: 2rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border-faint); }
+  .block-head h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
+  .block-head p.sub { color: var(--ink-muted); font-size: 0.95rem; max-width: 42rem; margin-top: 0.4rem; }
+
+  .lead { color: var(--ink-muted); max-width: 46rem; margin: 0 0 1.75rem; font-size: 0.98rem; }
+
+  /* ---------- generic card ---------- */
+  .card { border: 1px solid var(--border-faint); background: var(--bg-raised); padding: 1.5rem; }
+
+  /* ---------- 1. Grid ---------- */
+  .grid-demo { border: 1px solid var(--border-faint); background: var(--bg-code); padding: 1.25rem; margin-bottom: 1.5rem; }
+  .grid-demo .cols { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(0.5rem, 0.75vw, 0.75rem); }
+  .grid-demo .cols div { height: 2.5rem; background: var(--border-faint); position: relative; }
+  .grid-demo .cols div::after { content: attr(data-i); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 500 0.6rem 'JetBrains Mono'; color: var(--ink-faint); }
+  .layout-pattern { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(0.5rem, 0.75vw, 0.75rem); margin: 0.6rem 0 1.75rem; }
+  .layout-pattern .seg { height: 2.75rem; background: var(--accent); opacity: 0.85; display: flex; align-items: center; justify-content: center; color: #fff; font: 600 0.68rem 'Inter Tight'; }
+  .layout-pattern .seg.b { background: var(--accent-deep); opacity: 0.9; }
+  .layout-pattern .seg.c { background: var(--ink-faint); opacity: 0.5; color: var(--ink); }
+
+  table.spec { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  table.spec th, table.spec td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border-faint); vertical-align: top; }
+  table.spec th { font: 600 0.72rem 'Inter Tight'; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); border-bottom: 1px solid var(--border); }
+  table.spec td.mono, table.spec td code { font-family: 'JetBrains Mono'; font-size: 0.82rem; color: var(--accent-deep); }
+  [data-theme="dark"] table.spec td code, @media (prefers-color-scheme: dark) { }
+  :root:not([data-theme="light"]) table.spec td code { color: var(--accent-cyan); }
+  :root[data-theme="dark"] table.spec td code { color: var(--accent-cyan); }
+  .table-wrap { overflow-x: auto; }
+
+  .bp-row { display: flex; gap: 0.35rem; margin-top: 1rem; flex-wrap: wrap; }
+  .bp-chip { border: 1px solid var(--border); padding: 0.35rem 0.7rem; font: 500 0.72rem 'JetBrains Mono'; color: var(--ink-muted); }
+
+  /* ---------- 2. Modals ---------- */
+  .modal-frame { border: 1px solid var(--border-faint); background: var(--bg-sunken); padding: 0.6rem; margin-bottom: 1.5rem; }
+  .modal-frame .frame-bar { display: flex; align-items: center; gap: 0.4rem; padding: 0 0.3rem 0.6rem; }
+  .modal-frame .frame-bar span { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--border); }
+  .modal-frame .frame-label { margin-left: auto; font: 500 0.65rem 'JetBrains Mono'; color: var(--ink-faint); }
+  .modal-mock { position: relative; border: 1px solid var(--border); background: rgba(0,0,0,0.10); backdrop-filter: blur(6px); padding: 2.25rem 1.5rem; overflow: hidden; }
+  :root:not([data-theme="light"]) .modal-mock { background: #17100E; }
+  :root[data-theme="dark"] .modal-mock { background: #17100E; }
+  .modal-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; max-width: 46rem; margin: 0 auto; }
+  .modal-panel .col-text h4 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 0.95; margin-bottom: 0.75rem; }
+  .modal-panel .col-text p { color: var(--ink-muted); font-size: 0.85rem; line-height: 1.4; max-width: 20rem; margin: 0; }
+  :root:not([data-theme="light"]) .modal-panel .col-text p { color: rgba(255,255,255,0.7); }
+  :root[data-theme="dark"] .modal-panel .col-text p { color: rgba(255,255,255,0.7); }
+  :root:not([data-theme="light"]) .modal-panel .col-text h4 { color: #fff; }
+  :root[data-theme="dark"] .modal-panel .col-text h4 { color: #fff; }
+  .modal-panel .chip-row { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0 0 1rem; }
+  .chip { border-radius: 100px; border: 1px solid var(--border); padding: 0.3rem 0.75rem; font-size: 0.72rem; color: var(--ink-muted); }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  :root:not([data-theme="light"]) .chip { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+  :root[data-theme="dark"] .chip { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+  .modal-panel .field { border: 1px solid var(--border); padding: 0.6rem 0.8rem; font-size: 0.8rem; color: var(--ink-faint); margin-top: 0.6rem; }
+  :root:not([data-theme="light"]) .modal-panel .field { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+  :root[data-theme="dark"] .modal-panel .field { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+  .modal-close-dot { position: absolute; top: 0.9rem; right: 1rem; width: 1.6rem; height: 1.6rem; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+  .stage-list { counter-reset: stage; margin: 0; padding: 0; list-style: none; }
+  .stage-list li { counter-increment: stage; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 0.9rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border-faint); }
+  .stage-list li:last-child { border-bottom: none; }
+  .stage-list li::before { grid-column: 1; content: counter(stage); font: 600 0.85rem 'JetBrains Mono'; color: var(--accent); }
+  .stage-list .stage-body { grid-column: 2; min-width: 0; }
+  .stage-list b { display: block; font-size: 0.92rem; margin-bottom: 0.15rem; }
+  .stage-list span.dur { color: var(--ink-faint); font-size: 0.8rem; }
+
+  /* ---------- 3. Type scale ---------- */
+  .type-row { display: grid; grid-template-columns: 8rem 1fr; gap: 1.5rem; align-items: baseline; padding: 1.15rem 0; border-bottom: 1px solid var(--border-faint); }
+  .type-row .meta { font: 500 0.72rem 'JetBrains Mono'; color: var(--ink-faint); line-height: 1.6; }
+  .type-row .meta b { color: var(--ink-muted); font-family: 'Inter Tight'; display: block; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+  .type-row .sample { font-family: 'Oranienbaum', Georgia, serif; overflow-wrap: anywhere; }
+  .type-row.sans .sample { font-family: 'Inter Tight', sans-serif; }
+  .type-row.mono .sample { font-family: 'JetBrains Mono'; }
+
+  /* ---------- 4. Colors ---------- */
+  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: 1px; background: var(--border-faint); border: 1px solid var(--border-faint); }
+  .swatch { background: var(--bg-raised); padding: 1rem; }
+  .swatch .chip-color { height: 4rem; border: 1px solid var(--swatch-border); margin-bottom: 0.7rem; }
+  .swatch b { display: block; font-size: 0.82rem; margin-bottom: 0.15rem; }
+  .swatch .hex { font: 500 0.72rem 'JetBrains Mono'; color: var(--ink-faint); }
+  .swatch .role { font-size: 0.72rem; color: var(--ink-muted); margin-top: 0.3rem; line-height: 1.35; }
+
+  .theme-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border-faint); border: 1px solid var(--border-faint); margin-top: 1.5rem; }
+  .theme-pane { padding: 1.5rem; }
+  .theme-pane.dark { background: #120908; color: #F2F2F2; }
+  .theme-pane.light { background: #FFFAF9; color: #1D1D1D; }
+  .theme-pane .tag { font: 700 0.65rem 'Inter Tight'; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.8rem; opacity: 0.55; }
+  .theme-pane .mini-btn { display: inline-block; background: #FD4B32; color: #fff; padding: 0.5rem 1rem; font-size: 0.78rem; font-weight: 600; margin-top: 0.9rem; }
+
+  /* ---------- 5. Backgrounds ---------- */
+  .bg-flow { border: 1px solid var(--border-faint); overflow: hidden; margin-bottom: 1.25rem; }
+  .bg-flow .seg { padding: 1.5rem; font: 600 0.78rem 'Inter Tight'; color: #fff; display: flex; align-items: center; justify-content: space-between; }
+  .bg-flow .seg span.tag { font: 500 0.68rem 'JetBrains Mono'; opacity: 0.7; }
+  .bg-flow .s1 { background: linear-gradient(to bottom, #120908, #181818); }
+  .bg-flow .s2 { background: linear-gradient(to bottom, #181818, #121213, #0b0b0c); }
+  .bg-flow .s3 { background: #0b0b0c; }
+  .bg-flow .s4 { background: radial-gradient(ellipse 90% 140% at 50% 50%, rgba(253,75,50,0.28) 0%, rgba(163,42,23,0.18) 45%, transparent 75%), linear-gradient(to bottom, #0b0b0c, #1c0a07 60%, #4a1309); }
+  .bg-flow .s5 { background: linear-gradient(to bottom, #4a1309, #1c0a07 50%, #0b0b0c); color: #fff; }
+
+  /* ---------- 6. Hero animation ---------- */
+  .hero-demo { position: relative; border: 1px solid var(--border-faint); background: #17100E; padding: 3rem 1.5rem; text-align: center; overflow: hidden; margin-bottom: 1.5rem; }
+  .hero-demo canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.9; }
+  .hero-demo .content { position: relative; z-index: 1; }
+  .hero-demo h3 { color: #fff; font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1; margin-bottom: 0.75rem; }
+  .hero-demo p { color: rgba(255,255,255,0.85); font-size: 0.88rem; margin-bottom: 1.25rem; }
+  .hero-demo .btn-demo { display: inline-flex; align-items: center; gap: 0.5rem; background: #000; color: #fff; padding: 0.75rem 1.4rem; font-size: 0.82rem; font-weight: 500; border: none; cursor: pointer; transition: transform 1330ms cubic-bezier(0.16,1,0.3,1), background-color 770ms ease, box-shadow 1330ms cubic-bezier(0.16,1,0.3,1); }
+  .hero-demo .btn-demo:hover { transform: scale(1.07); background: #444; box-shadow: 0 14px 34px -4px rgba(35,133,157,0.45), 0 0 2.2rem rgba(43,153,180,0.3); }
+  .hero-demo .btn-demo .arrow { transition: transform 910ms cubic-bezier(0.16,1,0.3,1.18) 140ms; }
+  .hero-demo .btn-demo:hover .arrow { transform: translateY(3px) scale(1.12); }
+  .hero-demo .btn-demo .txt { transition: letter-spacing 910ms cubic-bezier(0.16,1,0.3,1) 90ms; }
+  .hero-demo .btn-demo:hover .txt { letter-spacing: 0.045em; }
+
+  .layer-diagram { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem; }
+  .layer-row { display: grid; grid-template-columns: 9rem minmax(0, 1fr) 11rem; gap: 1rem; align-items: center; }
+  .layer-row .lbl { font: 600 0.78rem 'Inter Tight'; }
+  .layer-row .bar-track { height: 0.5rem; background: var(--border-faint); position: relative; }
+  .layer-row .bar-fill { position: absolute; top: 0; bottom: 0; left: 0; background: var(--accent); }
+  .layer-row .z { font: 500 0.7rem 'JetBrains Mono'; color: var(--ink-faint); text-align: right; }
+
+  /* ---------- 7. Button behavior ---------- */
+  .state-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); gap: 1px; background: var(--border-faint); border: 1px solid var(--border-faint); }
+  .state-cell { background: var(--bg-raised); padding: 1.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; text-align: center; }
+  .state-cell .lbl { font: 600 0.72rem 'Inter Tight'; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-faint); }
+  .btn-sim { background: #000; color: #fff; padding: 0.65rem 1.15rem; font-size: 0.78rem; font-weight: 500; border: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+  :root:not([data-theme="light"]) .btn-sim { background: #1c1c1c; }
+  :root[data-theme="dark"] .btn-sim { background: #1c1c1c; }
+  .state-cell.hover .btn-sim { transform: scale(1.07); background: #444; box-shadow: 0 10px 24px -4px rgba(35,133,157,0.45); letter-spacing: 0.03em; }
+  .state-cell.active .btn-sim { transform: scale(1.02); background: #444; }
+  .state-cell.disabled .btn-sim { opacity: 0.7; }
+  .state-cell p { font-size: 0.78rem; color: var(--ink-muted); margin: 0; line-height: 1.4; }
+
+  footer.doc-foot { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--border-faint); font-size: 0.8rem; color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+
+  @media (max-width: 40rem) {
+    .block-head { grid-template-columns: 1fr; gap: 0.3rem; }
+    .block-head p.sub { grid-column: 1; }
+    .theme-compare { grid-template-columns: 1fr; }
+    .type-row { grid-template-columns: 1fr; gap: 0.4rem; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="doc-head">
+    <h1>Дизайн-система обложки и первого экрана</h1>
+    <p>Справочник токенов и поведения главной страницы: сетка, модальные окна услуг, шкала шрифтов, цвета, бесшовные переходы фонов между секциями, физика анимации обложки и кинематика кнопок.</p>
+    <div class="doc-meta">
+      <span><b>Стиль:</b> редакционный swiss-grid + WebGL</span>
+      <span><b>Радиусы:</b> 0 (кроме чипсов — 100px)</span>
+      <span><b>Акцент:</b> #FD4B32</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#grid"><span class="num">01</span> Сетка</a>
+    <a href="#modals"><span class="num">02</span> Модальные окна</a>
+    <a href="#type"><span class="num">03</span> Шрифты</a>
+    <a href="#color"><span class="num">04</span> Цвета</a>
+    <a href="#bg"><span class="num">05</span> Бесшовные фоны</a>
+    <a href="#hero"><span class="num">06</span> Анимация обложки</a>
+    <a href="#button"><span class="num">07</span> Поведение кнопки</a>
+  </nav>
+
+  <!-- 01 GRID -->
+  <section class="block" id="grid">
+    <div class="block-head">
+      <h2>Сетка</h2>
+      <p class="sub">12-колоночная модульная сетка внутри контейнера с фиксированным максимумом. Секции главной страницы используют её асимметрично — широкий + узкий блок, а не равные колонки.</p>
+    </div>
+
+    <div class="grid-demo">
+      <div class="cols">
+        <div data-i="1"></div><div data-i="2"></div><div data-i="3"></div><div data-i="4"></div>
+        <div data-i="5"></div><div data-i="6"></div><div data-i="7"></div><div data-i="8"></div>
+        <div data-i="9"></div><div data-i="10"></div><div data-i="11"></div><div data-i="12"></div>
+      </div>
+    </div>
+
+    <p class="lead">Типовые раскладки блоков главной (Hero → About → Services → Cases → Contacts):</p>
+    <div class="layout-pattern">
+      <div class="seg" style="grid-column: 1 / span 7;">1–7 lead</div>
+      <div class="seg c" style="grid-column: 8 / span 1;"></div>
+      <div class="seg b" style="grid-column: 9 / span 4;">9–12 side</div>
+    </div>
+    <div class="layout-pattern">
+      <div class="seg c" style="grid-column: 1 / span 1;"></div>
+      <div class="seg" style="grid-column: 2 / span 10;">2–11 center</div>
+      <div class="seg c" style="grid-column: 12 / span 1;"></div>
+    </div>
+    <div class="layout-pattern">
+      <div class="seg" style="grid-column: 1 / span 4;">1–4 small</div>
+      <div class="seg c" style="grid-column: 5 / span 1;"></div>
+      <div class="seg b" style="grid-column: 6 / span 7;">6–12 wide</div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="spec">
+        <thead><tr><th>Параметр</th><th>Значение</th><th>Где применяется</th></tr></thead>
+        <tbody>
+          <tr><td>Контейнер max-width</td><td class="mono"><code>88rem</code> (1408px)</td><td>.container на всех секциях</td></tr>
+          <tr><td>Боковые поля, моб.</td><td class="mono"><code>2rem</code> (16px×2)</td><td>&lt; 768px</td></tr>
+          <tr><td>Боковые поля, десктоп</td><td class="mono"><code>4rem</code> (32px×2)</td><td>≥ 768px</td></tr>
+          <tr><td>Межколонник</td><td class="mono"><code>clamp(0.5rem, 0.75vw, 0.75rem)</code></td><td>grid-gap 12-колоночной сетки</td></tr>
+          <tr><td>Вертикальный ритм секций</td><td class="mono"><code>clamp(4.5rem, 9vw, 9rem)</code></td><td>padding-block каждой секции</td></tr>
+          <tr><td>Портфолио — lead</td><td class="mono"><code>1 / span 7</code></td><td>ProduxPortfolio.astro</td></tr>
+          <tr><td>Портфолио — side</td><td class="mono"><code>9 / span 4</code>, align-self: end</td><td>ProduxPortfolio.astro</td></tr>
+          <tr><td>Контакты — блок формы</td><td class="mono"><code>9 / span 4</code></td><td>Contacts.astro</td></tr>
+          <tr><td>Модалка услуги — текст</td><td class="mono"><code>1 / span 4</code></td><td>ServiceApplicationModal</td></tr>
+          <tr><td>Модалка услуги — форма</td><td class="mono"><code>8 / span 5</code></td><td>ServiceApplicationModal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bp-row">
+      <div class="bp-chip">&lt; 544px — mobile S</div>
+      <div class="bp-chip">&lt; 768px — mobile L</div>
+      <div class="bp-chip">768–1023px — tablet</div>
+      <div class="bp-chip">≥ 1024px — desktop (полная 12-col сетка)</div>
+      <div class="bp-chip">≥ 1440px — контейнер фиксируется на 88rem</div>
+    </div>
+  </section>
+
+  <!-- 02 MODALS -->
+  <section class="block" id="modals">
+    <div class="block-head">
+      <h2>Модальные окна</h2>
+      <p class="sub">Заявка на услугу — не диалоговое окно поверх контента, а полноэкранный оверлей на весь вьюпорт (<code class="mono">fixed inset-0, w-screen h-screen</code>), поверх шапки. Контент внутри выстроен в ту же 12-колоночную сетку: текст слева, форма справа. Есть также лёгкий превью-модуль, следующий за курсором до клика.</p>
+    </div>
+
+    <div class="modal-frame">
+      <div class="frame-bar"><span></span><span></span><span></span><span class="frame-label">viewport — 100vw × 100vh</span></div>
+      <div class="modal-mock">
+        <div class="modal-close-dot">✕</div>
+        <div class="modal-panel">
+          <div class="col-text">
+            <h4>Оставьте заявку</h4>
+            <p>Опишите задачу или оставьте контакты — свяжемся в течение 2 часов.</p>
+          </div>
+          <div>
+            <div class="chip-row">
+              <span class="chip active">Сайты</span>
+              <span class="chip">Айдентика</span>
+              <span class="chip">Полиграфия</span>
+            </div>
+            <div class="field">Имя</div>
+            <div class="field">+7 (___) ___-__-__</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ol class="stage-list">
+      <li><div class="stage-body"><b>Триггер</b><span class="dur">клик по строке услуги (role="listitem" → button aria-haspopup="dialog")</span></div></li>
+      <li><div class="stage-body"><b>Портал</b><span class="dur">рендер через <code>createPortal</code> напрямую в <code>document.body</code>, поверх шапки (<code>z-index: 9990–9999</code>)</span></div></li>
+      <li><div class="stage-body"><b>Оверлей</b><span class="dur">полноэкранный слой <code>fixed inset-0, w-screen h-screen</code>, fade 0 → 1 opacity за 250ms, фон <code>rgba(0,0,0,0.10)</code> + <code>backdrop-filter: blur(30px)</code></span></div></li>
+      <li><div class="stage-body"><b>Появление панелей</b><span class="dur">2 колонки въезжают снизу: <code>y:16px → 0</code>, 300–350ms, cubic-bezier(0.16,1,0.3,1), правая колонка с задержкой 50ms</span></div></li>
+      <li><div class="stage-body"><b>Блокировка скролла</b><span class="dur"><code>body.overflow: hidden</code> + пауза Lenis-скролла на время открытия</span></div></li>
+      <li><div class="stage-body"><b>Фокус и клавиатура</b><span class="dur">автофокус на поле «Имя» через 50ms, <kbd>Esc</kbd> закрывает, клик по фону закрывает (клик по панели — <code>stopPropagation</code>)</span></div></li>
+      <li><div class="stage-body"><b>Закрытие</b><span class="dur">обратная анимация scale/opacity 350ms, ease cubic-bezier(0.32,0,0.67,0), возврат скролла и Lenis</span></div></li>
+    </ol>
+
+    <p class="lead" style="margin-top:2rem;">Ховер-превью (десктоп, до клика) — плавающая карточка 26×22rem / 30×24rem, следует за курсором через <code>gsap.quickTo</code> (0.75s, power3.out), масштаб входа/выхода <code>scale: 0 → 1</code> за 400/350ms. Отключается на touch-устройствах и при <code>prefers-reduced-motion</code>.</p>
+
+    <div class="table-wrap">
+      <table class="spec">
+        <thead><tr><th>Свойство</th><th>Значение</th></tr></thead>
+        <tbody>
+          <tr><td>Радиусы</td><td class="mono"><code>0</code> на полях/панели, <code>100px</code> на чипсах-услугах</td></tr>
+          <tr><td>Поле ввода — фон</td><td class="mono"><code>bg-white/80</code> (light) / <code>white/[0.04]</code> (dark), backdrop-blur-2xl</td></tr>
+          <tr><td>Поле ввода — фокус</td><td class="mono"><code>border: #FD4B32</code>, тень <code>0 8px 20px rgba(253,75,50,.12)</code></td></tr>
+          <tr><td>Валидация</td><td>инлайн-ошибка под полем, красная рамка <code>border-red-500</code>, без блокировки ввода</td></tr>
+          <tr><td>Успех</td><td>панель формы заменяется состоянием с чек-иконкой и кнопками «Закрыть» / «Отправить ещё»</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 03 TYPE -->
+  <section class="block" id="type">
+    <div class="block-head">
+      <h2>Размеры шрифтов</h2>
+      <p class="sub">Три гарнитуры: акцидентный Oranienbaum для заголовков, Inter Tight для интерфейса и текста, моно — для номеров и тегов. Все крупные размеры — флюидные через clamp().</p>
+    </div>
+
+    <div class="type-row">
+      <div class="meta"><b>Hero H1</b>clamp(4rem, 7.3vw, 7rem)<br>line-height 1 · tracking -0.045em</div>
+      <div class="sample" style="font-size:clamp(2.4rem,6vw,4.5rem); line-height:1;">Дизайн, который работает</div>
+    </div>
+    <div class="type-row">
+      <div class="meta"><b>Section H2</b>clamp(2.75rem, 7vw, 5.5rem)<br>line-height 0.95–1 · tracking -0.04…-0.055em</div>
+      <div class="sample" style="font-size:clamp(2rem,4.5vw,3.4rem); line-height:0.97;">Услуги</div>
+    </div>
+    <div class="type-row">
+      <div class="meta"><b>H3 / подзаголовок</b>clamp(1.5rem, 2.1vw, 2.25rem)<br>line-height 1–1.05</div>
+      <div class="sample" style="font-size:clamp(1.3rem,2.4vw,1.9rem);">Портфолио избранных кейсов</div>
+    </div>
+    <div class="type-row sans">
+      <div class="meta"><b>Lead / intro</b>clamp(1rem, 1.4vw, 1.15rem)<br>line-height 1.3 · tracking -0.015em</div>
+      <div class="sample" style="font-size:1.1rem;">Создаём айдентику и сайты, которые выделяют компанию среди конкурентов.</div>
+    </div>
+    <div class="type-row sans">
+      <div class="meta"><b>Body</b>clamp(1rem, 0.2vw + 0.95rem, 1.05rem)<br>line-height 1.3, min 16px</div>
+      <div class="sample" style="font-size:1rem; color:var(--ink-muted);">Проектируем структуру, рисуем макеты, верстаем, запускаем сайты и сервисы.</div>
+    </div>
+    <div class="type-row sans">
+      <div class="meta"><b>Кнопка / UI</b>0.88–1rem<br>weight 600 · hover tracking +0.025em</div>
+      <div class="sample" style="font-size:0.9rem; font-weight:600;">Смотреть кейсы →</div>
+    </div>
+    <div class="type-row sans">
+      <div class="meta"><b>Nav link</b>clamp(0.75rem, 1.6vw, 0.95rem)<br>weight 400</div>
+      <div class="sample" style="font-size:0.88rem;">Услуги · Кейсы · Отзывы · Контакты</div>
+    </div>
+    <div class="type-row sans">
+      <div class="meta"><b>Метка / pill</b>clamp(0.62rem, 0.75vw, 0.78rem)<br>UPPERCASE · tracking 0.035–0.04em · weight 700</div>
+      <div class="sample" style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--accent);">Кейс // Compass</div>
+    </div>
+    <div class="type-row mono">
+      <div class="meta"><b>Номер (01)</b>0.875–1rem<br>Font Mono, tracking 0</div>
+      <div class="sample" style="font-size:0.95rem; color:var(--ink-faint);">01 / 06</div>
+    </div>
+  </section>
+
+  <!-- 04 COLOR -->
+  <section class="block" id="color">
+    <div class="block-head">
+      <h2>Цвета</h2>
+      <p class="sub">Единственный фирменный цвет — Yapil-оранжевый. Тёмная тема — база по умолчанию, светлая — тёплый молочный вариант, не инверсия.</p>
+    </div>
+
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip-color" style="background:#FD4B32"></div><b>Accent</b><div class="hex">#FD4B32</div><div class="role">Фирменный акцент, CTA, WebGL-шейдер обложки</div></div>
+      <div class="swatch"><div class="chip-color" style="background:#E63A22"></div><b>Accent Hover</b><div class="hex">#E63A22</div><div class="role">Активное наведение на акцентные элементы</div></div>
+      <div class="swatch"><div class="chip-color" style="background:#A32A17"></div><b>Accent Deep</b><div class="hex">#A32A17</div><div class="role">Фокус-рамки, тёмные слои шейдера</div></div>
+      <div class="swatch"><div class="chip-color" style="background:#80EFC9"></div><b>Accent Cyan</b><div class="hex">#80EFC9</div><div class="role">Подчёркивания в заголовке, ховер ссылок навигации</div></div>
+      <div class="swatch"><div class="chip-color" style="background:#120908"></div><b>BG Primary (dark)</b><div class="hex">#120908</div><div class="role">Базовый фон под шейдером</div></div>
+      <div class="swatch"><div class="chip-color" style="background:#0B0B0C"></div><b>BG Section (dark)</b><div class="hex">#0B0B0C</div><div class="role">Портфолио, Всячина, футер</div></div>
+      <div class="swatch"><div class="chip-color; background:#FFFAF9" style="background:#FFFAF9; border:1px solid #d5d2ce"></div><b>BG Primary (light)</b><div class="hex">#FFFAF9</div><div class="role">Базовый молочный фон</div></div>
+      <div class="swatch"><div class="chip-color" style="background:#EAE5DF; border:1px solid #d5d2ce"></div><b>BG Section (light)</b><div class="hex">#EAE5DF</div><div class="role">Портфолио и футер, светлая тема</div></div>
+    </div>
+
+    <div class="theme-compare">
+      <div class="theme-pane dark">
+        <div class="tag">Dark · default</div>
+        <div style="font-family:'Oranienbaum',serif; font-size:1.6rem; line-height:1;">Дизайн, который работает</div>
+        <p style="color:rgba(255,255,255,0.68); font-size:0.85rem; margin:0.6rem 0 0;">ink-muted rgba(255,255,255,.72)</p>
+        <span class="mini-btn">Смотреть кейсы</span>
+      </div>
+      <div class="theme-pane light">
+        <div class="tag">Light · [data-theme='light']</div>
+        <div style="font-family:'Oranienbaum',serif; font-size:1.6rem; line-height:1;">Дизайн, который работает</div>
+        <p style="color:#66635F; font-size:0.85rem; margin:0.6rem 0 0;">ink-muted #66635F</p>
+        <span class="mini-btn">Смотреть кейсы</span>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:1.5rem;">
+      <table class="spec">
+        <thead><tr><th>Токен</th><th>Dark</th><th>Light</th></tr></thead>
+        <tbody>
+          <tr><td>--ink-primary</td><td class="mono"><code>#FFFFFF</code></td><td class="mono"><code>#1D1D1D</code></td></tr>
+          <tr><td>--ink-muted</td><td class="mono"><code>rgba(255,255,255,.72)</code></td><td class="mono"><code>#66635F</code></td></tr>
+          <tr><td>--border-subtle</td><td class="mono"><code>rgba(255,255,255,.16)</code></td><td class="mono"><code>#D5D2CE</code></td></tr>
+          <tr><td>--bg-card</td><td class="mono"><code>rgba(255,255,255,.04)</code></td><td class="mono"><code>#FFFFFF</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 05 BACKGROUNDS -->
+  <section class="block" id="bg">
+    <div class="block-head">
+      <h2>Бесшовные фоны страниц</h2>
+      <p class="sub">Секции стыкуются без видимой границы: каждая следующая начинается с цвета, которым закончилась предыдущая. Швы прячутся в линейных и радиальных градиентах.</p>
+    </div>
+
+    <div class="bg-flow">
+      <div class="seg s1">Hero — прозрачный, поверх WebGL-канваса <span class="tag">#120908 → #181818</span></div>
+      <div class="seg s2">Услуги — линейный градиент <span class="tag">#181818 → #121213 → #0b0b0c</span></div>
+      <div class="seg s3">Портфолио / Всячина — плоский монохром <span class="tag">#0b0b0c</span></div>
+      <div class="seg s4">Контакты — радиальный акцент поверх монохрома <span class="tag">radial rgba(253,75,50,.28) + linear → #4a1309</span></div>
+      <div class="seg s5">Футер — Ruixen-градиент, продолжает терракотовую растяжку <span class="tag">#4a1309 → #0b0b0c</span></div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="spec">
+        <thead><tr><th>Секция</th><th>Фон</th><th>Приём бесшовности</th></tr></thead>
+        <tbody>
+          <tr><td>Hero</td><td class="mono"><code>transparent</code>, WebGL simplex-noise, fill #FD4B32</td><td>фиксированный canvas на всю страницу за контентом (z-index 0), а не блок внутри секции</td></tr>
+          <tr><td>Услуги / О нас</td><td class="mono"><code>linear-gradient(#181818 → #0b0b0c)</code></td><td>стартовый стоп градиента = конечному цвету предыдущей секции</td></tr>
+          <tr><td>Портфолио / Всячина</td><td class="mono"><code>#0B0B0C</code></td><td>плоский цвет, совпадающий с последним стопом градиента выше</td></tr>
+          <tr><td>Контакты</td><td class="mono"><code>radial + linear → #0b0b0c…#4a1309…#0b0b0c</code></td><td>радиальное свечение акцента поверх той же монохромной базы</td></tr>
+          <tr><td>Футер</td><td>Ruixen SVG-градиент 9 полос, blur 42px</td><td>раскрывается по скроллу (scaleY), базовый тон наследует терракоту контактов</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead" style="margin-top:1rem;">Светлая тема: та же логика, но база — тёплый молочный <code class="mono">#FFFAF9</code> → секционный серо-бежевый <code class="mono">#EAE5DF</code>, без монохромного чёрного шва.</p>
+  </section>
+
+  <!-- 06 HERO ANIMATION -->
+  <section class="block" id="hero">
+    <div class="block-head">
+      <h2>Анимация на обложке</h2>
+      <p class="sub">Два независимых слоя движения: WebGL-шейдер фона (постоянный, автономный) и 3D-гироскоп текстового блока (реагирует на курсор/наведение на кнопку).</p>
+    </div>
+
+    <div class="hero-demo">
+      <canvas id="heroShaderDemo"></canvas>
+      <div class="content">
+        <h3>Дизайн, который<br>работает на бизнес</h3>
+        <p>Наведите на кнопку — заголовок и описание уходят вглубь по Z-оси</p>
+        <button class="btn-demo" type="button">
+          <span class="txt">Смотреть кейсы</span>
+          <span class="arrow">↓</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="spec">
+        <thead><tr><th>Слой</th><th>Механика</th></tr></thead>
+        <tbody>
+          <tr><td>WebGL-фон</td><td>3 октавы simplex-noise, цвета <code class="mono">['#FF6044','#FD4B32','#A32A17','#310B06']</code> на базе <code class="mono">#FD4B32</code>, зерно 0.3, ~60fps десктоп / ~25fps моб., пауза вне вьюпорта и при <code>prefers-reduced-motion</code></td></tr>
+          <tr><td>Гироскоп текста</td><td>слежение за курсором с инерцией <code class="mono">1 − 0.93^Δt</code>, поворот <code class="mono">rotateX −10…10°</code>, <code class="mono">rotateY −12…12°</code>; отключается вне hover-устройств</td></tr>
+          <tr><td>Push-back при hover CTA</td><td>заголовок и описание отдаляются по Z синхронно с приближением кнопки — см. слои ниже</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lead" style="margin-top:1.75rem;">Z-глубина слоёв обложки (perspective: 1100px) в состоянии hover на кнопке:</p>
+    <div class="layer-diagram">
+      <div class="layer-row"><span class="lbl">Заголовок H1</span><div class="bar-track"><div class="bar-fill" style="width:22%"></div></div><span class="z">58px → 12px, scale .965</span></div>
+      <div class="layer-row"><span class="lbl">Описание</span><div class="bar-track"><div class="bar-fill" style="width:5%; background:var(--ink-faint);"></div></div><span class="z">0px → −52px, opacity .72</span></div>
+      <div class="layer-row"><span class="lbl">Кнопка CTA</span><div class="bar-track"><div class="bar-fill" style="width:82%"></div></div><span class="z">42px → 82px, scale 1.07</span></div>
+    </div>
+
+    <div class="bp-row" style="margin-top:1.5rem;">
+      <div class="bp-chip">ease-spring: cubic-bezier(.16,1,.3,1)</div>
+      <div class="bp-chip">duration pushback: 1575ms</div>
+      <div class="bp-chip">мобайл: 3D отключён → 2D scale(0.985/1.04)</div>
+    </div>
+  </section>
+
+  <!-- 07 BUTTON -->
+  <section class="block" id="button">
+    <div class="block-head">
+      <h2>Поведение кнопки</h2>
+      <p class="sub">4 независимых слоя (контейнер → 3D-платформа → текст → иконка), каждый со своей задержкой — эффект «каскадного разгона» вместо одновременного скейла.</p>
+    </div>
+
+    <div class="state-grid">
+      <div class="state-cell">
+        <span class="lbl">Default</span>
+        <button class="btn-sim" type="button"><span>Смотреть кейсы</span><span>↓</span></button>
+        <p>translateZ 42px, letter-spacing 0.01em</p>
+      </div>
+      <div class="state-cell hover">
+        <span class="lbl">Hover / focus-visible</span>
+        <button class="btn-sim" type="button" style="transform:scale(1.07); background:#444; box-shadow:0 10px 24px -4px rgba(35,133,157,.45); letter-spacing:0.045em;"><span>Смотреть кейсы</span><span style="transform:translateY(3px) scale(1.12); display:inline-block;">↓</span></button>
+        <p>0ms контейнер, 90ms текст, 140ms стрелка — каскад</p>
+      </div>
+      <div class="state-cell active">
+        <span class="lbl">Active / Click</span>
+        <button class="btn-sim" type="button" style="transform:scale(1.02); background:#444;"><span>Смотреть кейсы</span><span>↓</span></button>
+        <p>мгновенный сброс за 90ms — тактильный отклик</p>
+      </div>
+      <div class="state-cell disabled">
+        <span class="lbl">Disabled</span>
+        <button class="btn-sim" type="button" style="opacity:0.7; cursor:not-allowed;"><span>Отправка…</span></button>
+        <p>opacity 0.7, transform/shadow сброшены</p>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:1.5rem;">
+      <table class="spec">
+        <thead><tr><th>Слой</th><th>Что происходит на hover</th><th>Задержка / длительность</th></tr></thead>
+        <tbody>
+          <tr><td>1 · Контейнер</td><td>scale 1.055–1.07, translateZ → 82px, фон #000 → #444, свечение тени</td><td>0ms · 1330ms spring</td></tr>
+          <tr><td>2 · 3D-платформа</td><td>preserve-3d, держит текст и иконку в одной плоскости смещения</td><td>—</td></tr>
+          <tr><td>3 · Текст</td><td>scale 1.045×1.02, letter-spacing 0.01em → 0.045em</td><td>90ms · 910ms text-stagger</td></tr>
+          <tr><td>4 · Иконка-стрелка</td><td>translateY 3px, scale 1.12, translateZ 12px</td><td>140ms · 910ms text-stagger</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lead" style="margin-top:1.5rem;">Кривые: <code class="mono">--ease-spring: cubic-bezier(.16,1,.3,1)</code> · <code class="mono">--ease-text-stagger: cubic-bezier(.16,1,.3,1.18)</code>. При <code>prefers-reduced-motion</code> все transform/transition обнуляются (<code class="mono">!important</code>), кнопка остаётся кликабельной без анимации.</p>
+  </section>
+
+  <footer class="doc-foot">
+    <span>Источник: src/components/Hero.astro, SiteBackground.astro, services-animated-modal.tsx, tokens.css</span>
+    <span>Обновлено под текущую реализацию главной страницы</span>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    const canvas = document.getElementById('heroShaderDemo');
+    if (!canvas) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const gl = canvas.getContext('webgl', { antialias: false, alpha: true });
+    if (!gl) return;
+
+    const vert = `attribute vec2 position; varying vec2 vUv; void main(){ vUv = position*0.5+0.5; gl_Position = vec4(position,0.0,1.0);}`;
+    const frag = `
+      precision highp float; varying vec2 vUv;
+      uniform vec2 u_resolution; uniform float u_time; uniform vec3 u_colors[4]; uniform vec3 u_bg;
+      vec3 permute(vec3 x){ return mod(((x*34.0)+1.0)*x,289.0); }
+      float snoise(vec2 v){
+        const vec4 C = vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
+        vec2 i=floor(v+dot(v,C.yy)); vec2 x0=v-i+dot(i,C.xx);
+        vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
+        vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1; i=mod(i,289.0);
+        vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
+        vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0); m=m*m; m=m*m;
+        vec3 x=2.0*fract(p*C.www)-1.0; vec3 h=abs(x)-0.5; vec3 ox=floor(x+0.5); vec3 a0=x-ox;
+        m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
+        vec3 g; g.x=a0.x*x0.x+h.x*x0.y; g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+        return 130.0*dot(m,g);
+      }
+      void main(){
+        vec2 uv=vUv; float ratio=u_resolution.x/u_resolution.y; vec2 p=uv-0.5; p.x*=ratio;
+        float t=u_time*0.1;
+        float n1=snoise(p*0.4+vec2(t*0.2,-t*0.3));
+        float n2=snoise(p*0.55+vec2(-t*0.15,t*0.25)+n1*0.25);
+        float n3=snoise(p*0.75+vec2(t*0.1,-t*0.2)+n2*0.2);
+        vec3 col=u_bg; float dist=length(p)*1.5; float vig=1.0-smoothstep(0.4,1.3,dist);
+        col=mix(col,u_colors[0],smoothstep(-0.2,0.6,n1)*0.65);
+        col=mix(col,u_colors[1],smoothstep(-0.1,0.6,n2)*0.6);
+        col=mix(col,u_colors[2],smoothstep(-0.3,0.4,n3)*0.6);
+        col=mix(col,u_colors[3],smoothstep(0.0,0.7,n1*n2)*0.5);
+        col=mix(col*0.35,col,vig);
+        gl_FragColor=vec4(clamp(col,0.0,1.0),0.55);
+      }`;
+
+    function hex(h){ const v=h.replace('#',''); return [parseInt(v.slice(0,2),16)/255,parseInt(v.slice(2,4),16)/255,parseInt(v.slice(4,6),16)/255]; }
+    function shader(type,src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return gl.getShaderParameter(s,gl.COMPILE_STATUS)?s:null; }
+    const vs=shader(gl.VERTEX_SHADER,vert), fs=shader(gl.FRAGMENT_SHADER,frag), program=gl.createProgram();
+    if(!vs||!fs||!program) return;
+    gl.attachShader(program,vs); gl.attachShader(program,fs); gl.linkProgram(program); gl.useProgram(program);
+    const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+    const posLoc=gl.getAttribLocation(program,'position'); gl.enableVertexAttribArray(posLoc); gl.vertexAttribPointer(posLoc,2,gl.FLOAT,false,0,0);
+    const resLoc=gl.getUniformLocation(program,'u_resolution'), timeLoc=gl.getUniformLocation(program,'u_time'),
+          colLoc=gl.getUniformLocation(program,'u_colors[0]'), bgLoc=gl.getUniformLocation(program,'u_bg');
+    const bg=hex('#17100E'), colors=['#FF6044','#FD4B32','#A32A17','#310B06'].flatMap(hex);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    function resize(){
+      const w=Math.max(1,Math.round(canvas.clientWidth)), h=Math.max(1,Math.round(canvas.clientHeight));
+      canvas.width=w; canvas.height=h; gl.viewport(0,0,w,h);
+    }
+    let frame=0;
+    function draw(time){
+      gl.uniform2f(resLoc, canvas.width, canvas.height);
+      gl.uniform1f(timeLoc, time*0.002);
+      gl.uniform3f(bgLoc, bg[0],bg[1],bg[2]);
+      gl.uniform3fv(colLoc, new Float32Array(colors));
+      gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+      if (!reduce) frame = requestAnimationFrame(draw);
+    }
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+    if (!reduce) frame = requestAnimationFrame(draw); else draw(0);
+  })();
+</script>

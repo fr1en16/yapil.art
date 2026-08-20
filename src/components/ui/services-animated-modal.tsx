@@ -96,6 +96,24 @@ const SERVICE_CTA_DESCRIPTIONS: Record<string, string> = {
     'Опишите ваши задачи по дизайну или оставьте контакты. Подберём формат сопровождения, объём и график под них.',
 };
 
+const SERVICE_DESCRIPTIONS_PERSONAL: Record<string, string> = {
+  websites: 'Проектирую структуру, рисую макеты, верстаю, запускаю. Делаю лендинги, интернет-магазины, сервисы.',
+  identity: 'Придумываю логотип, типографику, графический язык. Собираю брендбук, по которому ваш подрядчик соберёт макет без вопросов ко мне.',
+  print: 'Разрабатываю упаковку, POS-материалы, мерч, многостраничные издания. Готовлю файлы к печати, проверяю цветопробу в типографии.',
+  smm: 'Собираю концепцию профиля, шаблоны постов, рекламные креативы, сторис.',
+  presentations: 'Оформляю инвест-питчи, коммерческие предложения, годовые отчёты. Перевожу цифры в схемы, графики, инфографику.',
+  support: 'Работаю как ваш внешний арт-отдел: закрываю регулярные задачи, готовлю промо, держу стиль по гайдлайну.',
+};
+
+const SERVICE_CTA_DESCRIPTIONS_PERSONAL: Record<string, string> = {
+  websites: 'Опишите задачу или оставьте контакты. На созвоне подберу стек под неё и посчитаю сроки со сметой.',
+  identity: 'Расскажите о бренде или оставьте контакты. Разберу стиль, соберу ТЗ и посчитаю этапы работы.',
+  print: 'Укажите тираж и материалы или оставьте контакты. Подгоню макет под типографию и посчитаю стоимость.',
+  smm: 'Расскажите о ваших соцсетях. Разберу позиционирование и предложу план публикаций.',
+  presentations: 'Расскажите о цели презентации. Соберу структуру и упакую данные в инфографику, сроки назову сразу на созвоне.',
+  support: 'Опишите ваши задачи по дизайну или оставьте контакты. Подберу формат сопровождения, объём и график под них.',
+};
+
 const scaleAnimation = {
   initial: { scale: 0, x: '-50%', y: '-50%' },
   enter: {
@@ -114,10 +132,19 @@ const scaleAnimation = {
 
 export default function ServicesAnimatedModal({
   theme = 'dark',
+  personal = false,
 }: {
   theme?: 'dark' | 'light';
+  personal?: boolean;
 }) {
   const isLight = theme === 'light';
+  const displayedServices = personal
+    ? services.map((item) => ({ ...item, description: SERVICE_DESCRIPTIONS_PERSONAL[item.id] ?? item.description }))
+    : services;
+  const ctaDescriptions = personal ? SERVICE_CTA_DESCRIPTIONS_PERSONAL : SERVICE_CTA_DESCRIPTIONS;
+  const defaultCtaDescription = personal
+    ? 'Расскажите о задаче или оставьте контактные данные — свяжусь с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.'
+    : 'Расскажите о задаче или оставьте контактные данные — мы свяжемся с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.';
   const [mounted, setMounted] = useState(false);
   const [hoverModal, setHoverModal] = useState<{ active: boolean; index: number }>({
     active: false,
@@ -171,8 +198,10 @@ export default function ServicesAnimatedModal({
               isLight ? 'text-[#1D1D1D]/65' : 'text-white/60'
             }`}
           >
-            Собираем сайты, бренды и коммуникации — от стратегии до ежедневного контента.
-            Нажмите на услугу, чтобы обсудить задачу и заказать проект.
+            {personal
+              ? 'Собираю сайты, бренды и коммуникации: делаю стратегию, веду контент каждый день.'
+              : 'Собираем сайты, бренды и коммуникации — от стратегии до ежедневного контента.'}
+            {' '}Нажмите на услугу, чтобы обсудить задачу и заказать проект.
           </p>
         </div>
 
@@ -181,7 +210,7 @@ export default function ServicesAnimatedModal({
           className={`relative flex flex-col ${isLight ? 'border-t border-black/10' : 'border-t border-white/15'}`}
           role="list"
         >
-          {services.map((item, index) => (
+          {displayedServices.map((item, index) => (
             <div key={item.id} role="listitem" className="w-full">
               <ServiceRow
                 item={item}
@@ -600,8 +629,7 @@ function ServiceApplicationModal({
                   isLight ? 'text-[#1D1D1D]/75' : 'text-white/75'
                 }`}
               >
-                {SERVICE_CTA_DESCRIPTIONS[service.id] ||
-                  'Расскажите о задаче или оставьте контактные данные — мы свяжемся с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.'}
+                {ctaDescriptions[service.id] || defaultCtaDescription}
               </p>
             </div>
 
@@ -611,10 +639,10 @@ function ServiceApplicationModal({
                 <Clock className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
                 <div className="text-base sm:text-lg leading-snug">
                   <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                    Ответ в течение 2 часов
+                    {personal ? 'Отвечаю в течение 2 часов' : 'Ответ в течение 2 часов'}
                   </span>
                   <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                    свяжемся в Telegram, WhatsApp или по телефону
+                    {personal ? 'в Telegram, WhatsApp или по телефону' : 'свяжемся в Telegram, WhatsApp или по телефону'}
                   </span>
                 </div>
               </div>
@@ -623,10 +651,10 @@ function ServiceApplicationModal({
                 <UserCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
                 <div className="text-base sm:text-lg leading-snug">
                   <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                    Прямой диалог
+                    {personal ? 'Сам веду проект' : 'Прямой диалог'}
                   </span>
                   <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                    проект сразу ведёт и оценивает ключевой дизайнер
+                    {personal ? 'и сам оцениваю задачи' : 'проект сразу ведёт и оценивает ключевой дизайнер'}
                   </span>
                 </div>
               </div>
@@ -635,10 +663,10 @@ function ServiceApplicationModal({
                 <ShieldCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
                 <div className="text-base sm:text-lg leading-snug">
                   <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                    Прозрачная смета
+                    {personal ? 'Смета фиксирует этапы' : 'Прозрачная смета'}
                   </span>
                   <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                    фиксируем этапы и финальную стоимость до старта
+                    {personal ? 'и итоговую стоимость до старта работы' : 'фиксируем этапы и финальную стоимость до старта'}
                   </span>
                 </div>
               </div>

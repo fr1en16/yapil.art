@@ -4,9 +4,10 @@ import { getWhatsAppUrl } from '../utils/messengerLinks';
 
 interface Props {
   theme?: 'dark' | 'light';
+  personal?: boolean;
 }
 
-const { theme = 'dark' } = Astro.props;
+const { theme = 'dark', personal = false } = Astro.props;
 const isLight = theme === 'light';
 const homePath = isLight ? '/light' : '/';
 
@@ -40,13 +41,17 @@ const lightStops = [
         <a class="footer-brand" href={homePath} aria-label="Yapil.art — на главную">
           <span class="footer-brand-name">Yapil.art</span>
         </a>
-        <p class="footer-brand-desc">Дизайн-студия полного цикла.<br />От первой концепции до печати или релиза.</p>
+        <p class="footer-brand-desc">
+          {personal
+            ? <>Дизайн от первого эскиза до печати или релиза.<br />Веду каждый проект сам.</>
+            : <>Дизайн-студия полного цикла.<br />От первой концепции до печати или релиза.</>}
+        </p>
       </div>
 
       <div class="footer-columns">
         <nav aria-label="Навигация в подвале">
-          <h2>Студия</h2>
-          <a href={`${homePath}#about`}>О студии</a>
+          <h2>{personal ? 'Обо мне' : 'Студия'}</h2>
+          <a href={`${homePath}#about`}>{personal ? 'Обо мне' : 'О студии'}</a>
           <a href="/services">Услуги</a>
           <a href="/solutions">Отрасли</a>
           <a href={`${homePath}#cases`}>Кейсы</a>

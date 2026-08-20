@@ -3,10 +3,11 @@ import ServicesAnimatedModal from './ui/services-animated-modal.tsx';
 
 interface Props {
   theme?: 'dark' | 'light';
+  personal?: boolean;
 }
 
-const { theme = 'dark' } = Astro.props;
+const { theme = 'dark', personal = false } = Astro.props;
 ---
 
-<ServicesAnimatedModal client:visible theme={theme} />
+<ServicesAnimatedModal client:visible theme={theme} personal={personal} />
 

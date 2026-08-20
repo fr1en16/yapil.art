@@ -1,17 +1,24 @@
 ---
 interface Props {
   theme?: 'dark' | 'light';
+  title?: string;
+  description?: string;
+  casesHref?: string;
 }
 
-const { theme = 'dark' } = Astro.props;
-const casesHref = theme === 'light' ? '/light#cases' : '#cases';
+const {
+  theme = 'dark',
+  title = 'Дизайн, который<br />работает на бизнес',
+  description = 'Создаём айдентику и сайты, которые выделяют компанию среди конкурентов и приносят заявки.',
+  casesHref = theme === 'light' ? '/light#cases' : '#cases',
+} = Astro.props;
 ---
 
 <section class="hero-cover" aria-labelledby="hero-title" data-hero-cover>
   <div class="hero-copy">
-    <h1 id="hero-title" class="hero-layer hero-layer--title">Дизайн, который<br />работает на бизнес</h1>
+    <h1 id="hero-title" class="hero-layer hero-layer--title" set:html={title} />
     <p class="hero-description hero-layer hero-layer--description">
-      Создаём айдентику и сайты, которые выделяют компанию среди конкурентов и приносят заявки.
+      {description}
     </p>
     <a class="hero-link hero-layer hero-layer--cta" href={casesHref}>
       <span class="hero-link-inner">

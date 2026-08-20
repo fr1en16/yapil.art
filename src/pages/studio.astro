@@ -5,7 +5,6 @@ import ProduxPortfolio from '../components/ProduxPortfolio.astro';
 import VsyachinaInfinite from '../components/VsyachinaInfinite.astro';
 import ReviewsSlider from '../components/ReviewsSlider.astro';
 import AboutCompact from '../components/AboutCompact.astro';
-import Founder from '../components/Founder.astro';
 import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
@@ -15,29 +14,34 @@ const homePageJsonLd = {
   '@graph': [
     {
       '@type': 'WebSite',
-      '@id': 'https://yapil.art/#website',
-      name: 'Яков Пилипюк',
-      url: 'https://yapil.art',
+      '@id': 'https://yapil.art/studio#website',
+      name: 'Yapil',
+      url: 'https://yapil.art/studio',
       inLanguage: 'ru',
       publisher: {
-        '@id': 'https://yapil.art/#person',
+        '@id': 'https://yapil.art/#organization',
       },
     },
     {
-      '@type': 'Person',
-      '@id': 'https://yapil.art/#person',
-      name: 'Яков Пилипюк',
-      alternateName: 'Yapil',
-      url: 'https://yapil.art',
+      '@type': ['ProfessionalService', 'Organization'],
+      '@id': 'https://yapil.art/#organization',
+      name: 'Yapil',
+      alternateName: 'Дизайн-студия Yapil',
+      url: 'https://yapil.art/studio',
+      logo: 'https://yapil.art/favicon.svg',
       image: 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2',
-      jobTitle: 'Дизайнер',
-      description: 'Я — дизайнер Яков Пилипюк: разрабатываю сайты, создаю айдентику, делаю брендинг, полиграфию, презентации и веду дизайн-сопровождение для бизнеса.',
+      description: 'Дизайн-студия Yapil: разработка сайтов, создание айдентики, брендинг, полиграфия, презентации и дизайн-сопровождение для бизнеса.',
       email: 'hi@yapil.art',
       telephone: '+77067436197',
       sameAs: [
         'https://t.me/yakov_pil',
         'https://wa.me/77067436197',
       ],
+      founder: {
+        '@type': 'Person',
+        name: 'Яков Пиль',
+        jobTitle: 'Ведущий дизайнер',
+      },
       knowsAbout: [
         'Веб-дизайн',
         'Разработка сайтов на Astro и React',
@@ -51,16 +55,24 @@ const homePageJsonLd = {
         'Дизайн-сопровождение',
       ],
       areaServed: ['KZ', 'UZ', 'RU', 'Worldwide'],
+      priceRange: '$$$',
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '5.0',
+        reviewCount: '24',
+        bestRating: '5',
+        worstRating: '1',
+      },
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
-        name: 'Услуги',
+        name: 'Услуги дизайн-студии Yapil',
         itemListElement: [
           {
             '@type': 'Offer',
             itemOffered: {
               '@type': 'Service',
               name: 'Разработка сайтов под ключ',
-              description: 'Проектирую структуру, рисую интерфейсы и быстро разрабатываю на Astro/React с оценкой PageSpeed 95+.',
+              description: 'Проектирование структуры, дизайн интерфейсов и быстрая разработка на Astro/React с оценкой PageSpeed 95+.',
               url: 'https://yapil.art/services/websites',
             },
           },
@@ -108,10 +120,10 @@ const homePageJsonLd = {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'Какие услуги вы предоставляете?',
+          name: 'Какие услуги предоставляет дизайн-студия Yapil?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Я создаю сайты под ключ (Astro, React, Tailwind), разрабатываю айдентику и фирменный стиль, верстаю полиграфию и упаковку, проектирую инвест-презентации и веду абонентское дизайн-сопровождение.',
+            text: 'Мы создаем сайты под ключ (Astro, React, Tailwind), разрабатываем айдентику и фирменный стиль, верстаем полиграфию и упаковку, проектируем инвест-презентации и ведем абонентское дизайн-сопровождение.',
           },
         },
         {
@@ -127,7 +139,7 @@ const homePageJsonLd = {
           name: 'Работаете ли вы официально по договору?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Да, работаю официально с заключением договора, поэтапной оплатой, актами выполненных работ и передачей всех исключительных прав на исходные материалы.',
+            text: 'Да, работаем официально с заключением договора, поэтапной оплатой, актами выполненных работ и передачей всех исключительных прав на исходные материалы.',
           },
         },
       ],
@@ -137,26 +149,16 @@ const homePageJsonLd = {
 ---
 
 <Base
-  title="Яков Пилипюк — дизайнер: сайты, айдентика и полиграфия для бизнеса"
-  description="Я Яков Пилипюк, дизайнер: разрабатываю сайты, создаю айдентику, брендинг и полиграфию для бизнеса — от первой концепции до релиза и печати."
+  title="Дизайн-студия Yapil — сайты, айдентика и полиграфия для бизнеса"
+  description="Дизайн-студия Yapil: разработка сайтов, создание айдентики, брендинг и полиграфия для бизнеса — от первой концепции до релиза и печати."
   jsonLd={homePageJsonLd}
 >
-  <Hero
-    title="Дизайн, который<br />работает на бизнес"
-    description="Создаю сайты и айдентику, которые выделяют компанию среди конкурентов и приносят заявки."
-  />
-  <AboutCompact personal />
-  <Services personal />
+  <Hero />
+  <AboutCompact />
+  <Services />
   <ProduxPortfolio />
   <VsyachinaInfinite />
   <ReviewsSlider />
-  <Founder />
-  <Contacts
-    title="Нашли задачу,<br />похожую на вашу?"
-    lead="Расскажите о задаче или заполните форму — отвечу в течение 2 часов и подготовлю предложение."
-    successText="Спасибо за обращение. Изучу вашу задачу и отвечу в течение 2 часов."
-    source="contacts_form"
-    sourceDetails="Форма контактов на главной странице"
-  />
-  <Footer slot="footer" personal />
+  <Contacts />
+  <Footer slot="footer" />
 </Base>

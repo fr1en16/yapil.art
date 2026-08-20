@@ -176,7 +176,7 @@ export default function ReviewsSlider({
           paddingBlock: 'clamp(4.5rem, 8vw, 8rem)',
           background: isLight
             ? 'linear-gradient(to bottom, transparent 0%, #EAE5DF 100%)'
-            : 'linear-gradient(to bottom, transparent 0%, #0B0B0C 100%)',
+            : 'linear-gradient(to bottom, transparent 0%, #181818 100%)',
         }}
       >
         <div className="container">

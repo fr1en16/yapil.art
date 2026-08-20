@@ -6,6 +6,7 @@ interface Props {
   theme?: 'dark' | 'light';
   title?: string;
   lead?: string;
+  successText?: string;
   source?: LeadSource;
   sourceDetails?: string;
 }
@@ -14,6 +15,7 @@ const {
   theme = 'dark',
   title = 'Нашли задачу,<br />похожую на вашу?',
   lead = 'Расскажите о задаче или заполните форму — ответим в течение 2 часов и подготовим предложение.',
+  successText = 'Спасибо за обращение. Мы изучим вашу задачу и ответим в течение 2 часов.',
   source = 'contacts_form',
   sourceDetails = 'Форма контактов на странице',
 } = Astro.props;
@@ -184,7 +186,7 @@ const whatsappHref = getWhatsAppUrl({
             </div>
             <h4 class="success-title">Заявка успешно отправлена!</h4>
             <p class="success-text">
-              Спасибо за обращение. Мы изучим вашу задачу и ответим в течение 2 часов.
+              {successText}
             </p>
             <button type="button" class="reset-button">
               <span class="reset-btn-inner">
@@ -414,7 +416,12 @@ const whatsappHref = getWhatsAppUrl({
     padding-top: clamp(4rem, 7vw, 7.5rem);
     padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
     color: var(--ink-primary);
-    background: #0B0B0C;
+    background: linear-gradient(
+      to bottom,
+      #000000 0%,
+      #0B0B0C 35%,
+      #0B0B0C 100%
+    );
   }
 
   .contacts.theme-light {

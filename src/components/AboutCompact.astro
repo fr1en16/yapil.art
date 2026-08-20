@@ -1,12 +1,13 @@
 ---
 interface Props {
   theme?: 'dark' | 'light';
+  personal?: boolean;
 }
 
-const { theme = 'dark' } = Astro.props;
+const { theme = 'dark', personal = false } = Astro.props;
 const isLight = theme === 'light';
 
-const cards = [
+const cardsStudio = [
   {
     id: 'experience',
     title: '8\u00A0лет<br />в\u00A0дизайне',
@@ -32,20 +33,45 @@ const cards = [
     icon: 'shapes',
   },
 ];
+
+const cardsPersonal = [
+  {
+    id: 'experience',
+    title: '8\u00A0лет<br />в\u00A0дизайне',
+    text: 'Веду проекты в\u00A0инфобизнесе и\u00A0в\u00A0корпоративном секторе. Лендинг для\u00A0трейдера и\u00A0полиграфия для\u00A0стрит-фуда требуют разного подхода. Умею и\u00A0то, и\u00A0другое.',
+    icon: 'award',
+  },
+  {
+    id: 'full-cycle',
+    title: 'Полный<br />цикл',
+    text: 'Каждый проект веду сам: от\u00A0первой концепции до\u00A0финальной правки в\u00A0типографии. Ничего не\u00A0отдаю на\u00A0аутсорс.',
+    icon: 'refresh-cw',
+  },
+  {
+    id: 'agency',
+    title: 'Опыт<br />агентства',
+    text: 'Был ключевым дизайнером в\u00A0thePeak, которое делало визуал для LUKOIL, Cadillac, PUMA и\u00A0Gippo. Оттуда взял процессы, которые держат сроки на\u00A0больших проектах.',
+    icon: 'briefcase',
+  },
+  {
+    id: 'three-directions',
+    title: 'Три направления<br />в\u00A0одних руках',
+    text: 'Бренд, сайт и\u00A0печать делаю сам. Логотип, сайт и\u00A0буклет получаются в\u00A0одном стиле, потому что их\u00A0делает один человек.',
+    icon: 'shapes',
+  },
+];
+
+const cards = personal ? cardsPersonal : cardsStudio;
 ---
 
 <section
   id="about-compact"
-  aria-label="О студии в деталях"
+  aria-label={personal ? 'Обо мне в деталях' : 'О студии в деталях'}
   class:list={[
     'relative z-10 pt-6 pb-16 md:pb-24 transition-colors duration-300',
     isLight ? 'text-[#1D1D1D]' : 'text-white',
   ]}
-  style={
-    isLight
-      ? 'background: linear-gradient(to top, #F7F5F2 0%, rgba(247, 245, 242, 0.96) 20%, rgba(247, 245, 242, 0.8) 42%, rgba(247, 245, 242, 0.45) 68%, rgba(247, 245, 242, 0.15) 86%, transparent 100%);'
-      : 'background: linear-gradient(to top, #181818 0%, rgba(24, 24, 24, 0.96) 20%, rgba(24, 24, 24, 0.8) 42%, rgba(24, 24, 24, 0.45) 68%, rgba(24, 24, 24, 0.15) 86%, transparent 100%);'
-  }
+  style={isLight ? 'background: #F7F5F2;' : 'background: #181818;'}
 >
   <div class="container">
     <ol class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 md:gap-[var(--grid-gap)] list-none p-0 m-0">

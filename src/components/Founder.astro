@@ -1,0 +1,64 @@
+---
+interface Props {
+  theme?: 'dark' | 'light';
+}
+
+const { theme = 'dark' } = Astro.props;
+const isLight = theme === 'light';
+---
+
+<section
+  id="founder"
+  aria-label="О Якове"
+  class:list={[
+    'relative z-10 pt-24 pb-16 md:pt-32 md:pb-24 transition-colors duration-300',
+    isLight ? 'text-[#1D1D1D]' : 'text-white',
+  ]}
+  style={
+    isLight
+      ? 'background: linear-gradient(to top, #F7F5F2 0%, rgba(247, 245, 242, 0.96) 20%, rgba(247, 245, 242, 0.8) 42%, rgba(247, 245, 242, 0.45) 68%, rgba(247, 245, 242, 0.15) 86%, transparent 100%);'
+      : 'background: linear-gradient(to bottom, #181818 0%, #000000 100%);'
+  }
+>
+  <div class="container">
+    <div class="grid grid-cols-12 gap-x-[var(--grid-gap)] gap-y-8 items-center">
+      <div class="col-start-4 col-span-6 sm:col-start-1 sm:col-span-12 lg:col-start-3 lg:col-span-3">
+        <div
+          class:list={[
+            'relative aspect-[4/5] w-full max-w-[26rem] mx-auto lg:mx-0 overflow-hidden',
+            isLight ? 'bg-black/[0.04]' : 'bg-white/[0.04]',
+          ]}
+        >
+          <img
+            src="/cover.webp"
+            alt="Яков Пилипюк, дизайнер"
+            width="640"
+            height="800"
+            loading="lazy"
+            class="h-full w-full object-cover grayscale-[15%] transition-all duration-500 hover:grayscale-0"
+          />
+        </div>
+      </div>
+
+      <div class="col-start-4 col-span-9 sm:col-start-1 sm:col-span-12 lg:col-start-7 lg:col-span-4">
+        <h2
+          class:list={[
+            'm-0 mb-6 text-[clamp(2rem,4vw,3rem)] font-normal leading-[1.05] tracking-[-0.04em]',
+            isLight ? 'text-[#1D1D1D]' : 'text-white',
+          ]}
+          style="font-family: var(--font-display);"
+        >
+          Яков Пилипюк
+        </h2>
+        <p
+          class:list={[
+            'm-0 max-w-[42rem] text-[clamp(1rem,1.2vw,1.15rem)] leading-[1.4] text-pretty',
+            isLight ? 'text-[#1D1D1D]/75' : 'text-white/80',
+          ]}
+        >
+          Верю, что хороший дизайн начинается с&nbsp;внимания к&nbsp;деталям, к&nbsp;смыслу, к&nbsp;тому, что действительно важно сказать. Восемь лет я&nbsp;превращаю идеи в&nbsp;форму: сайты, знаки, бумагу, которую хочется держать в&nbsp;руках. Не&nbsp;люблю разбивать проект на&nbsp;цеха и&nbsp;довожу всё сам.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

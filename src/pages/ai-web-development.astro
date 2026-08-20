@@ -1,0 +1,1120 @@
+---
+import Base from '../layouts/Base.astro';
+import Contacts from '../components/Contacts.astro';
+import Footer from '../components/Footer.astro';
+import AiCalculator from '../components/ui/ai-calculator.tsx';
+
+const pageJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      name: 'Разработка сайтов на ИИ для бизнеса — yapil.art',
+      url: 'https://yapil.art/ai-web-development',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://yapil.art' },
+        { '@type': 'ListItem', position: 2, name: 'Сайты на ИИ', item: 'https://yapil.art/ai-web-development' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Что значит «сайт на ИИ»? Его делает программа без людей?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Нейросеть пишет код и рендерит графику. Структуру, тексты и макет делает дизайнер. За счёт этого разработка занимает дни вместо месяца при студийном качестве.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Не получится ли текст, по которому видно нейросеть?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Нет. Тексты пишет дизайнер и вычищает шаблонные обороты, по которым читатель узнаёт машину. Картинки отбираем и ретушируем, кривые руки и нечитаемые вывески на сайт не попадают.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Придётся ли платить ежемесячно за сайт?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Нет. Сайт переходит в вашу собственность. Вы платите за хостинг и домен, около 500–1000 ₸ в месяц.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Смогу ли я сам менять цены и контакты?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Да. Настраиваем управление контентом, чтобы вы в пару кликов обновили номер телефона, прайс или добавили товар.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'А если нужен нестандартный калькулятор или интеграция?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Мы работаем с чистым кодом, поэтому реализуем расчёт по вашим формулам, выгрузку заявок в Google Таблицы, интеграцию с CRM или приём платежей Kaspi Pay.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
+const workStages = [
+  { stage: 'Структура страницы и смыслы', who: 'Дизайнер' },
+  { stage: 'Заголовки и тексты', who: 'Дизайнер' },
+  { stage: 'Макет и типографика', who: 'Дизайнер, Figma' },
+  { stage: 'Графика и фотоконтент', who: 'Генерация по раскадровке, отбор и ретушь за дизайнером' },
+  { stage: 'Вёрстка и код', who: 'ИИ, проверка вручную' },
+  { stage: 'Тестирование и запуск', who: 'Дизайнер' },
+];
+
+const advantages = [
+  {
+    title: 'Дизайн и визуал под нишу',
+    text: 'Макет рисует дизайнер. Фотореалистичные изображения товаров и интерьеров генерируем по его раскадровке и дорабатываем под фирменный стиль.',
+  },
+  {
+    title: 'Маркетинг и продающая структура',
+    text: 'Разбираем сайты конкурентов в вашей нише и пишем структуру руками: заголовки, ответы на возражения, кнопки заказа.',
+  },
+  {
+    title: 'Функционал под задачу',
+    text: 'Калькуляторы расчёта стоимости, онлайн-запись, квизы, каталоги, приём оплат Kaspi Pay, личный кабинет.',
+  },
+  {
+    title: 'SEO-подготовка',
+    text: 'Чистый семантический код, 90+ в Google PageSpeed, настроенные мета-теги. Сайт готов к продвижению в Google и Yandex.',
+  },
+  {
+    title: 'Интеграция с WhatsApp и CRM',
+    text: 'Заявка приходит в мессенджер или учётную систему за секунду после отправки формы.',
+  },
+];
+
+const tariffs = [
+  {
+    idx: '01',
+    name: 'Быстрый старт',
+    hint: 'Для сферы услуг, запуска рекламы, экспертов и сезонных акций',
+    time: '3–5 дней',
+    items: [
+      'Одностраничный сайт до 6–8 смысловых блоков',
+      'Структуру и тексты пишет дизайнер',
+      'Графика и баннеры по его раскадровке, вёрстка на ИИ',
+      'Адаптация под смартфоны и планшеты',
+      'Кнопка заказа и отправка заявок в WhatsApp или Telegram',
+      'Базовая SEO-настройка и подключение домена',
+    ],
+    cta: 'Выбрать тариф «Быстрый старт»',
+    highlight: false,
+  },
+  {
+    idx: '02',
+    name: 'Бизнес-Каталог',
+    badge: 'Хит продаж',
+    hint: 'Для компаний с линейкой услуг, оптовиков, B2B, клиник, автосервисов и производств',
+    time: '5–12 дней',
+    items: [
+      'Многостраничный сайт до 5–10 страниц: О компании, Услуги, Каталог, Отзывы, Контакты',
+      'Каталог с фильтрацией и карточками услуг или товаров',
+      'Калькулятор стоимости или квиз-опросник',
+      'Корпоративная почта, счётчики аналитики, пиксели рекламы',
+      'Расширенная SEO-оптимизация страниц',
+    ],
+    variants: [
+      { name: 'Быстрый, на ИИ', time: '5–7 дней', price: 'базовая цена', text: 'Структуру, тексты и графику генерирует нейросеть по нашим промптам. Дизайнер проверяет результат, чистит формулировки и правит вёрстку. Подходит, когда нужно быстро занять место в поиске и начать собирать заявки.' },
+      { name: 'Дизайн и копирайт вручную', time: '8–12 дней', price: 'базовая + 40%', text: 'Дизайнер собирает структуру под вашу воронку и пишет тексты после разбора конкурентов. Макет — в Figma под ваш фирменный стиль, графику генерируем по раскадровке и ретушируем, вёрстку делает ИИ. Подходит, когда сайт должен отличаться от соседей по нише.' },
+    ],
+    cta: 'Выбрать тариф «Бизнес-Каталог»',
+    highlight: true,
+  },
+  {
+    idx: '03',
+    name: 'Кастом / PRO',
+    hint: 'Для интернет-магазинов, сервисов, онлайн-школ и нестандартных задач',
+    time: 'от 10–14 дней',
+    items: [
+      'Индивидуальная архитектура и функционал под задачу',
+      'Онлайн-оплата: Kaspi Pay, Freedom Pay, Halyk Bank, банковские карты',
+      'Личные кабинеты, системы бронирования, закрытые разделы',
+      'Интеграция с 1С, складскими базами или внешними сервисами по API',
+      'Встроенный ИИ-ассистент для автоответов клиентам на сайте',
+      'Дизайн и тексты пишем вручную, ИИ отвечает за код и рендер',
+      'HTTPS, ежедневные бэкапы, загрузка до 1 сек',
+    ],
+    cta: 'Обсудить кастомный проект',
+    highlight: false,
+  },
+];
+
+const matrixRows = [
+  { criterion: 'Срок сдачи', us: 'От 3 дней', constructors: '7 – 14 дней', studios: '1 – 3 месяца', freelance: 'От 2 недель, срок плавает' },
+  { criterion: 'Кто делает дизайн и тексты', us: 'Дизайнер, 8 лет практики', constructors: 'Вы сами в редакторе', studios: 'Дизайнер и копирайтер', freelance: 'Как повезёт' },
+  { criterion: 'Абонентская плата', us: '0 ₸, код остаётся у вас', constructors: 'От 35 000 ₸ в год, пока сайт работает', studios: '0 ₸', freelance: '0 ₸' },
+  { criterion: 'Сложный функционал', us: 'Калькуляторы, API, базы, личные кабинеты', constructors: 'Ограничения движка', studios: 'За доплату', freelance: 'В пределах знаний одного человека' },
+  { criterion: 'Скорость загрузки', us: '0.8 сек, чистый код', constructors: '2–4 сек, тяжёлые скрипты', studios: 'Зависит от CMS', freelance: 'Зависит от опыта' },
+  { criterion: 'SEO и индексация', us: 'Доступ к коду и мета-тегам', constructors: 'Ограничено движком', studios: 'Хорошо', freelance: 'Базовый уровень' },
+  { criterion: 'Правки и контент', us: 'Генерация за минуты', constructors: 'Ручной поиск на стоках', studios: 'Согласования по неделе', freelance: 'Поиск бесплатных картинок' },
+];
+
+const processSteps = [
+  { num: '01', title: 'Короткий бриф', hint: '15 минут', text: 'Обсуждаем задачу в WhatsApp или по телефону, фиксируем цели и функционал.' },
+  { num: '02', title: 'Концепт и тексты', hint: '1–2 дня', text: 'Дизайнер пишет структуру, смысловые блоки и тексты, рисует визуальный стиль. Показываем вам на согласование.' },
+  { num: '03', title: 'Разработка и интеграции', hint: '2–4 дня', text: 'ИИ верстает утверждённый макет, мы подключаем формы, WhatsApp, калькуляторы и платёжные системы.' },
+  { num: '04', title: 'Тестирование и запуск', hint: '1 день', text: 'Проверяем вёрстку на смартфонах от 360 px, настраиваем SEO, привязываем домен и передаём сайт.' },
+];
+
+const faq = [
+  { q: 'Что значит «сайт на ИИ»? Его делает программа без людей?', a: 'Нейросеть пишет код и рендерит графику. Структуру, тексты и макет делает дизайнер. За счёт этого разработка занимает дни вместо месяца при студийном качестве.' },
+  { q: 'Не получится ли текст, по которому видно нейросеть?', a: 'Нет. Тексты пишет дизайнер и вычищает шаблонные обороты, по которым читатель узнаёт машину. Картинки отбираем и ретушируем, кривые руки и нечитаемые вывески на сайт не попадают.' },
+  { q: 'Придётся ли платить ежемесячно за сайт?', a: 'Нет. Сайт переходит в вашу собственность. Вы платите за хостинг и домен, около 500–1000 ₸ в месяц.' },
+  { q: 'Смогу ли я сам менять цены и контакты?', a: 'Да. Настраиваем управление контентом, чтобы вы в пару кликов обновили номер телефона, прайс или добавили товар.' },
+  { q: 'А если нужен нестандартный калькулятор или интеграция?', a: 'Мы работаем с чистым кодом, поэтому реализуем расчёт по вашим формулам, выгрузку заявок в Google Таблицы, интеграцию с CRM или приём платежей Kaspi Pay.' },
+];
+---
+
+<Base
+  title="Сайты для бизнеса от 3 дней — авторский дизайн, вёрстка на ИИ"
+  description="Лендинг за 3–5 дней, каталог за 5–10. Структуру, тексты и дизайн делает дизайнер, ИИ ускоряет вёрстку и графику. Без абонентской платы, код остаётся у вас."
+  jsonLd={pageJsonLd}
+>
+  <article class="ai-page">
+    <!-- Block 1: Hero -->
+    <header class="ai-hero container">
+      <h1 class="ai-hero-title">Сайты для бизнеса от 3 дней. Авторский дизайн, вёрстка на ИИ, без абонентской платы</h1>
+      <p class="ai-hero-lead">Лендинг собираем за 3–5 дней, каталог за 5–10. Дизайн и тексты пишет дизайнер, ИИ ускоряет вёрстку и графику.</p>
+
+      <ul class="ai-hero-triggers">
+        <li>Структуру, тексты и макет делает человек. Сгенерированный мусор на сайт не попадает.</li>
+        <li>0 ₸ платформе. Код и домен принадлежат вам.</li>
+        <li>Загрузка 0.8 сек на смартфоне, заявка уходит в WhatsApp.</li>
+      </ul>
+
+      <div class="ai-hero-actions">
+        <a href="#calculator" class="ai-cta-btn">
+          <span class="btn-inner">
+            <span class="btn-text">Рассчитать стоимость в калькуляторе</span>
+            <span class="btn-icon" aria-hidden="true">↓</span>
+          </span>
+        </a>
+        <a href="https://wa.me/77067436197" target="_blank" rel="noopener noreferrer" class="ai-secondary-link">
+          Обсудить проект в WhatsApp
+        </a>
+      </div>
+    </header>
+
+    <!-- Block 2: Comparison + solution -->
+    <section class="ai-section compare-section" aria-labelledby="compare-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Рынок</span>
+          <h2 class="display-title" id="compare-title">Сколько стоит сайт у конструктора, студии и фрилансера</h2>
+        </div>
+
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h3>Конструкторы <span>(Tilda / Wix)</span></h3>
+            <p>Подписка от 35 000 ₸ в год, пока сайт работает. Блоки из общей сетки, ограничения по коду, тяжёлые скрипты на мобильных.</p>
+          </div>
+          <div class="compare-card">
+            <h3>Классические студии</h3>
+            <p>От 1 000 000 ₸ и от месяца до трёх. Правки идут через менеджера, доработки считают отдельно.</p>
+          </div>
+          <div class="compare-card">
+            <h3>Случайные фрилансеры</h3>
+            <p>Сроки плавают, картинки берут со стоков, поддержка заканчивается после оплаты.</p>
+          </div>
+          <div class="compare-card compare-card--solution">
+            <h3>Решение yapil.art</h3>
+            <p>Дизайнер с 8-летним опытом собирает структуру, пишет тексты и рисует макет. ИИ верстает код и рендерит графику по этим макетам. Вы получаете кастомную разработку по цене конструктора.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 3: Who does the work -->
+    <section class="ai-section who-section" aria-labelledby="who-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Процесс</span>
+          <h2 class="display-title" id="who-title">ИИ ускоряет работу, решения принимает дизайнер</h2>
+          <p class="section-sub">Восемь лет в графическом дизайне и больше сотни проектов. Нейросеть в этой работе выполняет роль исполнителя, а не автора.</p>
+        </div>
+
+        <div class="who-table-wrap">
+          <table class="who-table">
+            <thead>
+              <tr><th>Этап работы</th><th>Кто делает</th></tr>
+            </thead>
+            <tbody>
+              {workStages.map((row) => (
+                <tr>
+                  <td>{row.stage}</td>
+                  <td>{row.who}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p class="who-note">Ни один текст и ни одна картинка не уходят к вам в том виде, в котором их выдала нейросеть.</p>
+      </div>
+    </section>
+
+    <!-- Block 4: Advantages -->
+    <section class="ai-section advantages-section" aria-labelledby="advantages-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Преимущества</span>
+          <h2 class="display-title" id="advantages-title">В каждом сайте на yapil.art</h2>
+        </div>
+
+        <div class="advantages-grid">
+          {advantages.map((a, idx) => (
+            <div class="advantage-card">
+              <span class="advantage-num">0{idx + 1}</span>
+              <h3>{a.title}</h3>
+              <p>{a.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 5: Calculator -->
+    <section class="ai-section calculator-section" id="calculator" aria-labelledby="calculator-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Калькулятор</span>
+          <h2 class="display-title" id="calculator-title">Рассчитайте стоимость и срок за 1 минуту</h2>
+          <p class="section-sub">Ответьте на 5 вопросов и увидите состав работ, срок и вилку бюджета.</p>
+        </div>
+
+        <div class="calculator-shell">
+          <AiCalculator client:load />
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 6: Pricing -->
+    <section class="ai-section pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Тарифы</span>
+          <h2 class="display-title" id="pricing-title">Тарифы и что в них входит</h2>
+          <p class="section-sub">Без скрытых платежей и ежемесячных подписок.</p>
+        </div>
+
+        <div class="pricing-grid">
+          {tariffs.map((t) => (
+            <div class:list={['pricing-card', { 'pricing-card--highlight': t.highlight }]}>
+              {t.badge && <span class="pricing-badge">{t.badge}</span>}
+              <div class="pricing-top">
+                <span class="pricing-idx">{t.idx}</span>
+                <span class="pricing-time">{t.time}</span>
+              </div>
+              <h3 class="pricing-name">{t.name}</h3>
+              <p class="pricing-hint">{t.hint}</p>
+
+              <ul class="pricing-items">
+                {t.items.map((item) => <li>{item}</li>)}
+              </ul>
+
+              {t.variants && (
+                <div class="pricing-variants">
+                  {t.variants.map((v) => (
+                    <div class="pricing-variant">
+                      <div class="pricing-variant-head">
+                        <strong>{v.name}</strong>
+                        <span>{v.time} · {v.price}</span>
+                      </div>
+                      <p>{v.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <a href="#contacts" class="pricing-cta">{t.cta} →</a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 7: Comparison matrix -->
+    <section class="ai-section matrix-section" aria-labelledby="matrix-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Сравнение</span>
+          <h2 class="display-title" id="matrix-title">Сравнение yapil.art с другими вариантами на рынке</h2>
+        </div>
+
+        <div class="matrix-table-wrap">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>Критерий</th>
+                <th class="matrix-us">yapil.art</th>
+                <th>Конструкторы</th>
+                <th>Веб-студии</th>
+                <th>Фрилансеры</th>
+              </tr>
+            </thead>
+            <tbody>
+              {matrixRows.map((row) => (
+                <tr>
+                  <td>{row.criterion}</td>
+                  <td class="matrix-us">{row.us}</td>
+                  <td>{row.constructors}</td>
+                  <td>{row.studios}</td>
+                  <td>{row.freelance}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 8: Process -->
+    <section class="ai-section process-section" aria-labelledby="process-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Процесс</span>
+          <h2 class="display-title" id="process-title">Четыре шага от идеи до запуска</h2>
+        </div>
+
+        <ol class="process-list">
+          {processSteps.map((step) => (
+            <li class="process-step">
+              <div class="step-num-col">
+                <span class="step-num">{step.num}</span>
+                <span class="step-hint">{step.hint}</span>
+              </div>
+              <div class="step-content">
+                <h3 class="step-title">{step.title}</h3>
+                <p class="step-text">{step.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- Block 9: FAQ -->
+    <section class="ai-section faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">FAQ</span>
+          <h2 class="display-title" id="faq-title">Частые вопросы</h2>
+        </div>
+
+        <div class="faq-list">
+          {faq.map((item, idx) => (
+            <details class="faq-item" open={idx === 0}>
+              <summary class="faq-summary">
+                <span class="faq-question">{item.q}</span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-answer">
+                <p>{item.a}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 10: Final CTA -->
+    <Contacts
+      title="Запуск на этой неделе"
+      lead="Напишите в WhatsApp и расскажите о своём бизнесе. В течение дня пришлём концепт структуры и расчёт стоимости."
+      source="contacts_form"
+      sourceDetails="Лендинг: Сайты на ИИ для бизнеса"
+    />
+  </article>
+
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .ai-page {
+    position: relative;
+    padding-top: clamp(2rem, 5vw, 4rem);
+    color: var(--ink-primary);
+  }
+
+  /* Hero */
+  .ai-hero {
+    padding-bottom: clamp(3.5rem, 8vw, 7rem);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .ai-hero-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: #ffffff;
+    max-width: 52rem;
+  }
+
+  .ai-hero-lead {
+    max-width: 44rem;
+    margin: 0 0 2rem;
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ai-hero-triggers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    max-width: 40rem;
+    margin: 0 0 2.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ai-hero-triggers li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .ai-hero-triggers li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--accent);
+  }
+
+  .ai-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem 2rem;
+  }
+
+  .ai-cta-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.1rem 2.2rem;
+    color: #ffffff;
+    background: var(--accent, #FD4B32);
+    border: 1px solid var(--accent, #FD4B32);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    transform-origin: center center;
+    will-change: transform, box-shadow, background-color;
+    transition:
+      transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+      background-color var(--duration-btn-color, 770ms) ease,
+      box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .ai-cta-btn:hover,
+  .ai-cta-btn:focus-visible {
+    background: var(--accent-hover, #E63A22);
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 14px 34px -4px rgba(253, 75, 50, 0.45), 0 0 2.2rem rgba(253, 75, 50, 0.25);
+  }
+
+  .ai-cta-btn .btn-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .ai-cta-btn .btn-text {
+    letter-spacing: -0.01em;
+    transition:
+      transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-text, 90ms),
+      letter-spacing var(--duration-btn-text, 910ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) var(--delay-btn-text, 90ms);
+  }
+
+  .ai-cta-btn .btn-icon {
+    transition: transform var(--duration-btn-text, 910ms) var(--ease-text-stagger, cubic-bezier(0.16, 1, 0.3, 1.18)) var(--delay-btn-icon, 140ms);
+  }
+
+  .ai-cta-btn:hover .btn-text,
+  .ai-cta-btn:focus-visible .btn-text {
+    letter-spacing: 0.025em;
+  }
+
+  .ai-cta-btn:hover .btn-icon,
+  .ai-cta-btn:focus-visible .btn-icon {
+    transform: translateY(4px);
+  }
+
+  .ai-secondary-link {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .ai-secondary-link:hover {
+    color: #ffffff;
+  }
+
+  /* Sections */
+  .ai-section {
+    padding-block: clamp(4.5rem, 9vw, 9rem);
+    border-bottom: 1px solid var(--border-subtle);
+    position: relative;
+  }
+
+  .section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-tint, #F7C8BF);
+  }
+
+  .section-sub {
+    margin: 0.25rem 0 0;
+    max-width: 42rem;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+  }
+
+  /* Block 2: compare */
+  .compare-section {
+    background: linear-gradient(to bottom, transparent 0%, rgba(11, 11, 12, 0.82) 14%, #0B0B0C 32%, #141417 65%, #0B0B0C 100%);
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 48rem) {
+    .compare-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gap, 1.25rem);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .compare-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .compare-card {
+    padding: clamp(1.75rem, 2.5vw, 2.25rem);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%), #0e0e10;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .compare-card h3 {
+    margin: 0 0 0.85rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+    line-height: 1.1;
+    color: #ffffff;
+  }
+
+  .compare-card h3 span {
+    color: var(--ink-muted);
+    font-size: 0.65em;
+  }
+
+  .compare-card p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.4;
+  }
+
+  .compare-card--solution {
+    background: linear-gradient(145deg, rgba(253, 75, 50, 0.14) 0%, rgba(253, 75, 50, 0.03) 100%), #171110;
+    border-color: rgba(253, 75, 50, 0.5);
+  }
+
+  .compare-card--solution p {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Block 3: who */
+  .who-section {
+    background: #0B0B0C;
+  }
+
+  .who-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .who-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .who-table th,
+  .who-table td {
+    text-align: left;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .who-table th {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+
+  .who-table td:first-child {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .who-table td:last-child {
+    color: #ffffff;
+    font-weight: 500;
+  }
+
+  .who-note {
+    margin: 0;
+    max-width: 40rem;
+    padding: 1.25rem 1.5rem;
+    background: rgba(253, 75, 50, 0.06);
+    border: 1px solid rgba(253, 75, 50, 0.25);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  /* Block 4: advantages */
+  .advantages-section {
+    background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(253, 75, 50, 0.05) 0%, transparent 70%), linear-gradient(to bottom, #0B0B0C 0%, #161619 40%, #18181C 50%, #161619 60%, #0B0B0C 100%);
+  }
+
+  .advantages-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 48rem) {
+    .advantages-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gap, 1.25rem);
+    }
+  }
+
+  .advantage-card {
+    padding: clamp(2rem, 3vw, 2.75rem);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.01) 100%), #0D0D0F;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .advantage-num {
+    display: block;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .advantage-card h3 {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.15;
+    color: #ffffff;
+  }
+
+  .advantage-card p {
+    margin: 0;
+    font-size: 0.98rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+  }
+
+  /* Block 5: calculator */
+  .calculator-section {
+    background: #0B0B0C;
+  }
+
+  .calculator-shell {
+    max-width: 40rem;
+  }
+
+  /* Block 6: pricing */
+  .pricing-section {
+    background: linear-gradient(to bottom, #0B0B0C 0%, #131315 40%, #0B0B0C 100%);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    .pricing-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--grid-gap, 1.5rem);
+    }
+  }
+
+  .pricing-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.75rem, 2.5vw, 2.25rem);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%), #0E0E10;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pricing-card--highlight {
+    background: linear-gradient(145deg, rgba(253, 75, 50, 0.1) 0%, rgba(253, 75, 50, 0.02) 100%), #14100F;
+    border-color: rgba(253, 75, 50, 0.5);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.4rem 0.85rem;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pricing-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .pricing-idx {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .pricing-time {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+  }
+
+  .pricing-name {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 2.5vw, 2rem);
+    color: #ffffff;
+  }
+
+  .pricing-hint {
+    margin: 0 0 1.5rem;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.35;
+  }
+
+  .pricing-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pricing-items li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.35;
+  }
+
+  .pricing-items li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 0.4rem;
+    height: 0.4rem;
+    background: var(--accent);
+  }
+
+  .pricing-variants {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pricing-variant-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+    color: #ffffff;
+  }
+
+  .pricing-variant-head span {
+    font-size: 0.78rem;
+    color: var(--accent-tint, #F7C8BF);
+    white-space: nowrap;
+  }
+
+  .pricing-variant p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+  }
+
+  .pricing-cta {
+    margin-top: auto;
+    padding-top: 1rem;
+    color: var(--accent-tint, #F7C8BF);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .pricing-cta:hover {
+    color: #ffffff;
+  }
+
+  /* Block 7: matrix */
+  .matrix-section {
+    background: #0B0B0C;
+  }
+
+  .matrix-table-wrap {
+    overflow-x: auto;
+  }
+
+  .matrix-table {
+    width: 100%;
+    min-width: 48rem;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .matrix-table th,
+  .matrix-table td {
+    text-align: left;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: top;
+  }
+
+  .matrix-table th {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+  }
+
+  .matrix-table td {
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .matrix-us {
+    background: rgba(253, 75, 50, 0.06);
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+
+  th.matrix-us {
+    color: var(--accent) !important;
+  }
+
+  /* Block 8: process (shared pattern) */
+  .process-section {
+    background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(253, 75, 50, 0.05) 0%, transparent 70%), linear-gradient(to bottom, #0B0B0C 0%, #161619 40%, #18181C 50%, #161619 60%, #0B0B0C 100%);
+  }
+
+  .process-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .process-step {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-block: 2rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .process-step:last-child {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .step-num-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .step-hint {
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+  }
+
+  .step-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    line-height: 1.1;
+    color: #ffffff;
+  }
+
+  .step-text {
+    margin: 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.35;
+    max-width: 42rem;
+  }
+
+  @media (min-width: 64rem) {
+    .process-list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--grid-gap, 1rem);
+    }
+
+    .process-step {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%), #0F0F12;
+    }
+
+    .process-step:last-child {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  /* Block 9: FAQ (shared pattern) */
+  .faq-section {
+    background: linear-gradient(to bottom, #0B0B0C 0%, #111114 50%, #0B0B0C 100%);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 54rem;
+  }
+
+  .faq-item {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%), #0E0E10;
+  }
+
+  .faq-item[open] {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%), #121216;
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .faq-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: clamp(1.25rem, 2vw, 1.75rem);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    line-height: 1.25;
+    color: #ffffff;
+  }
+
+  .faq-icon {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    color: var(--accent);
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    padding: 0 clamp(1.25rem, 2vw, 1.75rem) clamp(1.25rem, 2vw, 1.75rem);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.02rem;
+    line-height: 1.4;
+  }
+
+  .faq-answer p {
+    margin: 0;
+  }
+</style>
