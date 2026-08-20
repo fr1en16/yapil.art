@@ -122,7 +122,26 @@ const {
     isolation: isolate;
   }
 
+  .hero-cover::after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: clamp(10rem, 24vh, 18rem);
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgb(24 24 24 / 0) 0%,
+      rgb(24 24 24 / 0.45) 45%,
+      #181818 100%
+    );
+  }
+
   .hero-copy {
+    position: relative;
+    z-index: 1;
     width: min(calc(100% - 2rem), 68rem);
     padding: clamp(5.5rem, 10vh, 7.5rem) 1rem clamp(2.5rem, 5vh, 4rem);
     text-align: center;
