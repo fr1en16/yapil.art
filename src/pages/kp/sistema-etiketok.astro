@@ -282,15 +282,16 @@ const stages = [
       </div>
     </div>
   </article>
-  <div class="footer-transition" slot="footer" aria-hidden="true">
-    <div class="footer-transition-inner"></div>
-  </div>
   <Footer slot="footer" theme="light" />
 </Base>
 
 <style>
   :global(body.theme-light) {
     background: #f2efe9;
+  }
+
+  :global(body.theme-light .site-footer.theme-light) {
+    background: #f5f1e9;
   }
 
   .proposal {
@@ -728,26 +729,6 @@ const stages = [
     background: #fd4b32;
   }
 
-  .footer-transition {
-    height: clamp(8rem, 12vw, 12rem);
-    background: linear-gradient(to bottom, #f5f1e9, #eae5df);
-  }
-
-  .footer-transition-inner {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--grid-gap);
-    width: min(calc(100% - var(--container-inline-space)), var(--container-max));
-    height: 100%;
-    margin-inline: auto;
-  }
-
-  .footer-transition-inner::after {
-    content: '';
-    grid-column: 3 / 13;
-    background: linear-gradient(to bottom, #fd4b32, #eae5df);
-  }
-
   .closing-label {
     font-family: var(--font-body);
     font-size: 0.75rem;
@@ -766,8 +747,6 @@ const stages = [
     .cover h1 span + span::before { content: ' '; }
     .cover-bottom { display: flex; align-items: start; flex-direction: column; gap: 3rem; }
     .proposal-body { display: block; width: min(calc(100% - 2rem), 100rem); }
-    .footer-transition-inner { width: min(calc(100% - 2rem), 100rem); }
-    .footer-transition-inner::after { grid-column: 1 / -1; }
     .page-nav { display: none; }
     .content { border-left: 0; }
     .proposal-section { padding-left: 0; }
@@ -826,8 +805,35 @@ const stages = [
     .estimate-subtotal { display: flex; justify-content: space-between; }
     .package-price { align-items: start; flex-direction: column; }
     .package-price strong { font-size: clamp(1.5rem, 7vw, 2rem); }
-    .timeline li { grid-template-columns: 2rem 1fr; }
-    .timeline h3, .timeline p, .timeline-payment { grid-column: 2; }
+    .timeline li {
+      grid-template-columns: 2.75rem minmax(0, 1fr);
+      column-gap: 1rem;
+      row-gap: 0.8rem;
+      align-items: start;
+      min-height: 0;
+      padding: 2.25rem 0 2.5rem;
+    }
+    .timeline-number {
+      grid-column: 1;
+      grid-row: 1;
+      padding-top: 0.2rem;
+    }
+    .timeline h3 {
+      grid-column: 2;
+      grid-row: 1;
+      font-size: clamp(1.75rem, 8vw, 2.25rem);
+      line-height: 1.02;
+    }
+    .timeline p {
+      grid-column: 2;
+      grid-row: 2;
+      font-size: 1rem;
+    }
+    .timeline-payment {
+      grid-column: 2;
+      grid-row: 3;
+      font-size: 0.9rem;
+    }
     .terms-list > div { grid-template-columns: 1fr; gap: 1rem; }
     .terms-list dt,
     .terms-list dd { grid-column: 1; }
