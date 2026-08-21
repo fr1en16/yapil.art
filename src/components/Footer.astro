@@ -51,7 +51,7 @@ const lightStops = [
       <div class="footer-columns">
         <nav aria-label="Навигация в подвале">
           <h2>{personal ? 'Обо мне' : 'Студия'}</h2>
-          <a href={`${homePath}#about`}>{personal ? 'Обо мне' : 'О студии'}</a>
+          {personal && <a href={`${homePath}#about`}>Обо мне</a>}
           <a href="/services">Услуги</a>
           <a href={`${homePath}#cases`}>Кейсы</a>
         </nav>
@@ -71,8 +71,6 @@ const lightStops = [
     <span>© {new Date().getFullYear()} yapil.art</span>
     <div class="footer-bottom-links">
       <a href="/privacy">Конфиденциальность</a>
-      <span class="footer-divider" aria-hidden="true">·</span>
-      <a href="/crm" class="footer-crm-link" title="Внутренняя CRM студии">CRM</a>
     </div>
   </div>
 </RuixenGradientFooter>
@@ -201,6 +199,10 @@ const lightStops = [
   .footer-columns a,
   .footer-bottom a {
     text-decoration: none;
+    white-space: nowrap;
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
   }
 
   .footer-columns a:hover,
@@ -227,27 +229,16 @@ const lightStops = [
 
   .footer-bottom > * {
     max-width: 100%;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
   }
 
   .footer-bottom-links {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-  }
-
-  .footer-divider {
-    opacity: 0.4;
-  }
-
-  .footer-crm-link {
-    color: var(--accent-tint, #F7C8BF);
-    font-weight: 600;
-    transition: color 0.2s ease;
-  }
-
-  .footer-crm-link:hover {
-    color: #ffffff;
   }
 
   .footer-bottom > :first-child {

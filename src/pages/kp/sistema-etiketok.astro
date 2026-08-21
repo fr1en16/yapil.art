@@ -282,6 +282,9 @@ const stages = [
       </div>
     </div>
   </article>
+  <div class="footer-transition" slot="footer" aria-hidden="true">
+    <div class="footer-transition-inner"></div>
+  </div>
   <Footer slot="footer" theme="light" />
 </Base>
 
@@ -720,14 +723,29 @@ const stages = [
   .terms-list dd { grid-column: 3 / 11; max-width: 48rem; margin: 0; font-size: clamp(1.15rem, 2vw, 1.75rem); line-height: 1.15; letter-spacing: -0.035em; }
 
   .closing {
-    padding: clamp(4rem, 8vw, 8rem) 1.5rem clamp(8rem, 12vw, 12rem);
+    padding: clamp(4rem, 8vw, 8rem) 1.5rem 2.5rem;
     color: white;
-    background: linear-gradient(
-      to bottom,
-      #fd4b32 0%,
-      #fd4b32 68%,
-      #eae5df 100%
-    );
+    background: #fd4b32;
+  }
+
+  .footer-transition {
+    height: clamp(8rem, 12vw, 12rem);
+    background: linear-gradient(to bottom, #f5f1e9, #eae5df);
+  }
+
+  .footer-transition-inner {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    width: min(calc(100% - var(--container-inline-space)), var(--container-max));
+    height: 100%;
+    margin-inline: auto;
+  }
+
+  .footer-transition-inner::after {
+    content: '';
+    grid-column: 3 / 13;
+    background: linear-gradient(to bottom, #fd4b32, #eae5df);
   }
 
   .closing-label {
@@ -748,6 +766,8 @@ const stages = [
     .cover h1 span + span::before { content: ' '; }
     .cover-bottom { display: flex; align-items: start; flex-direction: column; gap: 3rem; }
     .proposal-body { display: block; width: min(calc(100% - 2rem), 100rem); }
+    .footer-transition-inner { width: min(calc(100% - 2rem), 100rem); }
+    .footer-transition-inner::after { grid-column: 1 / -1; }
     .page-nav { display: none; }
     .content { border-left: 0; }
     .proposal-section { padding-left: 0; }
