@@ -1,0 +1,831 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+
+const scope = [
+  {
+    number: '01',
+    title: 'Сетка и модуль',
+    text: 'Одна логика построения на всех форматах, от 250 мл до канистры 20 кг. Позиция логотипа, зона названия, зона объёма, поле обязательного текста, отступы под высечку.',
+  },
+  {
+    number: '02',
+    title: 'Типографика',
+    text: 'Заголовочный шрифт для названия продукта, текстовый для состава. Размерная шкала и правила для длинных названий на маленькой этикетке.',
+  },
+  {
+    number: '03',
+    title: 'Цветовое кодирование',
+    text: 'Пять категорий, пять цветов. Плюс шкала оттенков под варианты внутри категории: ароматы полиролей, освежителей, сухого тумана. С Pantone и CMYK.',
+  },
+  {
+    number: '04',
+    title: 'Иерархия информации',
+    text: 'Покупатель с двух метров видит категорию, с полуметра название, в руках состав. Порядок блоков на лице и обороте, место штрихкода, объёма, знаков и предупреждений.',
+  },
+  {
+    number: '05',
+    title: 'Работа с логотипом',
+    text: 'Охранное поле, минимальный размер, версии под светлый и тёмный фон, поведение на разных пропорциях этикетки.',
+  },
+  {
+    number: '06',
+    title: 'Шаблоны в Illustrator',
+    text: 'Готовые макеты под каждый типоразмер из вашей таблицы: 150×85, 120×110, 185×170 и остальные. С вылетами и метками под высечку.',
+  },
+  {
+    number: '07',
+    title: 'Документ с правилами',
+    text: 'PDF на 15–25 страниц. По нему любой дизайнер соберёт новую этикетку без моего участия, и линейка сохранит единый вид.',
+  },
+  {
+    number: '08',
+    title: 'Две демонстрационные этикетки',
+    text: 'Собираю по системе на реальных продуктах. Проверяем правила до запуска всей линейки.',
+  },
+];
+
+const estimate = [
+  {
+    title: 'Система этикеток',
+    note: 'Полный состав в разделе 01. Делаю один раз',
+    quantity: '1',
+    unit: '—',
+    total: '250 000 – 400 000',
+  },
+  {
+    title: 'Базовые дизайны',
+    note: 'Отдельный продукт в системе: лицо и оборот, вёрстка названия, состава, инструкции, штрихкода и обязательных знаков. Файл готов к печати',
+    quantity: '20',
+    unit: '15 000 – 25 000',
+    total: '300 000 – 500 000',
+  },
+  {
+    title: 'Варианты по аромату и оттенку',
+    note: 'Тот же дизайн, меняю название и цвет: POLISH PANEL, POLISH PRO, AROMATICA, сухой туман',
+    quantity: '17',
+    unit: '5 000 – 8 000',
+    total: '85 000 – 136 000',
+  },
+  {
+    title: 'Размерные адаптации',
+    note: 'Перевёрстка готового дизайна под другой типоразмер: 1 / 5 / 10 / 20 кг',
+    quantity: '32',
+    unit: '5 000 – 7 000',
+    total: '160 000 – 224 000',
+  },
+];
+
+const stages = [
+  ['01', 'Система и две демонстрационные этикетки', '1–2 недели', '50% предоплата'],
+  ['02', 'Чернители и полироли', '1–2 недели', 'по факту этапа'],
+  ['03', 'Шампуни и концентраты', '1–2 недели', 'по факту этапа'],
+  ['04', 'Освежители, сухой туман, стёкла, химчистка', '1–2 недели', 'по факту этапа'],
+];
+---
+
+<Base
+  title="Система этикеток для линейки автохимии"
+  description="Коммерческое предложение Yapil по разработке системы этикеток для линейки автохимии."
+  theme="light"
+  noindex={true}
+  navOverlay={true}
+>
+  <article class="proposal">
+    <section class="cover" aria-labelledby="proposal-title">
+      <div class="cover-grid" aria-hidden="true"></div>
+      <div class="container cover-inner">
+        <div class="cover-kicker">
+          <span>Коммерческое предложение</span>
+          <span>21.08.2026</span>
+        </div>
+
+        <div class="cover-title-wrap">
+          <p class="cover-index">КП / 01</p>
+          <h1 id="proposal-title">
+            <span>Система этикеток</span>
+            <span>для линейки автохимии</span>
+          </h1>
+        </div>
+
+        <div class="cover-bottom">
+          <p class="cover-lead">
+            Один набор правил на 130 позиций. Покупатель видит на полке один бренд.
+          </p>
+          <dl class="cover-meta">
+            <div><dt>Кому</dt><dd>Есбол</dd></div>
+            <div><dt>От</dt><dd>Яков Пилипюк, Yapil</dd></div>
+            <div><dt>Действует до</dt><dd>20.09.2026</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <div class="proposal-body">
+      <aside class="page-nav" aria-label="Содержание предложения">
+        <a href="#scope"><span>01</span>Система</a>
+        <a href="#estimate"><span>02</span>Смета</a>
+        <a href="#stages"><span>03</span>Этапы</a>
+        <a href="#inputs"><span>04</span>Материалы</a>
+        <a href="#terms"><span>05</span>Условия</a>
+      </aside>
+
+      <div class="content">
+        <section class="proposal-section" id="scope">
+          <header class="section-heading">
+            <p class="section-number">01</p>
+            <div>
+              <h2>Состав<br />системы</h2>
+              <p class="section-intro">
+                Один раз задаём правила, дальше по ним собираю всю линейку. Правила держат 130 позиций в одном бренде.
+              </p>
+            </div>
+          </header>
+
+          <div class="scope-grid">
+            {scope.map((item) => (
+              <article class="scope-card">
+                <p class="card-number">{item.number}</p>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="proposal-section estimate-section" id="estimate">
+          <header class="section-heading">
+            <p class="section-number">02</p>
+            <div>
+              <h2>Смета</h2>
+              <p class="section-intro">
+                Дизайнов меньше, чем позиций: один макет работает на несколько ароматов, оттенков и объёмов. Поэтому считаю по трём ставкам, а не по числу SKU.
+              </p>
+              <p class="section-intro">
+                Ранее я называл 35–70к за отдельный продукт. Это цена разовой этикетки. В КП ставки ниже: все двадцать продуктов собираю по одной системе, это один проект вместо двадцати. По старой ставке те же двадцать макетов вышли бы в 700к–1,4 млн без адаптаций.
+              </p>
+            </div>
+          </header>
+
+          <div class="estimate-table" role="table" aria-label="Смета проекта">
+            <div class="estimate-row estimate-head" role="row">
+              <span role="columnheader">Работа</span>
+              <span role="columnheader">Кол-во</span>
+              <span role="columnheader">За единицу, ₸</span>
+              <span role="columnheader">Сумма, ₸</span>
+            </div>
+            {estimate.map((item) => (
+              <div class="estimate-row" role="row">
+                <div class="estimate-work" role="cell">
+                  <strong>{item.title}</strong>
+                  <p>{item.note}</p>
+                </div>
+                <span data-label="Кол-во" role="cell">{item.quantity}</span>
+                <span data-label="За единицу" role="cell">{item.unit}</span>
+                <strong data-label="Сумма" role="cell">{item.total}</strong>
+              </div>
+            ))}
+            <div class="estimate-row estimate-subtotal" role="row">
+              <strong role="cell">Сумма по позициям</strong>
+              <span></span><span></span>
+              <strong role="cell">795 000 – 1 260 000</strong>
+            </div>
+          </div>
+
+          <div class="package-price">
+            <div>
+              <p>Пакетом за всю линейку</p>
+              <span>Работа однотипная, согласование одно</span>
+            </div>
+            <strong>750 000 – 850 000 ₸</strong>
+          </div>
+          <p class="fine-print">Отдельный блок считаю по ставкам из таблицы.</p>
+        </section>
+
+        <section class="proposal-section" id="stages">
+          <header class="section-heading">
+            <p class="section-number">03</p>
+            <div>
+              <h2>Этапы<br />и сроки</h2>
+              <p class="section-intro">
+                Начинаю с системы и двух демо-этикеток, включая чернитель в большой таре. Дальше собираю линейку блоками. Каждый блок принимаете и оплачиваете отдельно.
+              </p>
+            </div>
+          </header>
+
+          <ol class="timeline">
+            {stages.map(([number, title, duration, payment]) => (
+              <li>
+                <span class="timeline-number">{number}</span>
+                <h3>{title}</h3>
+                <p>{duration}</p>
+                <span class="timeline-payment">{payment}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section class="proposal-section split-section" id="inputs">
+          <div class="split-panel split-dark">
+            <p class="section-number">04 / A</p>
+            <h2>Материалы<br />от вас</h2>
+            <ul>
+              <li>Названия и состав по каждой позиции<span>Текст, который пойдёт на этикетку</span></li>
+              <li>Логотип в векторе<span>AI, EPS или SVG. Растр не подойдёт</span></li>
+              <li>Финальная таблица размеров этикеток<span>Ширина и высота по каждой таре</span></li>
+              <li>Требования типографии к макету<span>Вылеты, минимальный кегль, число красок, профиль цвета. Типография выдаёт списком. Нужны к началу второго этапа</span></li>
+            </ul>
+          </div>
+          <div class="split-panel">
+            <p class="section-number">04 / Б</p>
+            <h2>Вне<br />сметы</h2>
+            <ul>
+              <li>Копирайтинг описаний и инструкций<span>Состав и инструкцию пишете вы или отдельный автор</span></li>
+              <li>Фотосъёмка продукта<span>Съёмка тары для этикетки и рекламы</span></li>
+              <li>Препресс и работа с типографией<span>Треппинг, оверпринт, спуск на рулон. Делает препресс-отдел типографии</span></li>
+              <li>Получение штрихкодов<span>EAN-13 компания покупает через GS1 Kazakhstan. Номера присылаете мне, я ставлю их в макет</span></li>
+            </ul>
+            <p class="split-note">Любую из этих задач возьму отдельно, стоимость посчитаю по факту.</p>
+          </div>
+        </section>
+
+        <section class="proposal-section terms-section" id="terms">
+          <header class="section-heading">
+            <p class="section-number">05</p>
+            <div><h2>Условия</h2></div>
+          </header>
+
+          <dl class="terms-list">
+            <div>
+              <dt>Правки</dt>
+              <dd>Два круга на каждом этапе. Дальше по часовой ставке.</dd>
+            </div>
+            <div>
+              <dt>Исходники</dt>
+              <dd>Передаю после полной оплаты этапа.</dd>
+            </div>
+            <div>
+              <dt>Точность сметы</dt>
+              <dd>Назову точную сумму, когда подтвердите финальный список позиций. На присланных скриншотах часть таблицы обрезана.</dd>
+            </div>
+            <div>
+              <dt>Оплата</dt>
+              <dd>Безналичный расчёт, ИП. Договор и счёт после согласования объёма.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="closing">
+          <p class="closing-label">Готовы начать</p>
+          <h2>Соберём линейку<br />в одну систему.</h2>
+        </section>
+      </div>
+    </div>
+  </article>
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<style>
+  :global(body.theme-light) {
+    background: #f2efe9;
+  }
+
+  .proposal {
+    --paper: #f5f1e9;
+    --proposal-ink: #171717;
+    --proposal-muted: #6d6963;
+    --line: rgba(23, 23, 23, 0.18);
+    color: var(--proposal-ink);
+    background: transparent;
+  }
+
+  .cover {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    color: #fff8f2;
+    background: transparent;
+  }
+
+  .cover-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.34;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    background-size: 25% 25%;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
+  }
+
+  .cover-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100svh;
+    padding-block: 7.5rem 2rem;
+  }
+
+  .cover-kicker,
+  .cover-bottom,
+  .cover-meta div {
+    display: flex;
+  }
+
+  .cover-kicker {
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cover-title-wrap {
+    align-self: center;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    padding-block: clamp(4rem, 12vh, 8rem);
+  }
+
+  .cover-index {
+    grid-column: 1 / -1;
+    margin-bottom: 1.25rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+  }
+
+  .cover h1 {
+    grid-column: 1 / 11;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 7.3vw, 7rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+
+  .cover h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .cover-bottom {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    align-items: end;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .cover-lead {
+    grid-column: 1 / 7;
+    max-width: 34rem;
+    margin: 0;
+    font-size: clamp(1.15rem, 2vw, 1.75rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  .cover-meta {
+    grid-column: 9 / 13;
+    min-width: min(100%, 26rem);
+    margin: 0;
+  }
+
+  .cover-meta div {
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .cover-meta dt,
+  .cover-meta dd {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+
+  .cover-meta dt { opacity: 0.65; }
+
+  .proposal-body {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    width: min(calc(100% - var(--container-inline-space)), var(--container-max));
+    margin-inline: auto;
+    background: var(--paper);
+  }
+
+  .proposal-body::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    background: var(--paper);
+    transform: translateX(-50%);
+  }
+
+  .page-nav {
+    grid-column: 1 / 3;
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 7rem 2rem 0 0;
+  }
+
+  .page-nav a {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    color: var(--proposal-muted);
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
+
+  .page-nav a:hover { color: #fd4b32; }
+  .page-nav span { font-family: var(--font-body); }
+
+  .content {
+    grid-column: 3 / 13;
+    min-width: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .proposal-section {
+    padding: clamp(5rem, 9vw, 9rem) 0;
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: 5rem;
+  }
+
+  .section-heading {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    margin-bottom: clamp(3.5rem, 7vw, 7rem);
+  }
+
+  .section-heading > .section-number { grid-column: 1; }
+  .section-heading > div { grid-column: 2 / 11; }
+
+  .section-number,
+  .card-number {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .section-number { color: #fd4b32; }
+
+  .section-heading h2,
+  .split-panel h2,
+  .closing h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7.3vw, 7.5rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .section-intro {
+    max-width: 45rem;
+    margin: clamp(2rem, 4vw, 3.5rem) 0 0;
+    font-size: clamp(1.15rem, 1.85vw, 1.65rem);
+    line-height: 1.18;
+    letter-spacing: -0.035em;
+  }
+
+  .scope-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
+
+  .scope-card {
+    min-height: 18rem;
+    padding: 1.5rem 1.5rem 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .scope-card:nth-child(odd) {
+    padding-right: clamp(1.5rem, 4vw, 4rem);
+    border-right: 1px solid var(--line);
+  }
+
+  .scope-card:nth-child(even) { padding-left: clamp(1.5rem, 4vw, 4rem); }
+
+  .card-number { color: var(--proposal-muted); }
+
+  .scope-card h3 {
+    max-width: 15ch;
+    margin: 4rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3vw, 2.7rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+
+  .scope-card > p:last-child {
+    max-width: 34rem;
+    margin: 0;
+    color: var(--proposal-muted);
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .estimate-table { border-top: 1px solid var(--proposal-ink); }
+
+  .estimate-row {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    align-items: start;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .estimate-head {
+    padding: 0.75rem 1.5rem;
+    color: var(--proposal-muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .estimate-row > :nth-child(1) { grid-column: 1 / 6; }
+  .estimate-row > :nth-child(2) { grid-column: 6; }
+  .estimate-row > :nth-child(3) { grid-column: 7 / 9; }
+  .estimate-row > :nth-child(4) { grid-column: 9 / 11; }
+
+  .estimate-subtotal > :first-child { grid-column: 1 / 9; }
+  .estimate-subtotal > :last-child { grid-column: 9 / 11; }
+
+  .estimate-work strong,
+  .estimate-row > strong { font-weight: 600; }
+
+  .estimate-work p {
+    max-width: 43rem;
+    margin: 0.45rem 0 0;
+    color: var(--proposal-muted);
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .estimate-subtotal { border-bottom-color: var(--proposal-ink); }
+
+  .package-price {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    align-items: end;
+    margin-top: 1rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    color: white;
+    background: #fd4b32;
+  }
+
+  .package-price > div { grid-column: 1 / 6; }
+  .package-price > strong { grid-column: 6 / 11; text-align: right; }
+
+  .package-price p {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.25rem, 2.2vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+  }
+
+  .package-price span { font-size: 0.85rem; opacity: 0.75; }
+
+  .package-price strong {
+    flex-shrink: 0;
+    font-size: clamp(1.8rem, 4vw, 3.75rem);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+  }
+
+  .fine-print {
+    margin: 0.75rem 0 0;
+    color: var(--proposal-muted);
+    font-size: 0.82rem;
+  }
+
+  .timeline { margin: 0; padding: 0; list-style: none; }
+
+  .timeline li {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    align-items: center;
+    min-height: 8rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .timeline li:last-child { border-bottom: 1px solid var(--line); }
+  .timeline-number { grid-column: 1; color: #fd4b32; font-family: var(--font-body); font-size: 0.75rem; }
+
+  .timeline h3 {
+    grid-column: 2 / 7;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 2.4vw, 2.1rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .timeline p,
+  .timeline-payment { margin: 0; font-size: 0.9rem; }
+  .timeline p { grid-column: 7 / 9; }
+  .timeline-payment { grid-column: 9 / 11; }
+  .timeline-payment { color: var(--proposal-muted); }
+
+  .split-section {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    padding: 0;
+  }
+
+  .split-panel:first-child { grid-column: 1 / 6; }
+  .split-panel:last-child { grid-column: 6 / 11; }
+
+  .split-panel {
+    min-height: 44rem;
+    padding: clamp(2rem, 5vw, 5rem);
+    background: #dcefe8;
+  }
+
+  .split-dark { color: #fff; background: #171717; }
+  .split-panel .section-number { color: currentColor; opacity: 0.6; }
+
+  .split-panel h2 {
+    margin-top: 5rem;
+    font-size: clamp(2.6rem, 5vw, 5rem);
+  }
+
+  .split-panel ul {
+    margin: 4rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .split-panel li {
+    padding: 1rem 0;
+    border-top: 1px solid currentColor;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.2;
+  }
+
+  .split-panel li span {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    opacity: 0.6;
+  }
+
+  .split-note {
+    margin: 2rem 0 0;
+    color: var(--proposal-muted);
+    font-size: 0.85rem;
+  }
+
+  .terms-list { margin: 0; }
+
+  .terms-list > div {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    padding: 2rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .terms-list > div:last-child { border-bottom: 1px solid var(--line); }
+  .terms-list dt { grid-column: 1 / 3; color: #fd4b32; font-family: var(--font-body); font-size: 0.78rem; }
+  .terms-list dd { grid-column: 3 / 11; max-width: 48rem; margin: 0; font-size: clamp(1.15rem, 2vw, 1.75rem); line-height: 1.15; letter-spacing: -0.035em; }
+
+  .closing {
+    padding: clamp(4rem, 8vw, 8rem) 1.5rem clamp(8rem, 12vw, 12rem);
+    color: white;
+    background: linear-gradient(
+      to bottom,
+      #fd4b32 0%,
+      #fd4b32 68%,
+      #eae5df 100%
+    );
+  }
+
+  .closing-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .closing h2 {
+    margin-top: clamp(3rem, 8vw, 8rem);
+    font-size: clamp(3.6rem, 8.5vw, 8rem);
+  }
+
+  @media (max-width: 56rem) {
+    .cover-inner { padding-top: 6.5rem; }
+    .cover-title-wrap { display: block; }
+    .cover h1 span { display: inline; white-space: normal; }
+    .cover h1 span + span::before { content: ' '; }
+    .cover-bottom { display: flex; align-items: start; flex-direction: column; gap: 3rem; }
+    .proposal-body { display: block; width: min(calc(100% - 2rem), 100rem); }
+    .page-nav { display: none; }
+    .content { border-left: 0; }
+    .proposal-section { padding-left: 0; }
+
+    .estimate-head { display: none; }
+    .estimate-row {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .estimate-row > * { grid-column: auto; }
+    .estimate-work { grid-column: 1 / -1; }
+    .estimate-row > [data-label]::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--proposal-muted);
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .estimate-subtotal { grid-template-columns: 1fr auto; }
+    .estimate-subtotal > :first-child,
+    .estimate-subtotal > :last-child { grid-column: auto; }
+    .estimate-subtotal span { display: none; }
+    .package-price { display: flex; }
+    .package-price > div,
+    .package-price > strong { text-align: left; }
+    .timeline li { grid-template-columns: 2.5rem 1fr auto; padding: 1.5rem 0; }
+    .timeline-number { grid-column: 1; }
+    .timeline h3 { grid-column: 2 / -1; }
+    .timeline p { grid-column: 2; }
+    .timeline-payment { grid-column: 3; }
+    .split-section { grid-template-columns: 1fr; }
+    .split-panel:first-child,
+    .split-panel:last-child { grid-column: 1; }
+    .split-panel { min-height: auto; }
+  }
+
+  @media (max-width: 40rem) {
+    .cover-title-wrap { padding-block: 4rem; }
+    .cover h1 { font-size: clamp(3.4rem, 16vw, 5rem); }
+    .cover-bottom { gap: 1.5rem; }
+    .cover-meta { width: 100%; min-width: 0; }
+    .section-heading { display: block; }
+    .section-number { margin-bottom: 2rem; }
+    .scope-grid { grid-template-columns: 1fr; }
+    .scope-card,
+    .scope-card:nth-child(odd),
+    .scope-card:nth-child(even) { min-height: 0; padding: 1.25rem 1.5rem 2.5rem; border-right: 0; }
+    .scope-card h3 { margin-top: 2.5rem; }
+    .estimate-row { grid-template-columns: 1fr 1fr; }
+    .estimate-row > [data-label]:nth-child(3) { grid-column: 1; }
+    .estimate-row > [data-label]:nth-child(4) { grid-column: 2; }
+    .estimate-row > [data-label]:nth-child(2) { display: none; }
+    .estimate-subtotal { display: flex; justify-content: space-between; }
+    .package-price { align-items: start; flex-direction: column; }
+    .package-price strong { font-size: clamp(1.5rem, 7vw, 2rem); }
+    .timeline li { grid-template-columns: 2rem 1fr; }
+    .timeline h3, .timeline p, .timeline-payment { grid-column: 2; }
+    .terms-list > div { grid-template-columns: 1fr; gap: 1rem; }
+    .terms-list dt,
+    .terms-list dd { grid-column: 1; }
+    .closing { padding-inline: 1rem; }
+  }
+
+  @media print {
+    :global(.site-header),
+    :global(.skip-link),
+    :global([data-grid-overlay]),
+    .page-nav { display: none !important; }
+
+    :global(body), .proposal, .proposal-body { background: #fff !important; }
+    .cover { min-height: 100vh; background: #fd4b32 !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; break-after: page; }
+    .proposal-body { display: block; width: 100%; }
+    .content { border: 0; }
+    .proposal-section { padding: 3rem 2rem; break-inside: avoid; }
+    .split-section, .closing, .package-price { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .closing { break-before: page; }
+  }
+</style>

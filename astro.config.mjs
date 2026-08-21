@@ -10,9 +10,18 @@ export default defineConfig({
   site: 'https://yapil.art',
   output: 'static',
   adapter: vercel(),
-  integrations: [sitemap(), react()],
+  server: {
+    port: 4321,
+  },
+  integrations: [
+    sitemap({ filter: (page) => !new URL(page).pathname.startsWith('/kp/') }),
+    react(),
+  ],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      strictPort: true,
+    },
     optimizeDeps: {
       include: ['react', 'react-dom', 'framer-motion', 'lucide-react', 'gsap'],
     },

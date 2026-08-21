@@ -1312,18 +1312,6 @@ export function CrmApp() {
                 <span>Ссылка для клиента</span>
               </button>
 
-              {/* Action: Open Live Review Page */}
-              <a
-                href="/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`px-3.5 py-2 text-xs border flex items-center gap-1.5 transition-colors no-underline ${
-                  isDarkTheme ? 'border-white/15 text-white/80 hover:text-white hover:border-white/30' : 'border-black/15 text-black/80 hover:text-black'
-                }`}
-              >
-                <span>Открыть /review</span>
-                <ArrowUpRight className="size-3.5" />
-              </a>
             </div>
 
             {/* Reviews Grid */}

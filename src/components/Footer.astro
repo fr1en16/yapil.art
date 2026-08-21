@@ -9,7 +9,7 @@ interface Props {
 
 const { theme = 'dark', personal = false } = Astro.props;
 const isLight = theme === 'light';
-const homePath = isLight ? '/light' : '/';
+const homePath = '/';
 
 const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
@@ -53,10 +53,7 @@ const lightStops = [
           <h2>{personal ? 'Обо мне' : 'Студия'}</h2>
           <a href={`${homePath}#about`}>{personal ? 'Обо мне' : 'О студии'}</a>
           <a href="/services">Услуги</a>
-          <a href="/solutions">Отрасли</a>
           <a href={`${homePath}#cases`}>Кейсы</a>
-          <a href="/cases">Все работы</a>
-          <a href="/review">Оставить отзыв</a>
         </nav>
 
         <nav aria-label="Контакты">
@@ -74,8 +71,6 @@ const lightStops = [
     <span>© {new Date().getFullYear()} yapil.art</span>
     <div class="footer-bottom-links">
       <a href="/privacy">Конфиденциальность</a>
-      <span class="footer-divider" aria-hidden="true">·</span>
-      <a href="/review">Оставить отзыв</a>
       <span class="footer-divider" aria-hidden="true">·</span>
       <a href="/crm" class="footer-crm-link" title="Внутренняя CRM студии">CRM</a>
     </div>

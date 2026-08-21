@@ -38,15 +38,41 @@ if (!authorized) {
 
 Astro.response.headers.set('Cache-Control', 'private, no-store');
 
+const addUtcDays = (date: string, amount: number) => {
+  const value = new Date(`${date}T00:00:00.000Z`);
+  value.setUTCDate(value.getUTCDate() + amount);
+  return value.toISOString().slice(0, 10);
+};
+const isDate = (value: string | null) => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
+const today = new Date().toISOString().slice(0, 10);
+const earliest = addUtcDays(today, -29);
+const requestedFrom = Astro.url.searchParams.get('from');
+const requestedTo = Astro.url.searchParams.get('to');
+const hasCustomRange = isDate(requestedFrom) && isDate(requestedTo);
 const requestedDays = Number(Astro.url.searchParams.get('days'));
-const days = [7, 30, 90].includes(requestedDays) ? requestedDays : 30;
+const presetDays = [7, 30].includes(requestedDays) ? requestedDays : 30;
+let until = hasCustomRange ? requestedTo! : today;
+until = until < earliest ? earliest : until > today ? today : until;
+let since = hasCustomRange ? requestedFrom! : addUtcDays(until, -(presetDays - 1));
+since = since < earliest ? earliest : since > until ? until : since;
+const days = Math.round(
+  (new Date(`${until}T00:00:00.000Z`).getTime() - new Date(`${since}T00:00:00.000Z`).getTime()) /
+    86_400_000,
+) + 1;
+const requestedPage = Astro.url.searchParams.get('page');
+const selectedPage = requestedPage?.startsWith('/') && requestedPage.length <= 300
+  ? requestedPage.replace(/[\u0000-\u001f\u007f]/g, '')
+  : '';
 const configured = Boolean(token && projectId && (password || import.meta.env.DEV));
 let report: AnalyticsReport | null = null;
 let errorMessage = '';
 
 if (configured) {
   try {
-    report = await getAnalyticsReport({ token, projectId, teamId }, days);
+    report = await getAnalyticsReport(
+      { token, projectId, teamId },
+      { since, until, requestPath: selectedPage || undefined },
+    );
   } catch (error) {
     errorMessage = error instanceof Error ? error.message : 'Не удалось получить данные Vercel.';
   }
@@ -54,10 +80,32 @@ if (configured) {
 
 const number = new Intl.NumberFormat('ru-RU');
 const date = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 'short' });
+const fullDate = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
 const countryNames = new Intl.DisplayNames(['ru'], { type: 'region' });
-const totalViews = report?.trend.reduce((sum, row) => sum + row.pageviews, 0) ?? 0;
-const totalVisitors = report?.trend.reduce((sum, row) => sum + row.visitors, 0) ?? 0;
+const totalViews = report?.totals.pageviews ?? 0;
+const totalVisitors = report?.totals.visitors ?? 0;
 const maxViews = Math.max(...(report?.trend.map((row) => row.pageviews) ?? [1]), 1);
+const rangeLabel = days === 1
+  ? fullDate.format(new Date(`${since}T12:00:00.000Z`))
+  : `${fullDate.format(new Date(`${since}T12:00:00.000Z`))} — ${fullDate.format(new Date(`${until}T12:00:00.000Z`))}`;
+
+const reportUrl = (page = selectedPage) => {
+  const params = new URLSearchParams();
+  if (hasCustomRange) {
+    params.set('from', since);
+    params.set('to', until);
+  } else {
+    params.set('days', String(presetDays));
+  }
+  if (page) params.set('page', page);
+  return `/anal?${params.toString()}`;
+};
+
+const presetUrl = (period: number) => {
+  const params = new URLSearchParams({ days: String(period) });
+  if (selectedPage) params.set('page', selectedPage);
+  return `/anal?${params.toString()}`;
+};
 
 const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
   const value = row[key];
@@ -85,13 +133,46 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
         <h1>Аналитика</h1>
       </div>
       <nav class="periods" aria-label="Период отчёта">
-        {[7, 30, 90].map((period) => (
-          <a href={`/anal?days=${period}`} aria-current={days === period ? 'page' : undefined}>
+        {[7, 30].map((period) => (
+          <a href={presetUrl(period)} aria-current={!hasCustomRange && presetDays === period ? 'page' : undefined}>
             {period} дней
           </a>
         ))}
       </nav>
     </header>
+
+    <section class="report-controls" aria-label="Фильтры отчёта">
+      <form method="get" action="/anal">
+        <label>
+          <span>С даты</span>
+          <input type="date" name="from" value={since} min={earliest} max={until} />
+        </label>
+        <label>
+          <span>По дату</span>
+          <input type="date" name="to" value={until} min={since} max={today} />
+        </label>
+        <label class="page-select">
+          <span>Страница</span>
+          <select name="page">
+            <option value="" selected={!selectedPage}>Все страницы</option>
+            {selectedPage && !report?.pages.some((row) => row.requestPath === selectedPage) && (
+              <option value={selectedPage} selected>{selectedPage}</option>
+            )}
+            {report?.pages.map((row) => (
+              <option value={row.requestPath} selected={row.requestPath === selectedPage}>
+                {row.requestPath} · {number.format(row.pageviews)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button type="submit">Показать</button>
+        {(selectedPage || hasCustomRange) && <a class="reset-filter" href="/anal?days=30">Сбросить</a>}
+      </form>
+      <p>
+        <span>{rangeLabel}</span>
+        <strong>{selectedPage || 'Все страницы'}</strong>
+      </p>
+    </section>
 
     {!configured && (
       <section class="notice">
@@ -120,7 +201,7 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
           <article>
             <span>Просмотры</span>
             <strong>{number.format(totalViews)}</strong>
-            <small>за {days} дней</small>
+            <small>{days === 1 ? 'за выбранный день' : `за ${days} дней`}</small>
           </article>
           <article>
             <span>Посетители</span>
@@ -137,12 +218,12 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
         <section class="panel chart-panel">
           <div class="panel-head">
             <h2>Динамика</h2>
-            <p>Просмотры страниц по дням</p>
+            <p>{selectedPage ? selectedPage : 'Все страницы'} · по дням</p>
           </div>
           <div
             class="chart"
             role="img"
-            aria-label={`График просмотров за ${days} дней`}
+            aria-label={`График просмотров за ${days} дней${selectedPage ? ` для ${selectedPage}` : ''}`}
             style={`--chart-columns: ${Math.max(report.trend.length, 1)}`}
           >
             {report.trend.map((row) => (
@@ -155,38 +236,69 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
           </div>
         </section>
 
+        <section class="panel pages-panel">
+          <div class="panel-head">
+            <h2>Статистика по страницам</h2>
+            <p>{number.format(report.pages.length)} в выбранном диапазоне</p>
+          </div>
+          {report.pages.length ? (
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Страница</th>
+                    <th scope="col">Просмотры</th>
+                    <th scope="col">Посетители</th>
+                    <th scope="col">На посетителя</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {report.pages.map((row) => (
+                    <tr class:list={{ 'is-selected': row.requestPath === selectedPage }}>
+                      <th scope="row"><a href={reportUrl(row.requestPath)}>{row.requestPath}</a></th>
+                      <td>{number.format(row.pageviews)}</td>
+                      <td>{number.format(row.visitors)}</td>
+                      <td>{row.visitors ? (row.pageviews / row.visitors).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) : '0'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p class="empty-state">За выбранный период просмотров пока нет.</p>
+          )}
+        </section>
+
         <div class="panel-grid">
           <section class="panel list-panel">
-            <div class="panel-head"><h2>Страницы</h2><p>По просмотрам</p></div>
-            <ol>
-              {report.pages.map((row) => (
-                <li><span>{labelFor(row, 'requestPath')}</span><strong>{number.format(row.pageviews)}</strong></li>
-              ))}
-            </ol>
-          </section>
-          <section class="panel list-panel">
             <div class="panel-head"><h2>Источники</h2><p>По посетителям</p></div>
-            <ol>
-              {report.referrers.map((row) => (
-                <li><span>{labelFor(row, 'referrerHostname')}</span><strong>{number.format(row.visitors)}</strong></li>
-              ))}
-            </ol>
+            {report.referrers.length ? (
+              <ol>
+                {report.referrers.map((row) => (
+                  <li><span>{labelFor(row, 'referrerHostname')}</span><strong>{number.format(row.visitors)}</strong></li>
+                ))}
+              </ol>
+            ) : <p class="empty-state">Нет данных</p>}
           </section>
           <section class="panel list-panel">
             <div class="panel-head"><h2>Страны</h2><p>По посетителям</p></div>
-            <ol>
-              {report.countries.map((row) => (
-                <li><span>{labelFor(row, 'country')}</span><strong>{number.format(row.visitors)}</strong></li>
-              ))}
-            </ol>
+            {report.countries.length ? (
+              <ol>
+                {report.countries.map((row) => (
+                  <li><span>{labelFor(row, 'country')}</span><strong>{number.format(row.visitors)}</strong></li>
+                ))}
+              </ol>
+            ) : <p class="empty-state">Нет данных</p>}
           </section>
           <section class="panel list-panel">
             <div class="panel-head"><h2>Устройства</h2><p>По посетителям</p></div>
-            <ol>
-              {report.devices.map((row) => (
-                <li><span>{labelFor(row, 'deviceType')}</span><strong>{number.format(row.visitors)}</strong></li>
-              ))}
-            </ol>
+            {report.devices.length ? (
+              <ol>
+                {report.devices.map((row) => (
+                  <li><span>{labelFor(row, 'deviceType')}</span><strong>{number.format(row.visitors)}</strong></li>
+                ))}
+              </ol>
+            ) : <p class="empty-state">Нет данных</p>}
           </section>
         </div>
       </>
@@ -242,6 +354,66 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
     background: var(--accent);
   }
 
+  .report-controls {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .report-controls form {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.7fr) minmax(9rem, 0.7fr) minmax(14rem, 1.6fr) auto auto;
+    align-items: end;
+    gap: 0.75rem;
+  }
+
+  .report-controls label {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .report-controls label > span {
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .report-controls input,
+  .report-controls select,
+  .report-controls button,
+  .reset-filter {
+    min-height: 2.85rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+    background: white;
+    color: var(--ink-primary);
+    font: inherit;
+    font-size: 0.82rem;
+  }
+
+  .report-controls input,
+  .report-controls select { width: 100%; padding-inline: 0.8rem; }
+  .report-controls button { padding-inline: 1.25rem; border-color: var(--accent); background: var(--accent); color: white; cursor: pointer; }
+  .reset-filter { display: inline-grid; place-items: center; padding-inline: 1rem; text-decoration: none; }
+
+  .report-controls > p {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 0.72rem;
+  }
+
+  .report-controls > p strong { overflow: hidden; color: var(--ink-primary); text-overflow: ellipsis; white-space: nowrap; }
+
   .metrics {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -265,7 +437,7 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
 
   .panel-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
 
@@ -275,7 +447,7 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
     background: rgba(255, 255, 255, 0.7);
   }
 
-  .chart-panel { margin-bottom: 1rem; }
+  .chart-panel, .pages-panel { margin-bottom: 1rem; }
   .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
   .panel-head h2 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.5rem); }
   .panel-head p { margin: 0; font-size: 0.78rem; }
@@ -300,10 +472,22 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
   .chart-bar { min-height: 3px; background: var(--accent); }
   .chart-column time { overflow: hidden; padding-top: 0.45rem; color: var(--ink-tertiary); font-size: 0.58rem; text-align: center; white-space: nowrap; }
 
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th, td { padding: 0.85rem 0.75rem; border-top: 1px solid var(--border-faint); text-align: right; white-space: nowrap; }
+  thead th { color: var(--ink-muted); font-family: var(--font-mono); font-size: 0.62rem; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase; }
+  th:first-child { width: 100%; padding-left: 0; text-align: left; }
+  td:last-child, thead th:last-child { padding-right: 0; }
+  tbody th { max-width: 30rem; overflow: hidden; font-weight: 500; text-overflow: ellipsis; }
+  tbody th a { display: block; overflow: hidden; color: inherit; text-overflow: ellipsis; text-decoration: none; }
+  tbody tr:hover, tbody tr.is-selected { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  tbody tr.is-selected th a { color: var(--accent); }
+
   ol { margin: 0; padding: 0; list-style: none; }
   li { display: flex; justify-content: space-between; gap: 1rem; padding-block: 0.8rem; border-top: 1px solid var(--border-faint); }
   li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   li strong { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; }
+  .empty-state { margin: 0; color: var(--ink-muted); font-size: 0.82rem; }
 
   .notice { max-width: 52rem; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--border-subtle); background: white; }
   .notice h2 { margin-bottom: 1rem; font-size: clamp(2rem, 5vw, 4rem); }
@@ -313,6 +497,8 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
 
   @media (max-width: 47.99rem) {
     .metrics, .panel-grid { grid-template-columns: 1fr; }
+    .report-controls form { grid-template-columns: 1fr 1fr; }
+    .report-controls .page-select, .report-controls button, .reset-filter { grid-column: 1 / -1; }
     .metrics article { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
     .metrics article:last-child { border-bottom: 0; }
     .chart { overflow-x: auto; grid-template-columns: repeat(var(--chart-columns, 30), minmax(18px, 1fr)); }

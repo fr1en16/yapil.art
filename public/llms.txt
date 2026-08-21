@@ -16,7 +16,6 @@
 - [Сопровождение: внешний арт-отдел](https://yapil.art/#services)
 
 ## Кейсы и работы
-- [Все кейсы](https://yapil.art/cases)
 - [Кейс ONmacabim](https://yapil.art/case/onmacabim)
 - [Кейс Compass](https://yapil.art/case/compass)
 - [Кейс Я тут](https://yapil.art/case/yatut)

@@ -8,11 +8,19 @@ export type AnalyticsRow = {
   deviceType?: string;
 };
 
-type AnalyticsResponse = {
+type AggregateResponse = {
   data: AnalyticsRow[];
 };
 
+type CountResponse = {
+  data: {
+    pageviews: number;
+    visitors: number;
+  };
+};
+
 export type AnalyticsReport = {
+  totals: CountResponse['data'];
   trend: AnalyticsRow[];
   pages: AnalyticsRow[];
   referrers: AnalyticsRow[];
@@ -26,23 +34,40 @@ type AnalyticsConfig = {
   teamId?: string;
 };
 
-const API_URL = 'https://api.vercel.com/v1/query/web-analytics/visits/aggregate';
+export type AnalyticsRange = {
+  since: string;
+  until: string;
+};
 
-async function queryAnalytics(
-  config: AnalyticsConfig,
-  since: string,
-  until: string,
-  by: string,
-  limit = 10,
-): Promise<AnalyticsRow[]> {
-  const url = new URL(API_URL);
+type AnalyticsOptions = AnalyticsRange & {
+  requestPath?: string;
+};
+
+const API_URL = 'https://api.vercel.com/v1/query/web-analytics/visits';
+
+function addUtcDays(date: string, days: number) {
+  const value = new Date(`${date}T00:00:00.000Z`);
+  value.setUTCDate(value.getUTCDate() + days);
+  return value.toISOString().slice(0, 10);
+}
+
+function analyticsFilter(requestPath?: string) {
+  const filters = ["environment eq 'production'"];
+  if (requestPath) filters.push(`requestPath eq '${requestPath.replaceAll("'", "''")}'`);
+  return filters.join(' and ');
+}
+
+function analyticsUrl(config: AnalyticsConfig, endpoint: 'count' | 'aggregate', options: AnalyticsOptions) {
+  const url = new URL(`${API_URL}/${endpoint}`);
   url.searchParams.set('projectId', config.projectId);
-  url.searchParams.set('since', since);
-  url.searchParams.set('until', until);
-  url.searchParams.set('by', by);
-  url.searchParams.set('limit', String(limit));
+  url.searchParams.set('since', options.since);
+  url.searchParams.set('until', options.until);
+  url.searchParams.set('filter', analyticsFilter(options.requestPath));
   if (config.teamId) url.searchParams.set('teamId', config.teamId);
+  return url;
+}
 
+async function fetchAnalytics<T>(config: AnalyticsConfig, url: URL): Promise<T> {
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${config.token}` },
     signal: AbortSignal.timeout(10_000),
@@ -53,27 +78,47 @@ async function queryAnalytics(
     throw new Error(`Vercel Analytics API: ${response.status} ${message.slice(0, 180)}`);
   }
 
-  const payload = (await response.json()) as AnalyticsResponse;
+  return response.json() as Promise<T>;
+}
+
+async function queryCount(config: AnalyticsConfig, options: AnalyticsOptions) {
+  const payload = await fetchAnalytics<CountResponse>(config, analyticsUrl(config, 'count', options));
+  return payload.data;
+}
+
+async function queryAggregate(
+  config: AnalyticsConfig,
+  options: AnalyticsOptions,
+  by: string,
+  limit = 10,
+): Promise<AnalyticsRow[]> {
+  const url = analyticsUrl(config, 'aggregate', options);
+  url.searchParams.set('by', by);
+  url.searchParams.set('limit', String(limit));
+  const payload = await fetchAnalytics<AggregateResponse>(config, url);
   return payload.data;
 }
 
 export async function getAnalyticsReport(
   config: AnalyticsConfig,
-  days: number,
+  options: AnalyticsOptions,
 ): Promise<AnalyticsReport> {
-  const untilDate = new Date();
-  const sinceDate = new Date(untilDate);
-  sinceDate.setUTCDate(sinceDate.getUTCDate() - (days - 1));
-  const since = sinceDate.toISOString().slice(0, 10);
-  const until = untilDate.toISOString().slice(0, 10);
+  const days = Math.round(
+    (new Date(`${options.until}T00:00:00.000Z`).getTime() -
+      new Date(`${options.since}T00:00:00.000Z`).getTime()) /
+      86_400_000,
+  ) + 1;
+  const dimensionOptions = { ...options, until: addUtcDays(options.until, 1) };
+  const allPagesOptions = { ...dimensionOptions, requestPath: undefined };
 
-  const [trend, pages, referrers, countries, devices] = await Promise.all([
-    queryAnalytics(config, since, until, 'day', days),
-    queryAnalytics(config, since, until, 'requestPath', 12),
-    queryAnalytics(config, since, until, 'referrerHostname', 8),
-    queryAnalytics(config, since, until, 'country', 8),
-    queryAnalytics(config, since, until, 'deviceType', 8),
+  const [totals, trend, pages, referrers, countries, devices] = await Promise.all([
+    queryCount(config, options),
+    queryAggregate(config, options, 'day', Math.min(days, 30)),
+    queryAggregate(config, allPagesOptions, 'requestPath', 100),
+    queryAggregate(config, dimensionOptions, 'referrerHostname', 20),
+    queryAggregate(config, dimensionOptions, 'country', 20),
+    queryAggregate(config, dimensionOptions, 'deviceType', 10),
   ]);
 
-  return { trend, pages, referrers, countries, devices };
+  return { totals, trend, pages, referrers, countries, devices };
 }

@@ -5,7 +5,7 @@ interface Props {
 }
 
 const { overlay = false, theme = 'dark' } = Astro.props;
-const homePath = theme === 'light' ? '/light' : '/';
+const homePath = '/';
 ---
 
 <header class:list={['site-header', { overlay, 'theme-light': theme === 'light' }]} data-site-header data-theme={theme}>
