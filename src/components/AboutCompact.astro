@@ -71,7 +71,11 @@ const cards = personal ? cardsPersonal : cardsStudio;
     'relative z-10 pt-6 pb-16 md:pb-24 transition-colors duration-300',
     isLight ? 'text-[#1D1D1D]' : 'text-white',
   ]}
-  style={isLight ? 'background: #F7F5F2;' : 'background: #181818;'}
+  style={
+    isLight
+      ? 'background: #F7F5F2;'
+      : 'background: linear-gradient(to bottom, transparent 0%, #181818 100%);'
+  }
 >
   <div class="container">
     <ol class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 md:gap-[var(--grid-gap)] list-none p-0 m-0">
