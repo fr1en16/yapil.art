@@ -53,7 +53,8 @@ npx astro dev stop
 npm run build
 ```
 
-Готовая статическая сборка появится в `dist/`. Для её локального просмотра:
+Готовая гибридная сборка появится в `dist/`: основные страницы остаются статическими, а `/anal`
+работает как серверный маршрут Vercel. Для локального просмотра:
 
 ```bash
 npm run preview
@@ -92,11 +93,29 @@ git status
    - Install Command: `npm install`;
    - Build Command: `npm run build`;
    - Output Directory: `dist`;
-   - переменные окружения пока не нужны.
+   - переменные окружения из раздела ниже нужны для страницы `/anal`.
 
 6. Нажмите **Deploy**. Сайт получит отдельный адрес вида `https://<новое-имя>.vercel.app` и не затронет `yapil.art`.
 7. Проверьте главную страницу, `/case/onmacabim`, `/privacy`, `/404` и несколько других кейсов.
 8. Последующие push в `master` будут автоматически обновлять production нового Vercel-проекта. Ветки и pull request будут создавать preview.
+
+### Vercel Web Analytics и `/anal`
+
+1. В Vercel откройте проект → **Analytics** и нажмите **Enable**.
+2. Создайте access token в `Account Settings → Tokens`.
+3. Добавьте в **Project Settings → Environment Variables**:
+
+   - `VERCEL_ANALYTICS_TOKEN` — access token Vercel;
+   - `ANALYTICS_USERNAME` — логин для закрытой страницы, например `yapil`;
+   - `ANALYTICS_PASSWORD` — длинный случайный пароль;
+   - `VERCEL_ANALYTICS_PROJECT_ID` — ID проекта, только если системная переменная `VERCEL_PROJECT_ID` недоступна;
+   - `VERCEL_ANALYTICS_TEAM_ID` — ID команды, только для team-проекта.
+
+4. Создайте новый deployment и откройте `/anal`. Браузер запросит логин и пароль.
+
+Токен используется только серверным маршрутом и не попадает в HTML. Без `ANALYTICS_PASSWORD`
+production-страница не запрашивает данные API. Сам `/anal` исключён из статистики, чтобы просмотры
+отчёта не искажали показатели сайта.
 
 ### Вариант 2 — Vercel CLI без GitHub
 

@@ -1,0 +1,321 @@
+---
+import Base from '../layouts/Base.astro';
+import { getAnalyticsReport, type AnalyticsReport, type AnalyticsRow } from '../lib/vercelAnalytics';
+
+export const prerender = false;
+
+const env = import.meta.env;
+const token = env.VERCEL_ANALYTICS_TOKEN || env.VERCEL_TOKEN;
+const projectId = env.VERCEL_ANALYTICS_PROJECT_ID || env.VERCEL_PROJECT_ID;
+const teamId = env.VERCEL_ANALYTICS_TEAM_ID || env.VERCEL_TEAM_ID;
+const username = env.ANALYTICS_USERNAME || 'yapil';
+const password = env.ANALYTICS_PASSWORD;
+
+const authorization = Astro.request.headers.get('authorization');
+let authorized = !password;
+
+if (password && authorization?.startsWith('Basic ')) {
+  try {
+    const credentials = atob(authorization.slice(6));
+    const separator = credentials.indexOf(':');
+    const providedUser = credentials.slice(0, separator);
+    const providedPassword = credentials.slice(separator + 1);
+    authorized = providedUser === username && providedPassword === password;
+  } catch {
+    authorized = false;
+  }
+}
+
+if (!authorized) {
+  return new Response('Требуется авторизация', {
+    status: 401,
+    headers: {
+      'WWW-Authenticate': 'Basic realm="Yapil Analytics", charset="UTF-8"',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+
+const requestedDays = Number(Astro.url.searchParams.get('days'));
+const days = [7, 30, 90].includes(requestedDays) ? requestedDays : 30;
+const configured = Boolean(token && projectId && (password || import.meta.env.DEV));
+let report: AnalyticsReport | null = null;
+let errorMessage = '';
+
+if (configured) {
+  try {
+    report = await getAnalyticsReport({ token, projectId, teamId }, days);
+  } catch (error) {
+    errorMessage = error instanceof Error ? error.message : 'Не удалось получить данные Vercel.';
+  }
+}
+
+const number = new Intl.NumberFormat('ru-RU');
+const date = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 'short' });
+const countryNames = new Intl.DisplayNames(['ru'], { type: 'region' });
+const totalViews = report?.trend.reduce((sum, row) => sum + row.pageviews, 0) ?? 0;
+const totalVisitors = report?.trend.reduce((sum, row) => sum + row.visitors, 0) ?? 0;
+const maxViews = Math.max(...(report?.trend.map((row) => row.pageviews) ?? [1]), 1);
+
+const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
+  const value = row[key];
+  if (key === 'country' && typeof value === 'string') {
+    try { return countryNames.of(value) || value; } catch { return value; }
+  }
+  if (key === 'deviceType') {
+    return ({ desktop: 'Компьютер', mobile: 'Телефон', tablet: 'Планшет' } as Record<string, string>)[String(value)] || String(value || 'Не определено');
+  }
+  if (key === 'referrerHostname') return String(value || 'Прямые переходы');
+  return String(value || 'Не определено');
+};
+---
+
+<Base
+  title="Аналитика"
+  description="Закрытый отчёт по посещаемости сайта Yapil."
+  theme="light"
+  noindex
+>
+  <div class="analytics container">
+    <header class="analytics-head">
+      <div>
+        <p class="eyebrow">Yapil · Vercel Web Analytics</p>
+        <h1>Аналитика</h1>
+      </div>
+      <nav class="periods" aria-label="Период отчёта">
+        {[7, 30, 90].map((period) => (
+          <a href={`/anal?days=${period}`} aria-current={days === period ? 'page' : undefined}>
+            {period} дней
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    {!configured && (
+      <section class="notice">
+        <p class="eyebrow">Нужна настройка</p>
+        <h2>Подключите доступ к API Vercel</h2>
+        <p>
+          Добавьте в Environment Variables проекта <code>VERCEL_ANALYTICS_TOKEN</code>,
+          <code>ANALYTICS_PASSWORD</code> и, если системный ID проекта недоступен,
+          <code>VERCEL_ANALYTICS_PROJECT_ID</code>. Затем включите Web Analytics в панели Vercel
+          и создайте новый деплой.
+        </p>
+      </section>
+    )}
+
+    {errorMessage && (
+      <section class="notice notice-error">
+        <p class="eyebrow">Vercel API</p>
+        <h2>Данные пока недоступны</h2>
+        <p>{errorMessage}</p>
+      </section>
+    )}
+
+    {report && (
+      <>
+        <section class="metrics" aria-label="Основные показатели">
+          <article>
+            <span>Просмотры</span>
+            <strong>{number.format(totalViews)}</strong>
+            <small>за {days} дней</small>
+          </article>
+          <article>
+            <span>Посетители</span>
+            <strong>{number.format(totalVisitors)}</strong>
+            <small>сумма дневных уникальных</small>
+          </article>
+          <article>
+            <span>Просмотров на посетителя</span>
+            <strong>{totalVisitors ? (totalViews / totalVisitors).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) : '0'}</strong>
+            <small>в среднем</small>
+          </article>
+        </section>
+
+        <section class="panel chart-panel">
+          <div class="panel-head">
+            <h2>Динамика</h2>
+            <p>Просмотры страниц по дням</p>
+          </div>
+          <div
+            class="chart"
+            role="img"
+            aria-label={`График просмотров за ${days} дней`}
+            style={`--chart-columns: ${Math.max(report.trend.length, 1)}`}
+          >
+            {report.trend.map((row) => (
+              <div class="chart-column">
+                <span class="chart-value">{number.format(row.pageviews)}</span>
+                <div class="chart-bar" style={`height: ${Math.max((row.pageviews / maxViews) * 100, 2)}%`}></div>
+                <time datetime={row.timestamp}>{row.timestamp ? date.format(new Date(row.timestamp)) : ''}</time>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div class="panel-grid">
+          <section class="panel list-panel">
+            <div class="panel-head"><h2>Страницы</h2><p>По просмотрам</p></div>
+            <ol>
+              {report.pages.map((row) => (
+                <li><span>{labelFor(row, 'requestPath')}</span><strong>{number.format(row.pageviews)}</strong></li>
+              ))}
+            </ol>
+          </section>
+          <section class="panel list-panel">
+            <div class="panel-head"><h2>Источники</h2><p>По посетителям</p></div>
+            <ol>
+              {report.referrers.map((row) => (
+                <li><span>{labelFor(row, 'referrerHostname')}</span><strong>{number.format(row.visitors)}</strong></li>
+              ))}
+            </ol>
+          </section>
+          <section class="panel list-panel">
+            <div class="panel-head"><h2>Страны</h2><p>По посетителям</p></div>
+            <ol>
+              {report.countries.map((row) => (
+                <li><span>{labelFor(row, 'country')}</span><strong>{number.format(row.visitors)}</strong></li>
+              ))}
+            </ol>
+          </section>
+          <section class="panel list-panel">
+            <div class="panel-head"><h2>Устройства</h2><p>По посетителям</p></div>
+            <ol>
+              {report.devices.map((row) => (
+                <li><span>{labelFor(row, 'deviceType')}</span><strong>{number.format(row.visitors)}</strong></li>
+              ))}
+            </ol>
+          </section>
+        </div>
+      </>
+    )}
+  </div>
+</Base>
+
+<style>
+  .analytics {
+    min-height: 100vh;
+    padding-block: clamp(7rem, 11vw, 10rem) 5rem;
+  }
+
+  .analytics-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .eyebrow {
+    margin-bottom: 0.75rem;
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(4rem, 10vw, 8rem);
+    letter-spacing: -0.06em;
+  }
+
+  .periods {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .periods a {
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--border-subtle);
+    font-size: 0.8rem;
+    text-decoration: none;
+  }
+
+  .periods a[aria-current='page'] {
+    color: white;
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .metrics article {
+    display: grid;
+    gap: 0.35rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-right: 1px solid var(--border-subtle);
+  }
+
+  .metrics article:last-child { border-right: 0; }
+  .metrics span, .metrics small, .panel-head p { color: var(--ink-muted); }
+  .metrics span { font-size: 0.8rem; }
+  .metrics strong { font-family: var(--font-display); font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 400; line-height: 1; }
+  .metrics small { font-size: 0.72rem; }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .panel {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .chart-panel { margin-bottom: 1rem; }
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
+  .panel-head h2 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.5rem); }
+  .panel-head p { margin: 0; font-size: 0.78rem; }
+
+  .chart {
+    display: grid;
+    grid-template-columns: repeat(var(--chart-columns, 30), minmax(8px, 1fr));
+    align-items: end;
+    gap: clamp(2px, 0.5vw, 8px);
+    height: 18rem;
+  }
+
+  .chart-column {
+    display: grid;
+    grid-template-rows: 1.2rem 1fr 1.5rem;
+    align-items: end;
+    height: 100%;
+    min-width: 0;
+  }
+
+  .chart-value { overflow: hidden; color: var(--ink-muted); font-size: 0.62rem; text-align: center; }
+  .chart-bar { min-height: 3px; background: var(--accent); }
+  .chart-column time { overflow: hidden; padding-top: 0.45rem; color: var(--ink-tertiary); font-size: 0.58rem; text-align: center; white-space: nowrap; }
+
+  ol { margin: 0; padding: 0; list-style: none; }
+  li { display: flex; justify-content: space-between; gap: 1rem; padding-block: 0.8rem; border-top: 1px solid var(--border-faint); }
+  li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  li strong { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; }
+
+  .notice { max-width: 52rem; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--border-subtle); background: white; }
+  .notice h2 { margin-bottom: 1rem; font-size: clamp(2rem, 5vw, 4rem); }
+  .notice p:last-child { margin: 0; color: var(--ink-muted); }
+  .notice code { padding: 0.1rem 0.3rem; color: var(--ink-primary); background: var(--bg-section-light); font-size: 0.8em; }
+  .notice-error { border-color: var(--accent); }
+
+  @media (max-width: 47.99rem) {
+    .metrics, .panel-grid { grid-template-columns: 1fr; }
+    .metrics article { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+    .metrics article:last-child { border-bottom: 0; }
+    .chart { overflow-x: auto; grid-template-columns: repeat(var(--chart-columns, 30), minmax(18px, 1fr)); }
+    .panel-head { align-items: flex-start; flex-direction: column; margin-bottom: 1.5rem; }
+  }
+</style>

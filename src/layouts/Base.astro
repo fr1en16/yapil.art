@@ -3,6 +3,7 @@ import Nav from '../components/Nav.astro';
 import SiteBackground from '../components/SiteBackground.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import SmoothScroll from '../components/SmoothScroll.astro';
+import Analytics from '@vercel/analytics/astro';
 import '@fontsource-variable/inter-tight';
 import '../styles/global.css';
 
@@ -71,6 +72,10 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
     <link rel="alternate icon" href="/favicon.ico" sizes="any" />
     <title>{documentTitle}</title>
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script is:inline>
+      window.webAnalyticsBeforeSend = (event) => event.url.includes('/anal') ? null : event;
+    </script>
+    <Analytics />
   </head>
   <body class:list={{ 'is-home': isHome, 'theme-light': theme === 'light' }} data-theme={theme}>
     <a class="skip-link" href="#main-content">К основному содержанию</a>
