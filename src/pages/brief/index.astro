@@ -1,0 +1,249 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+import BriefQuestionField from '../../components/brief/BriefQuestionField.astro';
+import { briefsList, type BriefQuestion } from '../../data/briefsData';
+
+const contactQuestions: BriefQuestion[] = [
+  { name: 'company', label: 'Компания, продукт или проект', type: 'text', required: true, placeholder: 'Название и короткое описание' },
+  { name: 'deadline', label: 'Желаемый срок запуска', type: 'text', placeholder: 'Конкретная дата или ориентир' },
+  { name: 'budget', label: 'Ориентир по бюджету', type: 'select', options: [
+    { value: 'До $500', label: 'До $500' }, { value: '$500–1 000', label: '$500–1 000' }, { value: '$1 000–3 000', label: '$1 000–3 000' }, { value: '$3 000+', label: '$3 000+' }, { value: 'Нужно оценить', label: 'Нужно оценить' },
+  ] },
+  { name: 'name', label: 'Ваше имя', type: 'text', required: true, placeholder: 'Как к вам обращаться' },
+  { name: 'phone', label: 'Телефон или WhatsApp', type: 'text', required: true, placeholder: '+7 000 000 00 00' },
+  { name: 'email', label: 'Email', type: 'text', placeholder: 'name@company.com' },
+  { name: 'links', label: 'Ссылки на материалы', type: 'textarea', placeholder: 'Папка, презентация, сайт, референсы — каждая ссылка с новой строки' },
+  { name: 'comment', label: 'Что ещё важно знать?', type: 'textarea' },
+];
+---
+
+<Base title="Заполнить бриф — Yapil" description="Выберите услугу и ответьте на вопросы в одной форме." theme="light" noindex={true}>
+  <main class="brief-page">
+    <form class="brief-form container" data-brief-form novalidate>
+      <fieldset class="service-picker">
+        <legend>Что нужно сделать?</legend>
+        <div class="service-grid">
+          {briefsList.map((brief) => (
+            <label class="service-card">
+              <input type="radio" name="service" value={brief.slug} data-service-choice required />
+              <span><small>{brief.number}</small><strong>{brief.service}</strong><em>{brief.lead}</em></span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="service-forms" data-service-forms hidden>
+        {briefsList.map((brief) => (
+          <section class="service-panel" data-service-panel={brief.slug} data-service-name={brief.service} hidden>
+            {brief.groups.map((group, groupIndex) => (
+              <fieldset class="question-group">
+                <legend>
+                  <span>{String(groupIndex + 1).padStart(2, '0')}</span>
+                  <strong>{group.title}</strong>
+                  <small>{group.intro}</small>
+                </legend>
+                <div class="questions">
+                  {group.questions.map((question) => <BriefQuestionField {question} idPrefix={brief.slug} />)}
+                </div>
+              </fieldset>
+            ))}
+          </section>
+        ))}
+
+        <fieldset class="question-group contact-group" data-contact-group>
+          <legend><span>04</span><strong>Сроки и контакт</strong><small>Оставьте контакты и ориентиры проекта.</small></legend>
+          <div class="questions">
+            {contactQuestions.map((question) => <BriefQuestionField {question} idPrefix="contact" />)}
+          </div>
+          <label class="consent">
+            <input type="checkbox" name="privacy" required />
+            <span>Согласен с <a href="/privacy" target="_blank">политикой конфиденциальности</a>.</span>
+          </label>
+          <div class="form-actions"><button type="submit">Отправить бриф</button></div>
+        </fieldset>
+      </div>
+
+      <section class="brief-success" data-brief-success hidden aria-live="polite">
+        <p>Бриф отправлен</p>
+        <h2>Спасибо.<br />Изучу ответы<br />и свяжусь с вами.</h2>
+        <a href="/">Вернуться на главную</a>
+      </section>
+    </form>
+  </main>
+  <Footer slot="footer" theme="light" personal />
+</Base>
+
+<script>
+  import { submitLead } from '../../lib/crmStore';
+
+  const form = document.querySelector<HTMLFormElement>('[data-brief-form]');
+  if (form) {
+    const forms = form.querySelector<HTMLElement>('[data-service-forms]');
+    const panels = Array.from(form.querySelectorAll<HTMLElement>('[data-service-panel]'));
+    let activePanel: HTMLElement | null = null;
+
+    const valuesFor = (root: HTMLElement, name: string) => Array.from(root.querySelectorAll<HTMLInputElement | HTMLSelectElement>(`[name="${CSS.escape(name)}"]`))
+      .filter((field) => !field.disabled && (!(field instanceof HTMLInputElement) || !['radio', 'checkbox'].includes(field.type) || field.checked))
+      .map((field) => field.value).filter(Boolean);
+
+    const updateBranches = () => {
+      if (!activePanel) return;
+      activePanel.querySelectorAll<HTMLElement>('[data-branch-field]').forEach((container) => {
+        const source = container.dataset.branchField;
+        const accepted = (container.dataset.branchValues ?? '').split('|');
+        const visible = source ? valuesFor(activePanel as HTMLElement, source).some((value) => accepted.includes(value)) : true;
+        container.hidden = !visible;
+        container.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select').forEach((field) => { field.disabled = !visible; });
+      });
+    };
+
+    const selectService = (slug: string, updateUrl = true) => {
+      activePanel = null;
+      panels.forEach((panel) => {
+        const active = panel.dataset.servicePanel === slug;
+        panel.hidden = !active;
+        panel.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select').forEach((field) => { field.disabled = !active; });
+        if (active) activePanel = panel;
+      });
+      if (forms) forms.hidden = !activePanel;
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('[data-contact-group] input, [data-contact-group] textarea, [data-contact-group] select').forEach((field) => { field.disabled = !activePanel; });
+      updateBranches();
+      if (updateUrl && activePanel) history.replaceState({}, '', `${location.pathname}?service=${encodeURIComponent(slug)}`);
+    };
+
+    form.addEventListener('change', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.matches('[data-service-choice]')) selectService(target.value);
+      else updateBranches();
+    });
+    form.addEventListener('input', updateBranches);
+
+    const validateForm = () => {
+      const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select')).filter((field) => !field.disabled);
+      for (const field of fields) {
+        if (!field.checkValidity()) { field.reportValidity(); return false; }
+      }
+      for (const group of form.querySelectorAll<HTMLElement>('[data-required-group]')) {
+        if (group.closest<HTMLElement>('[data-service-panel]')?.hidden || group.closest<HTMLElement>('[data-question]')?.hidden) continue;
+        const checked = group.querySelector<HTMLInputElement>('input:checked');
+        const error = group.closest<HTMLElement>('[data-question]')?.querySelector<HTMLElement>('[data-question-error]');
+        if (!checked) {
+          if (error) error.textContent = 'Выберите хотя бы один вариант.';
+          group.querySelector<HTMLInputElement>('input')?.focus();
+          return false;
+        }
+        if (error) error.textContent = '';
+      }
+      return true;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!activePanel || !validateForm()) return;
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) { submit.disabled = true; submit.textContent = 'Отправляем…'; }
+      const data = new FormData(form);
+      const skip = new Set(['service', 'name', 'phone', 'email', 'privacy', 'budget']);
+      const lines: string[] = [];
+      const seen = new Set<string>();
+      for (const [name] of data.entries()) {
+        if (seen.has(name) || skip.has(name)) continue;
+        seen.add(name);
+        const values = data.getAll(name).map(String).filter(Boolean);
+        if (!values.length) continue;
+        const label = (activePanel.querySelector<HTMLElement>(`[data-question="${CSS.escape(name)}"] .question-label`)
+          ?? form.querySelector<HTMLElement>(`[data-contact-group] [data-question="${CSS.escape(name)}"] .question-label`))
+          ?.textContent?.replace('*', '').trim() ?? name;
+        lines.push(`${label}: ${values.join(', ')}`);
+      }
+      const service = activePanel.dataset.serviceName ?? 'Консультация';
+      try {
+        await submitLead({
+          name: String(data.get('name') ?? ''), phone: String(data.get('phone') ?? ''), email: String(data.get('email') ?? ''),
+          services: [service], budget: String(data.get('budget') ?? ''), message: lines.join('\n\n'), source: 'service_modal', sourceDetails: `Подробный бриф: ${service}`,
+        });
+        form.querySelector<HTMLElement>('.form-heading')?.setAttribute('hidden', '');
+        form.querySelector<HTMLElement>('.service-picker')?.setAttribute('hidden', '');
+        if (forms) forms.hidden = true;
+        const success = form.querySelector<HTMLElement>('[data-brief-success]');
+        if (success) success.hidden = false;
+      } catch {
+        if (submit) { submit.disabled = false; submit.textContent = 'Повторить отправку'; }
+        window.alert('Не удалось отправить бриф. Попробуйте ещё раз или напишите на hi@yapil.art.');
+      }
+    });
+
+    panels.forEach((panel) => panel.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select').forEach((field) => { field.disabled = true; }));
+    form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('[data-contact-group] input, [data-contact-group] textarea, [data-contact-group] select').forEach((field) => { field.disabled = true; });
+    const initialSlug = new URL(location.href).searchParams.get('service');
+    const initialChoice = initialSlug ? form.querySelector<HTMLInputElement>(`[data-service-choice][value="${CSS.escape(initialSlug)}"]`) : null;
+    if (initialChoice) { initialChoice.checked = true; selectService(initialChoice.value, false); }
+  }
+</script>
+
+<style>
+  :global(body.theme-light) { background: #f5f1e9; }
+  .brief-page { min-height: 100svh; color: #171717; background: #f5f1e9; }
+  .brief-form { padding-block: clamp(8rem, 11vw, 11rem) clamp(6rem, 10vw, 10rem); }
+  fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+  .service-picker > legend { margin-bottom: 2rem; font-family: var(--font-display); font-size: clamp(2rem, 4vw, 4rem); letter-spacing: -.04em; }
+  .service-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #171717; border-left: 1px solid rgba(23, 23, 23, .2); }
+  .service-card { position: relative; cursor: pointer; }
+  .service-card input { position: absolute; opacity: 0; pointer-events: none; }
+  .service-card > span { display: flex; flex-direction: column; min-height: 16rem; padding: 1.4rem; border-right: 1px solid rgba(23, 23, 23, .2); border-bottom: 1px solid rgba(23, 23, 23, .2); transition: color 180ms ease, background 180ms ease; }
+  .service-card small { color: #fd4b32; font-size: .75rem; }
+  .service-card strong { margin-top: auto; font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 3.8rem); font-weight: 400; line-height: .95; letter-spacing: -.04em; }
+  .service-card em { margin-top: 1rem; color: #6d6963; font-size: .85rem; font-style: normal; line-height: 1.35; }
+  .service-card input:checked + span { color: #fff; background: #fd4b32; }
+  .service-card input:checked + span small,.service-card input:checked + span em { color: inherit; }
+  .service-card input:focus-visible + span { outline: 2px solid #fd4b32; outline-offset: 3px; }
+  .service-forms { padding-top: clamp(6rem, 11vw, 11rem); }
+  [hidden] { display: none !important; }
+  .question-group + .question-group { margin-top: clamp(5rem, 9vw, 9rem); }
+  .question-group > legend { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--grid-gap); width: 100%; margin-bottom: clamp(3rem, 6vw, 6rem); }
+  .question-group > legend > span { grid-column: 1; color: #fd4b32; font-size: .75rem; }
+  .question-group > legend > strong { grid-column: 2 / 11; font-family: var(--font-display); font-size: clamp(3rem, 6vw, 6rem); font-weight: 400; line-height: .92; letter-spacing: -.04em; }
+  .question-group > legend > small { grid-column: 2 / 9; margin-top: 1.5rem; color: #6d6963; font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.4; }
+  .questions { border-top: 1px solid #171717; }
+  .question { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); padding: 2rem 0; border-bottom: 1px solid rgba(23, 23, 23, .18); }
+  .question-label { grid-column: 1 / 5; padding-right: 2rem; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.25; }
+  .question-label span { color: #fd4b32; }
+  .question-hint { grid-column: 1 / 5; margin: .5rem 0 0; color: #6d6963; font-size: .8rem; }
+  .question > input,.question > textarea,.question > select,.option-grid { grid-column: 5 / 13; }
+  .question > input,.question > textarea,.question > select { width: 100%; padding: 0 0 .8rem; border: 0; border-bottom: 1px solid rgba(23, 23, 23, .35); border-radius: 0; color: inherit; background: transparent; font: inherit; font-size: clamp(1rem, 1.4vw, 1.2rem); }
+  .question > textarea { resize: vertical; line-height: 1.4; }
+  .question > input:focus,.question > textarea:focus,.question > select:focus { border-bottom-color: #fd4b32; outline: 0; }
+  .option-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  .option-card { position: relative; display: block; cursor: pointer; }
+  .option-card input { position: absolute; opacity: 0; pointer-events: none; }
+  .option-card span { display: block; min-height: 3.75rem; padding: 1rem 1.1rem; border: 1px solid rgba(23, 23, 23, .18); line-height: 1.25; }
+  .option-card input:checked + span { color: #fff; border-color: #fd4b32; background: #fd4b32; }
+  .option-card input:focus-visible + span { outline: 2px solid #fd4b32; outline-offset: 3px; }
+  .question-error { grid-column: 5 / 13; min-height: 1em; margin: .6rem 0 0; color: #b3261e; font-size: .8rem; }
+  .consent { display: flex; gap: .75rem; align-items: flex-start; max-width: 42rem; margin: 2rem 0 0 auto; color: #6d6963; font-size: .9rem; }
+  .consent input { margin-top: .15rem; accent-color: #fd4b32; }
+  .consent a { color: inherit; }
+  .form-actions { display: flex; justify-content: flex-end; margin-top: 3rem; }
+  .form-actions button { min-width: 14rem; padding: 1.1rem 1.5rem; border: 1px solid #fd4b32; color: #fff; background: #fd4b32; font: inherit; cursor: pointer; }
+  .form-actions button:hover,.form-actions button:focus-visible { background: #e63a22; }
+  .form-actions button:disabled { cursor: wait; opacity: .55; }
+  .brief-success { padding-block: clamp(3rem, 8vw, 8rem); }
+  .brief-success > p { color: #fd4b32; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+  .brief-success h2 { margin: 2rem 0 4rem; font-family: var(--font-display); font-size: clamp(3rem, 7vw, 7rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
+  .brief-success a { color: inherit; text-underline-offset: .3em; }
+  @media (max-width: 56rem) { .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 40rem) {
+    .brief-form { padding-top: 7rem; }
+    .service-grid { grid-template-columns: 1fr; }
+    .service-card > span { min-height: 11rem; }
+    .question-group > legend { display: block; }
+    .question-group > legend > span,.question-group > legend > strong,.question-group > legend > small { display: block; }
+    .question-group > legend > span { margin-bottom: 1.5rem; }
+    .question { display: block; }
+    .question-label { display: block; margin-bottom: 1.25rem; padding: 0; }
+    .option-grid { grid-template-columns: 1fr; }
+    .question-error { min-height: 0; }
+    .form-actions button { width: 100%; }
+  }
+</style>

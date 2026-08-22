@@ -14,7 +14,12 @@ export default defineConfig({
     port: 4321,
   },
   integrations: [
-    sitemap({ filter: (page) => !new URL(page).pathname.startsWith('/kp/') }),
+    sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname;
+        return !pathname.startsWith('/kp/') && !pathname.startsWith('/site-map');
+      },
+    }),
     react(),
   ],
   vite: {

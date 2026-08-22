@@ -1,0 +1,11 @@
+---
+import { briefsData, type ServiceBrief } from '../../data/briefsData';
+
+export function getStaticPaths() {
+  return Object.values(briefsData).map((brief) => ({ params: { slug: brief.slug }, props: { brief } }));
+}
+
+interface Props { brief: ServiceBrief; }
+const { brief } = Astro.props;
+return Astro.redirect(`/brief?service=${brief.slug}`);
+---

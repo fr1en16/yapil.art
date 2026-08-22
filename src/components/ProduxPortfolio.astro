@@ -4,12 +4,15 @@ import { Image } from 'astro:assets';
 
 interface Props {
   theme?: 'dark' | 'light';
+  projectSlugs?: string[];
+  title?: string;
+  seamless?: boolean;
 }
 
-const { theme = 'dark' } = Astro.props;
+const { theme = 'dark', projectSlugs, title, seamless = false } = Astro.props;
 const isLight = theme === 'light';
 
-const targetSlugs = [
+const defaultSlugs = [
   'onmacabim',
   'compass',
   'yatut',
@@ -18,6 +21,7 @@ const targetSlugs = [
   'shanding',
   'bebble',
 ];
+const targetSlugs = projectSlugs?.length ? projectSlugs : defaultSlugs;
 
 const allCases = await getCollection('cases');
 const caseMap = new Map(allCases.map((c) => [c.id, c]));
@@ -37,9 +41,9 @@ const positions = [
 ];
 ---
 
-<section class:list={['portfolio', { 'theme-light': isLight }]} id="cases" aria-labelledby="portfolio-title">
+<section class:list={['portfolio', { 'theme-light': isLight, 'is-seamless': seamless }]} id="cases" aria-labelledby="portfolio-title">
   <div class="portfolio__header container">
-    <h2 id="portfolio-title">Избранные<br />проекты</h2>
+    <h2 id="portfolio-title">{title ?? <Fragment>Избранные<br />проекты</Fragment>}</h2>
   </div>
 
   <div class="portfolio__grid container">
@@ -134,6 +138,10 @@ const positions = [
   .portfolio.theme-light {
     color: #1D1D1D;
     background: linear-gradient(to bottom, #EAE5DF 0%, #EAE5DF 15%, rgba(234, 229, 223, 0.55) 45%, transparent 85%);
+  }
+
+  .portfolio.theme-light.is-seamless {
+    background: #f5f1e9;
   }
 
   .portfolio.theme-light h2 {

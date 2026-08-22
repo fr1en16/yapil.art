@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /crm
+Disallow: /site-map
 
 Sitemap: https://yapil.art/sitemap-index.xml

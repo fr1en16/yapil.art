@@ -1,0 +1,139 @@
+---
+import Base from '../../layouts/Base.astro';
+import Contacts from '../Contacts.astro';
+import Footer from '../Footer.astro';
+import ProduxPortfolio from '../ProduxPortfolio.astro';
+import '../../styles/proposal-pages.css';
+
+interface Metric { number: string; label: string; text: string; }
+interface Card { title: string; text: string; }
+interface Row { number: string; title: string; text: string; }
+interface Faq { question: string; answer: string; }
+interface Link { slug: string; number: string; title: string; description: string; }
+
+interface Props {
+  title: string;
+  description: string;
+  jsonLd: Record<string, unknown>;
+  section: 'services' | 'solutions';
+  slug: string;
+  name: string;
+  heroH1: string;
+  heroLead: string;
+  metrics: Metric[];
+  firstTitle: string;
+  firstCards: Card[];
+  secondTitle: string;
+  secondCards: Card[];
+  rowsTitle?: string;
+  rows?: Row[];
+  casesTitle: string;
+  caseSlugs: string[];
+  faqTitle: string;
+  faq: Faq[];
+  linksTitle?: string;
+  links?: Link[];
+  ctaTitle: string;
+  ctaLead: string;
+}
+
+const props = Astro.props;
+const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead } = props;
+const source = 'contacts_form';
+const sectionName = section === 'services' ? 'Услуга' : 'Решение';
+---
+
+<Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" navOverlay={true}>
+  <article class="editorial-page">
+    <header class="editorial-cover">
+      <div class="container editorial-cover__inner">
+        <div class="editorial-title-wrap">
+          <h1>{heroH1}</h1>
+        </div>
+        <div class="editorial-cover__bottom">
+          <p class="editorial-lead">{heroLead}</p>
+          <dl class="editorial-meta">
+            {metrics.map((metric) => <div><dt>{metric.label}</dt><dd>{metric.text}</dd></div>)}
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <div class="editorial-body">
+      <section class="editorial-section" id="scope" aria-labelledby="scope-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">01</p>
+          <div class="editorial-heading__content">
+            <h2 id="scope-title">{firstTitle}</h2>
+          </div>
+        </header>
+        <div class="editorial-grid">
+          {firstCards.map((card, index) => (
+            <article class="editorial-card">
+              <span class="editorial-card__number">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{card.title}</h3><p>{card.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="editorial-section" aria-labelledby="result-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">02</p>
+          <div class="editorial-heading__content"><h2 id="result-title">{secondTitle}</h2></div>
+        </header>
+        <div class="editorial-grid">
+          {secondCards.map((card, index) => (
+            <article class="editorial-card"><span class="editorial-card__number">{String(index + 1).padStart(2, '0')}</span><h3>{card.title}</h3><p>{card.text}</p></article>
+          ))}
+        </div>
+      </section>
+
+      {rows.length > 0 && rowsTitle && (
+        <section class="editorial-section" aria-labelledby="process-title">
+          <header class="editorial-heading"><p class="editorial-heading__number">03</p><div class="editorial-heading__content"><h2 id="process-title">{rowsTitle}</h2></div></header>
+          <ol class="editorial-list">{rows.map((row) => <li class="editorial-row"><span class="editorial-row__number">{row.number}</span><h3>{row.title}</h3><p>{row.text}</p></li>)}</ol>
+        </section>
+      )}
+
+    </div>
+    <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />
+    <div class="editorial-body">
+      <section class="editorial-section" aria-labelledby="faq-title">
+        <header class="editorial-heading"><p class="editorial-heading__number">{rows.length ? '05' : '04'}</p><div class="editorial-heading__content"><h2 id="faq-title">{faqTitle}</h2></div></header>
+        <div class="editorial-faq">{faq.map((item, index) => <details open={index === 0}><summary><span>{item.question}</span><span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div>
+      </section>
+
+      {links.length > 0 && linksTitle && (
+        <section class="editorial-section" aria-labelledby="links-title">
+          <header class="editorial-heading"><p class="editorial-heading__number">06</p><div class="editorial-heading__content"><h2 id="links-title">{linksTitle}</h2></div></header>
+          <div class="editorial-grid">{links.map((link) => <a class="editorial-card" href={`/${section}/${link.slug}`}><span class="editorial-card__number">{link.number} / ↗</span><h3>{link.title}</h3><p>{link.description}</p></a>)}</div>
+        </section>
+      )}
+
+    </div>
+
+    {section === 'services' && (
+      <div class="editorial-body">
+        <section class="brief-cta" aria-labelledby="brief-cta-title">
+          <p>Расскажите о задаче</p>
+          <h2 id="brief-cta-title">Подробный<br />бриф</h2>
+          <a href={`/brief?service=${slug}`}>
+            <span>Заполнить бриф по услуге «{name}»</span><span aria-hidden="true">→</span>
+          </a>
+        </section>
+      </div>
+    )}
+
+    <Contacts theme="light" title={ctaTitle} lead={ctaLead} source={source} sourceDetails={`${sectionName}: ${name}`} />
+  </article>
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<style>
+  .brief-cta { padding: clamp(5rem, 9vw, 9rem) 0; border-top: 1px solid rgba(23, 23, 23, .18); }
+  .brief-cta > p { margin: 0 0 2rem; color: #fd4b32; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+  .brief-cta h2 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem, 7.3vw, 7.5rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
+  .brief-cta a { display: flex; justify-content: space-between; align-items: center; margin-top: clamp(3rem, 7vw, 7rem); padding: 1.5rem 0; border-block: 1px solid #171717; color: inherit; font-size: clamp(1.1rem, 2vw, 1.5rem); text-decoration: none; transition: padding 220ms ease, color 220ms ease, background 220ms ease; }
+  .brief-cta a:hover,.brief-cta a:focus-visible { padding-inline: 1.5rem; color: #fff; background: #fd4b32; outline-offset: 4px; }
+</style>

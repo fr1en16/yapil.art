@@ -1,0 +1,290 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../Footer.astro';
+import type { ServiceBrief, BriefQuestion } from '../../data/briefsData';
+import '../../styles/proposal-pages.css';
+
+interface Props { brief: ServiceBrief; }
+const { brief } = Astro.props;
+
+const commonQuestions: BriefQuestion[] = [
+  { name: 'company', label: 'Компания, продукт или проект', type: 'text', required: true, placeholder: 'Название и короткое описание' },
+  { name: 'deadline', label: 'Желаемый срок запуска', type: 'text', placeholder: 'Конкретная дата или ориентир' },
+  { name: 'budget', label: 'Ориентир по бюджету', type: 'select', options: [
+    { value: 'До $500', label: 'До $500' }, { value: '$500–1 000', label: '$500–1 000' }, { value: '$1 000–3 000', label: '$1 000–3 000' }, { value: '$3 000+', label: '$3 000+' }, { value: 'Нужно оценить', label: 'Нужно оценить' },
+  ] },
+  { name: 'name', label: 'Ваше имя', type: 'text', required: true, placeholder: 'Как к вам обращаться' },
+  { name: 'phone', label: 'Телефон или WhatsApp', type: 'text', required: true, placeholder: '+7 000 000 00 00' },
+  { name: 'email', label: 'Email', type: 'text', placeholder: 'name@company.com' },
+  { name: 'links', label: 'Ссылки на материалы', type: 'textarea', placeholder: 'Папка, презентация, сайт, референсы — каждая ссылка с новой строки' },
+  { name: 'comment', label: 'Что ещё важно знать?', type: 'textarea' },
+];
+
+const groups = [
+  ...brief.groups,
+  { title: 'Сроки и контакт', intro: 'В завершение оставьте контакты и ориентиры проекта.', questions: commonQuestions },
+];
+---
+
+<Base
+  title={`${brief.title} — Yapil`}
+  description={`Подробный бриф на услугу «${brief.service}». Ответьте на вопросы — Яков Пилипюк изучит задачу и подготовит следующий шаг.`}
+  theme="light"
+  navOverlay={true}
+  noindex={true}
+>
+  <article class="brief-page">
+    <header class="brief-cover">
+      <div class="container brief-cover__inner">
+        <div class="brief-title-wrap">
+          <p>Бриф / {brief.number}</p>
+          <h1>{brief.title}</h1>
+        </div>
+        <div class="brief-cover__bottom">
+          <p>{brief.lead}</p>
+          <dl>
+            <div><dt>Услуга</dt><dd>{brief.service}</dd></div>
+            <div><dt>Время</dt><dd>10–15 минут</dd></div>
+            <div><dt>Сохранение</dt><dd>После отправки</dd></div>
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <div class="brief-body">
+      <form class="brief-form" data-service={brief.service} data-brief-form novalidate>
+        {groups.map((group, groupIndex) => (
+          <fieldset class="brief-step" data-brief-step={groupIndex}>
+            <legend>
+              <span>{String(groupIndex + 1).padStart(2, '0')}</span>
+              <strong>{group.title}</strong>
+              <small>{group.intro}</small>
+            </legend>
+
+            <div class="questions">
+              {group.questions.map((question) => (
+                <div
+                  class="question"
+                  data-question={question.name}
+                  data-branch-field={question.showWhen?.field}
+                  data-branch-values={question.showWhen?.values.join('|')}
+                  hidden={Boolean(question.showWhen)}
+                >
+                  <label class="question-label" for={`field-${question.name}`}>
+                    {question.label}{question.required && <span aria-hidden="true"> *</span>}
+                  </label>
+                  {question.hint && <p class="question-hint">{question.hint}</p>}
+
+                  {question.type === 'textarea' && (
+                    <textarea id={`field-${question.name}`} name={question.name} rows="4" placeholder={question.placeholder} required={question.required}></textarea>
+                  )}
+                  {(question.type === 'text' || question.type === 'url' || question.type === 'number') && (
+                    <input id={`field-${question.name}`} name={question.name} type={question.type} placeholder={question.placeholder} required={question.required} />
+                  )}
+                  {question.type === 'select' && (
+                    <select id={`field-${question.name}`} name={question.name} required={question.required}>
+                      <option value="">Выберите вариант</option>
+                      {question.options?.map((option) => <option value={option.value}>{option.label}</option>)}
+                    </select>
+                  )}
+                  {(question.type === 'radio' || question.type === 'checkbox') && (
+                    <div class="option-grid" role={question.type === 'radio' ? 'radiogroup' : 'group'} data-required-group={question.required ? question.name : undefined}>
+                      {question.options?.map((option, optionIndex) => (
+                        <label class="option-card">
+                          <input type={question.type} name={question.name} value={option.value} required={question.type === 'radio' && question.required && optionIndex === 0} />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                  <p class="question-error" data-question-error aria-live="polite"></p>
+                </div>
+              ))}
+            </div>
+
+            {groupIndex === groups.length - 1 && (
+              <label class="consent">
+                <input type="checkbox" name="privacy" required />
+                <span>Согласен с <a href="/privacy" target="_blank">политикой конфиденциальности</a>.</span>
+              </label>
+            )}
+
+            {groupIndex === groups.length - 1 && (
+              <div class="step-actions">
+                <button type="submit" class="button-primary">Отправить бриф</button>
+              </div>
+            )}
+          </fieldset>
+        ))}
+
+        <section class="brief-success" data-brief-success hidden aria-live="polite">
+          <p>Бриф отправлен</p>
+          <h2>Спасибо.<br />Изучу ответы<br />и свяжусь с вами.</h2>
+          <a href="/">Вернуться на главную</a>
+        </section>
+      </form>
+    </div>
+  </article>
+  <Footer slot="footer" theme="light" personal />
+</Base>
+
+<script>
+  import { submitLead } from '../../lib/crmStore';
+
+  const form = document.querySelector<HTMLFormElement>('[data-brief-form]');
+  if (form) {
+    const valuesFor = (name: string) => Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement>(`[name="${CSS.escape(name)}"]`))
+      .filter((field) => !(field instanceof HTMLInputElement) || !['radio', 'checkbox'].includes(field.type) || field.checked)
+      .map((field) => field.value)
+      .filter(Boolean);
+
+    const updateBranches = () => {
+      form.querySelectorAll<HTMLElement>('[data-branch-field]').forEach((container) => {
+        const source = container.dataset.branchField;
+        const accepted = (container.dataset.branchValues ?? '').split('|');
+        const visible = source ? valuesFor(source).some((value) => accepted.includes(value)) : true;
+        container.hidden = !visible;
+        container.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select').forEach((field) => {
+          field.disabled = !visible;
+        });
+      });
+    };
+
+    const validateForm = () => {
+      const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select')).filter((field) => !field.disabled);
+      for (const field of fields) {
+        if (!field.checkValidity()) {
+          field.reportValidity();
+          return false;
+        }
+      }
+      for (const group of form.querySelectorAll<HTMLElement>('[data-required-group]')) {
+        if (group.closest<HTMLElement>('[data-question]')?.hidden) continue;
+        const checked = group.querySelector<HTMLInputElement>('input:checked');
+        const error = group.closest<HTMLElement>('[data-question]')?.querySelector<HTMLElement>('[data-question-error]');
+        if (!checked) {
+          if (error) error.textContent = 'Выберите хотя бы один вариант.';
+          group.querySelector<HTMLInputElement>('input')?.focus();
+          return false;
+        }
+        if (error) error.textContent = '';
+      }
+      return true;
+    };
+
+    form.addEventListener('change', updateBranches);
+    form.addEventListener('input', updateBranches);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!validateForm()) return;
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) { submit.disabled = true; submit.textContent = 'Отправляем…'; }
+      const data = new FormData(form);
+      const skip = new Set(['name', 'phone', 'email', 'privacy', 'budget']);
+      const lines: string[] = [];
+      const seen = new Set<string>();
+      for (const [name] of data.entries()) {
+        if (seen.has(name) || skip.has(name)) continue;
+        seen.add(name);
+        const values = data.getAll(name).map(String).filter(Boolean);
+        if (!values.length) continue;
+        const label = form.querySelector<HTMLElement>(`[data-question="${CSS.escape(name)}"] .question-label`)?.textContent?.replace('*', '').trim() ?? name;
+        lines.push(`${label}: ${values.join(', ')}`);
+      }
+      try {
+        await submitLead({
+          name: String(data.get('name') ?? ''), phone: String(data.get('phone') ?? ''), email: String(data.get('email') ?? ''),
+          services: [form.dataset.service ?? 'Консультация'], budget: String(data.get('budget') ?? ''),
+          message: lines.join('\n\n'), source: 'service_modal', sourceDetails: `Подробный бриф: ${form.dataset.service ?? ''}`,
+        });
+        form.querySelectorAll<HTMLElement>('[data-brief-step]').forEach((element) => { element.hidden = true; });
+        const success = form.querySelector<HTMLElement>('[data-brief-success]');
+        if (success) success.hidden = false;
+      } catch {
+        if (submit) { submit.disabled = false; submit.textContent = 'Повторить отправку'; }
+        window.alert('Не удалось отправить бриф. Попробуйте ещё раз или напишите на hi@yapil.art.');
+      }
+    });
+
+    updateBranches();
+  }
+</script>
+
+<style>
+  :global(body.theme-light) { background: #f5f1e9; }
+  .brief-page { --paper: #f5f1e9; --ink: #171717; --muted: #6d6963; --line: rgba(23,23,23,.18); color: var(--ink); }
+  .brief-cover { min-height: 82svh; color: #fff8f2; }
+  .brief-cover__inner { display: grid; grid-template-rows: 1fr auto; min-height: 82svh; padding-block: 7.5rem 2rem; }
+  .brief-title-wrap { align-self: center; display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); padding-block: clamp(4rem,10vh,7rem); }
+  .brief-title-wrap > p { grid-column: 1 / -1; margin: 0 0 1.5rem; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+  .brief-title-wrap h1 { grid-column: 1 / 12; max-width: 12ch; margin: 0; font-family: var(--font-display); font-size: clamp(3.5rem,7.3vw,7rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
+  .brief-cover__bottom { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); align-items: end; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.5); }
+  .brief-cover__bottom > p { grid-column: 1 / 8; max-width: 42rem; margin: 0; font-size: clamp(1.15rem,2vw,1.75rem); line-height: 1.08; letter-spacing: -.035em; }
+  .brief-cover__bottom dl { grid-column: 9 / 13; margin: 0; }
+  .brief-cover__bottom dl div { display: flex; justify-content: space-between; gap: 1.5rem; padding: .4rem 0; border-bottom: 1px solid rgba(255,255,255,.25); }
+  .brief-cover__bottom dt,.brief-cover__bottom dd { margin: 0; font-size: .8rem; }
+  .brief-cover__bottom dt { opacity: .65; }
+
+  .brief-body { position: relative; isolation: isolate; width: min(calc(100% - var(--container-inline-space)),var(--container-max)); margin-inline: auto; background: var(--paper); }
+  .brief-body::before { content: ''; position: absolute; z-index: -1; inset-block: 0; left: 50%; width: 100vw; background: var(--paper); transform: translateX(-50%); }
+  .brief-form { padding: clamp(4rem,8vw,8rem) 0 clamp(6rem,10vw,10rem); scroll-margin-top: 4rem; }
+  .brief-step { margin: 0; padding: 0; border: 0; }
+  .brief-step + .brief-step { margin-top: clamp(5rem, 9vw, 9rem); }
+  .brief-step[hidden],.question[hidden],.brief-success[hidden] { display: none; }
+  .brief-step legend { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); width: 100%; margin-bottom: clamp(3rem,6vw,6rem); }
+  .brief-step legend > span { grid-column: 1; color: #fd4b32; font-size: .75rem; }
+  .brief-step legend > strong { grid-column: 2 / 11; font-family: var(--font-display); font-size: clamp(3rem,6vw,6rem); font-weight: 400; line-height: .92; letter-spacing: -.04em; }
+  .brief-step legend > small { grid-column: 2 / 9; margin-top: 1.5rem; color: var(--muted); font-size: clamp(1rem,1.5vw,1.25rem); line-height: 1.4; }
+  .questions { border-top: 1px solid var(--ink); }
+  .question { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); padding: 2rem 0; border-bottom: 1px solid var(--line); }
+  .question-label { grid-column: 1 / 5; padding-right: 2rem; font-size: clamp(1rem,1.4vw,1.2rem); line-height: 1.25; }
+  .question-label span { color: #fd4b32; }
+  .question-hint { grid-column: 1 / 5; margin: .5rem 0 0; color: var(--muted); font-size: .8rem; }
+  .question > input,.question > textarea,.question > select,.option-grid { grid-column: 5 / 13; }
+  .question > input,.question > textarea,.question > select { width: 100%; padding: 0 0 .8rem; border: 0; border-bottom: 1px solid rgba(23,23,23,.35); border-radius: 0; color: var(--ink); background: transparent; font: inherit; font-size: clamp(1rem,1.4vw,1.2rem); }
+  .question > textarea { resize: vertical; line-height: 1.4; }
+  .question > input:focus,.question > textarea:focus,.question > select:focus { border-bottom-color: #fd4b32; outline: 0; }
+  .option-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; }
+  .option-card { position: relative; display: block; cursor: pointer; }
+  .option-card input { position: absolute; opacity: 0; pointer-events: none; }
+  .option-card span { display: block; min-height: 3.75rem; padding: 1rem 1.1rem; border: 1px solid var(--line); line-height: 1.25; transition: color 180ms ease,background 180ms ease,border-color 180ms ease; }
+  .option-card input:checked + span { color: #fff; border-color: #fd4b32; background: #fd4b32; }
+  .option-card input:focus-visible + span { outline: 2px solid #fd4b32; outline-offset: 3px; }
+  .question-error { grid-column: 5 / 13; min-height: 1em; margin: .6rem 0 0; color: #b3261e; font-size: .8rem; }
+  .consent { display: flex; gap: .75rem; align-items: flex-start; max-width: 42rem; margin: 2rem 0 0 auto; color: var(--muted); font-size: .9rem; }
+  .consent input { margin-top: .15rem; accent-color: #fd4b32; }
+  .consent a { color: inherit; }
+  .step-actions { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 3rem; }
+  .button-primary,.button-secondary { min-width: 11rem; padding: 1rem 1.4rem; border: 1px solid var(--ink); font: inherit; cursor: pointer; }
+  .button-primary { color: #fff; border-color: #fd4b32; background: #fd4b32; }
+  .button-secondary { color: var(--ink); background: transparent; }
+  .button-primary:hover,.button-primary:focus-visible { background: #e63a22; }
+  .button-secondary:hover,.button-secondary:focus-visible { color: #fff; background: var(--ink); }
+  .button-primary:disabled { cursor: wait; opacity: .55; }
+  .brief-success { padding-block: clamp(4rem,8vw,8rem); }
+  .brief-success > p { color: #fd4b32; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+  .brief-success h2 { margin: 2rem 0 4rem; font-family: var(--font-display); font-size: clamp(3rem,7vw,7rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
+  .brief-success a { color: inherit; text-underline-offset: .3em; }
+
+  @media (max-width: 56rem) {
+    .brief-cover__bottom { display: flex; flex-direction: column; align-items: stretch; gap: 2.5rem; }
+    .brief-cover__bottom dl { width: 100%; }
+    .brief-body { width: min(calc(100% - 2rem),100rem); }
+  }
+  @media (max-width: 40rem) {
+    .brief-cover__inner { padding-top: 6.5rem; }
+    .brief-title-wrap { display: block; }
+    .brief-title-wrap h1 { font-size: clamp(3rem,15vw,5rem); }
+    .brief-step legend { display: block; }
+    .brief-step legend > span { display: block; margin-bottom: 1.5rem; }
+    .brief-step legend > strong { display: block; }
+    .brief-step legend > small { display: block; }
+    .question { display: block; }
+    .question-label { display: block; margin-bottom: 1.25rem; padding: 0; }
+    .option-grid { grid-template-columns: 1fr; }
+    .question-error { min-height: 0; }
+    .step-actions { flex-direction: column-reverse; }
+    .button-primary,.button-secondary { width: 100%; }
+  }
+</style>

@@ -197,20 +197,27 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
 
       stage.replaceChildren();
       const media = document.createElement(item.isVideo ? 'video' : 'img');
-      media.className = 'lightbox-media';
+      media.className = `lightbox-media ${item.isVideo ? 'lightbox-video' : 'lightbox-image'}`;
+      media.width = item.width;
+      media.height = item.height;
+      media.style.aspectRatio = `${item.width} / ${item.height}`;
       if (media instanceof HTMLVideoElement) {
         media.src = item.url;
         media.autoplay = true;
         media.controls = true;
+        media.defaultMuted = true;
+        media.muted = true;
         media.playsInline = true;
+        media.preload = 'auto';
         media.volume = 0.3;
       } else {
         media.src = item.url;
         media.alt = item.alt;
-        media.width = item.width;
-        media.height = item.height;
       }
       stage.append(media);
+      if (media instanceof HTMLVideoElement) {
+        void media.play().catch(() => undefined);
+      }
       title.textContent = item.title;
       count.textContent = `${String(lightboxIndex + 1).padStart(2, '0')} / ${String(group.images.length).padStart(2, '0')}`;
       dialog?.querySelectorAll<HTMLElement>('.lightbox-prev, .lightbox-next').forEach((button) => {
@@ -698,19 +705,40 @@ const serializedGroups = JSON.stringify(groups).replaceAll('<', '\\u003c');
 
   .lightbox-stage {
     display: grid;
+    grid-column: 2;
+    grid-row: 1;
     width: 100%;
     height: 100%;
+    min-width: 0;
     min-height: 0;
     padding: 2rem;
+    box-sizing: border-box;
     place-items: center;
   }
 
+  .lightbox-prev {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .lightbox-next {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
   .lightbox-stage :global(.lightbox-media) {
+    display: block;
     width: auto;
     max-width: 100%;
     height: auto;
     max-height: calc(100dvh - 7rem);
     object-fit: contain;
+  }
+
+  .lightbox-stage :global(.lightbox-video) {
+    /* The source files include pixel-aspect metadata that browsers may treat as
+       the natural ratio. The gallery dimensions are the intended frame ratio. */
+    object-fit: fill;
   }
 
   .lightbox-control {

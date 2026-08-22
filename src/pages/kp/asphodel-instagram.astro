@@ -1,0 +1,482 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+
+const logo = '/kp/asphodel/logo.jpg';
+
+const options = [
+  {
+    id: 'single',
+    number: '01',
+    title: 'Просто три картинки',
+    price: '40 000 ₸',
+    priceLabel: 'Цена',
+    note: 'Одна панорамная композиция, разрезанная на три квадрата в сетке профиля. Три отдельных поста, без каруселей внутри.',
+  },
+  {
+    id: 'carousel',
+    number: '02',
+    title: 'Три картинки + карусель в каждом посте',
+    price: '72 000 ₸',
+    priceLabel: 'Итого без линейки',
+    note: 'Та же панорама в сетке, но за каждой обложкой своя карусель.',
+  },
+];
+
+const highlights = [
+  { title: 'Клиенты', icon: 'pin' },
+  { title: 'Как заказать', icon: 'bag' },
+  { title: 'Каталог', icon: 'eye' },
+  { title: 'Отзывы', icon: 'star' },
+  { title: 'Связаться', icon: 'message' },
+];
+---
+
+<Base
+  title="Визуал Instagram для ASPHODEL"
+  description="Коммерческое предложение Yapil по оформлению визуала Instagram для бренда ASPHODEL."
+  image={logo}
+  theme="light"
+  noindex={true}
+  navOverlay={true}
+>
+  <article class="proposal">
+    <section class="cover" aria-labelledby="proposal-title">
+      <div class="cover-grid" aria-hidden="true"></div>
+      <div class="container cover-inner">
+        <div class="cover-kicker">
+          <span>Коммерческое предложение</span>
+          <span>22.08.2026</span>
+        </div>
+
+        <div class="cover-title-wrap">
+          <p class="cover-index">КП / 02</p>
+          <h1 id="proposal-title"><span>Визуал Instagram</span><span>для ASPHODEL</span></h1>
+          <div class="client-mark" aria-label="Логотип ASPHODEL">
+            <img src={logo} alt="ASPHODEL" width="409" height="409" />
+          </div>
+        </div>
+
+        <div class="cover-bottom">
+          <p class="cover-lead">Два варианта панорамной раскладки профиля и единая система иконок для актуального.</p>
+          <dl class="cover-meta">
+            <div><dt>Кому</dt><dd>ASPHODEL</dd></div>
+            <div><dt>От</dt><dd>Яков Пилипюк, Yapil</dd></div>
+            <div><dt>Действует до</dt><dd>21.09.2026</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <div class="proposal-body">
+      <div class="content">
+        <section class="difference-summary" aria-labelledby="difference-title">
+          <p class="difference-label" id="difference-title">Коротко о разнице</p>
+          <div class="difference-text">
+            <p>Еще раз здравствуйте, Милена!</p>
+            <p>Панорама в сетке профиля одинакова в обоих вариантах. Разница в том, что происходит после клика. Вариант 02 превращает каждую обложку в полноценный пост: список площадок и отзывы под рукой, весь каталог долистывается на месте, история бренда раскрывается без перехода на сайт. Один клик заменяет то, что в варианте 01 подписчик ищет сам — в шапке профиля, в закреплённых сторис, в переписке.</p>
+          </div>
+        </section>
+
+        <section class="proposal-section" id="variants">
+          <header class="section-heading">
+            <p class="section-number">01</p>
+            <div>
+              <h2>Два варианта<br />раскладки</h2>
+              <p class="section-intro">Кликните по выделенным плиткам: так видно, что открывает каждый пост в ленте и чем варианты отличаются друг от друга.</p>
+            </div>
+          </header>
+
+          <div class="variants-grid">
+            {options.map((option) => (
+              <article class="variant-card">
+                <div class="variant-topline">
+                  <span>{option.number}</span>
+                </div>
+                <h3>{option.title}</h3>
+                <p class="variant-note">{option.note}</p>
+
+                {option.id === 'single' ? (
+                  <ul class="variant-details">
+                    <li><strong>Слайд 1 — где купить:</strong> продукт крупным планом или цитата отзыва на фактуре.</li>
+                    <li><strong>Слайд 2 — линейка:</strong> несколько баночек в композиции.</li>
+                    <li><strong>Слайд 3 — бренд:</strong> текстура, типографика, суть без лица.</li>
+                  </ul>
+                ) : (
+                  <ul class="variant-details">
+                    <li><strong>Где купить:</strong> обложка, список площадок, скрины отзывов, дальше ещё отзывы или UGC. 4–5 слайдов.</li>
+                    <li><strong>Линейка:</strong> обложка, дальше весь каталог, один товар на слайд. До 20 слайдов.</li>
+                    <li><strong>О бренде:</strong> обложка, дальше история, цифры, особенности, УТП. 2 слайда.</li>
+                  </ul>
+                )}
+
+                <div class="instagram-frame">
+                  <div class="instagram-header">
+                    <img src={logo} alt="" width="36" height="36" />
+                    <span>asphodel02kz</span>
+                  </div>
+                  <div class="instagram-grid">
+                    <button class="instagram-tile panorama" type="button" data-post="2" data-mode={option.id} aria-label="Открыть публикацию «О бренде»">
+                      <span class="tile-number">3</span><span>Бренд</span>{option.id === 'carousel' && <span class="stack-icon" aria-hidden="true">▤</span>}
+                    </button>
+                    <button class="instagram-tile panorama" type="button" data-post="1" data-mode={option.id} aria-label="Открыть публикацию «Линейка»">
+                      <span class="tile-number">2</span><span>Линейка</span>{option.id === 'carousel' && <span class="stack-icon" aria-hidden="true">▤</span>}
+                    </button>
+                    <button class="instagram-tile panorama" type="button" data-post="0" data-mode={option.id} aria-label="Открыть публикацию «Где купить»">
+                      <span class="tile-number">1</span><span>Где купить</span>{option.id === 'carousel' && <span class="stack-icon" aria-hidden="true">▤</span>}
+                    </button>
+                    <div class="instagram-tile muted">другой пост</div>
+                    <div class="instagram-tile muted">другой пост</div>
+                    <div class="instagram-tile muted">другой пост</div>
+                  </div>
+                </div>
+
+                <div class="publish-order" aria-label="Порядок публикации">
+                  <span>3-м</span><span>2-м</span><span>1-м</span>
+                </div>
+                <p class="interaction-hint">
+                  {option.id === 'single'
+                    ? 'Панорама работает только в сетке профиля. При клике на отдельный пост видна треть картинки.'
+                    : 'Каждый пост работает дважды: в сетке профиля как часть панорамы, при клике как полная карусель.'}
+                </p>
+
+                {option.id === 'carousel' && (
+                  <div class="variant-estimate" aria-label="Расчёт второго варианта">
+                    <div><span>Панорама, 3 обложки</span><strong>40 000 ₸</strong></div>
+                    <div><span>Карусель «Где купить»</span><strong>20 000 ₸</strong></div>
+                    <div><span>Карусель «О бренде»</span><strong>12 000 ₸</strong></div>
+                    <div class="estimate-variable">
+                      <span>Карусель «Линейка»</span>
+                      <strong>3 000 ₸ за слайд</strong>
+                      <p>При разных макетах. При одном шаблоне на все товары — 2 000 ₸ за слайд. Например, 15 товаров по единому шаблону — 30 000 ₸ вместо 45 000 ₸.</p>
+                    </div>
+                  </div>
+                )}
+
+                {option.id === 'carousel' && (
+                  <p class="price-condition">Если количество слайдов увеличится, итоговая стоимость также увеличится.</p>
+                )}
+
+                <div class="variant-price variant-price-final">
+                  <span>{option.priceLabel}</span>
+                  <strong>{option.price}</strong>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="proposal-section highlights-section" id="highlights">
+          <header class="section-heading">
+            <p class="section-number">02</p>
+            <div>
+              <h2>Иконки для<br />актуального</h2>
+            </div>
+          </header>
+
+          <div class="highlights-grid">
+            {highlights.map((item, index) => (
+              <article class="highlight-item">
+                <div class="highlight-icon" aria-hidden="true">
+                  {item.icon === 'pin' && <svg viewBox="0 0 24 24"><path d="M12 21c-4-4-7-7.5-7-11a7 7 0 0 1 14 0c0 3.5-3 7-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>}
+                  {item.icon === 'bag' && <svg viewBox="0 0 24 24"><path d="M4 7h16l-1.5 12h-13z"></path><path d="M9 7V5a3 3 0 0 1 6 0v2"></path></svg>}
+                  {item.icon === 'eye' && <svg viewBox="0 0 24 24"><path d="M3 12s3-7 9-7 9 7 9 7-3 7-9 7-9-7-9-7z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>}
+                  {item.icon === 'star' && <svg viewBox="0 0 24 24"><path d="M12 17.3 5.8 21l1.6-7-5.2-4.5 6.9-.6L12 3l2.9 5.9 6.9.6-5.2 4.5 1.6 7z"></path></svg>}
+                  {item.icon === 'message' && <svg viewBox="0 0 24 24"><path d="M3 5h18v10H8l-5 4z"></path></svg>}
+                </div>
+                <span class="highlight-index">0{index + 1}</span>
+                <h3>{item.title}</h3>
+              </article>
+            ))}
+          </div>
+
+          <div class="highlights-price">
+            <span>Комплект из пяти иконок</span>
+            <strong>40 000 ₸</strong>
+          </div>
+        </section>
+
+        <section class="closing">
+          <p class="closing-label">Следующий шаг</p>
+          <h2>Выбрать вариант<br />и начать работу.</h2>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  <div class="post-dialog" id="postDialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" hidden>
+    <button class="dialog-backdrop" type="button" data-close aria-label="Закрыть просмотр"></button>
+    <div class="dialog-panel">
+      <div class="dialog-header">
+        <img src={logo} alt="" width="36" height="36" />
+        <strong id="dialogTitle">asphodel02kz</strong>
+        <button class="dialog-close" type="button" data-close aria-label="Закрыть">×</button>
+      </div>
+      <div class="dialog-slide">
+        <button class="dialog-nav dialog-prev" type="button" data-prev aria-label="Предыдущий слайд">‹</button>
+        <span class="slide-count" id="slideCount"></span>
+        <strong class="slide-label" id="slideLabel"></strong>
+        <button class="dialog-nav dialog-next" type="button" data-next aria-label="Следующий слайд">›</button>
+      </div>
+      <div class="dialog-dots" id="dialogDots" aria-hidden="true"></div>
+      <p class="dialog-footer" id="dialogFooter"></p>
+    </div>
+  </div>
+
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<script>
+  const posts = [
+    { title: 'Где купить', slides: ['Обложка', 'Список площадок', 'Скрины отзывов', 'Ещё отзывы', 'UGC-видео'] },
+    { title: 'Линейка', slides: ['Обложка', 'Товар 1', 'Товар 2', 'Товар 3', '… до 20 товаров'] },
+    { title: 'О бренде', slides: ['Обложка', 'История, цифры, УТП'] },
+  ];
+
+  const dialog = document.querySelector('#postDialog');
+  const slideCount = document.querySelector('#slideCount');
+  const slideLabel = document.querySelector('#slideLabel');
+  const dialogFooter = document.querySelector('#dialogFooter');
+  const dialogDots = document.querySelector('#dialogDots');
+  const prevButton = document.querySelector('[data-prev]');
+  const nextButton = document.querySelector('[data-next]');
+  let currentPost = 0;
+  let currentSlide = 0;
+  let mode = 'single';
+  let trigger = null;
+
+  function renderDialog() {
+    if (!(slideCount instanceof HTMLElement) || !(slideLabel instanceof HTMLElement) || !(dialogFooter instanceof HTMLElement) || !(dialogDots instanceof HTMLElement)) return;
+    const post = posts[currentPost];
+    const total = mode === 'single' ? 1 : post.slides.length;
+    slideCount.textContent = `${currentSlide + 1} / ${total}`;
+    slideLabel.textContent = post.slides[currentSlide];
+    dialogFooter.textContent = mode === 'single'
+      ? `${post.title}: одна картинка, без пролистывания`
+      : `${post.title}: слайд ${currentSlide + 1} из ${total}`;
+    if (prevButton instanceof HTMLButtonElement) prevButton.disabled = currentSlide === 0;
+    if (nextButton instanceof HTMLButtonElement) nextButton.disabled = mode === 'single' || currentSlide === total - 1;
+    dialogDots.replaceChildren(...Array.from({ length: total }, (_, index) => {
+      const dot = document.createElement('span');
+      dot.className = index === currentSlide ? 'active' : '';
+      return dot;
+    }));
+  }
+
+  function openDialog(button) {
+    if (!(dialog instanceof HTMLElement)) return;
+    trigger = button;
+    currentPost = Number(button.dataset.post || 0);
+    currentSlide = 0;
+    mode = button.dataset.mode || 'single';
+    renderDialog();
+    dialog.hidden = false;
+    document.body.classList.add('dialog-open');
+    const closeButton = dialog.querySelector('.dialog-close');
+    if (closeButton instanceof HTMLButtonElement) closeButton.focus();
+  }
+
+  function closeDialog() {
+    if (!(dialog instanceof HTMLElement)) return;
+    dialog.hidden = true;
+    document.body.classList.remove('dialog-open');
+    if (trigger instanceof HTMLButtonElement) trigger.focus();
+  }
+
+  document.querySelectorAll('.panorama').forEach((button) => {
+    if (button instanceof HTMLButtonElement) button.addEventListener('click', () => openDialog(button));
+  });
+  document.querySelectorAll('[data-close]').forEach((button) => button.addEventListener('click', closeDialog));
+  prevButton?.addEventListener('click', () => { if (currentSlide > 0) { currentSlide -= 1; renderDialog(); } });
+  nextButton?.addEventListener('click', () => {
+    const total = mode === 'single' ? 1 : posts[currentPost].slides.length;
+    if (currentSlide < total - 1) { currentSlide += 1; renderDialog(); }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (!(dialog instanceof HTMLElement) || dialog.hidden) return;
+    if (event.key === 'Escape') closeDialog();
+    if (event.key === 'ArrowLeft' && currentSlide > 0) { currentSlide -= 1; renderDialog(); }
+    if (event.key === 'ArrowRight') {
+      const total = mode === 'single' ? 1 : posts[currentPost].slides.length;
+      if (currentSlide < total - 1) { currentSlide += 1; renderDialog(); }
+    }
+  });
+</script>
+
+<style>
+  :global(body.theme-light) { background: #f2efe9; }
+  :global(body.theme-light .site-footer.theme-light) { background: #f5f1e9; }
+  :global(body.dialog-open) { overflow: hidden; }
+
+  .proposal {
+    --paper: #f5f1e9;
+    --ink: #171717;
+    --muted: #6d6963;
+    --line: rgba(23, 23, 23, 0.18);
+    color: var(--ink);
+  }
+
+  .cover { position: relative; min-height: 100svh; overflow: hidden; color: #fff8f2; }
+  .cover-grid {
+    position: absolute; inset: 0; opacity: 0.34;
+    background-image: linear-gradient(rgba(255,255,255,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.18) 1px,transparent 1px);
+    background-size: 25% 25%; mask-image: linear-gradient(to bottom,#000 0%,transparent 92%);
+  }
+  .cover-inner { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; min-height: 100svh; padding-block: 7.5rem 2rem; }
+  .cover-kicker { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,.5); font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .cover-title-wrap { align-self: center; display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); align-items: center; padding-block: clamp(4rem,12vh,8rem); }
+  .cover-index { grid-column: 1 / -1; margin: 0 0 1.25rem; font-size: .75rem; }
+  .cover h1 { grid-column: 1 / 11; margin: 0; font-family: var(--font-display); font-size: clamp(4rem,7.3vw,7rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; text-transform: uppercase; }
+  .cover h1 span { display: block; white-space: nowrap; }
+  .client-mark { grid-column: 11 / 13; grid-row: 2; justify-self: end; width: clamp(5.5rem,9vw,9rem); aspect-ratio: 1; padding: .35rem; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; }
+  .client-mark img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .cover-bottom { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); align-items: end; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.5); }
+  .cover-lead { grid-column: 1 / 7; max-width: 34rem; margin: 0; font-size: clamp(1.15rem,2vw,1.75rem); line-height: 1.08; letter-spacing: -.035em; }
+  .cover-meta { grid-column: 9 / 13; min-width: min(100%,26rem); margin: 0; }
+  .cover-meta div { display: flex; justify-content: space-between; gap: 2rem; padding: .35rem 0; border-bottom: 1px solid rgba(255,255,255,.25); }
+  .cover-meta dt,.cover-meta dd { margin: 0; font-size: .8rem; }
+  .cover-meta dt { opacity: .65; }
+  .cover-meta dd { text-align: right; }
+
+  .proposal-body { position: relative; isolation: isolate; width: min(calc(100% - var(--container-inline-space)),var(--container-max)); margin-inline: auto; background: var(--paper); }
+  .proposal-body::before { content: ''; position: absolute; z-index: -1; inset-block: 0; left: 50%; width: 100vw; background: var(--paper); transform: translateX(-50%); }
+  .difference-summary { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); padding-top: clamp(5rem,9vw,9rem); }
+  .difference-label { grid-column: 1 / 3; margin: .3rem 0 0; color: #fd4b32; font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .difference-text { grid-column: 3 / 12; max-width: 59rem; font-family: var(--font-display); font-size: clamp(1.8rem,3.2vw,3.35rem); line-height: 1.02; letter-spacing: -.035em; }
+  .difference-text p { margin: 0; }
+  .difference-text p + p { margin-top: .8em; }
+  .proposal-section { padding: clamp(5rem,9vw,9rem) 0; scroll-margin-top: 5rem; }
+  .section-heading { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); margin-bottom: clamp(3.5rem,7vw,7rem); }
+  .section-heading > .section-number { grid-column: 1; }
+  .section-heading > div { grid-column: 2 / 11; }
+  .section-number,.variant-topline span,.highlight-index { font-size: .75rem; letter-spacing: .04em; }
+  .section-number,.variant-topline span,.highlight-index { color: #fd4b32; }
+  .section-heading h2,.closing h2 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem,7.3vw,7.5rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
+  .section-intro { max-width: 45rem; margin: clamp(2rem,4vw,3.5rem) 0 0; font-size: clamp(1.15rem,1.85vw,1.65rem); line-height: 1.18; letter-spacing: -.035em; }
+
+  .variants-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .variant-card { min-width: 0; padding: clamp(1.5rem,3vw,3rem); }
+  .variant-topline { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .variant-card h3 { max-width: 12ch; margin: clamp(3rem,6vw,6rem) 0 1.5rem; font-family: var(--font-display); font-size: clamp(2rem,4vw,3.7rem); font-weight: 400; line-height: .92; letter-spacing: -.035em; }
+  .variant-price { display: flex; align-items: end; justify-content: space-between; gap: 1rem; width: min(100%,34rem); margin-top: 2.5rem; padding: 1rem 1.25rem; color: white; background: #fd4b32; }
+  .variant-price span { padding-bottom: .2rem; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; opacity: .82; }
+  .variant-price strong { font-size: clamp(1.7rem,2.5vw,2.5rem); line-height: .9; letter-spacing: -.045em; text-align: right; }
+  .variant-note { max-width: 34rem; margin: 0 0 1.5rem; color: var(--muted); line-height: 1.4; }
+  .variant-details { max-width: 34rem; margin: 0 0 2.5rem; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+  .variant-details li { padding: .85rem 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .9rem; line-height: 1.4; }
+  .variant-details strong { color: var(--ink); font-weight: 600; }
+  .instagram-frame { width: min(100%,25rem); overflow: hidden; border: 1px solid var(--line); border-radius: .4rem; background: #fff; }
+  .instagram-header { display: flex; align-items: center; gap: .65rem; padding: .75rem; border-bottom: 1px solid var(--line); font-size: .82rem; font-weight: 600; }
+  .instagram-header img,.dialog-header img { width: 2rem; height: 2rem; object-fit: cover; border-radius: 50%; }
+  .instagram-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2px; background: rgba(23,23,23,.2); }
+  .instagram-tile { position: relative; display: grid; place-items: center; aspect-ratio: 1; min-width: 0; padding: .45rem; border: 0; border-radius: 0; color: var(--muted); background: #e9e4dc; font: inherit; font-size: clamp(.6rem,1.2vw,.78rem); text-align: center; }
+  button.instagram-tile { cursor: pointer; }
+  .instagram-tile.panorama { color: #8c291b; background: #ead9d4; transition: color 180ms ease,background 180ms ease; }
+  .instagram-tile.panorama:hover,.instagram-tile.panorama:focus-visible { color: white; background: #fd4b32; outline-offset: -3px; }
+  .tile-number { position: absolute; top: .35rem; left: .4rem; font-size: .58rem; font-weight: 700; }
+  .stack-icon { position: absolute; top: .3rem; right: .4rem; font-size: .75rem; }
+  .publish-order { display: grid; grid-template-columns: repeat(3,1fr); width: min(100%,25rem); margin-top: .55rem; color: var(--muted); font-size: .68rem; text-align: center; }
+  .interaction-hint { max-width: 25rem; margin: 1.25rem 0 0; padding-left: 1rem; border-left: 2px solid #fd4b32; color: var(--muted); font-size: .82rem; line-height: 1.4; }
+  .variant-estimate { width: min(100%,34rem); margin-top: 2.5rem; border-top: 1px solid var(--ink); }
+  .variant-estimate > div { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 1rem; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .variant-estimate > div > span { color: var(--muted); font-size: .86rem; line-height: 1.3; }
+  .variant-estimate > div > strong { font-size: 1rem; white-space: nowrap; }
+  .variant-estimate .estimate-variable { align-items: start; }
+  .estimate-variable p { grid-column: 1 / -1; max-width: 31rem; margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.45; }
+  .price-condition { width: min(100%,34rem); margin: 1.5rem 0 0; padding-left: 1rem; border-left: 2px solid #fd4b32; color: var(--muted); font-size: .85rem; line-height: 1.45; }
+
+  .highlights-price { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-top: 1rem; padding: clamp(1.5rem,3vw,2.5rem); color: white; background: #fd4b32; }
+  .highlights-price span { font-size: clamp(1.1rem,2vw,1.8rem); }
+  .highlights-price strong { font-size: clamp(2rem,4vw,3.75rem); line-height: .9; letter-spacing: -.05em; white-space: nowrap; }
+  .highlights-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); margin-top: 1rem; }
+  .highlight-item { min-width: 0; min-height: 18rem; padding: 1.5rem; border-right: 1px solid var(--line); }
+  .highlight-item:last-child { border-right: 0; }
+  .highlight-icon { display: grid; place-items: center; width: clamp(4rem,7vw,6.5rem); aspect-ratio: 1; margin-bottom: 1.25rem; border-radius: 50%; background: var(--ink); }
+  .highlight-icon svg { width: 42%; height: 42%; fill: none; stroke: white; stroke-width: 1.6; }
+  .highlight-item h3 { margin: 5rem 0 0; font-family: var(--font-display); font-size: clamp(1.35rem,2vw,2rem); font-weight: 400; line-height: 1; overflow-wrap: anywhere; }
+
+  .closing { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); column-gap: var(--grid-gap); padding: clamp(4rem,8vw,8rem) clamp(1rem,2vw,2rem); color: white; background: #fd4b32; }
+  .closing-label { grid-column: 1 / 13; margin: 0; font-size: .75rem; text-transform: uppercase; }
+  .closing h2 { grid-column: 1 / 12; margin-top: clamp(3rem,8vw,8rem); font-size: clamp(3.6rem,8.5vw,8rem); }
+
+  .post-dialog[hidden] { display: none; }
+  .post-dialog { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 1rem; }
+  .dialog-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: rgba(0,0,0,.78); cursor: default; }
+  .dialog-panel { position: relative; width: min(100%,25rem); overflow: hidden; border-radius: .55rem; background: #fff; box-shadow: 0 1.5rem 5rem rgba(0,0,0,.35); }
+  .dialog-header { display: flex; align-items: center; gap: .65rem; padding: .75rem; border-bottom: 1px solid var(--line); }
+  .dialog-header strong { flex: 1; font-size: .85rem; }
+  .dialog-close { display: grid; place-items: center; width: 2rem; height: 2rem; padding: 0; border: 0; color: var(--muted); background: transparent; font-size: 1.5rem; cursor: pointer; }
+  .dialog-slide { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1; padding: 3rem; color: #8c291b; background: #ead9d4; text-align: center; }
+  .slide-count { margin-bottom: .75rem; font-size: .72rem; font-weight: 700; opacity: .65; }
+  .slide-label { font-family: var(--font-display); font-size: 2rem; font-weight: 400; line-height: 1; }
+  .dialog-nav { position: absolute; top: 50%; display: grid; place-items: center; width: 2rem; height: 2rem; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.88); transform: translateY(-50%); cursor: pointer; font-size: 1.4rem; }
+  .dialog-nav:disabled { opacity: 0; pointer-events: none; }
+  .dialog-prev { left: .75rem; }
+  .dialog-next { right: .75rem; }
+  .dialog-dots { display: flex; justify-content: center; gap: .35rem; padding: .75rem 0; }
+  .dialog-dots span { width: .35rem; height: .35rem; border-radius: 50%; background: #d5d2ce; }
+  .dialog-dots span.active { background: #fd4b32; }
+  .dialog-footer { margin: 0; padding: .25rem .9rem 1rem; color: var(--muted); font-size: .78rem; }
+
+  @media (max-width: 64rem) {
+    .cover h1 { grid-column: 1 / 10; }
+    .client-mark { grid-column: 10 / 13; }
+    .variants-grid { grid-template-columns: 1fr; }
+    .variant-note { min-height: 0; }
+    .highlights-grid { grid-template-columns: repeat(3,1fr); }
+    .highlight-item:nth-child(3) { border-right: 0; }
+    .highlight-item:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+  }
+
+  @media (max-width: 56rem) {
+    .cover-inner { padding-top: 6.5rem; }
+    .cover-title-wrap { display: grid; }
+    .cover h1 span { white-space: normal; }
+    .cover-bottom { display: flex; align-items: start; flex-direction: column; gap: 3rem; }
+    .cover-meta { width: 100%; min-width: 0; }
+    .proposal-body { width: min(calc(100% - 2rem),100rem); }
+    .difference-label { grid-column: 1 / 4; }
+    .difference-text { grid-column: 4 / 13; }
+  }
+
+  @media (max-width: 40rem) {
+    .cover-title-wrap { display: block; padding-block: 4rem; }
+    .cover h1 { font-size: clamp(3.2rem,15vw,5rem); }
+    .client-mark { width: 5rem; margin-top: 2rem; }
+    .cover-bottom { gap: 1.5rem; }
+    .cover-lead { font-size: 1.35rem; line-height: 1.15; }
+    .cover-meta dt,.cover-meta dd { font-size: .9rem; }
+    .difference-summary { display: block; }
+    .difference-label { margin-bottom: 2rem; font-size: .95rem; }
+    .difference-text { font-size: 2rem; line-height: 1.15; }
+    .difference-text p { font-size: inherit; line-height: inherit; }
+    .difference-text p + p { margin-top: 1em; }
+    .section-heading { display: block; }
+    .section-number { margin-bottom: 2rem; }
+    .section-intro { font-size: 1.3rem; line-height: 1.25; }
+    .variant-card { padding-inline: .75rem; }
+    .variant-card h3 { margin-top: 3rem; }
+    .variant-price { align-items: start; flex-direction: column; }
+    .variant-price span { font-size: .82rem; }
+    .variant-price strong { text-align: left; }
+    .variant-note { font-size: 1.08rem; line-height: 1.5; }
+    .variant-details li { padding-block: 1rem; font-size: 1rem; line-height: 1.5; }
+    .interaction-hint { max-width: none; font-size: 1rem; line-height: 1.5; }
+    .variant-estimate > div { grid-template-columns: 1fr; gap: .35rem; }
+    .variant-estimate > div > span { font-size: 1rem; line-height: 1.4; }
+    .variant-estimate > div > strong { font-size: 1.15rem; white-space: normal; }
+    .estimate-variable p { font-size: .95rem; line-height: 1.55; }
+    .price-condition { font-size: 1rem; line-height: 1.5; }
+    .highlights-price { align-items: start; flex-direction: column; }
+    .highlights-grid { grid-template-columns: repeat(2,1fr); }
+    .highlight-item,.highlight-item:nth-child(3) { min-height: 14rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .highlight-item:nth-child(even) { border-right: 0; }
+    .highlight-item:last-child { border-bottom: 0; }
+    .highlight-item h3 { margin-top: 3rem; }
+    .closing h2 { font-size: clamp(3.1rem,15vw,5rem); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .instagram-tile.panorama { transition: none; }
+  }
+</style>

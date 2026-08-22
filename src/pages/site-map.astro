@@ -1,0 +1,589 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { servicesList } from '../data/servicesData';
+import { solutionsList } from '../data/solutionsData';
+
+const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+
+const pageGroups = [
+  {
+    id: 'main',
+    eyebrow: '01 / Основа',
+    title: 'Главные страницы',
+    description: 'Основной маршрут посетителя по сайту.',
+    pages: [
+      { title: 'Главная', path: '/', note: 'Обложка, услуги, кейсы, отзывы и контакты' },
+      { title: 'Студия', path: '/studio', note: 'О студии и подходе' },
+      { title: 'Все кейсы', path: '/cases', note: `${cases.length} проектов в портфолио` },
+      { title: 'AI-разработка сайтов', path: '/ai-web-development', note: 'Отдельная посадочная страница' },
+      { title: 'Политика конфиденциальности', path: '/privacy', note: 'Юридическая информация' },
+    ],
+  },
+  {
+    id: 'services',
+    eyebrow: '02 / Предложение',
+    title: 'Услуги',
+    description: 'Общая страница и детальные направления работы.',
+    pages: [
+      { title: 'Все услуги', path: '/services', note: 'Обзор направлений' },
+      ...servicesList.map((service) => ({
+        title: service.name,
+        path: `/services/${service.slug}`,
+        note: service.tag,
+      })),
+    ],
+  },
+  {
+    id: 'solutions',
+    eyebrow: '03 / Отрасли',
+    title: 'Решения',
+    description: 'Посадочные страницы по типам бизнеса.',
+    pages: [
+      { title: 'Все решения', path: '/solutions', note: 'Обзор отраслей' },
+      ...solutionsList.map((solution) => ({
+        title: solution.name,
+        path: `/solutions/${solution.slug}`,
+        note: solution.tag,
+      })),
+    ],
+  },
+  {
+    id: 'cases',
+    eyebrow: '04 / Портфолио',
+    title: 'Кейсы',
+    description: 'Все опубликованные страницы проектов.',
+    pages: cases.map((item) => ({
+      title: item.data.title,
+      path: `/case/${item.id}`,
+      note: `${item.data.year} · ${item.data.services.join(' / ')}`,
+    })),
+  },
+  {
+    id: 'utility',
+    eyebrow: '05 / Внутреннее',
+    title: 'Служебные страницы',
+    description: 'Не входят в основной пользовательский маршрут.',
+    pages: [
+      { title: 'Аналитика', path: '/anal', note: 'Закрыта от индексации', status: 'private' },
+      { title: 'CRM', path: '/crm', note: 'Закрыта от индексации', status: 'private' },
+      { title: 'Форма отзыва', path: '/review', note: 'Страница для клиентов' },
+      { title: 'Светлая версия главной', path: '/light', note: 'Альтернативная обложка' },
+      { title: 'Карта сайта', path: '/site-map', note: 'Эта страница · закрыта от индексации', status: 'private' },
+      { title: 'КП · Система этикеток', path: '/kp/sistema-etiketok', note: 'Коммерческое предложение', status: 'private' },
+      { title: 'Архив · Shanding', path: '/archive/shanding', note: 'Архивная версия', status: 'archive' },
+      { title: 'Страница 404', path: '/404', note: 'Системная страница', status: 'private' },
+    ],
+  },
+];
+
+const totalPages = pageGroups.reduce((total, group) => total + group.pages.length, 0);
+---
+
+<Base
+  title="Карта сайта"
+  description="Внутренняя визуальная карта страниц сайта Yapil."
+  theme="light"
+  noindex={true}
+  navOverlay={false}
+>
+  <div class="map-page">
+    <header class="map-hero container">
+      <div class="map-kicker">
+        <span class="map-kicker-mark" aria-hidden="true">+</span>
+        <span>Личная рабочая область</span>
+      </div>
+      <div class="map-heading">
+        <h1>Карта<br />сайта</h1>
+        <div class="map-intro">
+          <p>Все опубликованные страницы в одной структуре. Нажмите на карточку, чтобы открыть страницу в новой вкладке.</p>
+          <div class="map-summary" aria-label="Сводка по карте сайта">
+            <span><strong>{totalPages}</strong> страниц</span>
+            <span><strong>{pageGroups.length}</strong> разделов</span>
+            <span class="private-label">noindex</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="map-workspace container" aria-label="Графическая карта сайта">
+      <div class="map-toolbar">
+        <label class="map-search">
+          <span class="sr-only">Найти страницу</span>
+          <span aria-hidden="true">⌕</span>
+          <input type="search" placeholder="Найти страницу или адрес" data-map-search />
+          <kbd>⌘ K</kbd>
+        </label>
+        <div class="map-legend" aria-label="Условные обозначения">
+          <span><i class="status-dot status-live"></i> Публичная</span>
+          <span><i class="status-dot status-private"></i> Скрытая</span>
+          <span><i class="status-dot status-archive"></i> Архив</span>
+        </div>
+      </div>
+
+      <div class="map-root" aria-hidden="true">
+        <span class="root-index">00</span>
+        <div>
+          <strong>yapil.art</strong>
+          <small>Корень сайта</small>
+        </div>
+      </div>
+
+      <div class="map-tree" data-map-tree>
+        {pageGroups.map((group) => (
+          <section class:list={['map-branch', `map-branch-${group.id}`]} data-map-group>
+            <header class="branch-header">
+              <div>
+                <span class="branch-eyebrow">{group.eyebrow}</span>
+                <h2>{group.title}</h2>
+              </div>
+              <span class="branch-count" data-group-count>{group.pages.length}</span>
+            </header>
+            <p class="branch-description">{group.description}</p>
+            <div class="branch-pages">
+              {group.pages.map((page) => (
+                <a
+                  class:list={['page-node', page.status && `is-${page.status}`]}
+                  href={page.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-map-node
+                  data-search-text={`${page.title} ${page.path} ${page.note}`.toLocaleLowerCase('ru')}
+                >
+                  <i class:list={['status-dot', page.status ? `status-${page.status}` : 'status-live']} aria-hidden="true"></i>
+                  <span class="page-node-copy">
+                    <strong>{page.title}</strong>
+                    <small>{page.note}</small>
+                  </span>
+                  <code>{page.path}</code>
+                  <span class="node-arrow" aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <p class="map-empty" data-map-empty hidden>Ничего не найдено. Попробуйте другое название или адрес.</p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>('[data-map-search]');
+  const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-map-node]'));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-map-group]'));
+  const empty = document.querySelector<HTMLElement>('[data-map-empty]');
+
+  const updateMap = () => {
+    const query = search?.value.trim().toLocaleLowerCase('ru') ?? '';
+    let visibleTotal = 0;
+
+    nodes.forEach((node) => {
+      const visible = !query || node.dataset.searchText?.includes(query);
+      node.hidden = !visible;
+      if (visible) visibleTotal += 1;
+    });
+
+    groups.forEach((group) => {
+      const visibleNodes = Array.from(group.querySelectorAll<HTMLElement>('[data-map-node]')).filter((node) => !node.hidden);
+      group.hidden = visibleNodes.length === 0;
+      const count = group.querySelector<HTMLElement>('[data-group-count]');
+      if (count) count.textContent = String(visibleNodes.length);
+    });
+
+    if (empty) empty.hidden = visibleTotal !== 0;
+  };
+
+  search?.addEventListener('input', updateMap);
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === 'k') {
+      event.preventDefault();
+      search?.focus();
+    }
+  });
+</script>
+
+<style>
+  :global(body.theme-light) {
+    background: #f1efe9;
+  }
+
+  .map-page {
+    min-height: 100vh;
+    padding: clamp(8rem, 12vw, 11rem) 0 clamp(5rem, 9vw, 9rem);
+    color: #171716;
+    background:
+      linear-gradient(rgba(23, 23, 22, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23, 23, 22, 0.055) 1px, transparent 1px),
+      #f1efe9;
+    background-size: 32px 32px;
+  }
+
+  .map-hero {
+    margin-bottom: clamp(3rem, 7vw, 6rem);
+  }
+
+  .map-kicker,
+  .map-summary,
+  .map-legend {
+    display: flex;
+    align-items: center;
+  }
+
+  .map-kicker {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .map-kicker-mark {
+    color: #fd4b32;
+    font-size: 1rem;
+  }
+
+  .map-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(17rem, 5fr);
+    gap: var(--grid-gap, 1.5rem);
+    align-items: end;
+  }
+
+  .map-heading h1 {
+    margin: 0;
+    font-size: clamp(5rem, 13vw, 11rem);
+    line-height: 0.72;
+    letter-spacing: -0.075em;
+  }
+
+  .map-intro {
+    padding-bottom: 0.3rem;
+  }
+
+  .map-intro p {
+    max-width: 34rem;
+    margin-bottom: 1.5rem;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.35;
+  }
+
+  .map-summary {
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .map-summary span {
+    padding: 0.45rem 0.65rem;
+    border: 1px solid rgba(23, 23, 22, 0.2);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .map-summary strong {
+    margin-right: 0.25rem;
+    font-size: 0.95rem;
+  }
+
+  .map-summary .private-label {
+    color: #fff;
+    background: #171716;
+    border-color: #171716;
+  }
+
+  .map-workspace {
+    position: relative;
+  }
+
+  .map-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #171716;
+  }
+
+  .map-search {
+    display: flex;
+    width: min(100%, 31rem);
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0.85rem;
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid rgba(23, 23, 22, 0.2);
+  }
+
+  .map-search:focus-within {
+    border-color: #fd4b32;
+    box-shadow: 0 0 0 1px #fd4b32;
+  }
+
+  .map-search input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 0.9rem;
+  }
+
+  .map-search kbd {
+    padding: 0.15rem 0.35rem;
+    color: rgba(23, 23, 22, 0.55);
+    background: #e6e3dc;
+    border: 1px solid rgba(23, 23, 22, 0.15);
+    font-size: 0.65rem;
+  }
+
+  .map-legend {
+    gap: 1rem;
+    color: rgba(23, 23, 22, 0.64);
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .map-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .status-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: #218a50;
+  }
+
+  .status-private { background: #fd4b32; }
+  .status-archive { background: #8d8980; }
+
+  .map-root {
+    position: relative;
+    display: inline-flex;
+    min-width: 15rem;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 2rem 0 3rem;
+    padding: 1rem;
+    color: #fff;
+    background: #171716;
+  }
+
+  .map-root::after {
+    position: absolute;
+    top: 100%;
+    left: 2rem;
+    width: 1px;
+    height: 3rem;
+    content: '';
+    background: rgba(23, 23, 22, 0.38);
+  }
+
+  .root-index {
+    display: grid;
+    width: 2.2rem;
+    height: 2.2rem;
+    place-items: center;
+    color: #171716;
+    background: #fd4b32;
+    font: 650 0.7rem/1 var(--font-body);
+  }
+
+  .map-root strong,
+  .map-root small {
+    display: block;
+  }
+
+  .map-root strong { font-size: 0.95rem; }
+  .map-root small { margin-top: 0.2rem; color: rgba(255, 255, 255, 0.55); font-size: 0.7rem; }
+
+  .map-tree {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .map-branch {
+    position: relative;
+    grid-column: span 4;
+    align-self: start;
+    padding-top: 1rem;
+    border-top: 1px solid #171716;
+  }
+
+  .map-branch-cases { grid-column: span 8; }
+  .map-branch-utility { grid-column: span 4; }
+
+  .map-branch::before {
+    position: absolute;
+    top: -1.5rem;
+    left: 2rem;
+    width: 1px;
+    height: 1.5rem;
+    content: '';
+    background: rgba(23, 23, 22, 0.38);
+  }
+
+  .branch-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .branch-eyebrow {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: #fd4b32;
+    font-size: 0.65rem;
+    font-weight: 650;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .branch-header h2 {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(1.35rem, 2vw, 2rem);
+    font-weight: 550;
+    letter-spacing: -0.04em;
+  }
+
+  .branch-count {
+    display: grid;
+    min-width: 2rem;
+    height: 2rem;
+    place-items: center;
+    color: #fff;
+    background: #171716;
+    font-size: 0.7rem;
+  }
+
+  .branch-description {
+    min-height: 2.5em;
+    margin: 0.75rem 0 1.25rem;
+    color: rgba(23, 23, 22, 0.58);
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .branch-pages {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+
+  .map-branch-cases .branch-pages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-node {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    min-height: 4.6rem;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.75rem;
+    overflow: hidden;
+    color: #171716;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(23, 23, 22, 0.14);
+    text-decoration: none;
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  }
+
+  .page-node:hover {
+    z-index: 1;
+    color: #fff;
+    background: #171716;
+    border-color: #171716;
+    transform: translateY(-2px);
+  }
+
+  .page-node-copy,
+  .page-node-copy strong,
+  .page-node-copy small {
+    min-width: 0;
+    display: block;
+  }
+
+  .page-node-copy strong {
+    overflow: hidden;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .page-node-copy small {
+    margin-top: 0.22rem;
+    overflow: hidden;
+    color: rgba(23, 23, 22, 0.52);
+    font-size: 0.66rem;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .page-node:hover small { color: rgba(255, 255, 255, 0.58); }
+
+  .page-node code {
+    max-width: 8rem;
+    overflow: hidden;
+    color: rgba(23, 23, 22, 0.48);
+    font: 500 0.62rem/1 var(--font-body);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .page-node:hover code { color: #fd4b32; }
+  .node-arrow { font-size: 0.8rem; }
+  .page-node[hidden], .map-branch[hidden] { display: none; }
+
+  .map-empty {
+    padding: 4rem 1rem;
+    text-align: center;
+    border: 1px dashed rgba(23, 23, 22, 0.3);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 70rem) {
+    .map-branch { grid-column: span 6; }
+    .map-branch-cases { grid-column: span 12; }
+    .map-branch-utility { grid-column: span 6; }
+  }
+
+  @media (max-width: 48rem) {
+    .map-page { padding-top: 7rem; background-size: 24px 24px; }
+    .map-heading { grid-template-columns: 1fr; gap: 2.5rem; }
+    .map-heading h1 { font-size: clamp(4.8rem, 25vw, 8rem); }
+    .map-toolbar { align-items: stretch; flex-direction: column; }
+    .map-search { width: 100%; }
+    .map-legend { flex-wrap: wrap; }
+    .map-tree { display: block; }
+    .map-branch { margin-bottom: 2.5rem; }
+    .map-branch-cases .branch-pages { grid-template-columns: 1fr; }
+    .page-node code { display: none; }
+    .branch-description { min-height: 0; }
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import Contacts from '../Contacts.astro';
+import Footer from '../Footer.astro';
+import '../../styles/proposal-pages.css';
+
+interface Item {
+  slug: string;
+  number: string;
+  name: string;
+  heroH1: string;
+  metrics: { label: string; text: string }[];
+}
+
+interface Props {
+  title: string;
+  description: string;
+  jsonLd: Record<string, unknown>;
+  section: 'services' | 'solutions';
+  heading: string;
+  lead: string;
+  items: Item[];
+  catalogTitle: string;
+  contactsTitle: string;
+  contactsLead: string;
+  source: 'contacts_form';
+}
+
+const { title, description, jsonLd, section, heading, lead, items, catalogTitle, contactsTitle, contactsLead, source } = Astro.props;
+const isServices = section === 'services';
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} theme="light" navOverlay={true}>
+  <article class="editorial-page">
+    <header class="editorial-cover">
+      <div class="container editorial-cover__inner">
+        <div class="editorial-title-wrap">
+          <h1>{heading}</h1>
+        </div>
+        <div class="editorial-cover__bottom">
+          <p class="editorial-lead">{lead}</p>
+          <dl class="editorial-meta">
+            <div><dt>Формат</dt><dd>{isServices ? 'Услуги студии' : 'Решения по нишам'}</dd></div>
+            <div><dt>География</dt><dd>Казахстан / Весь мир</dd></div>
+            <div><dt>Связь</dt><dd>Ответим в течение 2 часов</dd></div>
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <div class="editorial-body">
+      <section class="editorial-section" aria-labelledby="catalog-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">01</p>
+          <div class="editorial-heading__content">
+            <h2 id="catalog-title">{catalogTitle}</h2>
+          </div>
+        </header>
+        <div class="editorial-grid">
+          {items.map((item) => (
+            <a class="editorial-card" href={`/${section}/${item.slug}`}>
+              <span class="editorial-card__number">{item.number} / ↗</span>
+              <h2>{item.name}</h2>
+              <p>{item.heroH1}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="editorial-section" aria-labelledby="principles-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">02</p>
+          <div class="editorial-heading__content"><h2 id="principles-title">Принципы работы</h2></div>
+        </header>
+        <ol class="editorial-list">
+          <li class="editorial-row"><span class="editorial-row__number">01</span><h3>Погружаемся в задачу</h3><p>Разбираем продукт, аудиторию и контекст до первого визуального решения.</p></li>
+          <li class="editorial-row"><span class="editorial-row__number">02</span><h3>Проектируем систему</h3><p>Связываем смысл, дизайн и технологию в цельный инструмент для бизнеса.</p></li>
+          <li class="editorial-row"><span class="editorial-row__number">03</span><h3>Доводим до запуска</h3><p>Готовим все материалы, проверяем качество и сопровождаем внедрение.</p></li>
+        </ol>
+      </section>
+
+    </div>
+
+    <Contacts theme="light" title={contactsTitle} lead={contactsLead} source={source} sourceDetails={isServices ? 'Каталог услуг' : 'Каталог отраслевых решений'} />
+  </article>
+  <Footer slot="footer" theme="light" />
+</Base>
