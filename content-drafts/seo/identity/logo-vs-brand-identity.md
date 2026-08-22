@@ -9,6 +9,8 @@ relatedKeywords:
   - "разработка логотипа"
   - "разработка фирменного стиля"
   - "что входит в фирменный стиль"
+cover: "/articles/covers/identity/logo-vs-brand-identity.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Логотип или фирменный стиль: в чём разница»"
 status: "draft"
 ---
 

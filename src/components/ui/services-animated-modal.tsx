@@ -74,7 +74,7 @@ export const services: ServiceItem[] = [
     description: 'Работаем как ваш внешний арт-отдел: закрываем регулярные задачи, готовим промо, держим стиль по гайдлайну.',
     caseBadge: 'Кейс // ONmacabim',
     caseLink: '/case/onmacabim',
-    image: '/services/support.webp',
+    image: 'https://media.yapil.art/services/support.webp?v=20260822',
     color: '#141416',
   },
 ];

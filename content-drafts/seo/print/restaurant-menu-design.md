@@ -9,6 +9,8 @@ relatedKeywords:
   - "разработка меню"
   - "оформление меню"
   - "меню для ресторана"
+cover: "/articles/covers/print/restaurant-menu-design.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Как сделать удобное меню для ресторана»"
 status: "draft"
 ---
 

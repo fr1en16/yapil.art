@@ -9,6 +9,8 @@ relatedKeywords:
   - "нейросеть для презентации"
   - "дизайн презентации"
   - "Gamma презентация"
+cover: "/articles/covers/presentations/ai-vs-designer-presentation.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «ИИ или дизайнер: как лучше создать презентацию»"
 status: "draft"
 ---
 

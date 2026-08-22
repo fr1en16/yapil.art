@@ -9,6 +9,8 @@ relatedKeywords:
   - "презентация инвестору"
   - "инвестиционная презентация"
   - "слайды pitch deck"
+cover: "/articles/covers/presentations/pitch-deck-structure.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Структура pitch deck для инвестора»"
 status: "draft"
 ---
 

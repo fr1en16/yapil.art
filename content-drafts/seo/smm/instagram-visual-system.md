@@ -9,6 +9,8 @@ relatedKeywords:
   - "единый стиль Instagram"
   - "оформление сторис"
   - "обложки Reels"
+cover: "/articles/covers/smm/instagram-visual-system.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Как оформить Instagram компании»"
 status: "draft"
 ---
 

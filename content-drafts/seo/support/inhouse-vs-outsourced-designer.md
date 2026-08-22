@@ -9,6 +9,8 @@ relatedKeywords:
   - "дизайн аутсорсинг"
   - "услуги графического дизайнера"
   - "дизайн сопровождение"
+cover: "/articles/covers/support/inhouse-vs-outsourced-designer.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Дизайнер в штат или на аутсорс»"
 status: "draft"
 ---
 

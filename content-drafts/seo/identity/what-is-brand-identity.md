@@ -9,6 +9,8 @@ relatedKeywords:
   - "фирменный стиль"
   - "визуальная идентичность"
   - "элементы айдентики"
+cover: "/articles/covers/identity/what-is-brand-identity.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Что такое айдентика бренда»"
 status: "draft"
 ---
 

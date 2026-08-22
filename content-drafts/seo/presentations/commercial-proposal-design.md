@@ -9,6 +9,8 @@ relatedKeywords:
   - "структура коммерческого предложения"
   - "коммерческое предложение пример"
   - "презентация для клиента"
+cover: "/articles/covers/presentations/commercial-proposal-design.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Как сделать убедительное коммерческое предложение»"
 status: "draft"
 ---
 

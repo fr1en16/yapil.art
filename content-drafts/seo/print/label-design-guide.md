@@ -9,6 +9,8 @@ relatedKeywords:
   - "этикетка для продукта"
   - "дизайн наклейки"
   - "макет этикетки"
+cover: "/articles/covers/print/label-design-guide.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Как разработать дизайн этикетки»"
 status: "draft"
 ---
 

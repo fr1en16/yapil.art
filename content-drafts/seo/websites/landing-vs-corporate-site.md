@@ -9,6 +9,8 @@ relatedKeywords:
   - "лендинг под ключ"
   - "корпоративный сайт"
   - "создание сайта для бизнеса"
+cover: "/articles/covers/websites/landing-vs-corporate-site.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Лендинг или многостраничный сайт: что выбрать бизнесу»"
 status: "draft"
 ---
 

@@ -9,6 +9,8 @@ relatedKeywords:
   - "заказать дизайн упаковки"
   - "дизайн этикетки"
   - "упаковка для товара"
+cover: "/articles/covers/print/product-packaging-design.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Как проходит разработка дизайна упаковки»"
 status: "draft"
 ---
 

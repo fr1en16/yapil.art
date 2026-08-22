@@ -9,6 +9,8 @@ relatedKeywords:
   - "SMM продвижение"
   - "SMM для бизнеса"
   - "что входит в SMM"
+cover: "/articles/covers/smm/what-is-smm.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Что такое SMM простыми словами»"
 status: "draft"
 ---
 

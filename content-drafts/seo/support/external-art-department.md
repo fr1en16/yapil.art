@@ -9,6 +9,8 @@ relatedKeywords:
   - "дизайн сопровождение бизнеса"
   - "внешняя дизайн команда"
   - "поддержка фирменного стиля"
+cover: "/articles/covers/support/external-art-department.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Как работает внешний арт-отдел»"
 status: "draft"
 ---
 

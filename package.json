@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "seo:generate": "node scripts/generate-seo-library.mjs",
+    "seo:verify": "node scripts/verify-seo-library.mjs",
     "verify:geo": "node scripts/verify-geo-pages.mjs",
     "preview": "astro preview",
     "astro": "astro"

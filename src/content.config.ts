@@ -49,6 +49,9 @@ const articles = defineCollection({
       author: z.string().default('Yapil'),
       reviewer: z.string().optional(),
       cover: z.string().optional(),
+      coverAlt: z.string().optional(),
+      trendCluster: z.string().optional(),
+      trendBasis: z.string().optional(),
     })
     .refine((data) => data.status !== 'published' || Boolean(data.publishedAt), {
       message: 'Для опубликованной статьи укажите publishedAt',

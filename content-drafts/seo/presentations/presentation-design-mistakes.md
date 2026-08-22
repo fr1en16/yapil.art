@@ -9,6 +9,8 @@ relatedKeywords:
   - "как улучшить презентацию"
   - "оформление слайдов"
   - "профессиональная презентация"
+cover: "/articles/covers/presentations/presentation-design-mistakes.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «10 ошибок в бизнес-презентации и как их исправить»"
 status: "draft"
 ---
 

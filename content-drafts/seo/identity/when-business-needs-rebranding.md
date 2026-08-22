@@ -9,6 +9,8 @@ relatedKeywords:
   - "признаки устаревшего бренда"
   - "обновление фирменного стиля"
   - "этапы ребрендинга"
+cover: "/articles/covers/identity/when-business-needs-rebranding.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Когда бизнесу нужен ребрендинг»"
 status: "draft"
 ---
 

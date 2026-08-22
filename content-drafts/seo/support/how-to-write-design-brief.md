@@ -9,6 +9,8 @@ relatedKeywords:
   - "бриф для дизайнера"
   - "как поставить задачу дизайнеру"
   - "шаблон ТЗ на дизайн"
+cover: "/articles/covers/support/how-to-write-design-brief.webp"
+coverAlt: "Редакционный коллаж Yapil о теме «Как правильно поставить задачу дизайнеру»"
 status: "draft"
 ---
 
