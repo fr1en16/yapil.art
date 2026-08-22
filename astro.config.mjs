@@ -4,6 +4,16 @@ import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
+import { readdirSync, readFileSync } from 'node:fs';
+
+const articlesRoot = new URL('./content-drafts/seo/', import.meta.url);
+const articleEntries = /** @type {string[]} */ (readdirSync(articlesRoot, { recursive: true, encoding: 'utf8' }));
+const publishedArticlePaths = new Set(
+  articleEntries
+    .filter((entry) => entry.endsWith('.md') && entry !== 'ARTICLE_TEMPLATE.md')
+    .filter((entry) => /^status:\s*["']?published["']?\s*$/m.test(readFileSync(new URL(entry, articlesRoot), 'utf8')))
+    .map((entry) => `/articles/${entry.slice(entry.lastIndexOf('/') + 1).replace(/\.md$/, '')}`),
+);
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,7 +27,20 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const pathname = new URL(page).pathname;
-        return !pathname.startsWith('/kp/') && !pathname.startsWith('/site-map');
+        const normalizedPath = pathname.replace(/\/$/, '') || '/';
+
+        if (normalizedPath === '/articles') return publishedArticlePaths.size > 0;
+        if (normalizedPath.startsWith('/articles/')) return publishedArticlePaths.has(normalizedPath);
+
+        return ![
+          '/anal',
+          '/archive/shanding',
+          '/brief',
+          '/crm',
+          '/kp',
+          '/light',
+          '/site-map',
+        ].some((privatePath) => normalizedPath === privatePath || normalizedPath.startsWith(`${privatePath}/`));
       },
     }),
     react(),

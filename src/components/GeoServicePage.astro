@@ -32,8 +32,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const serviceUrl = new URL(`/services/${service.slug}`, Astro.site).href;
 const cityUrl = new URL(`/services/${service.slug}/${city.slug}`, Astro.site).href;
 
-const title = `${geoCopy.searchName} в ${locationPrepositional} — Yapil`;
-const description = `${geoCopy.action} для компаний ${locationGenitive}. ${geoCopy.audienceResult}. Работа по всему Казахстану.`;
+const title = `${geoCopy.titleName ?? geoCopy.searchName} в ${locationPrepositional} — Yapil`;
+const description = `${geoCopy.action} для бизнеса ${locationGenitive}. ${geoCopy.metaResult}`;
 const heroH1 = `${geoCopy.searchName} в ${locationPrepositional}`;
 const heroLead = `${localContext} ${geoCopy.localValue}`;
 

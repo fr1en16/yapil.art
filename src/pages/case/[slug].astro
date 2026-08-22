@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
@@ -25,6 +24,16 @@ const ogImage = new URL(`/open-graph/${c.id}.png`, Astro.site).href;
 const caseCoverUrl = c.data.cover.startsWith('http')
   ? c.data.cover
   : new URL(c.data.cover, Astro.site).href;
+const metaDescriptionParts = [
+  `Кейс ${c.data.title}: ${c.data.summary.replace(/[.!?]+$/, '')}.`,
+  c.data.task?.replace(/[.!?]+$/, ''),
+  `Услуги: ${c.data.services.join(', ')}.`,
+  `Проект ${c.data.year} года из портфолио дизайн-студии Yapil.`,
+  'Смотрите задачу, визуальное решение и материалы проекта.',
+].filter(Boolean).join(' ');
+const metaDescription = metaDescriptionParts.length <= 160
+  ? metaDescriptionParts
+  : `${metaDescriptionParts.slice(0, 157).replace(/\s+\S*$/, '')}…`;
 const creativeWorkJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -78,7 +87,7 @@ const creativeWorkJsonLd = {
 
 <Base
   title={`${c.data.title} · ${c.data.services.join(' / ')}`}
-  description={`Кейс ${c.data.title}: ${c.data.summary}. ${c.data.task || ''}`}
+  description={metaDescription}
   image={ogImage}
   type="article"
   jsonLd={creativeWorkJsonLd}
@@ -132,16 +141,14 @@ const creativeWorkJsonLd = {
             decoding="async"
           />
         ) : (
-          <Image
+          <img
             src={c.data.cover}
             alt={`${c.data.title} — ${c.data.summary}`}
-            inferSize
-            widths={[600, 1000, 1600]}
-            sizes="100vw"
-            format="webp"
-            quality={75}
+            width="1600"
+            height="1000"
             loading="eager"
             fetchpriority="high"
+            decoding="async"
           />
         )}
       </div>

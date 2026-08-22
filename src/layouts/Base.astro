@@ -32,8 +32,9 @@ const {
 } = Astro.props;
 const documentTitle = title.includes('Yapil')
   ? title
-  : `${title} — Дизайн-студия Yapil`;
+  : `${title} — Yapil`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const resolvedImage = new URL(image, Astro.site).href;
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/light' || Astro.url.pathname === '/light/';
 const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
 ---
@@ -55,21 +56,18 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
     <link rel="preload" href="/fonts/oranienbaum-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/hero-cover/dm-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="ru" href={canonical} />
-    <link rel="alternate" hreflang="ru-KZ" href={canonical} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
     <meta property="og:type" content={type} />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:site_name" content="Yapil" />
     <meta property="og:title" content={documentTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={resolvedImage} />
     <meta property="og:image:alt" content={documentTitle} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={documentTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image" content={resolvedImage} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" sizes="any" />
     <title>{documentTitle}</title>

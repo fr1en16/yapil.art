@@ -3,12 +3,15 @@ import { getCollection } from 'astro:content';
 import CaseCard from './CaseCard.astro';
 
 const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+const { pageHeading = false } = Astro.props;
 ---
 
 <section class="cases section" id="cases" aria-labelledby="cases-title">
   <div class="container">
     <div class="cases-heading">
-      <h2 class="display-title" id="cases-title">Кейсы</h2>
+      {pageHeading
+        ? <h1 class="display-title" id="cases-title">Кейсы и портфолио</h1>
+        : <h2 class="display-title" id="cases-title">Кейсы</h2>}
       <p>Каждый проект начинали с нуля.</p>
     </div>
 

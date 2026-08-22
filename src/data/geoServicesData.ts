@@ -1,10 +1,12 @@
 export interface GeoServiceCopy {
   searchName: string;
+  titleName?: string;
   shortName: string;
   action: string;
   priceObject: string;
   localValue: string;
   audienceResult: string;
+  metaResult: string;
 }
 
 export const geoServicesData: Record<string, GeoServiceCopy> = {
@@ -15,6 +17,7 @@ export const geoServicesData: Record<string, GeoServiceCopy> = {
     priceObject: 'разработка сайта',
     localValue: 'Создаём быстрые лендинги, корпоративные сайты, каталоги и цифровые сервисы, которые понятно объясняют предложение и приводят к заявке.',
     audienceResult: 'структура, UX/UI-дизайн, разработка, интеграции и запуск',
+    metaResult: 'Структура, дизайн, разработка и запуск.',
   },
   identity: {
     searchName: 'Разработка айдентики',
@@ -23,14 +26,17 @@ export const geoServicesData: Record<string, GeoServiceCopy> = {
     priceObject: 'разработка айдентики',
     localValue: 'Собираем логотип, типографику, палитру и графическую систему в узнаваемый образ, который последовательно работает во всех каналах.',
     audienceResult: 'логотип, фирменный стиль, гайдлайн и готовые носители',
+    metaResult: 'Логотип, фирменный стиль и гайдлайн.',
   },
   print: {
     searchName: 'Дизайн полиграфии и упаковки',
+    titleName: 'Дизайн упаковки',
     shortName: 'Полиграфия',
     action: 'Разрабатываем дизайн полиграфии и упаковки',
     priceObject: 'дизайн полиграфии и упаковки',
     localValue: 'Проектируем упаковку, этикетки, каталоги, меню и POS-материалы с учётом производства, тиража и технических требований типографии.',
     audienceResult: 'концепция, макеты, препресс и комплект файлов для производства',
+    metaResult: 'Концепция, макеты и подготовка к печати.',
   },
   presentations: {
     searchName: 'Дизайн презентаций',
@@ -39,6 +45,7 @@ export const geoServicesData: Record<string, GeoServiceCopy> = {
     priceObject: 'дизайн презентации',
     localValue: 'Переводим стратегию, цифры и сложные продукты в ясную историю для инвесторов, клиентов, партнёров и тендерных комиссий.',
     audienceResult: 'структура, редактура, инфографика и готовый файл презентации',
+    metaResult: 'Структура, редактура, дизайн и инфографика.',
   },
   smm: {
     searchName: 'Дизайн для SMM',
@@ -47,13 +54,16 @@ export const geoServicesData: Record<string, GeoServiceCopy> = {
     priceObject: 'дизайн для SMM',
     localValue: 'Разрабатываем визуальную концепцию, шаблоны публикаций и рекламные креативы, чтобы коммуникация бренда оставалась узнаваемой и управляемой.',
     audienceResult: 'визуальная концепция, шаблоны, рекламные креативы и правила работы',
+    metaResult: 'Концепция, шаблоны и рекламные креативы.',
   },
   support: {
     searchName: 'Дизайн-сопровождение бизнеса',
+    titleName: 'Дизайн-сопровождение',
     shortName: 'Дизайн-сопровождение',
     action: 'Берём дизайн-задачи бизнеса на сопровождение',
     priceObject: 'дизайн-сопровождение',
     localValue: 'Работаем как внешний арт-отдел: поддерживаем сайт, рекламу, презентации, полиграфию и фирменный стиль в единой системе.',
     audienceResult: 'регулярный дизайн-процесс, приоритеты, контроль сроков и единое качество',
+    metaResult: 'Регулярные задачи, контроль сроков и качества.',
   },
 };

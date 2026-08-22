@@ -1,6 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-
 interface Props {
   slug: string;
   title: string;
@@ -60,16 +58,14 @@ const poster = isVideo
               decoding="async"
             />
           ) : (
-            <Image
+            <img
               src={cover}
               alt={`${title} — ${summary}`}
-              inferSize
-              widths={[400, 800]}
-              sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) 50vw, 33vw"
-              format="webp"
-              quality={70}
+              width="800"
+              height="800"
               loading={index < 2 ? 'eager' : 'lazy'}
               fetchpriority={index === 0 ? 'high' : 'auto'}
+              decoding="async"
             />
           )}
         </div>

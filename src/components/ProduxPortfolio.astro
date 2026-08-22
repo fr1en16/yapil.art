@@ -1,6 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 
 interface Props {
   theme?: 'dark' | 'light';
@@ -90,15 +89,13 @@ const positions = [
                       decoding="async"
                     />
                   ) : (
-                    <Image
+                    <img
                       src={project.data.cover}
                       alt={`${project.data.title} — ${project.data.summary}`}
-                      inferSize
-                      widths={[640, 960, 1440]}
-                      sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1199px) calc(100vw - 4rem), 70vw"
-                      format="webp"
-                      quality={78}
+                      width="1440"
+                      height="900"
                       loading="lazy"
+                      decoding="async"
                     />
                   )}
                 </div>
