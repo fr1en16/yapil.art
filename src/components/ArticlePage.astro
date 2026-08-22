@@ -1,0 +1,555 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+  headings: Heading[];
+  slug: string;
+  readingMinutes: number;
+}
+
+const { article, headings, slug, readingMinutes } = Astro.props;
+const toc = headings.filter((heading) => heading.depth === 2);
+const servicePaths: Record<string, string> = {
+  'Сайты': 'websites',
+  'Айдентика': 'identity',
+  'Полиграфия': 'print',
+  'Презентации': 'presentations',
+  'SMM': 'smm',
+  'Сопровождение': 'support',
+};
+const serviceSlug = servicePaths[article.data.service] ?? 'websites';
+const publishedLabel = article.data.publishedAt
+  ? new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).format(article.data.publishedAt)
+  : 'Редакционный шаблон';
+---
+
+<article class="article-page">
+  <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
+
+  <header class="article-hero">
+    <div class="container article-hero__inner">
+      <nav class="article-breadcrumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a>
+        <span aria-hidden="true">/</span>
+        <a href="/articles">Статьи</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{article.data.service}</span>
+      </nav>
+
+      <div class="article-kicker">
+        <span>{article.data.service}</span>
+        <span>{readingMinutes} мин чтения</span>
+        {article.data.status === 'draft' && <span class="article-status">Черновик</span>}
+      </div>
+
+      <h1>{article.data.h1}</h1>
+      <p class="article-deck">{article.data.description}</p>
+
+      <div class="article-byline">
+        <div>
+          <span class="article-byline__label">Автор</span>
+          <strong>{article.data.author}</strong>
+        </div>
+        <div>
+          <span class="article-byline__label">Опубликовано</span>
+          <strong>{publishedLabel}</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="article-layout container">
+    <aside class="article-rail" aria-label="Навигация по статье">
+      <div class="article-rail__sticky">
+        <p class="article-rail__title">В этой статье</p>
+        <ol>
+          {toc.map((heading, index) => (
+            <li>
+              <a href={`#${heading.slug}`}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </aside>
+
+    <div class="article-main">
+      <div class="article-copy">
+        <slot />
+      </div>
+
+      <section class="article-cta" aria-labelledby="article-cta-title">
+        <span class="article-cta__eyebrow">Следующий шаг</span>
+        <h2 id="article-cta-title">Нужна помощь с направлением «{article.data.service}»?</h2>
+        <p>Разберём задачу, предложим подходящий формат и зафиксируем состав результата до начала работы.</p>
+        <div class="article-cta__actions">
+          <a class="article-cta__primary" href={`/brief?service=${serviceSlug}`}>
+            Обсудить проект <span aria-hidden="true">→</span>
+          </a>
+          <a class="article-cta__secondary" href={`/services/${serviceSlug}`}>Посмотреть услугу</a>
+        </div>
+      </section>
+
+      <footer class="article-footer">
+        <p>Основной запрос</p>
+        <strong>{article.data.primaryKeyword}</strong>
+        {article.data.relatedKeywords.length > 0 && (
+          <ul aria-label="Связанные темы">
+            {article.data.relatedKeywords.map((keyword) => <li>{keyword}</li>)}
+          </ul>
+        )}
+        <a href={`/articles/${slug}#main-content`} class="article-back-top">Наверх ↑</a>
+      </footer>
+    </div>
+  </div>
+</article>
+
+<script>
+  const progress = document.querySelector<HTMLElement>('[data-reading-progress]');
+  const article = document.querySelector<HTMLElement>('.article-page');
+
+  if (progress && article) {
+    const updateProgress = () => {
+      const start = article.offsetTop;
+      const end = Math.max(article.scrollHeight - window.innerHeight, 1);
+      const value = Math.min(Math.max((window.scrollY - start) / end, 0), 1);
+      progress.style.transform = `scaleX(${value})`;
+    };
+
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+  }
+</script>
+
+<style>
+  .article-page {
+    --article-ink: #171717;
+    --article-muted: #6f6b66;
+    --article-line: rgba(23, 23, 23, 0.16);
+    color: var(--article-ink);
+    background: #f7f5f2;
+  }
+
+  .reading-progress {
+    position: fixed;
+    z-index: 50;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    pointer-events: none;
+  }
+
+  .reading-progress span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #fd4b32;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  .article-hero {
+    padding: clamp(7rem, 13vw, 11rem) 0 clamp(4.5rem, 9vw, 8rem);
+    border-bottom: 1px solid var(--article-line);
+  }
+
+  .article-hero__inner {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .article-breadcrumbs,
+  .article-kicker,
+  .article-byline {
+    grid-column: 1 / -1;
+  }
+
+  .article-breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: clamp(4rem, 8vw, 7rem);
+    color: var(--article-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .article-breadcrumbs a {
+    text-decoration: none;
+  }
+
+  .article-breadcrumbs a:hover,
+  .article-breadcrumbs a:focus-visible {
+    color: #fd4b32;
+  }
+
+  .article-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-bottom: 1.25rem;
+    color: #fd4b32;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .article-kicker span:not(:last-child)::after {
+    content: '·';
+    margin-left: 0.55rem;
+    color: var(--article-muted);
+  }
+
+  .article-status {
+    color: var(--article-muted);
+  }
+
+  h1 {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    font-size: clamp(3.45rem, 8.4vw, 9.4rem);
+    line-height: 0.88;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+  }
+
+  .article-deck {
+    grid-column: 5 / 11;
+    margin: clamp(2.5rem, 5vw, 5rem) 0 0;
+    color: #3e3b38;
+    font-size: clamp(1.2rem, 2vw, 1.65rem);
+    line-height: 1.24;
+    text-wrap: pretty;
+  }
+
+  .article-byline {
+    display: flex;
+    gap: clamp(2rem, 6vw, 6rem);
+    margin-top: clamp(3rem, 7vw, 6rem);
+    padding-top: 1rem;
+    border-top: 1px solid var(--article-line);
+  }
+
+  .article-byline div {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .article-byline__label,
+  .article-rail__title,
+  .article-cta__eyebrow,
+  .article-footer > p {
+    color: var(--article-muted);
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .article-byline strong {
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  .article-layout {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 2vw, 2rem);
+    padding-top: clamp(4rem, 8vw, 7rem);
+    padding-bottom: clamp(6rem, 12vw, 11rem);
+  }
+
+  .article-rail {
+    grid-column: 1 / 4;
+  }
+
+  .article-rail__sticky {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .article-rail__title {
+    margin-bottom: 1.25rem;
+  }
+
+  .article-rail ol {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--article-line);
+    list-style: none;
+  }
+
+  .article-rail li {
+    border-bottom: 1px solid var(--article-line);
+  }
+
+  .article-rail a {
+    display: grid;
+    grid-template-columns: 1.8rem 1fr;
+    gap: 0.45rem;
+    padding: 0.85rem 0;
+    color: #4c4945;
+    font-size: 0.78rem;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .article-rail a span {
+    color: #fd4b32;
+    font-size: 0.65rem;
+  }
+
+  .article-rail a:hover,
+  .article-rail a:focus-visible {
+    color: #fd4b32;
+  }
+
+  .article-main {
+    grid-column: 5 / 11;
+    min-width: 0;
+  }
+
+  .article-copy {
+    font-size: clamp(1.08rem, 1.45vw, 1.25rem);
+    line-height: 1.55;
+  }
+
+  .article-copy :global(> p:first-child) {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(1.4rem, 2.3vw, 2rem);
+    line-height: 1.24;
+    letter-spacing: -0.025em;
+  }
+
+  .article-copy :global(h2) {
+    margin: clamp(4.5rem, 8vw, 7rem) 0 1.4rem;
+    scroll-margin-top: 6rem;
+    font-size: clamp(2.2rem, 4.2vw, 4.3rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .article-copy :global(h3) {
+    margin: 2.8rem 0 0.9rem;
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .article-copy :global(p) {
+    margin-bottom: 1.35rem;
+  }
+
+  .article-copy :global(ul),
+  .article-copy :global(ol) {
+    display: grid;
+    gap: 0.7rem;
+    margin: 1.6rem 0 2rem;
+    padding-left: 1.25rem;
+  }
+
+  .article-copy :global(li::marker) {
+    color: #fd4b32;
+  }
+
+  .article-copy :global(a) {
+    color: #e63a22;
+  }
+
+  .article-copy :global(strong) {
+    font-weight: 650;
+  }
+
+  .article-cta {
+    margin-top: clamp(5rem, 10vw, 9rem);
+    padding: clamp(2rem, 4vw, 3.5rem);
+    color: #171717;
+    background: #fd4b32;
+  }
+
+  .article-cta__eyebrow {
+    color: rgba(23, 23, 23, 0.65);
+  }
+
+  .article-cta h2 {
+    max-width: 12ch;
+    margin: 2.5rem 0 1.25rem;
+    font-size: clamp(2.5rem, 5vw, 4.8rem);
+    line-height: 0.94;
+    letter-spacing: -0.05em;
+  }
+
+  .article-cta p {
+    max-width: 31rem;
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+    line-height: 1.35;
+  }
+
+  .article-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .article-cta__actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3.25rem;
+    padding: 0.9rem 1.15rem;
+    border: 1px solid #171717;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 180ms ease, background-color 180ms ease;
+  }
+
+  .article-cta__primary {
+    color: #fff;
+    background: #171717;
+  }
+
+  .article-cta__primary:hover,
+  .article-cta__primary:focus-visible {
+    color: #171717;
+    background: transparent;
+  }
+
+  .article-cta__secondary:hover,
+  .article-cta__secondary:focus-visible {
+    color: #fff;
+    background: #171717;
+  }
+
+  .article-footer {
+    position: relative;
+    margin-top: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--article-line);
+    border-bottom: 1px solid var(--article-line);
+  }
+
+  .article-footer > p {
+    margin-bottom: 0.35rem;
+  }
+
+  .article-footer > strong {
+    display: block;
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+    font-weight: 550;
+  }
+
+  .article-footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .article-footer li {
+    padding: 0.45rem 0.6rem;
+    color: #5b5752;
+    border: 1px solid var(--article-line);
+    font-size: 0.72rem;
+  }
+
+  .article-back-top {
+    display: inline-block;
+    margin-top: 1.75rem;
+    color: #fd4b32;
+    font-size: 0.8rem;
+    text-decoration: none;
+  }
+
+  @media (max-width: 64rem) {
+    .article-deck {
+      grid-column: 3 / 11;
+    }
+
+    .article-rail {
+      grid-column: 1 / 4;
+    }
+
+    .article-main {
+      grid-column: 4 / 12;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .article-hero {
+      padding-top: 5.75rem;
+    }
+
+    .article-breadcrumbs {
+      margin-bottom: 3.5rem;
+    }
+
+    h1 {
+      max-width: none;
+      font-size: clamp(3.2rem, 15vw, 5.4rem);
+    }
+
+    .article-deck {
+      grid-column: 1 / -1;
+      margin-top: 2rem;
+    }
+
+    .article-byline {
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+
+    .article-layout {
+      display: block;
+    }
+
+    .article-rail {
+      margin-bottom: 4rem;
+    }
+
+    .article-rail__sticky {
+      position: static;
+    }
+
+    .article-rail ol {
+      grid-template-columns: 1fr;
+    }
+
+    .article-copy {
+      font-size: 1.05rem;
+    }
+
+    .article-copy :global(h2) {
+      font-size: clamp(2.35rem, 12vw, 3.5rem);
+    }
+
+    .article-cta {
+      margin-inline: calc(var(--container-inline-space) / -2);
+    }
+  }
+</style>

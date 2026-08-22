@@ -79,6 +79,25 @@ const isServices = section === 'services';
         </ol>
       </section>
 
+      {isServices && (
+        <section class="editorial-section" aria-labelledby="cities-title">
+          <header class="editorial-heading">
+            <p class="editorial-heading__number">03</p>
+            <div class="editorial-heading__content"><h2 id="cities-title">Услуги по городам Казахстана</h2></div>
+          </header>
+          <div class="editorial-grid">
+            <a class="editorial-card" href="/cities">
+              <span class="editorial-card__number">17 городов / ↗</span>
+              <h2>Выбрать город</h2>
+              <p>Страницы услуг для Алматы, Астаны, Шымкента и других городов с населением от 200 тысяч человек.</p>
+            </a>
+            <a class="editorial-card" href="/cities/almaty"><span class="editorial-card__number">01 / ↗</span><h2>Алматы</h2><p>Все услуги студии и страницы по восьми районам города.</p></a>
+            <a class="editorial-card" href="/cities/astana"><span class="editorial-card__number">02 / ↗</span><h2>Астана</h2><p>Все услуги студии и страницы по шести районам столицы.</p></a>
+            <a class="editorial-card" href="/cities/shymkent"><span class="editorial-card__number">03 / ↗</span><h2>Шымкент</h2><p>Все услуги студии и страницы по пяти районам города.</p></a>
+          </div>
+        </section>
+      )}
+
     </div>
 
     <Contacts theme="light" title={contactsTitle} lead={contactsLead} source={source} sourceDetails={isServices ? 'Каталог услуг' : 'Каталог отраслевых решений'} />

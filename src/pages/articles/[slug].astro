@@ -1,0 +1,79 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ArticlePage from '../../components/ArticlePage.astro';
+import Footer from '../../components/Footer.astro';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map((article) => ({
+    params: { slug: article.id.split('/').at(-1) },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const slug = article.id.split('/').at(-1) ?? article.id;
+const { Content, headings } = await render(article);
+const words = (article.body ?? '').trim().split(/\s+/u).filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.ceil(words / 180));
+const articleUrl = new URL(`/articles/${slug}`, Astro.site).href;
+const coverUrl = article.data.cover
+  ? new URL(article.data.cover, Astro.site).href
+  : new URL('/cover.webp', Astro.site).href;
+
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: article.data.h1,
+      description: article.data.description,
+      inLanguage: 'ru',
+      mainEntityOfPage: articleUrl,
+      image: coverUrl,
+      keywords: [article.data.primaryKeyword, ...article.data.relatedKeywords].join(', '),
+      about: article.data.service,
+      ...(article.data.publishedAt && { datePublished: article.data.publishedAt.toISOString() }),
+      ...(article.data.updatedAt && { dateModified: article.data.updatedAt.toISOString() }),
+      author: {
+        '@type': 'Organization',
+        name: article.data.author,
+        url: 'https://yapil.art',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Yapil',
+        url: 'https://yapil.art',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://yapil.art' },
+        { '@type': 'ListItem', position: 2, name: 'Статьи', item: 'https://yapil.art/articles' },
+        { '@type': 'ListItem', position: 3, name: article.data.h1, item: articleUrl },
+      ],
+    },
+  ],
+};
+---
+
+<Base
+  title={article.data.title}
+  description={article.data.description}
+  image={coverUrl}
+  type="article"
+  jsonLd={articleJsonLd}
+  theme="light"
+  noindex={article.data.status !== 'published'}
+>
+  <ArticlePage {article} {headings} {slug} {readingMinutes}>
+    <Content />
+  </ArticlePage>
+  <Footer slot="footer" theme="light" />
+</Base>

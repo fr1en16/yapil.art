@@ -18,10 +18,12 @@ interface Props {
   navOverlay?: boolean;
 }
 
+const defaultImage = new URL('/cover.webp', Astro.site).href;
+
 const {
   title,
   description,
-  image = 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2',
+  image = defaultImage,
   type = 'website',
   jsonLd,
   theme = 'dark',

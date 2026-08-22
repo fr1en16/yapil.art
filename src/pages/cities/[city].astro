@@ -1,0 +1,118 @@
+---
+import Base from '../../layouts/Base.astro';
+import Contacts from '../../components/Contacts.astro';
+import Footer from '../../components/Footer.astro';
+import { citiesList, type CityData } from '../../data/citiesData';
+import { servicesList } from '../../data/servicesData';
+import { geoServicesData } from '../../data/geoServicesData';
+import '../../styles/proposal-pages.css';
+
+export function getStaticPaths() {
+  return citiesList.map((city) => ({ params: { city: city.slug }, props: { city } }));
+}
+
+interface Props { city: CityData; }
+const { city } = Astro.props;
+const title = `Услуги дизайн-студии в ${city.prepositional} — Yapil`;
+const description = `Разработка сайтов, айдентики, упаковки, презентаций, SMM-дизайна и дизайн-сопровождения для компаний ${city.genitive}.`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: `Услуги Yapil в ${city.prepositional}`,
+      description,
+      url: `https://yapil.art/cities/${city.slug}`,
+      about: { '@type': 'City', name: city.name },
+      hasPart: servicesList.map((service) => ({
+        '@type': 'Service',
+        name: `${geoServicesData[service.slug].searchName} в ${city.prepositional}`,
+        url: `https://yapil.art/services/${service.slug}/${city.slug}`,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://yapil.art' },
+        { '@type': 'ListItem', position: 2, name: 'Города', item: 'https://yapil.art/cities' },
+        { '@type': 'ListItem', position: 3, name: city.name, item: `https://yapil.art/cities/${city.slug}` },
+      ],
+    },
+  ],
+};
+---
+
+<Base {title} {description} {jsonLd} theme="light" navOverlay={true}>
+  <article class="editorial-page">
+    <header class="editorial-cover">
+      <div class="container editorial-cover__inner">
+        <nav class="city-breadcrumbs" aria-label="Хлебные крошки"><a href="/cities">Города</a><span>/</span><span>{city.name}</span></nav>
+        <div class="editorial-title-wrap"><h1>Услуги дизайн-студии в {city.prepositional}</h1></div>
+        <div class="editorial-cover__bottom">
+          <p class="editorial-lead">{city.context} {city.workFormat}</p>
+          <dl class="editorial-meta">
+            <div><dt>Направления</dt><dd>{city.businessFocus.join(' / ')}</dd></div>
+            <div><dt>Услуги</dt><dd>{servicesList.length}</dd></div>
+            <div><dt>Формат</dt><dd>онлайн по Казахстану</dd></div>
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <div class="editorial-body">
+      <section class="editorial-section" aria-labelledby="services-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">01</p>
+          <div class="editorial-heading__content"><h2 id="services-title">Услуги в {city.prepositional}</h2></div>
+        </header>
+        <div class="editorial-grid">
+          {servicesList.map((service) => (
+            <a class="editorial-card" href={`/services/${service.slug}/${city.slug}`}>
+              <span class="editorial-card__number">{service.number} / ↗</span>
+              <h2>{geoServicesData[service.slug].shortName}</h2><p>{geoServicesData[service.slug].localValue}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {city.districts.length > 0 && (
+        <section class="editorial-section" aria-labelledby="districts-title">
+          <header class="editorial-heading">
+            <p class="editorial-heading__number">02</p>
+            <div class="editorial-heading__content"><h2 id="districts-title">Услуги по районам {city.genitive}</h2></div>
+          </header>
+          <div class="district-list">
+            {city.districts.map((district, index) => (
+              <article class="district-row">
+                <div><span>{String(index + 1).padStart(2, '0')}</span><h3>{district.name}</h3><p>{district.context}</p></div>
+                <nav aria-label={`Услуги: ${district.name}`}>
+                  {servicesList.map((service) => (
+                    <a href={`/services/${service.slug}/${city.slug}/${district.slug}`}>{geoServicesData[service.slug].shortName}</a>
+                  ))}
+                </nav>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+
+    <Contacts theme="light" title={`Обсудим проект в ${city.prepositional}`} lead="Опишите задачу — предложим подход, сроки и состав работ." source="contacts_form" sourceDetails={`Город: ${city.name}`} />
+  </article>
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<style>
+  .city-breadcrumbs { display: flex; gap: .5rem; padding-top: 7rem; color: rgba(23,23,23,.58); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
+  .city-breadcrumbs a { color: inherit; text-decoration: none; }
+  .district-list { border-top: 1px solid rgba(23,23,23,.18); }
+  .district-row { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(18rem,.85fr); gap: clamp(2rem,5vw,6rem); padding: 2rem 0; border-bottom: 1px solid rgba(23,23,23,.18); }
+  .district-row > div { display: grid; grid-template-columns: 2.5rem minmax(0,1fr); gap: .5rem 1rem; }
+  .district-row span { color: #fd4b32; font-size: .75rem; }
+  .district-row h3 { margin: 0; font-size: clamp(1.6rem,3vw,3rem); font-weight: 500; letter-spacing: -.035em; }
+  .district-row p { grid-column: 2; margin: .75rem 0 0; max-width: 45rem; color: rgba(23,23,23,.7); line-height: 1.55; }
+  .district-row nav { display: flex; flex-wrap: wrap; align-content: flex-start; gap: .5rem; }
+  .district-row nav a { padding: .7rem .85rem; border: 1px solid rgba(23,23,23,.22); color: inherit; font-size: .82rem; text-decoration: none; }
+  .district-row nav a:hover,.district-row nav a:focus-visible { border-color: #fd4b32; color: #fd4b32; }
+  @media (max-width: 800px) { .city-breadcrumbs { padding-top: 5.5rem; } .district-row { grid-template-columns: 1fr; } }
+</style>

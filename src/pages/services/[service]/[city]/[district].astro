@@ -1,0 +1,24 @@
+---
+import GeoServicePage from '../../../../components/GeoServicePage.astro';
+import { servicesList, type ServiceData } from '../../../../data/servicesData';
+import { districtsList, type CityData, type DistrictData } from '../../../../data/citiesData';
+
+export function getStaticPaths() {
+  return servicesList.flatMap((service) =>
+    districtsList.map(({ city, district }) => ({
+      params: { service: service.slug, city: city.slug, district: district.slug },
+      props: { service, city, district },
+    })),
+  );
+}
+
+interface Props {
+  service: ServiceData;
+  city: CityData;
+  district: DistrictData;
+}
+
+const { service, city, district } = Astro.props;
+---
+
+<GeoServicePage {service} {city} {district} />

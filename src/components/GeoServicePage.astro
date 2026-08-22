@@ -1,0 +1,313 @@
+---
+import Base from '../layouts/Base.astro';
+import Contacts from './Contacts.astro';
+import Footer from './Footer.astro';
+import ProduxPortfolio from './ProduxPortfolio.astro';
+import type { ServiceData } from '../data/servicesData';
+import { servicesList } from '../data/servicesData';
+import type { CityData, DistrictData } from '../data/citiesData';
+import { citiesList } from '../data/citiesData';
+import { geoServicesData } from '../data/geoServicesData';
+import '../styles/proposal-pages.css';
+
+interface Props {
+  service: ServiceData;
+  city: CityData;
+  district?: DistrictData;
+}
+
+const { service, city, district } = Astro.props;
+const geoCopy = geoServicesData[service.slug];
+
+if (!geoCopy) {
+  throw new Error(`Missing geo copy for service: ${service.slug}`);
+}
+
+const locationPrepositional = district?.prepositional ?? city.prepositional;
+const locationGenitive = district?.genitive ?? city.genitive;
+const locationLabel = district ? `${district.name}, ${city.name}` : city.name;
+const localContext = district?.context ?? city.context;
+const businessFocus = district?.businessFocus ?? city.businessFocus;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const serviceUrl = new URL(`/services/${service.slug}`, Astro.site).href;
+const cityUrl = new URL(`/services/${service.slug}/${city.slug}`, Astro.site).href;
+
+const title = `${geoCopy.searchName} в ${locationPrepositional} — Yapil`;
+const description = `${geoCopy.action} для компаний ${locationGenitive}. ${geoCopy.audienceResult}. Работа по всему Казахстану.`;
+const heroH1 = `${geoCopy.searchName} в ${locationPrepositional}`;
+const heroLead = `${localContext} ${geoCopy.localValue}`;
+
+const localCards = [
+  {
+    title: `Задачи бизнеса ${locationGenitive}`,
+    text: `Учитываем конкурентную среду и задачи направлений: ${businessFocus.join(', ')}. Сначала определяем аудиторию, сценарий выбора и критерии доверия.`,
+  },
+  {
+    title: 'Работа без привязки к офису',
+    text: district
+      ? `Проводим интервью и презентации онлайн. Личная встреча в ${district.prepositional} не обязательна; выезд можно согласовать отдельно, если он нужен проекту.`
+      : city.workFormat,
+  },
+  {
+    title: 'Понятный результат',
+    text: `На старте фиксируем состав работ, этапы и сроки. По завершении передаём ${geoCopy.audienceResult}, а также все предусмотренные договором исходники.`,
+  },
+];
+
+const localFaq = [
+  {
+    question: district
+      ? `Работаете ли вы с компаниями ${locationGenitive}?`
+      : `Работаете ли вы с компаниями из ${city.genitive}?`,
+    answer: district
+      ? `Да. География не меняет качество процесса: проводим интервью, показываем решения и собираем обратную связь онлайн. При необходимости отдельно согласуем очную рабочую сессию в ${district.prepositional}.`
+      : city.workFormat,
+  },
+  {
+    question: `Сколько стоит ${geoCopy.priceObject} для компании ${locationGenitive}?`,
+    answer: `Стоимость зависит от объёма, количества форматов, глубины исследования и сроков. После короткого брифа мы предложим состав работ, календарь и прозрачную смету без обязательства заказывать лишние этапы.`,
+  },
+  ...service.faq.slice(0, 3),
+];
+
+const otherServices = servicesList
+  .filter((item) => item.slug !== service.slug)
+  .slice(0, 5)
+  .map((item) => ({
+    title: geoServicesData[item.slug]?.shortName ?? item.name,
+    href: district
+      ? `/services/${item.slug}/${city.slug}/${district.slug}`
+      : `/services/${item.slug}/${city.slug}`,
+    text: `${item.name} для компаний ${locationGenitive}.`,
+  }));
+
+const currentCityIndex = citiesList.findIndex((item) => item.slug === city.slug);
+const neighboringCities = [...citiesList.slice(currentCityIndex + 1), ...citiesList.slice(0, currentCityIndex)]
+  .slice(0, 4)
+  .map((item) => ({
+    title: item.name,
+    href: `/services/${service.slug}/${item.slug}`,
+    text: `${geoCopy.searchName} в ${item.prepositional}.`,
+  }));
+
+const siblingDistricts = district
+  ? city.districts
+      .filter((item) => item.slug !== district.slug)
+      .slice(0, 4)
+      .map((item) => ({
+        title: item.name,
+        href: `/services/${service.slug}/${city.slug}/${item.slug}`,
+        text: `${geoCopy.searchName} в ${item.prepositional}.`,
+      }))
+  : [];
+
+const locationLinks = district ? siblingDistricts : neighboringCities;
+const breadcrumbs = [
+  { name: 'Главная', item: new URL('/', Astro.site).href },
+  { name: 'Услуги', item: new URL('/services', Astro.site).href },
+  { name: service.name, item: serviceUrl },
+  { name: city.name, item: cityUrl },
+];
+
+if (district) breadcrumbs.push({ name: district.name, item: canonical });
+
+const areaServed = district
+  ? {
+      '@type': 'AdministrativeArea',
+      name: district.name,
+      containedInPlace: { '@type': 'City', name: city.name },
+    }
+  : { '@type': 'City', name: city.name };
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      name: heroH1,
+      serviceType: service.seo.h1,
+      description,
+      url: canonical,
+      areaServed,
+      provider: {
+        '@type': 'ProfessionalService',
+        name: 'Yapil',
+        url: 'https://yapil.art',
+        telephone: '+77067436197',
+        email: 'hi@yapil.art',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        ...item,
+      })),
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: localFaq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    },
+  ],
+};
+---
+
+<Base {title} {description} {jsonLd} theme="light" navOverlay={true}>
+  <article class="editorial-page">
+    <header class="editorial-cover">
+      <div class="container editorial-cover__inner">
+        <nav class="geo-breadcrumbs" aria-label="Хлебные крошки">
+          <a href="/services">Услуги</a>
+          <span aria-hidden="true">/</span>
+          <a href={`/services/${service.slug}`}>{service.name}</a>
+          <span aria-hidden="true">/</span>
+          {district ? <a href={`/services/${service.slug}/${city.slug}`}>{city.name}</a> : <span>{city.name}</span>}
+          {district && <><span aria-hidden="true">/</span><span>{district.name}</span></>}
+        </nav>
+        <div class="editorial-title-wrap"><h1>{heroH1}</h1></div>
+        <div class="editorial-cover__bottom">
+          <p class="editorial-lead">{heroLead}</p>
+          <dl class="editorial-meta">
+            <div><dt>География</dt><dd>{locationLabel}</dd></div>
+            <div><dt>Формат</dt><dd>онлайн по Казахстану</dd></div>
+            <div><dt>Результат</dt><dd>{geoCopy.audienceResult}</dd></div>
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <div class="editorial-body">
+      <section class="editorial-section" aria-labelledby="local-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">01</p>
+          <div class="editorial-heading__content"><h2 id="local-title">Подход к проектам в {locationPrepositional}</h2></div>
+        </header>
+        <div class="editorial-grid">
+          {localCards.map((card, index) => (
+            <article class="editorial-card">
+              <span class="editorial-card__number">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{card.title}</h3><p>{card.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="editorial-section" aria-labelledby="formats-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">02</p>
+          <div class="editorial-heading__content"><h2 id="formats-title">{service.formatsTitle}</h2></div>
+        </header>
+        <div class="editorial-grid">
+          {service.formats.map((format, index) => (
+            <article class="editorial-card">
+              <span class="editorial-card__number">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{format.title}</h3><p>{format.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="editorial-section" aria-labelledby="process-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">03</p>
+          <div class="editorial-heading__content"><h2 id="process-title">{service.processTitle}</h2></div>
+        </header>
+        <ol class="editorial-list">
+          {service.steps.map((step) => (
+            <li class="editorial-row">
+              <span class="editorial-row__number">{step.number}</span><h3>{step.title}</h3><p>{step.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+
+    <ProduxPortfolio theme="light" title={`Релевантные проекты для бизнеса ${locationGenitive}`} projectSlugs={service.caseSlugs} seamless />
+
+    <div class="editorial-body">
+      <section class="editorial-section" aria-labelledby="faq-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">04</p>
+          <div class="editorial-heading__content"><h2 id="faq-title">Вопросы о работе в {locationPrepositional}</h2></div>
+        </header>
+        <div class="editorial-faq">
+          {localFaq.map((item, index) => (
+            <details open={index === 0}>
+              <summary><span>{item.question}</span><span aria-hidden="true">+</span></summary>
+              <div><p>{item.answer}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section class="editorial-section" aria-labelledby="other-services-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">05</p>
+          <div class="editorial-heading__content"><h2 id="other-services-title">Другие услуги в {locationPrepositional}</h2></div>
+        </header>
+        <div class="editorial-grid geo-links">
+          {otherServices.map((link, index) => (
+            <a class="editorial-card" href={link.href}>
+              <span class="editorial-card__number">{String(index + 1).padStart(2, '0')} / ↗</span>
+              <h3>{link.title}</h3><p>{link.text}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {locationLinks.length > 0 && (
+        <section class="editorial-section" aria-labelledby="nearby-title">
+          <header class="editorial-heading">
+            <p class="editorial-heading__number">06</p>
+            <div class="editorial-heading__content">
+              <h2 id="nearby-title">{district ? `Другие районы ${city.genitive}` : 'Услуга в других городах'}</h2>
+            </div>
+          </header>
+          <div class="editorial-grid geo-links">
+            {locationLinks.map((link, index) => (
+              <a class="editorial-card" href={link.href}>
+                <span class="editorial-card__number">{String(index + 1).padStart(2, '0')} / ↗</span>
+                <h3>{link.title}</h3><p>{link.text}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section class="brief-cta" aria-labelledby="brief-cta-title">
+        <p>Расскажите о задаче</p>
+        <h2 id="brief-cta-title">Подробный<br />бриф</h2>
+        <a href={`/brief?service=${service.slug}&city=${city.slug}${district ? `&district=${district.slug}` : ''}`}>
+          <span>Заполнить бриф: {geoCopy.shortName}, {locationLabel}</span><span aria-hidden="true">→</span>
+        </a>
+      </section>
+    </div>
+
+    <Contacts
+      theme="light"
+      title={`${service.ctaTitle} Работаем с компаниями ${locationGenitive}.`}
+      lead={service.ctaLead}
+      source="contacts_form"
+      sourceDetails={`${service.name}: ${locationLabel}`}
+    />
+  </article>
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<style>
+  .geo-breadcrumbs { display: flex; flex-wrap: wrap; gap: .45rem; padding-top: 7rem; color: rgba(23, 23, 23, .58); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
+  .geo-breadcrumbs a { color: inherit; text-decoration: none; }
+  .geo-breadcrumbs a:hover,.geo-breadcrumbs a:focus-visible { color: #fd4b32; }
+  .geo-links .editorial-card { color: inherit; text-decoration: none; }
+  .brief-cta { padding: clamp(5rem, 9vw, 9rem) 0; border-top: 1px solid rgba(23, 23, 23, .18); }
+  .brief-cta > p { margin: 0 0 2rem; color: #fd4b32; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+  .brief-cta h2 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem, 7.3vw, 7.5rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
+  .brief-cta a { display: flex; justify-content: space-between; align-items: center; gap: 2rem; margin-top: clamp(3rem, 7vw, 7rem); padding: 1.5rem 0; border-block: 1px solid #171717; color: inherit; font-size: clamp(1.1rem, 2vw, 1.5rem); text-decoration: none; transition: padding 220ms ease, color 220ms ease, background 220ms ease; }
+  .brief-cta a:hover,.brief-cta a:focus-visible { padding-inline: 1.5rem; color: #fff; background: #fd4b32; outline-offset: 4px; }
+  @media (max-width: 700px) { .geo-breadcrumbs { padding-top: 5.5rem; } .brief-cta a { align-items: flex-start; } }
+</style>

@@ -30,4 +30,30 @@ const vsyachina = defineCollection({
   }),
 });
 
-export const collections = { cases, vsyachina };
+const articles = defineCollection({
+  loader: glob({
+    pattern: '{websites,identity,print,presentations,smm,support}/*.md',
+    base: './content-drafts/seo',
+  }),
+  schema: z.object({
+      title: z.string(),
+      description: z.string(),
+      h1: z.string(),
+      service: z.string(),
+      primaryKeyword: z.string(),
+      searchIntent: z.string().optional(),
+      relatedKeywords: z.array(z.string()).default([]),
+      status: z.enum(['draft', 'published']).default('draft'),
+      publishedAt: z.coerce.date().optional(),
+      updatedAt: z.coerce.date().optional(),
+      author: z.string().default('Yapil'),
+      reviewer: z.string().optional(),
+      cover: z.string().optional(),
+    })
+    .refine((data) => data.status !== 'published' || Boolean(data.publishedAt), {
+      message: 'Для опубликованной статьи укажите publishedAt',
+      path: ['publishedAt'],
+    }),
+});
+
+export const collections = { cases, vsyachina, articles };

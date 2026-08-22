@@ -1,0 +1,313 @@
+---
+import { getCollection } from 'astro:content';
+import Footer from '../../components/Footer.astro';
+import Base from '../../layouts/Base.astro';
+
+const allArticles = await getCollection('articles');
+const publishedArticles = allArticles.filter((article) => article.data.status === 'published');
+const isEditorialPreview = publishedArticles.length === 0;
+const visibleArticles = (isEditorialPreview ? allArticles : publishedArticles).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title, 'ru'),
+);
+
+const serviceOrder = ['Сайты', 'Айдентика', 'Полиграфия', 'Презентации', 'SMM', 'Сопровождение'];
+const groups = serviceOrder
+  .map((service) => ({
+    service,
+    articles: visibleArticles.filter((article) => article.data.service === service),
+  }))
+  .filter((group) => group.articles.length > 0);
+
+const getSlug = (id: string) => id.split('/').at(-1) ?? id;
+const getReadingMinutes = (body?: string) => {
+  const words = (body ?? '').trim().split(/\s+/u).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 180));
+};
+
+const title = 'Статьи о дизайне, сайтах и брендинге — Yapil';
+const description = 'Практические материалы Yapil о разработке сайтов, айдентике, упаковке, презентациях, SMM и дизайн-сопровождении бизнеса.';
+const pageUrl = new URL('/articles', Astro.site).href;
+const collectionJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: title,
+      description,
+      url: pageUrl,
+      inLanguage: 'ru',
+      hasPart: visibleArticles.map((article) => ({
+        '@type': 'Article',
+        headline: article.data.h1,
+        url: new URL(`/articles/${getSlug(article.id)}`, Astro.site).href,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://yapil.art' },
+        { '@type': 'ListItem', position: 2, name: 'Статьи', item: pageUrl },
+      ],
+    },
+  ],
+};
+---
+
+<Base
+  {title}
+  {description}
+  jsonLd={collectionJsonLd}
+  theme="light"
+  noindex={isEditorialPreview}
+>
+  <article class="articles-index">
+    <header class="articles-hero container">
+      <nav class="articles-breadcrumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Статьи</span>
+      </nav>
+
+      <div class="articles-hero__meta">
+        <span>База знаний</span>
+        <span>{visibleArticles.length} материала</span>
+        {isEditorialPreview && <span>Редакционный просмотр</span>}
+      </div>
+      <h1>Статьи о дизайне и развитии бизнеса</h1>
+      <p>Практические разборы без общих обещаний: как выбрать формат, подготовить материалы и получить результат, который можно использовать в работе.</p>
+    </header>
+
+    <div class="articles-groups container">
+      {groups.map((group, groupIndex) => (
+        <section class="articles-group" aria-labelledby={`group-${groupIndex}`}>
+          <header class="articles-group__heading">
+            <span>{String(groupIndex + 1).padStart(2, '0')}</span>
+            <h2 id={`group-${groupIndex}`}>{group.service}</h2>
+            <span>{group.articles.length}</span>
+          </header>
+
+          <div class="articles-list">
+            {group.articles.map((article, articleIndex) => (
+              <a class="article-card" href={`/articles/${getSlug(article.id)}`}>
+                <span class="article-card__number">{String(articleIndex + 1).padStart(2, '0')}</span>
+                <div class="article-card__content">
+                  <h3>{article.data.h1}</h3>
+                  <p>{article.data.description}</p>
+                </div>
+                <div class="article-card__meta">
+                  <span>{getReadingMinutes(article.body)} мин</span>
+                  <span aria-hidden="true">↗</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </article>
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<style>
+  .articles-index {
+    --index-ink: #171717;
+    --index-muted: #706c67;
+    --index-line: rgba(23, 23, 23, 0.16);
+    min-height: 100vh;
+    color: var(--index-ink);
+    background: #f7f5f2;
+  }
+
+  .articles-hero {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 2vw, 2rem);
+    padding-top: clamp(7rem, 13vw, 11rem);
+    padding-bottom: clamp(5rem, 10vw, 9rem);
+  }
+
+  .articles-breadcrumbs,
+  .articles-hero__meta,
+  .articles-hero h1 {
+    grid-column: 1 / -1;
+  }
+
+  .articles-breadcrumbs {
+    display: flex;
+    gap: 0.45rem;
+    margin-bottom: clamp(4rem, 8vw, 7rem);
+    color: var(--index-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .articles-breadcrumbs a {
+    text-decoration: none;
+  }
+
+  .articles-breadcrumbs a:hover,
+  .articles-breadcrumbs a:focus-visible {
+    color: #fd4b32;
+  }
+
+  .articles-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-bottom: 1.25rem;
+    color: #fd4b32;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .articles-hero__meta span:not(:last-child)::after {
+    content: '·';
+    margin-left: 0.55rem;
+    color: var(--index-muted);
+  }
+
+  .articles-hero h1 {
+    max-width: none;
+    margin: 0;
+    font-size: clamp(3.5rem, 8.6vw, 9.6rem);
+    line-height: 0.88;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+  }
+
+  .articles-hero > p {
+    grid-column: 5 / 11;
+    margin: clamp(2.5rem, 5vw, 5rem) 0 0;
+    color: #3e3b38;
+    font-size: clamp(1.2rem, 2vw, 1.65rem);
+    line-height: 1.24;
+  }
+
+  .articles-groups {
+    padding-bottom: clamp(7rem, 14vw, 13rem);
+  }
+
+  .articles-group {
+    border-top: 1px solid var(--index-ink);
+  }
+
+  .articles-group__heading {
+    display: grid;
+    grid-template-columns: 4rem 1fr auto;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 1.1rem 0 clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .articles-group__heading span {
+    color: var(--index-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+  }
+
+  .articles-group__heading h2 {
+    margin: 0;
+    font-size: clamp(2.4rem, 5vw, 5rem);
+    letter-spacing: -0.05em;
+  }
+
+  .articles-list {
+    margin-bottom: clamp(5rem, 10vw, 9rem);
+  }
+
+  .article-card {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding: clamp(1.35rem, 2.6vw, 2.25rem) 0;
+    border-top: 1px solid var(--index-line);
+    text-decoration: none;
+    transition: color 180ms ease, padding 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .article-card:last-child {
+    border-bottom: 1px solid var(--index-line);
+  }
+
+  .article-card:hover,
+  .article-card:focus-visible {
+    padding-inline: 0.75rem;
+    color: #fd4b32;
+  }
+
+  .article-card__number {
+    color: #fd4b32;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  .article-card__content h3 {
+    max-width: 22ch;
+    margin: 0 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: clamp(1.35rem, 2.5vw, 2.2rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  .article-card__content p {
+    max-width: 50rem;
+    margin: 0;
+    color: var(--index-muted);
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .article-card__meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--index-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .article-card:hover .article-card__meta,
+  .article-card:focus-visible .article-card__meta {
+    color: #fd4b32;
+  }
+
+  @media (max-width: 47.99rem) {
+    .articles-hero {
+      display: block;
+      padding-top: 5.75rem;
+    }
+
+    .articles-breadcrumbs {
+      margin-bottom: 3.5rem;
+    }
+
+    .articles-hero h1 {
+      font-size: clamp(3.2rem, 15vw, 5.4rem);
+    }
+
+    .articles-hero > p {
+      margin-top: 2rem;
+    }
+
+    .articles-group__heading,
+    .article-card {
+      grid-template-columns: 2rem minmax(0, 1fr) auto;
+      gap: 0.65rem;
+    }
+
+    .article-card__content p {
+      display: none;
+    }
+
+    .article-card__meta span:first-child {
+      display: none;
+    }
+  }
+</style>
