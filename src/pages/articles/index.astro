@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
 
@@ -114,8 +115,15 @@ const collectionJsonLd = {
         </section>
       ))}
     </div>
+
+    <Contacts
+      title="Обсудим проект<br />или задачу?"
+      lead="Расскажите о задаче или заполните форму — отвечу в течение 2 часов и подготовлю предложение."
+      source="contacts_form"
+      sourceDetails="База знаний: каталог статей"
+    />
   </article>
-  <Footer slot="footer" theme="light" />
+  <Footer slot="footer" />
 </Base>
 
 <style>

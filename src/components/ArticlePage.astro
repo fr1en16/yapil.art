@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import Contacts from './Contacts.astro';
 
 interface Heading {
   depth: number;
@@ -16,15 +17,6 @@ interface Props {
 
 const { article, headings, slug, readingMinutes } = Astro.props;
 const toc = headings.filter((heading) => heading.depth === 2);
-const servicePaths: Record<string, string> = {
-  'Сайты': 'websites',
-  'Айдентика': 'identity',
-  'Полиграфия': 'print',
-  'Презентации': 'presentations',
-  'SMM': 'smm',
-  'Сопровождение': 'support',
-};
-const serviceSlug = servicePaths[article.data.service] ?? 'websites';
 const publishedLabel = article.data.publishedAt
   ? new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).format(article.data.publishedAt)
   : 'Редакционный шаблон';
@@ -100,18 +92,6 @@ const publishedLabel = article.data.publishedAt
         <slot />
       </div>
 
-      <section class="article-cta" aria-labelledby="article-cta-title">
-        <span class="article-cta__eyebrow">Следующий шаг</span>
-        <h2 id="article-cta-title">Нужна помощь с направлением «{article.data.service}»?</h2>
-        <p>Разберём задачу, предложим подходящий формат и зафиксируем состав результата до начала работы.</p>
-        <div class="article-cta__actions">
-          <a class="article-cta__primary" href={`/brief?service=${serviceSlug}`}>
-            Обсудить проект <span aria-hidden="true">→</span>
-          </a>
-          <a class="article-cta__secondary" href={`/services/${serviceSlug}`}>Посмотреть услугу</a>
-        </div>
-      </section>
-
       <footer class="article-footer">
         <p>Основной запрос</p>
         <strong>{article.data.primaryKeyword}</strong>
@@ -124,6 +104,15 @@ const publishedLabel = article.data.publishedAt
       </footer>
     </div>
   </div>
+
+  <Contacts
+    title={`Нужна помощь с направлением<br />«${article.data.service}»?`}
+    lead="Разберём задачу, предложим подходящий формат и зафиксируем состав результата до начала работы."
+    successText="Спасибо за обращение. Мы изучим вашу задачу и ответим в течение 2 часов."
+    source="contacts_form"
+    sourceDetails={`Статья: ${article.data.h1}`}
+    selectedService={article.data.service}
+  />
 </article>
 
 <script>
@@ -409,72 +398,9 @@ const publishedLabel = article.data.publishedAt
     font-weight: 650;
   }
 
-  .article-cta {
-    margin-top: clamp(5rem, 10vw, 9rem);
-    padding: clamp(2rem, 4vw, 3.5rem);
-    color: #171717;
-    background: #fd4b32;
-  }
-
-  .article-cta__eyebrow {
-    color: rgba(23, 23, 23, 0.65);
-  }
-
-  .article-cta h2 {
-    max-width: 12ch;
-    margin: 2.5rem 0 1.25rem;
-    font-size: clamp(2.5rem, 5vw, 4.8rem);
-    line-height: 0.94;
-    letter-spacing: -0.05em;
-  }
-
-  .article-cta p {
-    max-width: 31rem;
-    margin-bottom: 2rem;
-    font-size: 1.05rem;
-    line-height: 1.35;
-  }
-
-  .article-cta__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .article-cta__actions a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    min-height: 3.25rem;
-    padding: 0.9rem 1.15rem;
-    border: 1px solid #171717;
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 180ms ease, background-color 180ms ease;
-  }
-
-  .article-cta__primary {
-    color: #fff;
-    background: #171717;
-  }
-
-  .article-cta__primary:hover,
-  .article-cta__primary:focus-visible {
-    color: #171717;
-    background: transparent;
-  }
-
-  .article-cta__secondary:hover,
-  .article-cta__secondary:focus-visible {
-    color: #fff;
-    background: #171717;
-  }
-
   .article-footer {
     position: relative;
-    margin-top: 2rem;
+    margin-top: clamp(4rem, 8vw, 6rem);
     padding: 2rem 0;
     border-top: 1px solid var(--article-line);
     border-bottom: 1px solid var(--article-line);
@@ -575,10 +501,6 @@ const publishedLabel = article.data.publishedAt
 
     .article-copy :global(h2) {
       font-size: clamp(2.35rem, 12vw, 3.5rem);
-    }
-
-    .article-cta {
-      margin-inline: calc(var(--container-inline-space) / -2);
     }
   }
 </style>
