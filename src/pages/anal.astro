@@ -126,12 +126,13 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
   theme="light"
   noindex
 >
-  <div class="analytics container">
-    <header class="analytics-head">
-      <div>
-        <p class="eyebrow">Yapil · Vercel Web Analytics</p>
-        <h1>Аналитика</h1>
-      </div>
+  <div class="analytics-page">
+    <div class="analytics container">
+      <header class="analytics-head">
+        <div>
+          <p class="eyebrow">Yapil · Vercel Web Analytics</p>
+          <h1>Аналитика</h1>
+        </div>
       <nav class="periods" aria-label="Период отчёта">
         {[7, 30].map((period) => (
           <a href={presetUrl(period)} aria-current={!hasCustomRange && presetDays === period ? 'page' : undefined}>
@@ -303,10 +304,23 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
         </div>
       </>
     )}
+    </div>
   </div>
 </Base>
 
 <style>
+  :global(body.theme-light) {
+    background: #f5f1e9;
+  }
+
+  .analytics-page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    background: #f5f1e9;
+    color: var(--ink-primary);
+  }
+
   .analytics {
     min-height: 100vh;
     padding-block: clamp(7rem, 11vw, 10rem) 5rem;
@@ -334,6 +348,7 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
     margin: 0;
     font-size: clamp(4rem, 10vw, 8rem);
     letter-spacing: -0.06em;
+    color: var(--ink-primary);
   }
 
   .periods {
@@ -344,6 +359,8 @@ const labelFor = (row: AnalyticsRow, key: keyof AnalyticsRow) => {
   .periods a {
     padding: 0.65rem 0.85rem;
     border: 1px solid var(--border-subtle);
+    background: white;
+    color: var(--ink-primary);
     font-size: 0.8rem;
     text-decoration: none;
   }
