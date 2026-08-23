@@ -18,6 +18,7 @@ const publishedArticlePaths = new Set(
 // https://astro.build/config
 export default defineConfig({
   site: 'https://yapil.art',
+  trailingSlash: 'never',
   output: 'static',
   adapter: vercel(),
   server: {

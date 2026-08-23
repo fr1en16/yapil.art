@@ -33,7 +33,8 @@ const {
 const documentTitle = title.includes('Yapil')
   ? title
   : `${title} — Yapil`;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const normalizedPathname = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/+$/, '');
+const canonical = new URL(normalizedPathname, Astro.site);
 const resolvedImage = new URL(image, Astro.site).href;
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/light' || Astro.url.pathname === '/light/';
 const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;

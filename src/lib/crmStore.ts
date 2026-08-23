@@ -682,7 +682,7 @@ export function calculateStats(leads: Lead[]): CrmStats {
       servicesBreakdown[s] = (servicesBreakdown[s] || 0) + 1;
     });
 
-    const srcName = l.source === 'contacts_form' ? 'Форма контактов' : l.source === 'service_modal' ? 'Модалка услуг' : 'Ручное / Другое';
+    const srcName = l.source === 'contacts_form' ? 'Форма контактов' : l.source === 'service_modal' ? 'Модалка услуг' : l.source === 'threads_landing' ? 'Лендинг Threads' : 'Ручное / Другое';
     sourceBreakdown[srcName] = (sourceBreakdown[srcName] || 0) + 1;
   });
 

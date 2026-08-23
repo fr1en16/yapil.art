@@ -2,7 +2,7 @@ export type LeadStatus = 'new' | 'contacted' | 'meeting' | 'proposal' | 'won' | 
 
 export type LeadPriority = 'normal' | 'high' | 'urgent';
 
-export type LeadSource = 'contacts_form' | 'service_modal' | 'case_inquiry' | 'calculator' | 'manual';
+export type LeadSource = 'contacts_form' | 'service_modal' | 'case_inquiry' | 'calculator' | 'manual' | 'threads_landing';
 
 export interface LeadNote {
   id: string;
