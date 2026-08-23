@@ -477,31 +477,28 @@ export function CrmApp() {
   };
 
   const handleTestTelegram = async () => {
-    if (!settings.telegramBotToken || !settings.telegramChatId) {
-      alert('Укажите Bot Token и Chat ID перед тестом!');
-      return;
-    }
     setTelegramTestStatus('testing');
     try {
-      const url = `https://api.telegram.org/bot${settings.telegramBotToken}/sendMessage`;
-      const res = await fetch(url, {
+      const res = await fetch('/api/test-telegram', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: settings.telegramChatId,
-          text: `⚡ *Тестовое сообщение из CRM Yapil!*\n\nИнтеграция с Telegram успешно настроена. Новые заявки с сайта будут приходить сюда в реальном времени.\n🕒 ${new Date().toLocaleString('ru-RU')}`,
-          parse_mode: 'Markdown',
+          token: settings.telegramBotToken || undefined,
+          chatId: settings.telegramChatId || undefined,
         }),
       });
-      if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
         setTelegramTestStatus('success');
       } else {
         setTelegramTestStatus('error');
+        alert(`Ошибка проверки Telegram:\n${data.error || 'Не удалось отправить сообщение'}`);
       }
-    } catch {
+    } catch (err: any) {
       setTelegramTestStatus('error');
+      alert(`Сетевая ошибка при проверке Telegram:\n${err?.message || err}`);
     }
-    setTimeout(() => setTelegramTestStatus('idle'), 3500);
+    setTimeout(() => setTelegramTestStatus('idle'), 4000);
   };
 
   const formatTimeAgo = (dateStr: string) => {

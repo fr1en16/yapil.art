@@ -266,7 +266,16 @@ export async function submitClientReview(payload: CreateReviewPayload): Promise<
     }).catch((err) => console.warn('Supabase review insert error:', err));
   }
 
-  // Send Telegram notification
+  // Dispatch to server-side API (Telegram notification using Vercel env vars)
+  if (typeof window !== 'undefined') {
+    fetch('/api/review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newReview),
+    }).catch((err) => console.warn('[submitReview] /api/review request failed:', err));
+  }
+
+  // Send client-side Telegram notification if configured in local settings
   sendReviewTelegramNotification(newReview).catch((err) => {
     console.warn('Failed to send Telegram review notification:', err);
   });

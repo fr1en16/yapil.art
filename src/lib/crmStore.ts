@@ -505,7 +505,16 @@ export async function submitLead(payload: CreateLeadPayload): Promise<Lead> {
     }).catch((err) => console.warn('Supabase lead insertion error:', err));
   }
 
-  // Send external notifications in background
+  // Dispatch to server-side API (Telegram + Webhooks using Vercel / server env vars)
+  if (typeof window !== 'undefined') {
+    fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newLead),
+    }).catch((err) => console.warn('[submitLead] /api/lead request failed:', err));
+  }
+
+  // Send external notifications from client settings if configured
   const settings = getCrmSettings();
   Promise.allSettled([
     sendTelegramNotification(newLead, settings),
