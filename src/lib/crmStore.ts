@@ -129,177 +129,11 @@ export async function signInAdmin(email: string, password: string): Promise<{ su
   }
 }
 
-// Demo leads for initializing or previewing the CRM
-export const DEMO_LEADS: Lead[] = [
-  {
-    id: 'YP-8491',
-    name: 'Айгерим Касымова',
-    phone: '+7 (701) 555-12-84',
-    rawPhone: '77015551284',
-    email: 'aigerim.k@holding.kz',
-    services: ['Сайты', 'Айдентика'],
-    message: 'Нужен корпоративный сайт для сети премиальных ресторанов в Алматы и Астане с анимацией и каталогом.',
-    status: 'new',
-    priority: 'urgent',
-    budget: '4 500 000 ₸',
-    source: 'contacts_form',
-    sourceDetails: 'Форма контактов на главной',
-    pageUrl: 'https://yapil.art/#contacts',
-    createdAt: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
-    notes: [
-      {
-        id: 'n-1',
-        text: 'Лид пришел с главной страницы. Срочный запрос, запуск планируют через 2 месяца.',
-        createdAt: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
-        author: 'Система',
-      },
-    ],
-    activities: [
-      {
-        id: 'a-1',
-        type: 'created',
-        description: 'Заявка создана через форму контактов',
-        timestamp: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
-      },
-    ],
-  },
-  {
-    id: 'YP-8488',
-    name: 'Руслан Сарсенов',
-    phone: '+7 (777) 234-88-90',
-    rawPhone: '77772348890',
-    email: 'sarsenov@apex-group.com',
-    services: ['Айдентика', 'Презентации'],
-    message: 'Готовим инвест-раунд в Дубае. Нужен сильный брендбук и Pitch Deck на английском языке.',
-    status: 'contacted',
-    priority: 'high',
-    budget: '3 200 000 ₸',
-    source: 'service_modal',
-    sourceDetails: 'Модальное окно услуги «Айдентика»',
-    pageUrl: 'https://yapil.art/#services',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-    notes: [
-      {
-        id: 'n-2',
-        text: 'Созвонились в WhatsApp, отправил бриф на айдентику. Встреча назначена на четверг.',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-        author: 'Яков Пиль',
-      },
-    ],
-    activities: [
-      {
-        id: 'a-2',
-        type: 'created',
-        description: 'Заявка создана через модалку услуги',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
-      },
-      {
-        id: 'a-3',
-        type: 'status_change',
-        description: 'Статус изменен на «В работе»',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-      },
-    ],
-  },
-  {
-    id: 'YP-8472',
-    name: 'Елена Власова',
-    phone: '+7 (705) 912-44-11',
-    rawPhone: '77059124411',
-    services: ['Сайты'],
-    message: 'Разработка лендинга для нового ЖК бизнес-класса. 3D рендеры готовы.',
-    status: 'meeting',
-    priority: 'high',
-    budget: '2 800 000 ₸',
-    source: 'service_modal',
-    sourceDetails: 'Модальное окно услуги «Сайты»',
-    pageUrl: 'https://yapil.art/#services',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
-    notes: [
-      {
-        id: 'n-3',
-        text: 'Провели Zoom-презентацию кейсов (Compass, Dodo). Клиент готовит ТЗ со своей стороны.',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
-        author: 'Яков Пиль',
-      },
-    ],
-    activities: [
-      {
-        id: 'a-4',
-        type: 'status_change',
-        description: 'Статус изменен на «Встреча / Бриф»',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
-      },
-    ],
-  },
-  {
-    id: 'YP-8450',
-    name: 'Данияр Темиров',
-    phone: '+7 (702) 881-30-05',
-    rawPhone: '77028813005',
-    services: ['Полиграфия', 'Сопровождение'],
-    message: 'Упаковка для линейки премиального органического чая и оформление точек продаж.',
-    status: 'proposal',
-    priority: 'normal',
-    budget: '1 900 000 ₸',
-    source: 'contacts_form',
-    sourceDetails: 'Форма контактов на главной',
-    pageUrl: 'https://yapil.art/#contacts',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
-    notes: [
-      {
-        id: 'n-4',
-        text: 'КП отправлено на почту, ждем согласования от финансового директора.',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
-        author: 'Яков Пиль',
-      },
-    ],
-    activities: [
-      {
-        id: 'a-5',
-        type: 'status_change',
-        description: 'Статус изменен на «КП отправлено»',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
-      },
-    ],
-  },
-  {
-    id: 'YP-8410',
-    name: 'Марат Джумабаев',
-    phone: '+7 (707) 419-77-22',
-    rawPhone: '77074197722',
-    services: ['Сайты', 'Айдентика', 'SMM'],
-    message: 'Комплексный перезапуск бренда финтех-стартапа.',
-    status: 'won',
-    priority: 'high',
-    budget: '5 800 000 ₸',
-    source: 'contacts_form',
-    sourceDetails: 'Форма контактов',
-    pageUrl: 'https://yapil.art/#contacts',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 96).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-    notes: [
-      {
-        id: 'n-5',
-        text: 'Договор подписан, предоплата 50% получена. Приступаем к разработке концепции.',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-        author: 'Яков Пиль',
-      },
-    ],
-    activities: [
-      {
-        id: 'a-6',
-        type: 'status_change',
-        description: 'Сделка успешно закрыта',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-      },
-    ],
-  },
-];
+// Demo / legacy mock lead IDs for filtering
+const DEMO_LEAD_IDS = new Set(['YP-8491', 'YP-8488', 'YP-8472', 'YP-8450', 'YP-8410']);
+
+// Demo leads for initializing or previewing the CRM (empty by default for production)
+export const DEMO_LEADS: Lead[] = [];
 
 // BroadcastChannel instance (browser only)
 let broadcastChannel: BroadcastChannel | null = null;
@@ -525,12 +359,18 @@ export function getLeads(): Lead[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_LEADS);
     if (!raw) {
-      localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(DEMO_LEADS));
-      return DEMO_LEADS;
+      localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify([]));
+      return [];
     }
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed;
+    
+    // Automatically purge legacy demo leads
+    const realLeads = parsed.filter((lead: Lead) => !DEMO_LEAD_IDS.has(lead.id));
+    if (realLeads.length !== parsed.length) {
+      saveLeadsLocally(realLeads);
+    }
+    return realLeads;
   } catch {
     return [];
   }

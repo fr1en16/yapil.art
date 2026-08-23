@@ -245,34 +245,40 @@ const jsonLd = {
         </div>
       </section>
 
-      <section class="editorial-section" aria-labelledby="other-services-title">
-        <header class="editorial-heading">
-          <p class="editorial-heading__number">05</p>
-          <div class="editorial-heading__content"><h2 id="other-services-title">Другие услуги в {locationPrepositional}</h2></div>
+      <section class="editorial-section editorial-section--compact" aria-labelledby="other-services-title">
+        <header class="editorial-compact-header">
+          <span class="editorial-compact-header__number">05</span>
+          <h2 id="other-services-title">Другие услуги в {locationPrepositional}</h2>
         </header>
-        <div class="editorial-grid geo-links">
+        <div class="editorial-compact-grid">
           {otherServices.map((link, index) => (
-            <a class="editorial-card" href={link.href}>
-              <span class="editorial-card__number">{String(index + 1).padStart(2, '0')} / ↗</span>
-              <h3>{link.title}</h3><p>{link.text}</p>
+            <a class="editorial-compact-card" href={link.href}>
+              <div class="editorial-compact-card__top">
+                <span class="editorial-compact-card__number">{String(index + 1).padStart(2, '0')}</span>
+                <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>{link.title}</h3>
+              <p>{link.text}</p>
             </a>
           ))}
         </div>
       </section>
 
       {locationLinks.length > 0 && (
-        <section class="editorial-section" aria-labelledby="nearby-title">
-          <header class="editorial-heading">
-            <p class="editorial-heading__number">06</p>
-            <div class="editorial-heading__content">
-              <h2 id="nearby-title">{district ? `Другие районы ${city.genitive}` : 'Услуга в других городах'}</h2>
-            </div>
+        <section class="editorial-section editorial-section--compact" aria-labelledby="nearby-title">
+          <header class="editorial-compact-header">
+            <span class="editorial-compact-header__number">06</span>
+            <h2 id="nearby-title">{district ? `Другие районы ${city.genitive}` : 'Услуга в других городах'}</h2>
           </header>
-          <div class="editorial-grid geo-links">
+          <div class="editorial-compact-grid">
             {locationLinks.map((link, index) => (
-              <a class="editorial-card" href={link.href}>
-                <span class="editorial-card__number">{String(index + 1).padStart(2, '0')} / ↗</span>
-                <h3>{link.title}</h3><p>{link.text}</p>
+              <a class="editorial-compact-card" href={link.href}>
+                <div class="editorial-compact-card__top">
+                  <span class="editorial-compact-card__number">{String(index + 1).padStart(2, '0')}</span>
+                  <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
+                </div>
+                <h3>{link.title}</h3>
+                <p>{link.text}</p>
               </a>
             ))}
           </div>

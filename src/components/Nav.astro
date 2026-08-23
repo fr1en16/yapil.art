@@ -6,6 +6,20 @@ interface Props {
 
 const { overlay = false, theme = 'dark' } = Astro.props;
 const homePath = '/';
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const pagesWithoutContacts = [
+  '/404',
+  '/privacy',
+  '/site-map',
+  '/crm',
+  '/cv',
+  '/anal',
+];
+const isBrief = pathname.startsWith('/brief');
+const isProposal = pathname.startsWith('/kp/');
+const hasNoLocalContacts = pagesWithoutContacts.includes(pathname) || isBrief || isProposal;
+const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
 ---
 
 <header class:list={['site-header', { overlay, 'theme-light': theme === 'light' }]} data-site-header data-theme={theme}>
@@ -26,7 +40,7 @@ const homePath = '/';
         <span>Отзывы</span>
         <span class="nav-dot" aria-hidden="true"></span>
       </a>
-      <a href={`${homePath}#contacts`} data-nav-link="contacts">
+      <a href={contactsHref} data-nav-link="contacts">
         <span>Связаться с нами</span>
         <span class="nav-dot" aria-hidden="true"></span>
       </a>
@@ -40,6 +54,16 @@ const homePath = '/';
     const navLinks = document.querySelector<HTMLElement>('[data-nav-links]');
 
     if (!header) return;
+
+    // Dynamically ensure contacts link points to local #contacts if present, or /#contacts otherwise
+    const contactsLink = navLinks ? navLinks.querySelector<HTMLAnchorElement>('[data-nav-link="contacts"]') : null;
+    if (contactsLink) {
+      const hasLocalContacts = Boolean(
+        document.getElementById('contacts') ||
+        document.querySelector('.contacts, .feedback-form, [id="contacts"]')
+      );
+      contactsLink.setAttribute('href', hasLocalContacts ? '#contacts' : '/#contacts');
+    }
 
     let ticking = false;
     let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;

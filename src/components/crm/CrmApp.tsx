@@ -2025,20 +2025,6 @@ export function CrmApp() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (window.confirm('Заполнить базу реалистичными демо-заявками студии?')) {
-                      resetToDemoLeads();
-                      setLeads(getLeads());
-                    }
-                  }}
-                  className="px-3 py-1.5 border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 flex items-center gap-1.5"
-                >
-                  <RotateCcw className="size-3.5" />
-                  <span>Загрузить демо-лиды</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
                     if (window.confirm('ОЧИСТИТЬ ВСЕ ЗАЯВКИ? Это действие нельзя отменить.')) {
                       clearAllLeads();
                       setLeads([]);

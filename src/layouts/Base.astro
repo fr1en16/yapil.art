@@ -63,6 +63,10 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={resolvedImage} />
+    <meta property="og:image:secure_url" content={resolvedImage} />
+    <meta property="og:image:type" content={resolvedImage.endsWith('.png') ? 'image/png' : resolvedImage.endsWith('.jpg') || resolvedImage.endsWith('.jpeg') ? 'image/jpeg' : resolvedImage.endsWith('.svg') ? 'image/svg+xml' : 'image/webp'} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={documentTitle} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={documentTitle} />

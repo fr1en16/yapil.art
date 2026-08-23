@@ -105,20 +105,65 @@ const sectionName = section === 'services' ? 'Услуга' : 'Решение';
       </section>
 
       {links.length > 0 && linksTitle && (
-        <section class="editorial-section" aria-labelledby="links-title">
-          <header class="editorial-heading"><p class="editorial-heading__number">06</p><div class="editorial-heading__content"><h2 id="links-title">{linksTitle}</h2></div></header>
-          <div class="editorial-grid">{links.map((link) => <a class="editorial-card" href={`/${section}/${link.slug}`}><span class="editorial-card__number">{link.number} / ↗</span><h3>{link.title}</h3><p>{link.description}</p></a>)}</div>
+        <section class="editorial-section editorial-section--compact" aria-labelledby="links-title">
+          <header class="editorial-compact-header">
+            <span class="editorial-compact-header__number">06</span>
+            <h2 id="links-title">{linksTitle}</h2>
+          </header>
+          <div class="editorial-compact-grid">
+            {links.map((link) => (
+              <a class="editorial-compact-card" href={`/${section}/${link.slug}`}>
+                <div class="editorial-compact-card__top">
+                  <span class="editorial-compact-card__number">{link.number}</span>
+                  <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
+                </div>
+                <h3>{link.title}</h3>
+                <p>{link.description}</p>
+              </a>
+            ))}
+          </div>
         </section>
       )}
 
       {section === 'services' && (
-        <section class="editorial-section" aria-labelledby="cities-title">
-          <header class="editorial-heading"><p class="editorial-heading__number">07</p><div class="editorial-heading__content"><h2 id="cities-title">Услуга по городам Казахстана</h2></div></header>
-          <div class="editorial-grid">
-            <a class="editorial-card" href={`/services/${slug}/almaty`}><span class="editorial-card__number">01 / ↗</span><h3>Алматы</h3><p>{name} для бизнеса Алматы и страницы по районам города.</p></a>
-            <a class="editorial-card" href={`/services/${slug}/astana`}><span class="editorial-card__number">02 / ↗</span><h3>Астана</h3><p>{name} для компаний Астаны и страницы по районам столицы.</p></a>
-            <a class="editorial-card" href={`/services/${slug}/shymkent`}><span class="editorial-card__number">03 / ↗</span><h3>Шымкент</h3><p>{name} для бизнеса Шымкента и страницы по районам города.</p></a>
-            <a class="editorial-card" href="/cities"><span class="editorial-card__number">17 городов / ↗</span><h3>Вся география</h3><p>Выбрать город с населением от 200 тысяч человек.</p></a>
+        <section class="editorial-section editorial-section--compact" aria-labelledby="cities-title">
+          <header class="editorial-compact-header">
+            <span class="editorial-compact-header__number">07</span>
+            <h2 id="cities-title">Услуга по городам Казахстана</h2>
+          </header>
+          <div class="editorial-compact-grid">
+            <a class="editorial-compact-card" href={`/services/${slug}/almaty`}>
+              <div class="editorial-compact-card__top">
+                <span class="editorial-compact-card__number">01</span>
+                <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Алматы</h3>
+              <p>{name} для бизнеса Алматы и страницы по районам города.</p>
+            </a>
+            <a class="editorial-compact-card" href={`/services/${slug}/astana`}>
+              <div class="editorial-compact-card__top">
+                <span class="editorial-compact-card__number">02</span>
+                <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Астана</h3>
+              <p>{name} для компаний Астаны и страницы по районам столицы.</p>
+            </a>
+            <a class="editorial-compact-card" href={`/services/${slug}/shymkent`}>
+              <div class="editorial-compact-card__top">
+                <span class="editorial-compact-card__number">03</span>
+                <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Шымкент</h3>
+              <p>{name} для бизнеса Шымкента и страницы по районам города.</p>
+            </a>
+            <a class="editorial-compact-card" href="/cities">
+              <div class="editorial-compact-card__top">
+                <span class="editorial-compact-card__number">17 городов</span>
+                <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Вся география</h3>
+              <p>Выбрать город с населением от 200 тысяч человек.</p>
+            </a>
           </div>
         </section>
       )}
