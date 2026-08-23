@@ -4,6 +4,39 @@ import '../styles/global.css';
 import '../styles/tokens.css';
 import { CrmApp } from '../components/crm/CrmApp';
 
+export const prerender = false;
+
+const env = import.meta.env;
+const username = env.ANALYTICS_USERNAME || 'yapil';
+const password = env.ANALYTICS_PASSWORD;
+
+const authorization = Astro.request.headers.get('authorization');
+let authorized = !password;
+
+if (password && authorization?.startsWith('Basic ')) {
+  try {
+    const credentials = atob(authorization.slice(6));
+    const separator = credentials.indexOf(':');
+    const providedUser = credentials.slice(0, separator);
+    const providedPassword = credentials.slice(separator + 1);
+    authorized = providedUser === username && providedPassword === password;
+  } catch {
+    authorized = false;
+  }
+}
+
+if (!authorized) {
+  return new Response('Требуется авторизация', {
+    status: 401,
+    headers: {
+      'WWW-Authenticate': 'Basic realm="Yapil CRM", charset="UTF-8"',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+
 const title = 'CRM — Система приёма и обработки заявок | Yapil';
 const description = 'Внутренняя CRM-система приёма и обработки клиентских заявок дизайн-студии Yapil.';
 ---
