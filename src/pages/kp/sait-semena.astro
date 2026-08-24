@@ -1,0 +1,613 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+
+const variants = [
+  {
+    number: '1.',
+    title: 'Простой каталог',
+    description: 'Tilda, список товаров с поиском и категориями, без фильтров по параметрам',
+    design: 'Готовые блоки конструктора, адаптирую под ваш стиль',
+    duration: '1–2 недели',
+    price: '150 000 ₸',
+  },
+  {
+    number: '2.',
+    title: 'Каталог с фильтрами',
+    description: 'Tilda, поиск по сорту, сроку созревания, цвету и другим параметрам',
+    design: 'Готовые блоки конструктора, адаптирую под ваш стиль',
+    duration: '2–3 недели',
+    price: '260 000 ₸',
+  },
+  {
+    number: '3.',
+    title: 'Сайт на коде',
+    description: 'Без привязки к конструктору, своя админка, полная свобода в развитии',
+    design: 'Кастомный дизайн с нуля под бренд, без ограничений шаблона',
+    duration: '3–5 недель',
+    price: '600 000 ₸',
+  },
+];
+
+const pages = [
+  { title: 'Главная', purpose: 'Обложка бренда, популярные позиции, переход в каталог, короткое УТП' },
+  { title: 'Каталог', purpose: 'Список всех 300 позиций, сетка карточек с фото, названием и ценой' },
+  { title: 'Карточка товара', purpose: 'Фото (2–3 шт), описание, сорт, срок созревания, цена, кнопка «в корзину»' },
+  { title: 'Фильтры и поиск', purpose: 'В варианте 2 и 3: отбор по сорту, сроку созревания, цвету; поиск по названию' },
+  { title: 'Корзина', purpose: 'Список добавленных товаров, изменение количества, переход к оформлению' },
+  { title: 'Оформление заказа', purpose: 'Данные покупателя, способ доставки, оплата через эквайринг' },
+  { title: 'Личный кабинет', purpose: 'История заказов, статус доставки, сохранённые данные для повторной покупки' },
+  { title: 'О компании', purpose: 'Информация о ТОО, реквизиты, история бренда' },
+  { title: 'Доставка и оплата', purpose: 'Условия доставки, способы оплаты, сроки' },
+  { title: 'Контакты', purpose: 'Телефон, соцсети, форма обратной связи, карта при необходимости' },
+];
+
+const materials = [
+  'Таблица с товарами: название, сорт, цена, описание, фото — минимум 2–3 фото на позицию',
+  'Список нужных фильтров, если берёте вариант 2 или 3',
+  'Реквизиты ТОО и данные для подключения онлайн-оплаты',
+  'Логотип, если есть, или ориентир по стилю',
+];
+
+const workflow = [
+  'Получаю таблицу с товарами (хотя бы часть, остальное можно добавить позже)',
+  'Собираю структуру каталога и один-два образца карточки на согласование',
+  'После утверждения — сборка всего каталога и подключение оплаты',
+  'Финальная проверка, передача доступов',
+];
+
+const terms = [
+  { title: 'Оплата.', text: 'Предоплата 50%, остаток по готовности.' },
+  { title: 'Правки.', text: 'Два круга правок на этапе согласования, дальше — по часовой ставке 10 000 ₸/час.' },
+  { title: 'Наполнение каталога дальше.', text: 'Каталог грузится через таблицу, добавлять новые позиции самостоятельно можно будет без моего участия.' },
+];
+---
+
+<Base
+  title="Сайт для интернет-магазина семян"
+  description="Коммерческое предложение"
+  theme="light"
+  noindex={true}
+  navOverlay={true}
+>
+  <article class="proposal">
+    <section class="cover" aria-labelledby="proposal-title">
+      <div class="cover-grid" aria-hidden="true"></div>
+      <div class="container cover-inner">
+        <p class="cover-kicker">Коммерческое предложение</p>
+        <div class="cover-title-wrap">
+          <h1 id="proposal-title">
+            <span class="cover-line">Сайт для</span>
+            <span class="cover-line cover-shop"><span>интернет-</span><span>магазина</span></span>
+            <span class="cover-line">семян</span>
+          </h1>
+        </div>
+        <div class="cover-bottom">
+          <h2>Интернет магазин семян</h2>
+          <p>Каталог на 300 позиций томатов с расширением на перец в следующем году. Оплата онлайн.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="proposal-body">
+      <div class="content">
+        <section class="proposal-section" id="variants">
+          <header class="section-heading">
+            <p class="section-number">01</p>
+            <div>
+              <h2>Три<br />варианта</h2>
+              <p class="section-intro">Цена зависит от того, нужен ли конструктор или код, и насколько сложным должен быть поиск по каталогу.</p>
+            </div>
+          </header>
+
+          <div class="variants-table">
+            <div class="variant-head" aria-hidden="true">
+              <span>Вариант</span>
+              <span>Что это</span>
+              <span>Дизайн</span>
+              <span>Срок</span>
+              <span>Цена</span>
+            </div>
+            {variants.map((variant) => (
+              <article class="variant-row">
+                <h3><span class="variant-number" aria-hidden="true">{variant.number}</span> {variant.title}</h3>
+                <div class="cell"><span class="cell-label">Что это</span>{variant.description}</div>
+                <div class="cell"><span class="cell-label">Дизайн</span>{variant.design}</div>
+                <div class="cell"><span class="cell-label">Срок</span>{variant.duration}</div>
+                <div class="cell cell-price"><span class="cell-label">Цена</span><strong>{variant.price}</strong></div>
+              </article>
+            ))}
+          </div>
+
+          <aside class="recommendation" aria-label="Рекомендация">
+            <p class="recommendation-label">Рекомендация</p>
+            <h3 class="recommendation-verdict">Вариант 2, каталог с фильтрами</h3>
+            <p>При 300 позициях без фильтров каталог превращается в длинный список, который тяжело листать. Сорт и срок созревания нужны покупателю на первом же экране.</p>
+            <p class="recommendation-alt">Вариант 3 берите, если планируете рост на несколько тысяч позиций, сложную логику вроде оптовых скидок или упираетесь в скорость загрузки.</p>
+          </aside>
+        </section>
+
+        <section class="proposal-section" id="structure">
+          <header class="section-heading">
+            <p class="section-number">02</p>
+            <div>
+              <h2>Структура<br />сайта</h2>
+              <p class="section-intro">Набор страниц одинаков для всех трёх вариантов, разница в том, как эти страницы собраны — блоками конструктора или кодом.</p>
+            </div>
+          </header>
+
+          <div class="pages-list">
+            <div class="page-row page-head" aria-hidden="true">
+              <span>Страница</span>
+              <span>Назначение</span>
+            </div>
+            <ol class="pages-rows">
+              {pages.map((page, index) => (
+                <li class="page-row">
+                  <span class="row-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{page.title}</strong>
+                  <p>{page.purpose}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <p class="note"><strong>Что можно добавить отдельно.</strong> Блог или раздел с советами по выращиванию — хорошо работает для органического трафика на нишу вроде семян, но не входит в базовую смету, считается как отдельная задача.</p>
+        </section>
+
+        <section class="proposal-section" id="hosting">
+          <header class="section-heading compact-heading">
+            <p class="section-number">03</p>
+            <div>
+              <h2>Хостинг</h2>
+              <p class="section-intro">Отдельная ежемесячная/годовая плата, не входит в стоимость разработки.</p>
+            </div>
+          </header>
+
+          <div class="hosting-grid">
+            <article>
+              <h3>Для вариантов 1 и 2 (Tilda)</h3>
+              <p>Хостинг включён в тариф платформы. Для магазина такого размера — 36 000 ₸/год. Фото сжимаются платформой автоматически, отдельно платить за них не нужно. Домен, около 5 000 – 8 000 ₸/год.</p>
+            </article>
+            <article>
+              <h3>Для варианта 3 (код)</h3>
+              <p>Хостинг берётся отдельно, 60 000 – 180 000 ₸/год в зависимости от мощности сервера. Домен, около 5 000 – 8 000 ₸/год.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="proposal-section split-section" id="inputs">
+          <div class="split-panel split-dark">
+            <p class="section-number">04</p>
+            <h2>Что нужно<br />от вас</h2>
+            <ul>
+              {materials.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>)}
+            </ul>
+          </div>
+          <div class="split-panel">
+            <p class="section-number">05</p>
+            <h2>Порядок<br />работы</h2>
+            <ol>
+              {workflow.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>)}
+            </ol>
+          </div>
+        </section>
+
+        <section class="proposal-section terms-section" id="terms">
+          <header class="section-heading compact-heading">
+            <p class="section-number">06</p>
+            <div><h2>Условия</h2></div>
+          </header>
+
+          <dl class="terms-list">
+            {terms.map((term) => (
+              <div>
+                <dt>{term.title}</dt>
+                <dd>{term.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </div>
+    </div>
+  </article>
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<style>
+  :global(body.theme-light) { background: #f2efe9; }
+  :global(body.theme-light .site-footer.theme-light) { background: #f5f1e9; }
+
+  .proposal {
+    --paper: #f5f1e9;
+    --ink: #171717;
+    --muted: #6d6963;
+    --line: rgba(23, 23, 23, 0.18);
+    color: var(--ink);
+    background: transparent;
+  }
+
+  .cover {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    color: #fff8f2;
+    background: transparent;
+  }
+
+  .cover-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.34;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    background-size: 25% 25%;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
+  }
+
+  .cover-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100svh;
+    padding-block: 7.5rem 2rem;
+  }
+
+  .cover-kicker {
+    margin: 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cover-title-wrap {
+    align-self: center;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  .cover h1 {
+    grid-column: 1 / 12;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(3.8rem, 7.1vw, 6.8rem);
+    font-weight: 400;
+    line-height: 0.88;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+  }
+
+  .cover-line { display: block; }
+  .cover-shop > span { display: inline; }
+
+  .cover-bottom {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    align-items: end;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .cover-bottom h2 {
+    grid-column: 1 / 7;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .cover-bottom p {
+    grid-column: 8 / 13;
+    max-width: 34rem;
+    margin: 0;
+    font-size: clamp(1.05rem, 1.7vw, 1.45rem);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+  }
+
+  .proposal-body {
+    position: relative;
+    isolation: isolate;
+    width: min(calc(100% - var(--container-inline-space)), var(--container-max));
+    margin-inline: auto;
+    background: var(--paper);
+  }
+
+  .proposal-body::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset-block: 0;
+    left: 50%;
+    width: 100vw;
+    background: var(--paper);
+    transform: translateX(-50%);
+  }
+
+  .proposal-section {
+    padding: clamp(5rem, 9vw, 9rem) 0;
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: 5rem;
+  }
+
+  .section-heading {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    margin-bottom: clamp(3.5rem, 7vw, 7rem);
+  }
+
+  .section-heading > .section-number { grid-column: 1; }
+  .section-heading > div { grid-column: 2 / 11; }
+  .section-number,
+  .row-number { font-family: var(--font-body); font-size: 0.75rem; letter-spacing: 0.04em; }
+  .section-number { color: #fd4b32; }
+
+  .section-heading h2,
+  .split-panel h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7.3vw, 7.5rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .section-intro {
+    max-width: 47rem;
+    margin: clamp(2rem, 4vw, 3.5rem) 0 0;
+    font-size: clamp(1.15rem, 1.85vw, 1.65rem);
+    line-height: 1.18;
+    letter-spacing: -0.035em;
+  }
+
+  .variants-table { border-top: 1px solid var(--ink); }
+  .variant-head,
+  .variant-row {
+    display: grid;
+    grid-template-columns: 2.1fr 2.5fr 2.3fr 1.05fr 1.2fr;
+    gap: clamp(0.75rem, 1.6vw, 1.5rem);
+    align-items: start;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .variant-head {
+    padding-block: 0.75rem;
+    color: var(--muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .variant-row h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.8rem);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .variant-row .variant-number { color: #fd4b32; }
+  .variant-row .cell { color: var(--muted); font-size: 0.9rem; line-height: 1.35; }
+  .variant-row .cell-price { color: var(--ink); white-space: nowrap; }
+  .cell-label { display: none; }
+
+  .recommendation {
+    margin: 1.5rem 0 0;
+    padding: clamp(1.75rem, 3vw, 2.75rem);
+    border-top: 3px solid #fd4b32;
+    color: var(--ink);
+    background: #fff;
+  }
+
+  .recommendation-label {
+    margin: 0;
+    color: #fd4b32;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .recommendation-verdict {
+    max-width: 22ch;
+    margin: 0.75rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .recommendation p {
+    max-width: 46rem;
+    margin: 1.25rem 0 0;
+    font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+  }
+
+  .recommendation .recommendation-alt {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  .note {
+    margin: 1rem 0 0;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--ink);
+    background: #dcefe8;
+    font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .note strong { font-weight: 700; }
+  .pages-list { border-top: 1px solid var(--ink); }
+  .pages-rows { margin: 0; padding: 0; list-style: none; }
+  .page-row {
+    display: grid;
+    grid-template-columns: 3rem minmax(11rem, 3fr) minmax(0, 7fr);
+    column-gap: var(--grid-gap);
+    align-items: baseline;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head { padding-block: 0.75rem; color: var(--muted); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .page-head span:first-child { grid-column: 2; }
+  .page-row .row-number { color: #fd4b32; }
+  .page-row strong { font-family: var(--font-display); font-size: clamp(1.35rem, 2.2vw, 2rem); font-weight: 400; line-height: 1; }
+  .page-row p { margin: 0; color: var(--muted); line-height: 1.35; }
+
+  .compact-heading { margin-bottom: clamp(3rem, 5vw, 5rem); }
+  .hosting-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ink); }
+  .hosting-grid article { min-height: 24rem; padding: clamp(2rem, 4vw, 4rem); border-bottom: 1px solid var(--line); }
+  .hosting-grid article:first-child { padding-left: 0; border-right: 1px solid var(--line); }
+  .hosting-grid h3 { max-width: 17ch; margin: 0 0 clamp(5rem, 9vw, 9rem); font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 400; line-height: 1; }
+  .hosting-grid p { max-width: 34rem; margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.4; }
+
+  .split-section { display: grid; grid-template-columns: 1fr 1fr; padding: 0; }
+  .split-panel { min-height: 48rem; padding: clamp(2rem, 5vw, 5rem); background: #dcefe8; }
+  .split-dark { color: #fff; background: #171717; }
+  .split-panel .section-number { color: #4f4c47; }
+  .split-dark .section-number { color: rgba(255, 255, 255, 0.72); }
+  .split-panel h2 { margin-top: 5rem; font-size: clamp(2.6rem, 5vw, 5rem); }
+  .split-panel ul,
+  .split-panel ol { margin: 4rem 0 0; padding: 0; list-style: none; }
+  .split-panel li { display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.75rem; padding: 1rem 0; border-top: 1px solid rgba(23, 23, 23, 0.18); font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.25; }
+  .split-dark li { border-top-color: rgba(255, 255, 255, 0.24); }
+  .split-panel li span { padding-top: 0.2rem; color: #4f4c47; font-size: 0.7rem; }
+  .split-dark li span { color: rgba(255, 255, 255, 0.72); }
+
+  .terms-list { margin: 0; }
+  .terms-list > div { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); padding: 2rem 0; border-top: 1px solid var(--line); }
+  .terms-list > div:last-child { border-bottom: 1px solid var(--line); }
+  .terms-list dt { grid-column: 1 / 4; color: #fd4b32; font-family: var(--font-body); font-size: 0.78rem; }
+  .terms-list dd { grid-column: 4 / 11; max-width: 48rem; margin: 0; font-size: clamp(1.15rem, 2vw, 1.75rem); line-height: 1.15; letter-spacing: -0.035em; }
+
+  @media (max-width: 64rem) {
+    .variant-row { grid-template-columns: minmax(12rem, 1.8fr) minmax(0, 2.2fr) 1fr; }
+    .variant-head { display: none; }
+    .variant-row > :nth-child(3) { grid-column: 2; }
+    .cell-label { display: block; margin-bottom: 0.4rem; color: var(--muted); font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  }
+
+  @media (max-width: 56rem) {
+    .cover-inner { padding-top: 6.5rem; }
+    .cover-title-wrap { display: block; }
+    .cover-bottom { display: flex; align-items: start; flex-direction: column; gap: 2rem; }
+    .proposal-body { width: min(calc(100% - 2rem), 100rem); }
+    .hosting-grid,
+    .split-section { grid-template-columns: 1fr; }
+    .hosting-grid article { min-height: 0; padding-inline: 0; border-right: 0 !important; }
+    .hosting-grid h3 { margin-bottom: 4rem; }
+    .split-panel { min-height: auto; }
+  }
+
+  @media (max-width: 40rem) {
+    .cover-title-wrap { padding-block: 4rem; }
+    .cover h1 {
+      font-size: clamp(2.6rem, 11.2vw, 4.6rem);
+      overflow-wrap: normal;
+      hyphens: none;
+    }
+    .cover-shop > span {
+      display: block;
+      white-space: nowrap;
+    }
+    .cover-bottom { gap: 1.5rem; }
+    .proposal-body { width: min(calc(100% - 2.5rem), 100rem); }
+    .section-heading { display: block; }
+    .section-number { margin-bottom: 2rem; }
+    .variant-row {
+      grid-template-columns: 1fr auto;
+      row-gap: 0.85rem;
+      padding: 1.75rem 0;
+    }
+    .variant-row h3 {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      font-size: 1.75rem;
+    }
+    .variant-row > :nth-child(2) {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      margin-top: 0.6rem;
+    }
+    .variant-row > :nth-child(3) {
+      grid-column: 1 / -1;
+      grid-row: 4;
+    }
+    .variant-row > :nth-child(4),
+    .variant-row .cell-price {
+      grid-row: 2;
+      align-self: baseline;
+    }
+    .variant-row > :nth-child(4) .cell-label,
+    .variant-row .cell-price .cell-label { display: none; }
+    .variant-row > :nth-child(4) {
+      grid-column: 1;
+      font-size: 1rem;
+    }
+    .variant-row .cell-price {
+      grid-column: 2;
+      text-align: right;
+    }
+    .variant-row .cell-price strong { font-size: 1.4rem; }
+    .variant-row > :nth-child(2),
+    .variant-row > :nth-child(3),
+    .page-row p,
+    .hosting-grid p,
+    .split-panel li,
+    .recommendation p,
+    .note {
+      font-size: 1.125rem;
+      line-height: 1.5;
+    }
+    .recommendation { padding: 1.5rem 1.25rem 1.75rem; }
+    .recommendation-verdict { max-width: none; font-size: 1.75rem; }
+    .cover-bottom p {
+      font-size: 1.125rem;
+      line-height: 1.5;
+    }
+    .section-intro,
+    .terms-list dd { line-height: 1.4; }
+    .cell-label {
+      margin-bottom: 4px;
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+    }
+    .page-row { grid-template-columns: 2.25rem 1fr; row-gap: 0.8rem; }
+    .page-head { display: none; }
+    .page-row p { grid-column: 2; }
+    .split-panel { padding: 2.5rem 1.5rem; }
+    .terms-list > div { grid-template-columns: 1fr; gap: 1rem; }
+    .terms-list dt,
+    .terms-list dd { grid-column: 1; }
+  }
+
+  @media print {
+    :global(.site-header),
+    :global(.skip-link),
+    :global([data-grid-overlay]) { display: none !important; }
+    :global(body), .proposal, .proposal-body { background: #fff !important; }
+    .cover { min-height: 100vh; background: #fd4b32 !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; break-after: page; }
+    .proposal-body { width: 100%; }
+    .proposal-section { padding: 3rem 2rem; }
+    .split-section,
+    .recommendation,
+    .note { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
