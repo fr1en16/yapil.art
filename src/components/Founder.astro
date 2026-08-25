@@ -1,15 +1,17 @@
 ---
 interface Props {
   theme?: 'dark' | 'light';
+  lang?: 'ru' | 'en';
 }
 
-const { theme = 'dark' } = Astro.props;
+const { theme = 'dark', lang = 'ru' } = Astro.props;
 const isLight = theme === 'light';
+const isEn = lang === 'en';
 ---
 
 <section
   id="founder"
-  aria-label="О Якове"
+  aria-label={isEn ? 'About Yakov' : 'О Якове'}
   class:list={[
     'relative z-10 pt-24 pb-16 md:pt-32 md:pb-24 transition-colors duration-300',
     isLight ? 'text-[#1D1D1D]' : 'text-white',
@@ -31,7 +33,7 @@ const isLight = theme === 'light';
         >
           <img
             src="/cover.webp"
-            alt="Яков Пилипюк, дизайнер"
+            alt={isEn ? 'Yakov Pilipyuk, designer' : 'Яков Пилипюк, дизайнер'}
             width="640"
             height="800"
             loading="lazy"
@@ -48,7 +50,7 @@ const isLight = theme === 'light';
           ]}
           style="font-family: var(--font-display);"
         >
-          Яков Пилипюк
+          {isEn ? 'Yakov Pilipyuk' : 'Яков Пилипюк'}
         </h2>
         <p
           class:list={[
@@ -56,7 +58,11 @@ const isLight = theme === 'light';
             isLight ? 'text-[#1D1D1D]/75' : 'text-white/80',
           ]}
         >
-          Верю, что хороший дизайн начинается с&nbsp;внимания к&nbsp;деталям, к&nbsp;смыслу, к&nbsp;тому, что действительно важно сказать. Восемь лет я&nbsp;превращаю идеи в&nbsp;форму: сайты, знаки, бумагу, которую хочется держать в&nbsp;руках. Не&nbsp;люблю разбивать проект на&nbsp;цеха и&nbsp;довожу всё сам.
+          {isEn ? (
+            <>I believe great design begins with attention to detail, clarity, and what truly matters. For eight years, I have been translating ideas into tangible form: websites, identities, and print you want to hold in your hands. I handle every phase personally without dilution or handoffs.</>
+          ) : (
+            <>Верю, что хороший дизайн начинается с&nbsp;внимания к&nbsp;деталям, к&nbsp;смыслу, к&nbsp;тому, что действительно важно сказать. Восемь лет я&nbsp;превращаю идеи в&nbsp;форму: сайты, знаки, бумагу, которую хочется держать в&nbsp;руках. Не&nbsp;люблю разбивать проект на&nbsp;цеха и&nbsp;довожу всё сам.</>
+          )}
         </p>
       </div>
     </div>

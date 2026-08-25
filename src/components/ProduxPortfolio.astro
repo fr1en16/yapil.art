@@ -6,10 +6,12 @@ interface Props {
   projectSlugs?: string[];
   title?: string;
   seamless?: boolean;
+  lang?: 'ru' | 'en';
 }
 
-const { theme = 'dark', projectSlugs, title, seamless = false } = Astro.props;
+const { theme = 'dark', projectSlugs, title, seamless = false, lang = 'ru' } = Astro.props;
 const isLight = theme === 'light';
+const isEn = lang === 'en';
 
 const defaultSlugs = [
   'onmacabim',
@@ -25,8 +27,166 @@ const targetSlugs = projectSlugs?.length ? projectSlugs : defaultSlugs;
 const allCases = await getCollection('cases');
 const caseMap = new Map(allCases.map((c) => [c.id, c]));
 
+const SERVICE_TAG_MAP_EN: Record<string, string> = {
+  'Поддержка': 'Support',
+  'Полиграфия': 'Print',
+  'Сайт': 'Website',
+  'Сайты': 'Websites',
+  'Брендинг': 'Branding',
+  'Логотип': 'Logo',
+  'Лендинг': 'Landing page',
+  'Лендинги': 'Landing pages',
+  'Упаковка': 'Packaging',
+  'Соцсети': 'Social Media',
+  'Интернет-магазин': 'E-commerce',
+  'Презентация': 'Presentation',
+  'Презентации': 'Presentations',
+};
+
+const CASE_TRANSLATIONS_EN: Record<string, { title?: string; summary: string; services?: string[] }> = {
+  onmacabim: {
+    title: 'ONmacabim',
+    summary: 'Professional skincare cosmetics from Israel',
+    services: ['Support', 'Print'],
+  },
+  compass: {
+    title: 'Compass',
+    summary: 'Management consulting agency in Uzbekistan',
+    services: ['Website', 'Branding'],
+  },
+  'compass-management': {
+    title: 'Compass Management',
+    summary: 'Management consulting company',
+    services: ['Website', 'Branding'],
+  },
+  yatut: {
+    title: 'Ya Tut',
+    summary: 'Mountain retreat near Almaty',
+    services: ['Logo', 'Support'],
+  },
+  rv: {
+    title: 'Rykunov & Kudryashov',
+    summary: 'Media producers',
+    services: ['Landing page'],
+  },
+  boya: {
+    title: 'Boya',
+    summary: 'Paints & coating materials',
+    services: ['Website', 'Branding'],
+  },
+  shanding: {
+    title: 'Shanding',
+    summary: 'International logistics company',
+    services: ['Landing page', 'Print'],
+  },
+  bebble: {
+    title: 'Bebble',
+    summary: 'Bulgarian baby care brand',
+    services: ['Website'],
+  },
+  baizakova: {
+    title: 'Bayzakova',
+    summary: 'Influencer & media creator',
+    services: ['Landing page'],
+  },
+  brewbox: {
+    title: 'BrewBox',
+    summary: 'Craft beverage MVP concept',
+    services: ['Packaging', 'Social Media'],
+  },
+  'business-cars': {
+    title: 'Business Cars',
+    summary: 'Premium automotive rental and sales',
+    services: ['Websites'],
+  },
+  'dodo-hightower': {
+    title: 'Dodo Pizza // Hightower',
+    summary: 'Promo landing & campaign',
+    services: ['Landing page'],
+  },
+  gippo: {
+    title: 'Gippo',
+    summary: 'Pioneer street-food chain in Kazakhstan',
+    services: ['Support', 'Print'],
+  },
+  igorkochergin: {
+    title: 'Igor Kochergin',
+    summary: 'Financial trader',
+    services: ['Landing page'],
+  },
+  kenfasad: {
+    title: 'Kenfasad',
+    summary: 'Architectural facade engineering',
+    services: ['Branding', 'Website', 'Print'],
+  },
+  kirpi: {
+    title: 'Kirpi',
+    summary: 'Contemporary fashion label',
+    services: ['E-commerce'],
+  },
+  parking24: {
+    title: 'Parking24',
+    summary: 'Smart parking automation platform',
+    services: ['Presentation'],
+  },
+  'puma-kazakhstan': {
+    title: 'PUMA Kazakhstan',
+    summary: 'Leading global sportswear brand',
+    services: ['Support'],
+  },
+  'rim-invest': {
+    title: 'Rim Invest',
+    summary: 'Investment community',
+    services: ['Landing page'],
+  },
+  takara: {
+    title: 'Takara Sushi Bar',
+    summary: 'Authentic Japanese sushi bar',
+    services: ['Support', 'Print'],
+  },
+  taxikolesa: {
+    title: 'TaxiKolesa',
+    summary: '#1 Yandex.Go partner in Kazakhstan',
+    services: ['Landing pages'],
+  },
+  tomaskralov: {
+    title: 'Tomas Kralow',
+    summary: 'Global top trading educator',
+    services: ['Landing page'],
+  },
+  uaz: {
+    title: 'UAZ',
+    summary: 'Iconic all-terrain vehicles and commercial fleet',
+    services: ['Website'],
+  },
+  'ugc-donskova': {
+    title: 'Daria Donskova // UGC Creator',
+    summary: 'UGC content creator & blogger',
+    services: ['Landing page'],
+  },
+};
+
 const projects = targetSlugs
-  .map((slug) => caseMap.get(slug))
+  .map((slug) => {
+    const original = caseMap.get(slug);
+    if (!original) return null;
+    if (isEn) {
+      const en = CASE_TRANSLATIONS_EN[slug];
+      const title = en?.title || original.data.title;
+      const summary = en?.summary || original.data.summary;
+      const services = en?.services || original.data.services.map((s) => SERVICE_TAG_MAP_EN[s] || s);
+      return {
+        ...original,
+        data: {
+          ...original.data,
+          title,
+          summary,
+          services,
+        },
+      };
+    }
+    return original;
+  })
   .filter((c): c is NonNullable<typeof c> => Boolean(c));
 
 const positions = [
@@ -42,7 +202,7 @@ const positions = [
 
 <section class:list={['portfolio', { 'theme-light': isLight, 'is-seamless': seamless }]} id="cases" aria-labelledby="portfolio-title">
   <div class="portfolio__header container">
-    <h2 id="portfolio-title">{title ?? <Fragment>Избранные<br />проекты</Fragment>}</h2>
+    <h2 id="portfolio-title">{title ?? (isEn ? <Fragment>Featured<br />projects</Fragment> : <Fragment>Избранные<br />проекты</Fragment>)}</h2>
   </div>
 
   <div class="portfolio__grid container">
@@ -78,7 +238,7 @@ const positions = [
                         aria-hidden="true"
                         class="project__video"
                       >
-                        <track kind="captions" src="data:text/vtt,WEBVTT" label="Без звука" default />
+                        <track kind="captions" src="data:text/vtt,WEBVTT" label={isEn ? "No audio" : "Без звука"} default />
                       </video>
                     </>
                   ) : project.data.cover.startsWith('/') ? (
@@ -114,7 +274,7 @@ const positions = [
               </div>
               <div class="project__action" aria-hidden="true">
                 <span class="project__arrow">↗</span>
-                <span>Смотреть проект</span>
+                <span>{isEn ? 'View project' : 'Смотреть проект'}</span>
               </div>
             </div>
           </a>

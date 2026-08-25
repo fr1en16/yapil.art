@@ -10,39 +10,39 @@ import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
 import ProcessTimeline from '../components/ui/process-timeline';
 
-const processSteps = [
+const processStepsEn = [
   {
     number: '01',
-    title: 'Обсуждаем задачу',
-    description: 'Пишете в форму ниже или в Telegram — коротко рассказываете о задаче, сроках и бюджете.',
+    title: 'Discussing the task',
+    description: 'Fill out the form below or message in Telegram — briefly describe your goals, timeline, and budget.',
   },
   {
     number: '02',
-    title: 'Присылаю смету и сроки',
-    description: 'Точная стоимость и срок — фиксируем в договоре, без изменений задним числом.',
+    title: 'Quote and schedule',
+    description: 'Exact cost and timeline — agreed before kickoff, fixed in the contract with no surprise changes.',
   },
   {
     number: '03',
-    title: 'Делаю и присылаю на согласование',
-    description: 'Показываю концепцию, собираю обратную связь, довожу до финального варианта.',
+    title: 'Design & approval',
+    description: 'Presenting concepts, collecting feedback, and iterating until the design is completely approved.',
   },
   {
     number: '04',
-    title: 'Передаю результат',
-    description: 'Готовый сайт, макет или файл под печать — плюс исходники и все права на них.',
+    title: 'Final handover',
+    description: 'Live website, clean Figma UI, or prepress print files — plus full source assets and rights transfer.',
   },
 ];
 
-const threadsJsonLd = {
+const enJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'Person',
       '@id': 'https://yapil.art/#person',
-      name: 'Яков Пилипюк',
+      name: 'Yakov Pilipyuk',
       alternateName: 'Yapil',
-      url: 'https://yapil.art',
-      jobTitle: 'Дизайнер',
+      url: 'https://yapil.art/en',
+      jobTitle: 'Designer & Creative Director',
       email: 'hi@yapil.art',
       telephone: '+77067436197',
       sameAs: ['https://t.me/yakov_pil', 'https://wa.me/77067436197'],
@@ -52,34 +52,42 @@ const threadsJsonLd = {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'Сколько стоит проект?',
+          name: 'How much does a project cost?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Зависит от задачи: лендинг, айдентика и упаковка стоят по-разному. Присылаю смету после короткого созвона или переписки — точную, без “от” и без сюрпризов в процессе.',
+            text: 'It depends on the task: landing pages, visual identities, and packaging have different scope. I provide a transparent estimate after a short call or chat — fixed, accurate, and with zero surprises during the project.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Сколько занимает разработка?',
+          name: 'How long does development take?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Лендинги и презентации — от 1 до 3 недель. Сайты и айдентика — от 3 до 6 недель. Срок фиксируется в договоре на старте.',
+            text: 'Landing pages and presentation pitch decks: 1 to 3 weeks. Full websites and complete brand identities: 3 to 6 weeks. The timeline is fixed in the agreement at the start.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Работаете официально?',
+          name: 'Do you work under contract?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Да: договор, поэтапная оплата, акты выполненных работ и передача исключительных прав на исходники после финального платежа.',
+            text: 'Yes: formal contract, milestone-based payments, delivery reports, and transfer of all exclusive rights and source files upon final settlement.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Почему не студия, а один человек?',
+          name: 'Why work with an independent designer instead of an agency?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Проект от эскиза до релиза веду сам — без передачи между отделами и потери смысла на стыках. При этом есть опыт агентства thePeak: там я работал с LUKOIL, Cadillac, PUMA и Gippo, и оттуда — процессы, которые держат сроки.',
+            text: 'I lead every project myself from the first sketch to release — no account managers or miscommunications between departments. At the same time, I bring agency leadership experience from thePeak (working with LUKOIL, Cadillac, PUMA, Gippo), ensuring rigorous processes and met deadlines on major projects.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What if my task is not listed under services?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Reach out — let's discuss. If the task is outside my expertise, I'll tell you honestly right away rather than wasting your time.",
           },
         },
       ],
@@ -89,68 +97,69 @@ const threadsJsonLd = {
 ---
 
 <Base
-  title="Заявка дизайнеру из Threads — Яков Пилипюк | Yapil"
-  description="Пишете из Threads? Оставьте заявку — отвечаю в течение 2 часов лично. Сайты, айдентика, полиграфия и презентации под ключ."
+  lang="en"
+  title="Designer for hire — Yakov Pilipyuk | Yapil"
+  description="Websites, brand identity, packaging, and presentations that distinguish your company from competitors and drive business growth — from initial sketch to release."
   image="/cover-threads.webp"
-  jsonLd={threadsJsonLd}
+  jsonLd={enJsonLd}
   noindex
   navMinimal
   bodyClass="page-threads"
 >
   <Hero
-    title="Дизайн<br />который<br />работает<br />на вас"
-    description="Сайты, айдентика, упаковка и презентации, которые выделяют компанию среди конкурентов и приносят заявки — от первого эскиза до релиза или печати."
+    title="Design<br />that works<br />for you"
+    description="Websites, brand identity, packaging, and presentations that make your business stand out and convert visitors into clients — from initial sketch to print or launch."
     casesHref="#contacts"
-    ctaText="Связаться"
+    ctaText="Get in touch"
   />
 
-  <AboutCompact personal />
-  <Founder />
-  <Services personal cards currency="usd" />
-  <ProduxPortfolio />
-  <ReviewsSlider />
+  <AboutCompact personal lang="en" />
+  <Founder lang="en" />
+  <Services personal cards currency="usd" lang="en" />
+  <ProduxPortfolio lang="en" />
+  <ReviewsSlider lang="en" />
 
   <div class="process-faq-group">
     <div class="process-faq-inner">
       <section class="process section" aria-labelledby="process-title">
         <div class="container">
-          <h2 class="display-title" id="process-title">Как строим<br />работу</h2>
-          <ProcessTimeline client:visible steps={processSteps} />
+          <h2 class="display-title" id="process-title">How we<br />work</h2>
+          <ProcessTimeline client:visible steps={processStepsEn} />
         </div>
       </section>
 
       <section class="faq section" aria-labelledby="faq-title">
         <div class="container">
-          <h2 class="display-title" id="faq-title">Частые<br />вопросы</h2>
+          <h2 class="display-title" id="faq-title">Frequently<br />asked questions</h2>
           <div class="faq-list">
             <details class="faq-item">
-              <summary>Сколько стоит проект?</summary>
+              <summary>How much does a project cost?</summary>
               <div class="faq-answer"><div class="faq-answer-inner">
-                <p>Зависит от задачи: лендинг, айдентика и упаковка стоят по-разному. Присылаю смету после короткого созвона или переписки — точную, без «от» и без сюрпризов в процессе.</p>
+                <p>It depends on the task: landing pages, visual identities, and packaging have different scope. I provide a transparent estimate after a short call or chat — fixed, accurate, and with zero surprises during the project.</p>
               </div></div>
             </details>
             <details class="faq-item">
-              <summary>Сколько занимает разработка?</summary>
+              <summary>How long does development take?</summary>
               <div class="faq-answer"><div class="faq-answer-inner">
-                <p>Лендинги и презентации — от 1 до 3 недель. Сайты и айдентика — от 3 до 6 недель. Срок фиксируется в договоре на старте.</p>
+                <p>Landing pages and presentation pitch decks: 1 to 3 weeks. Full websites and complete brand identities: 3 to 6 weeks. The timeline is fixed in the agreement at the start.</p>
               </div></div>
             </details>
             <details class="faq-item">
-              <summary>Работаете официально?</summary>
+              <summary>Do you work under contract?</summary>
               <div class="faq-answer"><div class="faq-answer-inner">
-                <p>Да: договор, поэтапная оплата, акты выполненных работ и передача исключительных прав на исходники после финального платежа.</p>
+                <p>Yes: formal contract, milestone-based payments, delivery reports, and transfer of all exclusive rights and source files upon final settlement.</p>
               </div></div>
             </details>
             <details class="faq-item">
-              <summary>Почему не студия, а один человек?</summary>
+              <summary>Why work with an independent designer instead of an agency?</summary>
               <div class="faq-answer"><div class="faq-answer-inner">
-                <p>Проект от эскиза до релиза веду сам — без передачи между отделами и потери смысла на стыках. При этом есть опыт агентства thePeak: там я работал с LUKOIL, Cadillac, PUMA и Gippo, и оттуда — процессы, которые держат сроки на больших проектах.</p>
+                <p>I lead every project myself from the first sketch to release — no account managers or miscommunications between departments. At the same time, I bring agency leadership experience from thePeak (working with LUKOIL, Cadillac, PUMA, Gippo), ensuring rigorous processes and met deadlines on major projects.</p>
               </div></div>
             </details>
             <details class="faq-item">
-              <summary>Что если моя задача не из списка услуг?</summary>
+              <summary>What if my task is not listed under services?</summary>
               <div class="faq-answer"><div class="faq-answer-inner">
-                <p>Напишите — обсудим. Если задача не моя, честно скажу сразу, а не буду тянуть время.</p>
+                <p>Reach out — let's discuss. If the task is outside my expertise, I'll tell you honestly right away rather than wasting your time.</p>
               </div></div>
             </details>
           </div>
@@ -160,14 +169,15 @@ const threadsJsonLd = {
   </div>
 
   <Contacts
-    title="Пишете<br />из Threads?"
-    lead="Расскажите о задаче или заполните форму — отвечу лично в течение 2 часов и пришлю смету со сроками."
-    successText="Спасибо за заявку. Отвечу в течение 2 часов — проверьте Telegram или WhatsApp, если оставили контакт там."
-    source="threads_landing"
-    sourceDetails="Лендинг для заявок из Threads"
+    lang="en"
+    title="Have a project<br />in mind?"
+    lead="Tell me about your task or fill out the form — I will reply personally within 2 hours with an estimate and timeline."
+    successText="Thank you for your inquiry. I will reply within 2 hours — please check Telegram or WhatsApp if you provided a handle."
+    source="en_landing"
+    sourceDetails="English Landing Page"
   />
 
-  <Footer slot="footer" personal />
+  <Footer slot="footer" personal lang="en" />
 </Base>
 
 <script>

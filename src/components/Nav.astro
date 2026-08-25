@@ -5,10 +5,12 @@ interface Props {
   overlay?: boolean;
   theme?: 'dark' | 'light';
   minimal?: boolean;
+  lang?: string;
 }
 
-const { overlay = false, theme = 'dark', minimal = false } = Astro.props;
-const homePath = '/';
+const { overlay = false, theme = 'dark', minimal = false, lang = 'ru' } = Astro.props;
+const isEn = lang === 'en';
+const homePath = isEn ? '/en' : '/';
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 const pagesWithoutContacts = [
@@ -28,11 +30,11 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
 <header class:list={['site-header', { overlay, minimal, 'theme-light': theme === 'light' }]} data-site-header data-theme={theme}>
   <div class="container nav-row" data-nav-row>
     {!minimal && (
-      <a class="brand" href={homePath} aria-label="Yapil.art — на главную" data-nav-brand>
+      <a class="brand" href={homePath} aria-label={isEn ? 'Yapil.art — Home' : 'Yapil.art — на главную'} data-nav-brand>
         <span class="brand-text">Yapil.art</span>
       </a>
     )}
-    <PrimaryMenu contactsHref={contactsHref} client:load />
+    <PrimaryMenu contactsHref={contactsHref} lang={isEn ? 'en' : 'ru'} client:load />
   </div>
 </header>
 

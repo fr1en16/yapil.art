@@ -18,6 +18,7 @@ interface Props {
   navOverlay?: boolean;
   navMinimal?: boolean;
   bodyClass?: string;
+  lang?: string;
 }
 
 const defaultImage = new URL('/social-cover.webp', Astro.site).href;
@@ -33,6 +34,7 @@ const {
   navOverlay,
   navMinimal = false,
   bodyClass,
+  lang = 'ru',
 } = Astro.props;
 const documentTitle = title.includes('Yapil')
   ? title
@@ -45,7 +47,7 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
 ---
 
 <!doctype html>
-<html lang="ru">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -62,7 +64,7 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
     <link rel="preload" href="/hero-cover/dm-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content={type} />
-    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ru_RU'} />
     <meta property="og:site_name" content="Yapil" />
     <meta property="og:title" content={documentTitle} />
     <meta property="og:description" content={description} />
@@ -87,9 +89,9 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
     <Analytics />
   </head>
   <body class:list={[bodyClass, { 'is-home': isHome, 'theme-light': theme === 'light' }]} data-theme={theme}>
-    <a class="skip-link" href="#main-content">К основному содержанию</a>
+    <a class="skip-link" href="#main-content">{lang === 'en' ? 'Skip to main content' : 'К основному содержанию'}</a>
     <SiteBackground />
-    <Nav overlay={isNavOverlay} theme={theme} minimal={navMinimal} />
+    <Nav overlay={isNavOverlay} theme={theme} minimal={navMinimal} lang={lang} />
     <main id="main-content">
       <slot />
     </main>

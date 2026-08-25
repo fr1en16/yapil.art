@@ -79,7 +79,7 @@ export const services: ServiceItem[] = [
     number: '06',
     title: 'Сопровождение',
     description: 'Работаем как ваш внешний арт-отдел: закрываем регулярные задачи, готовим промо, держим стиль по гайдлайну.',
-    price: 'от 150 000 ₸ / мес.',
+    price: 'от 150 000 ₸',
     caseBadge: 'Кейс // ONmacabim',
     caseLink: '/case/onmacabim',
     image: 'https://media.yapil.art/services/support.webp?v=20260822',
@@ -87,9 +87,67 @@ export const services: ServiceItem[] = [
   },
 ];
 
-const ALL_SERVICE_CHIPS = ['Сайты', 'Айдентика', 'Полиграфия', 'SMM', 'Презентации', 'Сопровождение'];
+const PRICES_USD_RU: Record<string, string> = {
+  websites: 'от $300',
+  identity: 'от $360',
+  print: 'от $80',
+  smm: 'от $80',
+  presentations: 'от $120',
+  support: 'от $300 / мес.',
+};
 
-const SERVICE_CTA_DESCRIPTIONS: Record<string, string> = {
+const PRICES_USD_EN: Record<string, string> = {
+  websites: 'from $300',
+  identity: 'from $360',
+  print: 'from $80',
+  smm: 'from $80',
+  presentations: 'from $120',
+  support: 'from $300 / mo',
+};
+
+const SERVICES_EN: Record<string, { title: string; description: string; personalDescription: string; caseBadge: string }> = {
+  websites: {
+    title: 'Websites',
+    description: 'Structuring UX, designing UI in Figma, writing clean code, launching. Turnkey landing pages, e-commerce, web apps.',
+    personalDescription: 'Structuring UX, designing UI in Figma, writing clean code, launching. Turnkey landing pages, e-commerce, web apps.',
+    caseBadge: 'Case // Compass',
+  },
+  identity: {
+    title: 'Identity',
+    description: 'Logo design, typography systems, visual language, and brandbooks your contractors can implement with zero confusion.',
+    personalDescription: 'Logo design, typography systems, visual language, and brandbooks your contractors can implement with zero confusion.',
+    caseBadge: 'Case // Compass Management',
+  },
+  print: {
+    title: 'Print',
+    description: 'Product packaging, POS materials, merchandise, multi-page catalogs. Full prepress files and color proofing.',
+    personalDescription: 'Product packaging, POS materials, merchandise, multi-page catalogs. Full prepress files and color proofing.',
+    caseBadge: 'Case // Shanding',
+  },
+  smm: {
+    title: 'SMM',
+    description: 'Profile visual concepts, post templates, motion graphics, and high-CTR ad creatives.',
+    personalDescription: 'Profile visual concepts, post templates, motion graphics, and high-CTR ad creatives.',
+    caseBadge: 'Case // Gippo',
+  },
+  presentations: {
+    title: 'Presentations',
+    description: 'Investor pitch decks, commercial proposals, annual reports. Transforming raw data into structured infographics.',
+    personalDescription: 'Investor pitch decks, commercial proposals, annual reports. Transforming raw data into structured infographics.',
+    caseBadge: 'Case // Parking24',
+  },
+  support: {
+    title: 'Support',
+    description: 'Acting as your external art department: solving daily design tasks, building promo, maintaining brand consistency.',
+    personalDescription: 'Acting as your external art department: solving daily design tasks, building promo, maintaining brand consistency.',
+    caseBadge: 'Case // ONmacabim',
+  },
+};
+
+const ALL_SERVICE_CHIPS_RU = ['Сайты', 'Айдентика', 'Полиграфия', 'SMM', 'Презентации', 'Сопровождение'];
+const ALL_SERVICE_CHIPS_EN = ['Websites', 'Identity', 'Print', 'SMM', 'Presentations', 'Support'];
+
+const SERVICE_CTA_DESCRIPTIONS_RU: Record<string, string> = {
   websites:
     'Опишите задачу или оставьте контакты. На созвоне подберём стек под неё и посчитаем сроки со сметой.',
   identity:
@@ -104,7 +162,22 @@ const SERVICE_CTA_DESCRIPTIONS: Record<string, string> = {
     'Опишите ваши задачи по дизайну или оставьте контакты. Подберём формат сопровождения, объём и график под них.',
 };
 
-const SERVICE_DESCRIPTIONS_PERSONAL: Record<string, string> = {
+const SERVICE_CTA_DESCRIPTIONS_EN: Record<string, string> = {
+  websites:
+    'Describe your project or leave your contact details. During a call, we will pick the right stack and estimate the timeline and budget.',
+  identity:
+    'Tell me about your brand or leave your contact details. We will analyze your style, prepare a scope of work, and calculate project milestones.',
+  print:
+    'Specify the print run and materials or leave your contact details. We will tailor the layout for print production and provide a quote.',
+  smm:
+    'Tell me about your social media channels. We will refine your visual positioning and propose a publication and creative plan.',
+  presentations:
+    'Tell me about the goal of your presentation. We will build the structure and pack your data into clean infographics, setting the timeline right on our call.',
+  support:
+    'Describe your ongoing design needs or leave your contact details. We will select the right retainer format, scope, and delivery schedule.',
+};
+
+const SERVICE_DESCRIPTIONS_PERSONAL_RU: Record<string, string> = {
   websites: 'Проектирую структуру, рисую макеты, верстаю, запускаю. Делаю лендинги, интернет-магазины, сервисы.',
   identity: 'Придумываю логотип, типографику, графический язык. Собираю брендбук, по которому ваш подрядчик соберёт макет без вопросов ко мне.',
   print: 'Разрабатываю упаковку, POS-материалы, мерч, многостраничные издания. Готовлю файлы к печати, проверяю цветопробу в типографии.',
@@ -113,7 +186,7 @@ const SERVICE_DESCRIPTIONS_PERSONAL: Record<string, string> = {
   support: 'Работаю как ваш внешний арт-отдел: закрываю регулярные задачи, готовлю промо, держу стиль по гайдлайну.',
 };
 
-const SERVICE_CTA_DESCRIPTIONS_PERSONAL: Record<string, string> = {
+const SERVICE_CTA_DESCRIPTIONS_PERSONAL_RU: Record<string, string> = {
   websites: 'Опишите задачу или оставьте контакты. На созвоне подберу стек под неё и посчитаю сроки со сметой.',
   identity: 'Расскажите о бренде или оставьте контакты. Разберу стиль, соберу ТЗ и посчитаю этапы работы.',
   print: 'Укажите тираж и материалы или оставьте контакты. Подгоню макет под типографию и посчитаю стоимость.',
@@ -142,15 +215,46 @@ export default function ServicesAnimatedModal({
   theme = 'dark',
   personal = false,
   cards = false,
+  currency = 'kzt',
+  lang = 'ru',
 }: {
   theme?: 'dark' | 'light';
   personal?: boolean;
   cards?: boolean;
+  currency?: 'kzt' | 'usd';
+  lang?: 'ru' | 'en';
 }) {
   const isLight = theme === 'light';
-  const displayedServices = personal
-    ? services.map((item) => ({ ...item, description: SERVICE_DESCRIPTIONS_PERSONAL[item.id] ?? item.description }))
-    : services;
+  const isEn = lang === 'en';
+
+  const displayedServices: ServiceItem[] = services.map((item) => {
+    let title = item.title;
+    let description = personal
+      ? (SERVICE_DESCRIPTIONS_PERSONAL_RU[item.id] ?? item.description)
+      : item.description;
+    let price = item.price;
+    let caseBadge = item.caseBadge;
+
+    if (currency === 'usd') {
+      price = isEn ? (PRICES_USD_EN[item.id] ?? item.price) : (PRICES_USD_RU[item.id] ?? item.price);
+    }
+
+    if (isEn && SERVICES_EN[item.id]) {
+      const enItem = SERVICES_EN[item.id];
+      title = enItem.title;
+      description = personal ? enItem.personalDescription : enItem.description;
+      caseBadge = enItem.caseBadge;
+    }
+
+    return {
+      ...item,
+      title,
+      description,
+      price,
+      caseBadge,
+    };
+  });
+
   const [mounted, setMounted] = useState(false);
   const [hoverModal, setHoverModal] = useState<{ active: boolean; index: number }>({
     active: false,
@@ -196,7 +300,7 @@ export default function ServicesAnimatedModal({
               }`}
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Услуги
+              {isEn ? 'Services' : 'Услуги'}
             </h2>
           </div>
           <p
@@ -204,10 +308,13 @@ export default function ServicesAnimatedModal({
               isLight ? 'text-[#1D1D1D]/65' : 'text-white/60'
             }`}
           >
-            {personal
-              ? 'Собираю сайты, бренды и коммуникации: делаю стратегию, веду контент каждый день.'
-              : 'Собираем сайты, бренды и коммуникации — от стратегии до ежедневного контента.'}
-            {' '}Нажмите на услугу, чтобы обсудить задачу и заказать проект.
+            {isEn
+              ? (personal
+                  ? 'Structuring websites, brands, and visual communications: from strategy to daily content. Click any service to discuss your project.'
+                  : 'Building websites, brands, and visual communications — from strategy to daily content. Click any service to discuss your project.')
+              : (personal
+                  ? 'Собираю сайты, бренды и коммуникации: делаю стратегию, веду контент каждый день. Нажмите на услугу, чтобы обсудить задачу и заказать проект.'
+                  : 'Собираем сайты, бренды и коммуникации — от стратегии до ежедневного контента. Нажмите на услугу, чтобы обсудить задачу и заказать проект.')}
           </p>
         </div>
 
@@ -215,10 +322,10 @@ export default function ServicesAnimatedModal({
           <CoverflowCarousel
             slides={displayedServices.map((item) => ({
               src: item.image,
-              alt: `Пример работы по услуге «${item.title}»`,
+              alt: isEn ? `Work example for "${item.title}"` : `Пример работы по услуге «${item.title}»`,
               title: item.title,
               subtitle: item.price,
-              meta: [{ label: 'Описание', value: item.description }],
+              meta: [{ label: isEn ? 'Description' : 'Описание', value: item.description }],
             }))}
             cardWidth="clamp(210px, 28vw, 400px)"
             aspectRatio={5 / 4}
@@ -231,7 +338,7 @@ export default function ServicesAnimatedModal({
             showCaption
             showPagination
             showNavigation
-            label="Услуги — перетаскивайте или используйте стрелки"
+            label={isEn ? 'Services — drag or use arrows' : 'Услуги — перетаскивайте или используйте стрелки'}
             className="relative left-1/2 w-screen -translate-x-1/2"
             cardClassName={isLight ? 'border border-black/10' : 'border border-white/15'}
             onSlideClick={(index) => handleOpenModal(displayedServices[index])}
@@ -257,7 +364,7 @@ export default function ServicesAnimatedModal({
 
         {/* Floating Modal Preview & Magnetic Cursor (only if no active dialog) */}
         {!cards && !reduceMotion && !activeServiceModal && (
-          <HoverModalPreview modal={hoverModal} services={services} isLight={isLight} />
+          <HoverModalPreview modal={hoverModal} services={displayedServices} isLight={isLight} />
         )}
       </div>
 
@@ -271,6 +378,7 @@ export default function ServicesAnimatedModal({
                 service={activeServiceModal}
                 isLight={isLight}
                 personal={personal}
+                lang={lang}
                 onClose={handleCloseModal}
               />
             )}
@@ -425,17 +533,29 @@ function ServiceApplicationModal({
   service,
   isLight = false,
   personal = false,
+  lang = 'ru',
   onClose,
 }: {
   service: ServiceItem;
   isLight?: boolean;
   personal?: boolean;
+  lang?: 'ru' | 'en';
   onClose: () => void;
 }) {
-  const ctaDescriptions = personal ? SERVICE_CTA_DESCRIPTIONS_PERSONAL : SERVICE_CTA_DESCRIPTIONS;
-  const defaultCtaDescription = personal
-    ? 'Расскажите о задаче или оставьте контактные данные — свяжусь с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.'
-    : 'Расскажите о задаче или оставьте контактные данные — мы свяжемся с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.';
+  const isEn = lang === 'en';
+  const ctaDescriptions = isEn
+    ? SERVICE_CTA_DESCRIPTIONS_EN
+    : personal
+      ? SERVICE_CTA_DESCRIPTIONS_PERSONAL_RU
+      : SERVICE_CTA_DESCRIPTIONS_RU;
+  const defaultCtaDescription = isEn
+    ? 'Tell me about your task or leave contact details — I will get back to you to discuss the project in detail, suggest the best execution approach, and provide an estimate with timeline.'
+    : personal
+      ? 'Расскажите о задаче или оставьте контактные данные — свяжусь с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.'
+      : 'Расскажите о задаче или оставьте контактные данные — мы свяжемся с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.';
+
+  const allChips = isEn ? ALL_SERVICE_CHIPS_EN : ALL_SERVICE_CHIPS_RU;
+
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>([service.title]);
@@ -485,6 +605,14 @@ function ServiceApplicationModal({
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
+    if (isEn) {
+      setPhone(val);
+      if (errors.phone && val.trim()) {
+        setErrors((prev) => ({ ...prev, phone: undefined }));
+      }
+      return;
+    }
+
     let digits = val.replace(/\D/g, '');
     if (!digits) {
       setPhone('');
@@ -524,7 +652,7 @@ function ServiceApplicationModal({
   };
 
   const handlePhoneKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && phone.length <= 4) {
+    if (!isEn && e.key === 'Backspace' && phone.length <= 4) {
       setPhone('');
     }
   };
@@ -540,16 +668,24 @@ function ServiceApplicationModal({
     const newErrors: { name?: string; phone?: string; privacy?: string } = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Пожалуйста, укажите ваше имя';
+      newErrors.name = isEn ? 'Please enter your name' : 'Пожалуйста, укажите ваше имя';
     }
 
-    const digits = phone.replace(/\D/g, '');
-    if (!phone.trim() || digits.length < 11) {
-      newErrors.phone = 'Пожалуйста, укажите полный номер телефона';
+    if (isEn) {
+      if (!phone.trim()) {
+        newErrors.phone = 'Please provide your phone number, Telegram or WhatsApp';
+      }
+    } else {
+      const digits = phone.replace(/\D/g, '');
+      if (!phone.trim() || digits.length < 11) {
+        newErrors.phone = 'Пожалуйста, укажите полный номер телефона';
+      }
     }
 
     if (!privacy) {
-      newErrors.privacy = 'Необходимо согласие с политикой конфиденциальности';
+      newErrors.privacy = isEn
+        ? 'Consent with privacy policy is required'
+        : 'Необходимо согласие с политикой конфиденциальности';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -565,7 +701,7 @@ function ServiceApplicationModal({
       services: selectedServices.length > 0 ? selectedServices : [service.title],
       message: message.trim(),
       source: 'service_modal',
-      sourceDetails: `Модальное окно: ${service.title}`,
+      sourceDetails: `Modal: ${service.title} (${lang})`,
     }).catch((err) => {
       console.error('CRM submit error:', err);
     });
@@ -629,7 +765,7 @@ function ServiceApplicationModal({
           e.stopPropagation();
           onClose();
         }}
-        aria-label="Закрыть"
+        aria-label={isEn ? 'Close' : 'Закрыть'}
         className={`fixed top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-[9999] p-2 bg-transparent border-0 outline-none cursor-pointer transition-colors duration-200 ${
           isLight
             ? 'text-[#1D1D1D] hover:text-[#FD4B32]'
@@ -658,7 +794,7 @@ function ServiceApplicationModal({
               }`}
               style={{ fontFamily: 'var(--font-display)', lineHeight: '0.9' }}
             >
-              Оставьте заявку
+              {isEn ? 'Leave a request' : 'Оставьте заявку'}
             </h2>
 
             <p
@@ -692,14 +828,16 @@ function ServiceApplicationModal({
                   }`}
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
-                  Заявка успешно отправлена!
+                  {isEn ? 'Request sent successfully!' : 'Заявка успешно отправлена!'}
                 </h4>
                 <p
                   className={`text-sm sm:text-base max-w-md mx-auto m-0 leading-relaxed ${
                     isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'
                   }`}
                 >
-                  Спасибо за обращение. Мы изучим вашу задачу по направлению «{service.title}» и ответим в ближайшие часы.
+                  {isEn
+                    ? `Thank you for reaching out. I will review your project regarding "${service.title}" and reply shortly.`
+                    : `Спасибо за обращение. Мы изучим вашу задачу по направлению «${service.title}» и ответим в ближайшие часы.`}
                 </p>
               </div>
 
@@ -710,7 +848,7 @@ function ServiceApplicationModal({
                   className="form-cta-button sm:!w-auto !min-h-[3rem] !py-3 !px-7 text-sm"
                 >
                   <span className="btn-inner">
-                    <span className="btn-text">Отлично, закрыть</span>
+                    <span className="btn-text">{isEn ? 'Great, close' : 'Отлично, закрыть'}</span>
                   </span>
                 </button>
                 <button
@@ -724,7 +862,7 @@ function ServiceApplicationModal({
                 >
                   <span className="btn-inner">
                     <RotateCcw className="btn-icon size-3.5" />
-                    <span className="btn-text">Отправить ещё</span>
+                    <span className="btn-text">{isEn ? 'Send another' : 'Отправить ещё'}</span>
                   </span>
                 </button>
               </div>
@@ -741,7 +879,7 @@ function ServiceApplicationModal({
                     htmlFor="service-name-input"
                     className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
-                    Имя <span className="text-[#FD4B32]">*</span>
+                    {isEn ? 'Name' : 'Имя'} <span className="text-[#FD4B32]">*</span>
                   </label>
                   <input
                     ref={nameInputRef}
@@ -754,7 +892,7 @@ function ServiceApplicationModal({
                         setErrors((prev) => ({ ...prev, name: undefined }));
                       }
                     }}
-                    placeholder="Как к вам обращаться"
+                    placeholder={isEn ? 'How to address you' : 'Как к вам обращаться'}
                     style={{ outline: 'none' }}
                     className={`w-full px-5 py-4 sm:py-4.5 rounded-none backdrop-blur-2xl border text-sm sm:text-base outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
                       isLight
@@ -782,23 +920,23 @@ function ServiceApplicationModal({
                     htmlFor="service-phone-input"
                     className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
-                    Телефон <span className="text-[#FD4B32]">*</span>
+                    {isEn ? 'Phone / Telegram / WhatsApp' : 'Телефон'} <span className="text-[#FD4B32]">*</span>
                   </label>
                   <input
                     id="service-phone-input"
-                    type="tel"
+                    type={isEn ? 'text' : 'tel'}
                     value={phone}
                     onChange={handlePhoneChange}
                     onKeyDown={handlePhoneKeyDown}
                     onFocus={() => {
-                      if (!phone) setPhone('+7 (');
+                      if (!isEn && !phone) setPhone('+7 (');
                     }}
                     onBlur={() => {
-                      if (phone === '+7' || phone === '+7 (' || phone === '+7 ()') {
+                      if (!isEn && (phone === '+7' || phone === '+7 (' || phone === '+7 ()')) {
                         setPhone('');
                       }
                     }}
-                    placeholder="+7 (___) ___-__-__"
+                    placeholder={isEn ? '+1 (___) ___ ____ or @username' : '+7 (___) ___-__-__'}
                     style={{ outline: 'none' }}
                     className={`w-full px-5 py-4 sm:py-4.5 rounded-none backdrop-blur-2xl border text-sm sm:text-base outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
                       isLight
@@ -814,7 +952,7 @@ function ServiceApplicationModal({
                           }`
                     }`}
                     required
-                    inputMode="tel"
+                    inputMode={isEn ? 'text' : 'tel'}
                   />
                   {errors.phone && (
                     <span className="block text-xs text-red-500">{errors.phone}</span>
@@ -828,14 +966,14 @@ function ServiceApplicationModal({
                   id="service-select-label"
                   className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                 >
-                  Интересующие направления
+                  {isEn ? 'Areas of interest' : 'Интересующие направления'}
                 </label>
                 <div
                   className="flex flex-wrap gap-3 sm:gap-3.5"
                   role="group"
                   aria-labelledby="service-select-label"
                 >
-                  {ALL_SERVICE_CHIPS.map((chip) => {
+                  {allChips.map((chip) => {
                     const isSelected = selectedServices.includes(chip);
                     return (
                       <button
@@ -864,13 +1002,17 @@ function ServiceApplicationModal({
                   htmlFor="service-message-input"
                   className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                 >
-                  О задаче (необязательно)
+                  {isEn ? 'About the task (optional)' : 'О задаче (необязательно)'}
                 </label>
                 <textarea
                   id="service-message-input"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Опишите задачу, примерные сроки или оставьте ссылку на материалы"
+                  placeholder={
+                    isEn
+                      ? 'Describe your project, approximate timeline, or share a link to materials'
+                      : 'Опишите задачу, примерные сроки или оставьте ссылку на материалы'
+                  }
                   rows={4}
                   style={{ outline: 'none' }}
                   className={`w-full px-5 py-4 sm:py-4.5 rounded-none backdrop-blur-2xl border text-sm sm:text-base outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 resize-none leading-relaxed ${
@@ -911,16 +1053,33 @@ function ServiceApplicationModal({
                       isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'
                     }`}
                   >
-                    Согласен на обработку персональных данных в соответствии с{' '}
-                    <a
-                      href="/privacy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#FD4B32] hover:underline"
-                    >
-                      политикой конфиденциальности
-                    </a>
-                    .
+                    {isEn ? (
+                      <>
+                        I agree to the processing of personal data in accordance with the{' '}
+                        <a
+                          href="/privacy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#FD4B32] hover:underline"
+                        >
+                          privacy policy
+                        </a>
+                        .
+                      </>
+                    ) : (
+                      <>
+                        Согласен на обработку персональных данных в соответствии с{' '}
+                        <a
+                          href="/privacy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#FD4B32] hover:underline"
+                        >
+                          политикой конфиденциальности
+                        </a>
+                        .
+                      </>
+                    )}
                   </span>
                 </label>
                 {errors.privacy && (
@@ -936,7 +1095,11 @@ function ServiceApplicationModal({
                   className="form-cta-button !py-4.5 sm:!py-5 !text-base sm:!text-lg"
                 >
                   <span className="btn-inner">
-                    <span className="btn-text">{isSubmitting ? 'Отправка...' : 'Отправить заявку'}</span>
+                    <span className="btn-text">
+                      {isSubmitting
+                        ? (isEn ? 'Sending...' : 'Отправка...')
+                        : (isEn ? 'Send request' : 'Отправить заявку')}
+                    </span>
                     {!isSubmitting && (
                       <ArrowRight className="btn-icon size-5" />
                     )}
@@ -960,10 +1123,14 @@ function ServiceApplicationModal({
               <Clock className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
               <div className="text-base sm:text-lg leading-snug">
                 <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                  {personal ? 'Отвечаю в течение 2 часов' : 'Ответ в течение 2 часов'}
+                  {isEn ? 'Reply within 2 hours' : personal ? 'Отвечаю в течение 2 часов' : 'Ответ в течение 2 часов'}
                 </span>
                 <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                  {personal ? 'в Telegram, WhatsApp или по телефону' : 'свяжемся в Telegram, WhatsApp или по телефону'}
+                  {isEn
+                    ? 'via Telegram, WhatsApp, or email'
+                    : personal
+                      ? 'в Telegram, WhatsApp или по телефону'
+                      : 'свяжемся в Telegram, WhatsApp или по телефону'}
                 </span>
               </div>
             </div>
@@ -972,10 +1139,14 @@ function ServiceApplicationModal({
               <UserCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
               <div className="text-base sm:text-lg leading-snug">
                 <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                  {personal ? 'Сам веду проект' : 'Прямой диалог'}
+                  {isEn ? 'Direct collaboration' : personal ? 'Сам веду проект' : 'Прямой диалог'}
                 </span>
                 <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                  {personal ? 'и сам оцениваю задачи' : 'проект сразу ведёт и оценивает ключевой дизайнер'}
+                  {isEn
+                    ? 'I lead and estimate all tasks personally'
+                    : personal
+                      ? 'и сам оцениваю задачи'
+                      : 'проект сразу ведёт и оценивает ключевой дизайнер'}
                 </span>
               </div>
             </div>
@@ -984,10 +1155,14 @@ function ServiceApplicationModal({
               <ShieldCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
               <div className="text-base sm:text-lg leading-snug">
                 <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                  {personal ? 'Смета фиксирует этапы' : 'Прозрачная смета'}
+                  {isEn ? 'Transparent quote' : personal ? 'Смета фиксирует этапы' : 'Прозрачная смета'}
                 </span>
                 <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                  {personal ? 'и итоговую стоимость до старта работы' : 'фиксируем этапы и финальную стоимость до старта'}
+                  {isEn
+                    ? 'Milestones and final cost fixed before kickoff'
+                    : personal
+                      ? 'и итоговую стоимость до старта работы'
+                      : 'фиксируем этапы и финальную стоимость до старта'}
                 </span>
               </div>
             </div>

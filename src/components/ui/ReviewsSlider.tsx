@@ -2,33 +2,37 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ArrowUpRight, X } from 'lucide-react';
-import { reviewsData, typograph, type ReviewItem } from '../../data/reviewsData';
+import { reviewsData, reviewsDataEn, typograph, type ReviewItem } from '../../data/reviewsData';
 
 interface ReviewsSliderProps {
   theme?: 'dark' | 'light';
   items?: ReviewItem[];
   autoplayInterval?: number;
+  lang?: 'ru' | 'en';
 }
 
 export default function ReviewsSlider({
   theme = 'dark',
-  items = reviewsData,
+  items,
   autoplayInterval = 7000,
+  lang = 'ru',
 }: ReviewsSliderProps) {
+  const currentItems = items ?? (lang === 'en' ? reviewsDataEn : reviewsData);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
   const [activeReviewModal, setActiveReviewModal] = useState<ReviewItem | null>(null);
   const [mounted, setMounted] = useState(false);
   const isLight = theme === 'light';
+  const isEn = lang === 'en';
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const total = items.length;
-  const currentItem = items[currentIndex];
+  const total = currentItems.length;
+  const currentItem = currentItems[currentIndex];
 
   const handlePrev = useCallback(() => {
     setDirection(-1);
@@ -162,7 +166,7 @@ export default function ReviewsSlider({
         id="reviews"
         tabIndex={0}
         aria-roledescription="carousel"
-        aria-label="Отзывы клиентов"
+        aria-label={isEn ? 'Client feedback' : 'Отзывы клиентов'}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onFocus={() => setIsPaused(true)}
@@ -194,7 +198,7 @@ export default function ReviewsSlider({
                 }`}
                 style={{ fontVariationSettings: "'wght' 600" }}
               >
-                Что говорят клиенты
+                {isEn ? 'Client feedback' : 'Что говорят клиенты'}
               </span>
             </div>
 
@@ -227,7 +231,7 @@ export default function ReviewsSlider({
               <button
                 type="button"
                 onClick={handlePrev}
-                aria-label="Предыдущий отзыв"
+                aria-label={isEn ? 'Previous review' : 'Предыдущий отзыв'}
                 className={`group flex items-center justify-center p-1.5 sm:p-2 bg-transparent border-0 outline-none transition-colors duration-200 cursor-pointer ${
                   isLight
                     ? 'text-[#1D1D1D] hover:text-[#FD4B32]'
@@ -242,7 +246,7 @@ export default function ReviewsSlider({
               <button
                 type="button"
                 onClick={handleNext}
-                aria-label="Следующий отзыв"
+                aria-label={isEn ? 'Next review' : 'Следующий отзыв'}
                 className={`group flex items-center justify-center p-1.5 sm:p-2 bg-transparent border-0 outline-none transition-colors duration-200 cursor-pointer ${
                   isLight
                     ? 'text-[#1D1D1D] hover:text-[#FD4B32]'
@@ -416,7 +420,7 @@ export default function ReviewsSlider({
                             : 'text-white hover:text-[#FD4B32]'
                         }`}
                       >
-                        <span>Полный отзыв</span>
+                        <span>{isEn ? 'Full review' : 'Полный отзыв'}</span>
                         <ArrowRight
                           className="size-3.5 sm:size-4 transition-transform duration-200 group-hover/btn:translate-x-1 text-[#FD4B32]"
                           strokeWidth={2}
@@ -463,7 +467,7 @@ export default function ReviewsSlider({
                     e.stopPropagation();
                     setActiveReviewModal(null);
                   }}
-                  aria-label="Закрыть отзыв"
+                  aria-label={isEn ? 'Close review' : 'Закрыть отзыв'}
                   className={`fixed top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-[9999] p-2 bg-transparent border-0 outline-none cursor-pointer transition-colors duration-200 ${
                     isLight
                       ? 'text-[#1D1D1D] hover:text-[#FD4B32]'
@@ -511,7 +515,7 @@ export default function ReviewsSlider({
                           />
                           <div>
                             <span className="text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#FD4B32]">
-                              Отзыв клиента
+                              {isEn ? 'Client Review' : 'Отзыв клиента'}
                             </span>
                             <p
                               className={`text-xs sm:text-sm mt-0.5 m-0 ${
@@ -536,7 +540,7 @@ export default function ReviewsSlider({
                                 : 'border-white/10 bg-white/[0.04] text-white hover:border-white/25 hover:bg-white/[0.08] hover:text-[#FD4B32]'
                             }`}
                           >
-                            <span>Смотреть кейс проекта</span>
+                            <span>{isEn ? 'View project case' : 'Смотреть кейс проекта'}</span>
                             <ArrowUpRight className="size-3.5 sm:size-4 text-[#FD4B32]" />
                           </a>
                         </div>

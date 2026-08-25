@@ -5,16 +5,18 @@ import { getWhatsAppUrl } from '../utils/messengerLinks';
 interface Props {
   theme?: 'dark' | 'light';
   personal?: boolean;
+  lang?: 'ru' | 'en';
 }
 
-const { theme = 'dark', personal = false } = Astro.props;
+const { theme = 'dark', personal = false, lang = 'ru' } = Astro.props;
 const isLight = theme === 'light';
-const homePath = '/';
+const isEn = lang === 'en';
+const homePath = isEn ? '/en' : '/';
 
 const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
 const whatsappHref = getWhatsAppUrl({
-  pageTitle: 'Футер сайта',
+  pageTitle: isEn ? 'Website footer' : 'Футер сайта',
   pageUrl: currentUrl,
   sourceContext: 'footer_link',
 });
@@ -38,27 +40,31 @@ const lightStops = [
   <div class="footer-content">
     <div class="container footer-top">
       <div class="footer-meta">
-        <a class="footer-brand" href={homePath} aria-label="Yapil.art — на главную">
+        <a class="footer-brand" href={homePath} aria-label={isEn ? "Yapil.art — Home" : "Yapil.art — на главную"}>
           <span class="footer-brand-name">Yapil.art</span>
         </a>
         <p class="footer-brand-desc">
-          {personal
-            ? <>Дизайн от первого эскиза до печати или релиза.<br />Веду каждый проект сам.</>
-            : <>Дизайн-студия полного цикла.<br />От первой концепции до печати или релиза.</>}
+          {isEn
+            ? (personal
+                ? <>Design from initial sketch to print or launch.<br />Leading every project personally.</>
+                : <>Full-cycle design studio.<br />From initial concept to print or launch.</>)
+            : (personal
+                ? <>Дизайн от первого эскиза до печати или релиза.<br />Веду каждый проект сам.</>
+                : <>Дизайн-студия полного цикла.<br />От первой концепции до печати или релиза.</>)}
         </p>
       </div>
 
       <div class="footer-columns">
-        <nav aria-label="Навигация в подвале">
-          <h2>{personal ? 'Обо мне' : 'Студия'}</h2>
-          {personal && <a href={`${homePath}#about`}>Обо мне</a>}
-          <a href="/services">Услуги</a>
-          <a href="/articles">Статьи</a>
-          <a href={`${homePath}#cases`}>Кейсы</a>
+        <nav aria-label={isEn ? "Footer navigation" : "Навигация в подвале"}>
+          <h2>{isEn ? (personal ? 'About' : 'Studio') : (personal ? 'Обо мне' : 'Студия')}</h2>
+          {personal && <a href={`${homePath}#about`}>{isEn ? 'About me' : 'Обо мне'}</a>}
+          <a href="/services">{isEn ? 'Services' : 'Услуги'}</a>
+          <a href="/articles">{isEn ? 'Articles' : 'Статьи'}</a>
+          <a href={`${homePath}#cases`}>{isEn ? 'Cases' : 'Кейсы'}</a>
         </nav>
 
-        <nav aria-label="Контакты">
-          <h2>На связи</h2>
+        <nav aria-label={isEn ? "Contacts" : "Контакты"}>
+          <h2>{isEn ? 'Get in touch' : 'На связи'}</h2>
           <a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
           <a href="mailto:hi@yapil.art">Email ↗</a>

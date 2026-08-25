@@ -3,9 +3,10 @@ import ReviewsSliderComponent from './ui/ReviewsSlider';
 
 interface Props {
   theme?: 'dark' | 'light';
+  lang?: 'ru' | 'en';
 }
 
-const { theme = 'dark' } = Astro.props;
+const { theme = 'dark', lang = 'ru' } = Astro.props;
 ---
 
-<ReviewsSliderComponent client:visible theme={theme} />
+<ReviewsSliderComponent client:visible theme={theme} lang={lang} />

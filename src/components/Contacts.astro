@@ -11,24 +11,36 @@ interface Props {
   sourceDetails?: string;
   selectedService?: string;
   blendFromAccent?: boolean;
+  lang?: 'ru' | 'en';
 }
 
 const {
   theme = 'dark',
-  title = 'Нашли задачу,<br />похожую на вашу?',
-  lead = 'Расскажите о задаче или заполните форму — ответим в течение 2 часов и подготовим предложение.',
-  successText = 'Спасибо за обращение. Мы изучим вашу задачу и ответим в течение 2 часов.',
+  title,
+  lead,
+  successText,
   source = 'contacts_form',
-  sourceDetails = 'Форма контактов на странице',
+  sourceDetails,
   selectedService,
   blendFromAccent = false,
+  lang = 'ru',
 } = Astro.props;
 const isLight = theme === 'light';
+const isEn = lang === 'en';
+
+const displayTitle = title ?? (isEn ? 'Have a project<br />in mind?' : 'Нашли задачу,<br />похожую на вашу?');
+const displayLead = lead ?? (isEn
+  ? 'Tell me about your task or fill out the form — I will reply within 2 hours with a proposal.'
+  : 'Расскажите о задаче или заполните форму — ответим в течение 2 часов и подготовим предложение.');
+const displaySuccessText = successText ?? (isEn
+  ? 'Thank you for reaching out. I will review your project and reply within 2 hours.'
+  : 'Спасибо за обращение. Мы изучим вашу задачу и ответим в течение 2 часов.');
+const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форма контактов на странице');
 
 const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
 const whatsappHref = getWhatsAppUrl({
-  pageTitle: sourceDetails,
+  pageTitle: displaySourceDetails,
   pageUrl: currentUrl,
   sourceContext: source,
 });
@@ -46,11 +58,11 @@ const whatsappHref = getWhatsAppUrl({
         <div class="contacts-cover-inner">
           <div class="contacts-cover-header">
             <h2 class="display-title" id="contacts-title">
-              <Fragment set:html={title} />
+              <Fragment set:html={displayTitle} />
             </h2>
           </div>
           <p class="contacts-cover-lead">
-            {lead}
+            {displayLead}
           </p>
           <div class="contacts-cover-links">
             <a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
@@ -72,18 +84,18 @@ const whatsappHref = getWhatsAppUrl({
       <!-- Right side: Feedback Form (columns 9-12) -->
       <div class="feedback-panel">
         <div class="feedback-card">
-          <form class="feedback-form" data-source={source} data-source-details={sourceDetails} novalidate>
+          <form class="feedback-form" data-source={source} data-source-details={displaySourceDetails} data-lang={lang} novalidate>
             <!-- 1. Name -->
             <div class="form-group">
               <label class="form-label" for="client-name">
-                Имя <span class="required-star" aria-hidden="true">*</span>
+                {isEn ? 'Name' : 'Имя'} <span class="required-star" aria-hidden="true">*</span>
               </label>
               <input
                 type="text"
                 id="client-name"
                 name="name"
                 class="form-control"
-                placeholder="Как к вам обращаться"
+                placeholder={isEn ? 'How to address you' : 'Как к вам обращаться'}
                 required
                 autocomplete="name"
               />
@@ -93,61 +105,63 @@ const whatsappHref = getWhatsAppUrl({
             <!-- 2. Phone with automatic mask -->
             <div class="form-group">
               <label class="form-label" for="client-phone">
-                Номер телефона <span class="required-star" aria-hidden="true">*</span>
+                {isEn ? 'Phone / Telegram / WhatsApp' : 'Номер телефона'} <span class="required-star" aria-hidden="true">*</span>
               </label>
               <input
-                type="tel"
+                type={isEn ? 'text' : 'tel'}
                 id="client-phone"
                 name="phone"
                 class="form-control"
-                placeholder="+7 (___) ___-__-__"
+                placeholder={isEn ? '+1 (___) ___ ____ or @username' : '+7 (___) ___-__-__'}
                 required
                 autocomplete="tel"
-                inputmode="tel"
+                inputmode={isEn ? 'text' : 'tel'}
               />
               <span class="field-error field-error-phone" id="phone-error" aria-live="polite"></span>
             </div>
 
             <!-- 3. What interests you (Service Chips) -->
             <div class="form-group">
-              <label class="form-label" id="services-label">Что вас интересует?</label>
+              <label class="form-label" id="services-label">{isEn ? 'What interests you?' : 'Что вас интересует?'}</label>
               <div class="service-chips" role="group" aria-labelledby="services-label">
                 <label class="chip">
-                  <input type="checkbox" name="services" value="Сайты" checked={selectedService === 'Сайты'} />
-                  <span class="chip-label">Сайты</span>
+                  <input type="checkbox" name="services" value={isEn ? 'Websites' : 'Сайты'} checked={selectedService === 'Сайты' || selectedService === 'Websites'} />
+                  <span class="chip-label">{isEn ? 'Websites' : 'Сайты'}</span>
                 </label>
                 <label class="chip">
-                  <input type="checkbox" name="services" value="Айдентика" checked={selectedService === 'Айдентика'} />
-                  <span class="chip-label">Айдентика</span>
+                  <input type="checkbox" name="services" value={isEn ? 'Identity' : 'Айдентика'} checked={selectedService === 'Айдентика' || selectedService === 'Identity'} />
+                  <span class="chip-label">{isEn ? 'Identity' : 'Айдентика'}</span>
                 </label>
                 <label class="chip">
-                  <input type="checkbox" name="services" value="Полиграфия" checked={selectedService === 'Полиграфия'} />
-                  <span class="chip-label">Полиграфия</span>
+                  <input type="checkbox" name="services" value={isEn ? 'Print' : 'Полиграфия'} checked={selectedService === 'Полиграфия' || selectedService === 'Print'} />
+                  <span class="chip-label">{isEn ? 'Print' : 'Полиграфия'}</span>
                 </label>
                 <label class="chip">
                   <input type="checkbox" name="services" value="SMM" checked={selectedService === 'SMM'} />
                   <span class="chip-label">SMM</span>
                 </label>
                 <label class="chip">
-                  <input type="checkbox" name="services" value="Презентации" checked={selectedService === 'Презентации'} />
-                  <span class="chip-label">Презентации</span>
+                  <input type="checkbox" name="services" value={isEn ? 'Presentations' : 'Презентации'} checked={selectedService === 'Презентации' || selectedService === 'Presentations'} />
+                  <span class="chip-label">{isEn ? 'Presentations' : 'Презентации'}</span>
                 </label>
                 <label class="chip">
-                  <input type="checkbox" name="services" value="Сопровождение" checked={selectedService === 'Сопровождение'} />
-                  <span class="chip-label">Сопровождение</span>
+                  <input type="checkbox" name="services" value={isEn ? 'Support' : 'Сопровождение'} checked={selectedService === 'Сопровождение' || selectedService === 'Support'} />
+                  <span class="chip-label">{isEn ? 'Support' : 'Сопровождение'}</span>
                 </label>
               </div>
             </div>
 
             <!-- 4. Message (About task) -->
             <div class="form-group">
-              <label class="form-label" for="client-message">О задаче</label>
+              <label class="form-label" for="client-message">{isEn ? 'About the task' : 'О задаче'}</label>
               <textarea
                 id="client-message"
                 name="message"
                 class="form-control form-textarea"
                 rows="3"
-                placeholder="Кратко расскажите о вашей задаче, пожеланиях по срокам или приложите ссылки"
+                placeholder={isEn
+                  ? 'Briefly describe your task, preferred timeline, or include links to materials'
+                  : 'Кратко расскажите о вашей задаче, пожеланиях по срокам или приложите ссылки'}
               ></textarea>
             </div>
 
@@ -168,7 +182,11 @@ const whatsappHref = getWhatsAppUrl({
                   </svg>
                 </span>
                 <span class="form-disclaimer">
-                  Нажимая «Отправить заявку», вы соглашаетесь с условиями <a href="/privacy" target="_blank" rel="noopener noreferrer">конфиденциальности</a>.
+                  {isEn ? (
+                    <>By clicking "Send request", you agree to the <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</>
+                  ) : (
+                    <>Нажимая «Отправить заявку», вы соглашаетесь с условиями <a href="/privacy" target="_blank" rel="noopener noreferrer">конфиденциальности</a>.</>
+                  )}
                 </span>
               </label>
               <span class="field-error field-error-privacy" id="privacy-error" aria-live="polite"></span>
@@ -178,7 +196,7 @@ const whatsappHref = getWhatsAppUrl({
             <div class="form-actions">
               <button type="submit" class="submit-button">
                 <span class="btn-inner">
-                  <span class="btn-text">Отправить заявку</span>
+                  <span class="btn-text">{isEn ? 'Send request' : 'Отправить заявку'}</span>
                   <span class="btn-icon" aria-hidden="true">→</span>
                 </span>
               </button>
@@ -192,13 +210,13 @@ const whatsappHref = getWhatsAppUrl({
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
-            <h4 class="success-title">Заявка успешно отправлена!</h4>
+            <h4 class="success-title">{isEn ? 'Request sent successfully!' : 'Заявка успешно отправлена!'}</h4>
             <p class="success-text">
-              {successText}
+              {displaySuccessText}
             </p>
             <button type="button" class="reset-button">
               <span class="reset-btn-inner">
-                <span class="reset-btn-text">Отправить ещё одну заявку</span>
+                <span class="reset-btn-text">{isEn ? 'Send another request' : 'Отправить ещё одну заявку'}</span>
                 <span class="reset-btn-icon" aria-hidden="true">↺</span>
               </span>
             </button>
@@ -285,9 +303,13 @@ const whatsappHref = getWhatsAppUrl({
       const privacyError = form.querySelector('.field-error-privacy, #privacy-error') as HTMLElement | null;
       const submitBtn = form.querySelector('.submit-button') as HTMLButtonElement | null;
 
+      const isEn = form.dataset.lang === 'en';
+
       if (!nameInput || !phoneInput) return;
 
-      setupPhoneMask(phoneInput);
+      if (!isEn) {
+        setupPhoneMask(phoneInput);
+      }
 
       function clearErrors() {
         if (nameError) nameError.textContent = '';
@@ -308,21 +330,30 @@ const whatsappHref = getWhatsAppUrl({
         const phoneDigits = phoneVal.replace(/\D/g, '');
 
         if (!nameVal) {
-          if (nameError) nameError.textContent = 'Пожалуйста, укажите имя';
+          if (nameError) nameError.textContent = isEn ? 'Please enter your name' : 'Пожалуйста, укажите имя';
           nameInput.classList.add('has-error');
           nameInput.focus();
           hasError = true;
         }
 
-        if (!phoneVal || phoneDigits.length < 11) {
-          if (phoneError) phoneError.textContent = 'Пожалуйста, укажите полный номер телефона';
-          phoneInput.classList.add('has-error');
-          if (!hasError) phoneInput.focus();
-          hasError = true;
+        if (isEn) {
+          if (!phoneVal) {
+            if (phoneError) phoneError.textContent = 'Please enter your phone or handle';
+            phoneInput.classList.add('has-error');
+            if (!hasError) phoneInput.focus();
+            hasError = true;
+          }
+        } else {
+          if (!phoneVal || phoneDigits.length < 11) {
+            if (phoneError) phoneError.textContent = 'Пожалуйста, укажите полный номер телефона';
+            phoneInput.classList.add('has-error');
+            if (!hasError) phoneInput.focus();
+            hasError = true;
+          }
         }
 
         if (privacyCheckbox && !privacyCheckbox.checked) {
-          if (privacyError) privacyError.textContent = 'Необходимо согласие с условиями';
+          if (privacyError) privacyError.textContent = isEn ? 'Privacy policy consent is required' : 'Необходимо согласие с условиями';
           privacyCheckbox.classList.add('has-error');
           if (!hasError) privacyCheckbox.focus();
           hasError = true;
@@ -333,7 +364,7 @@ const whatsappHref = getWhatsAppUrl({
         if (submitBtn) {
           submitBtn.setAttribute('disabled', 'true');
           const btnText = submitBtn.querySelector('.btn-text');
-          if (btnText) btnText.textContent = 'Отправка...';
+          if (btnText) btnText.textContent = isEn ? 'Sending...' : 'Отправка...';
         }
 
         const formData = new FormData(form);
@@ -342,13 +373,13 @@ const whatsappHref = getWhatsAppUrl({
         const phone = String(formData.get('phone') || '').trim();
         const message = String(formData.get('message') || '').trim();
         const source = (form.dataset.source || 'contacts_form') as LeadSource;
-        const sourceDetails = form.dataset.sourceDetails || 'Форма контактов на странице';
+        const sourceDetails = form.dataset.sourceDetails || (isEn ? 'Contact form' : 'Форма контактов на странице');
 
         // Submit to central CRM lead receiver
         submitLead({
           name,
           phone,
-          services: services.length > 0 ? services : ['Консультация'],
+          services: services.length > 0 ? services : [isEn ? 'Consultation' : 'Консультация'],
           message,
           source,
           sourceDetails,
@@ -369,7 +400,7 @@ const whatsappHref = getWhatsAppUrl({
           if (submitBtn) {
             submitBtn.removeAttribute('disabled');
             const btnText = submitBtn.querySelector('.btn-text');
-            if (btnText) btnText.textContent = 'Отправить заявку';
+            if (btnText) btnText.textContent = isEn ? 'Send request' : 'Отправить заявку';
           }
           form.style.display = 'none';
           if (successState) {

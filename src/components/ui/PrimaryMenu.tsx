@@ -9,20 +9,24 @@ import {
 
 interface PrimaryMenuProps {
   contactsHref: string;
+  lang?: "ru" | "en";
 }
 
-const destinations = {
-  cases: "/#cases",
-  reviews: "/#reviews",
-  contacts: "/#contacts",
-} as const;
-
-export default function PrimaryMenu({ contactsHref }: PrimaryMenuProps) {
+export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuProps) {
   const [activeId, setActiveId] = useState("");
+  const isEn = lang === "en";
+  const homePath = isEn ? "/en" : "/";
+
+  const destinations = useMemo(() => ({
+    cases: `${homePath}#cases`,
+    reviews: `${homePath}#reviews`,
+    contacts: contactsHref || `${homePath}#contacts`,
+  }), [homePath, contactsHref]);
 
   useEffect(() => {
     const updateActiveItem = () => {
-      if (window.location.pathname !== "/") {
+      const p = window.location.pathname.replace(/\/$/, "") || "/";
+      if (p !== "/" && p !== "/en" && p !== "/threads") {
         setActiveId("");
         return;
       }
@@ -48,10 +52,10 @@ export default function PrimaryMenu({ contactsHref }: PrimaryMenuProps) {
   }, []);
 
   const items = useMemo<ExpandableActionBarItem[]>(() => [
-    { id: "cases", label: "Кейсы", icon: <BriefcaseBusiness /> },
-    { id: "reviews", label: "Отзывы", icon: <MessageCircleMore /> },
-    { id: "contacts", label: "Контакты", icon: <Mail /> },
-  ], []);
+    { id: "cases", label: isEn ? "Cases" : "Кейсы", icon: <BriefcaseBusiness /> },
+    { id: "reviews", label: isEn ? "Reviews" : "Отзывы", icon: <MessageCircleMore /> },
+    { id: "contacts", label: isEn ? "Contacts" : "Контакты", icon: <Mail /> },
+  ], [isEn]);
 
   const navigate = (item: ExpandableActionBarItem) => {
     setActiveId(item.id);
@@ -101,7 +105,7 @@ export default function PrimaryMenu({ contactsHref }: PrimaryMenuProps) {
   };
 
   return (
-    <nav aria-label="Основная навигация">
+    <nav aria-label={isEn ? "Main navigation" : "Основная навигация"}>
       <ExpandableActionBar
         items={items}
         activeId={activeId}

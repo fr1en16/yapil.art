@@ -5,9 +5,24 @@ interface Props {
   theme?: 'dark' | 'light';
   personal?: boolean;
   cards?: boolean;
+  currency?: 'kzt' | 'usd';
+  lang?: 'ru' | 'en';
 }
 
-const { theme = 'dark', personal = false, cards = false } = Astro.props;
+const {
+  theme = 'dark',
+  personal = false,
+  cards = false,
+  currency = 'kzt',
+  lang = 'ru',
+} = Astro.props;
 ---
 
-<ServicesAnimatedModal client:visible theme={theme} personal={personal} cards={cards} />
+<ServicesAnimatedModal
+  client:visible
+  theme={theme}
+  personal={personal}
+  cards={cards}
+  currency={currency}
+  lang={lang}
+/>

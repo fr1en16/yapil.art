@@ -2,12 +2,13 @@
 interface Props {
   theme?: 'dark' | 'light';
   personal?: boolean;
+  lang?: 'ru' | 'en';
 }
 
-const { theme = 'dark', personal = false } = Astro.props;
+const { theme = 'dark', personal = false, lang = 'ru' } = Astro.props;
 const isLight = theme === 'light';
 
-const cardsStudio = [
+const cardsStudioRu = [
   {
     id: 'experience',
     title: '8\u00A0лет<br />в\u00A0дизайне',
@@ -34,7 +35,7 @@ const cardsStudio = [
   },
 ];
 
-const cardsPersonal = [
+const cardsPersonalRu = [
   {
     id: 'experience',
     title: '8\u00A0лет<br />в\u00A0дизайне',
@@ -61,12 +62,43 @@ const cardsPersonal = [
   },
 ];
 
-const cards = personal ? cardsPersonal : cardsStudio;
+const cardsPersonalEn = [
+  {
+    id: 'experience',
+    title: '8\u00A0years<br />in\u00A0design',
+    text: 'Leading projects in\u00A0digital products and the\u00A0corporate sector. A\u00A0fintech landing page and\u00A0street-food packaging require different approaches. I\u00A0master both.',
+    icon: 'award',
+  },
+  {
+    id: 'full-cycle',
+    title: 'Full<br />cycle',
+    text: 'Every project is handled end-to-end personally: from the\u00A0initial concept to\u00A0the\u00A0final print-ready file. Zero outsourcing.',
+    icon: 'refresh-cw',
+  },
+  {
+    id: 'agency',
+    title: 'Agency<br />background',
+    text: 'Key designer at\u00A0thePeak, creating visuals for\u00A0LUKOIL, Cadillac, PUMA, and\u00A0Gippo. That shaped the\u00A0processes I\u00A0use to\u00A0guarantee solid deadlines.',
+    icon: 'briefcase',
+  },
+  {
+    id: 'three-directions',
+    title: 'Three disciplines<br />in\u00A0one hand',
+    text: 'Branding, websites, and\u00A0print handled together. Your logo, website, and\u00A0presentation deck stay seamlessly unified because one person designs them all.',
+    icon: 'shapes',
+  },
+];
+
+const cards = lang === 'en'
+  ? cardsPersonalEn
+  : personal
+    ? cardsPersonalRu
+    : cardsStudioRu;
 ---
 
 <section
   id="about-compact"
-  aria-label={personal ? 'Обо мне в деталях' : 'О студии в деталях'}
+  aria-label={lang === 'en' ? 'About me in details' : personal ? 'Обо мне в деталях' : 'О студии в деталях'}
   class:list={[
     'relative z-10 pt-6 pb-16 md:pb-24 transition-colors duration-300',
     isLight ? 'text-[#1D1D1D]' : 'text-white',
