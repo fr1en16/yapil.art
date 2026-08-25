@@ -100,7 +100,8 @@ const threadsJsonLd = {
   <Hero
     title="Дизайн<br />который<br />работает<br />на вас"
     description="Сайты, айдентика, упаковка и презентации, которые выделяют компанию среди конкурентов и приносят заявки — от первого эскиза до релиза или печати."
-    casesHref="#cases"
+    casesHref="#contacts"
+    ctaText="Связаться"
   />
 
   <AboutCompact personal />
@@ -109,50 +110,54 @@ const threadsJsonLd = {
   <ProduxPortfolio />
   <ReviewsSlider />
 
-  <section class="process section" aria-labelledby="process-title">
-    <div class="container">
-      <h2 class="display-title" id="process-title">Как строим<br />работу</h2>
-      <ProcessTimeline client:visible steps={processSteps} />
-    </div>
-  </section>
+  <div class="process-faq-group">
+    <div class="process-faq-inner">
+      <section class="process section" aria-labelledby="process-title">
+        <div class="container">
+          <h2 class="display-title" id="process-title">Как строим<br />работу</h2>
+          <ProcessTimeline client:visible steps={processSteps} />
+        </div>
+      </section>
 
-  <section class="faq section" aria-labelledby="faq-title">
-    <div class="container">
-      <h2 class="display-title" id="faq-title">Частые<br />вопросы</h2>
-      <div class="faq-list">
-        <details class="faq-item">
-          <summary>Сколько стоит проект?</summary>
-          <div class="faq-answer"><div class="faq-answer-inner">
-            <p>Зависит от задачи: лендинг, айдентика и упаковка стоят по-разному. Присылаю смету после короткого созвона или переписки — точную, без «от» и без сюрпризов в процессе.</p>
-          </div></div>
-        </details>
-        <details class="faq-item">
-          <summary>Сколько занимает разработка?</summary>
-          <div class="faq-answer"><div class="faq-answer-inner">
-            <p>Лендинги и презентации — от 1 до 3 недель. Сайты и айдентика — от 3 до 6 недель. Срок фиксируется в договоре на старте.</p>
-          </div></div>
-        </details>
-        <details class="faq-item">
-          <summary>Работаете официально?</summary>
-          <div class="faq-answer"><div class="faq-answer-inner">
-            <p>Да: договор, поэтапная оплата, акты выполненных работ и передача исключительных прав на исходники после финального платежа.</p>
-          </div></div>
-        </details>
-        <details class="faq-item">
-          <summary>Почему не студия, а один человек?</summary>
-          <div class="faq-answer"><div class="faq-answer-inner">
-            <p>Проект от эскиза до релиза веду сам — без передачи между отделами и потери смысла на стыках. При этом есть опыт агентства thePeak: там я работал с LUKOIL, Cadillac, PUMA и Gippo, и оттуда — процессы, которые держат сроки на больших проектах.</p>
-          </div></div>
-        </details>
-        <details class="faq-item">
-          <summary>Что если моя задача не из списка услуг?</summary>
-          <div class="faq-answer"><div class="faq-answer-inner">
-            <p>Напишите — обсудим. Если задача не моя, честно скажу сразу, а не буду тянуть время.</p>
-          </div></div>
-        </details>
-      </div>
+      <section class="faq section" aria-labelledby="faq-title">
+        <div class="container">
+          <h2 class="display-title" id="faq-title">Частые<br />вопросы</h2>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>Сколько стоит проект?</summary>
+              <div class="faq-answer"><div class="faq-answer-inner">
+                <p>Зависит от задачи: лендинг, айдентика и упаковка стоят по-разному. Присылаю смету после короткого созвона или переписки — точную, без «от» и без сюрпризов в процессе.</p>
+              </div></div>
+            </details>
+            <details class="faq-item">
+              <summary>Сколько занимает разработка?</summary>
+              <div class="faq-answer"><div class="faq-answer-inner">
+                <p>Лендинги и презентации — от 1 до 3 недель. Сайты и айдентика — от 3 до 6 недель. Срок фиксируется в договоре на старте.</p>
+              </div></div>
+            </details>
+            <details class="faq-item">
+              <summary>Работаете официально?</summary>
+              <div class="faq-answer"><div class="faq-answer-inner">
+                <p>Да: договор, поэтапная оплата, акты выполненных работ и передача исключительных прав на исходники после финального платежа.</p>
+              </div></div>
+            </details>
+            <details class="faq-item">
+              <summary>Почему не студия, а один человек?</summary>
+              <div class="faq-answer"><div class="faq-answer-inner">
+                <p>Проект от эскиза до релиза веду сам — без передачи между отделами и потери смысла на стыках. При этом есть опыт агентства thePeak: там я работал с LUKOIL, Cadillac, PUMA и Gippo, и оттуда — процессы, которые держат сроки на больших проектах.</p>
+              </div></div>
+            </details>
+            <details class="faq-item">
+              <summary>Что если моя задача не из списка услуг?</summary>
+              <div class="faq-answer"><div class="faq-answer-inner">
+                <p>Напишите — обсудим. Если задача не моя, честно скажу сразу, а не буду тянуть время.</p>
+              </div></div>
+            </details>
+          </div>
+        </div>
+      </section>
     </div>
-  </section>
+  </div>
 
   <Contacts
     title="Пишете<br />из Threads?"
@@ -229,59 +234,98 @@ const threadsJsonLd = {
   }
 
   .page-threads #about-compact {
-    background: linear-gradient(to bottom, transparent 0%, #181818 100%) !important;
+    background: linear-gradient(to bottom, transparent 0%, #000 100%) !important;
   }
 
   .page-threads #services {
-    background: linear-gradient(to bottom, #181818 0%, #121213 50%, #0b0b0c 100%) !important;
+    background: linear-gradient(to bottom, #000 0%, #000 100%) !important;
   }
 
   .page-threads .portfolio {
     background: linear-gradient(
       to bottom,
-      #0b0b0c 0%,
-      #0b0b0c 15%,
-      rgba(11, 11, 12, 0.55) 45%,
+      #000 0%,
+      #000 15%,
+      rgba(0, 0, 0, 0.55) 45%,
       transparent 85%,
       transparent 100%
     ) !important;
   }
 
   .page-threads #reviews {
-    background: linear-gradient(to bottom, transparent 0%, #181818 100%) !important;
+    background: linear-gradient(to bottom, transparent 0%, #000 100%) !important;
   }
 
   .page-threads .process {
     position: relative;
     z-index: 2;
     color: #fff;
-    background: linear-gradient(to bottom, #181818 0%, #121213 52%, #0b0b0c 100%);
+    background: linear-gradient(to bottom, #000 0%, #000 100%);
   }
 
   .page-threads .faq {
     position: relative;
     z-index: 2;
     color: #fff;
-    background: linear-gradient(to bottom, #0B0B0C 0%, #000000 100%);
+    background: linear-gradient(to bottom, #000 0%, #000 100%);
+  }
+
+  @media (min-width: 64rem) {
+    .page-threads .process-faq-group {
+      position: relative;
+      z-index: 2;
+      color: #fff;
+      padding-block: clamp(4.5rem, 9vw, 9rem);
+      background: #000;
+    }
+
+    .page-threads .process-faq-inner {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--grid-gap);
+      align-items: start;
+      width: min(calc(100% - var(--container-inline-space)), var(--container-max));
+      margin-inline: auto;
+    }
+
+    .page-threads .process-faq-group .process,
+    .page-threads .process-faq-group .faq {
+      padding-block: 0;
+      background: transparent !important;
+    }
+
+    .page-threads .process-faq-group .process {
+      grid-column: 1 / span 6;
+    }
+
+    .page-threads .process-faq-group .faq {
+      grid-column: 8 / span 5;
+    }
+
+    .page-threads .process-faq-group .container {
+      width: 100%;
+      margin-inline: 0;
+    }
+
+    .page-threads .process-faq-group .faq-list {
+      max-width: none;
+    }
   }
 
   .page-threads #founder {
     background: linear-gradient(
       to bottom,
-      #181818 0%,
-      #0d0d0e 18%,
-      #050505 50%,
-      #0b0b0c 78%,
-      #181818 100%
+      #000 0%,
+      #000 100%
     ) !important;
   }
 
   .page-threads #contacts {
-    background: linear-gradient(to bottom, #090909 0%, #0b0b0c 42%, #0b0b0c 100%) !important;
+    background: linear-gradient(to bottom, #000 0%, #000 100%) !important;
   }
 
   .page-threads .site-footer {
-    background: linear-gradient(to bottom, #0b0b0c 0%, #0a0a0b 48%, #080809 100%) !important;
+    background: linear-gradient(to bottom, #000 0%, #000 100%) !important;
   }
 
   .page-threads .faq-list {
