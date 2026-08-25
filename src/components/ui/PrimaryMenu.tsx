@@ -116,7 +116,7 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
           item: "!rounded-full text-white/70 hover:text-white",
           activeItem: "text-white",
           icon: "[&>svg]:h-full [&>svg]:w-full",
-          label: "text-[0.82rem] tracking-[-0.01em]",
+          label: "text-[0.82rem] tracking-[-0.014em]",
         }}
       />
     </nav>

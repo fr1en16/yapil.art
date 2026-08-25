@@ -136,7 +136,7 @@ export default function ProcessTimeline({ steps }: ProcessTimelineProps) {
           </motion.div>
 
           <div className="min-w-0 pt-px">
-            <h3 className="m-0 text-[24px] font-semibold leading-[1.15] tracking-[-0.025em] text-white sm:text-[28px]">
+            <h3 className="m-0 text-[24px] font-semibold leading-[1.15] tracking-[-0.035em] text-white sm:text-[28px]">
               {step.title}
             </h3>
             <p className="m-0 mt-3 text-[15px] leading-[1.4] text-white/60">{step.description}</p>

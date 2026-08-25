@@ -97,12 +97,12 @@ const PRICES_USD_RU: Record<string, string> = {
 };
 
 const PRICES_USD_EN: Record<string, string> = {
-  websites: 'from $300',
-  identity: 'from $360',
-  print: 'from $80',
-  smm: 'from $80',
-  presentations: 'from $120',
-  support: 'from $300 / mo',
+  websites: 'from $390',
+  identity: 'from $470',
+  print: 'from $105',
+  smm: 'from $105',
+  presentations: 'from $160',
+  support: 'from $390 / mo',
 };
 
 const SERVICES_EN: Record<string, { title: string; description: string; personalDescription: string; caseBadge: string }> = {
