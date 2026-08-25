@@ -1,4 +1,6 @@
 ---
+import PrimaryMenu from './ui/PrimaryMenu';
+
 interface Props {
   overlay?: boolean;
   theme?: 'dark' | 'light';
@@ -27,43 +29,14 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
     <a class="brand" href={homePath} aria-label="Yapil.art — на главную" data-nav-brand>
       <span class="brand-text">Yapil.art</span>
     </a>
-    <nav aria-label="Основная навигация" data-nav-links>
-      <a href={`${homePath}#services`} data-nav-link="services">
-        <span>Услуги</span>
-        <span class="nav-dot" aria-hidden="true"></span>
-      </a>
-      <a href={`${homePath}#cases`} data-nav-link="cases">
-        <span>Кейсы</span>
-        <span class="nav-dot" aria-hidden="true"></span>
-      </a>
-      <a href={`${homePath}#reviews`} data-nav-link="reviews">
-        <span>Отзывы</span>
-        <span class="nav-dot" aria-hidden="true"></span>
-      </a>
-      <a href={contactsHref} data-nav-link="contacts">
-        <span>Связаться с нами</span>
-        <span class="nav-dot" aria-hidden="true"></span>
-      </a>
-    </nav>
+    <PrimaryMenu contactsHref={contactsHref} client:load />
   </div>
 </header>
 
 <script>
   function initHeaderAndNav() {
     const header = document.querySelector<HTMLElement>('[data-site-header]');
-    const navLinks = document.querySelector<HTMLElement>('[data-nav-links]');
-
     if (!header) return;
-
-    // Dynamically ensure contacts link points to local #contacts if present, or /#contacts otherwise
-    const contactsLink = navLinks ? navLinks.querySelector<HTMLAnchorElement>('[data-nav-link="contacts"]') : null;
-    if (contactsLink) {
-      const hasLocalContacts = Boolean(
-        document.getElementById('contacts') ||
-        document.querySelector('.contacts, .feedback-form, [id="contacts"]')
-      );
-      contactsLink.setAttribute('href', hasLocalContacts ? '#contacts' : '/#contacts');
-    }
 
     let ticking = false;
     let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
@@ -72,51 +45,6 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
     const SCROLL_UP_THRESHOLD = 30; // 30px upward scroll to reveal
     const SCROLL_DOWN_THRESHOLD = 10; // 10px downward scroll to hide
     const TOP_THRESHOLD = 80; // Always visible when near top
-
-    // Cache section elements for active link tracking
-    const trackedSections = [
-      { id: 'services', el: document.getElementById('services') },
-      { id: 'cases', el: document.getElementById('cases') },
-      { id: 'reviews', el: document.getElementById('reviews') },
-      { id: 'contacts', el: document.getElementById('contacts') },
-    ];
-    const linkElements = navLinks ? Array.from(navLinks.querySelectorAll<HTMLAnchorElement>('[data-nav-link]')) : [];
-
-    function updateActiveNav(currentScrollY: number, winHeight: number, maxScroll: number) {
-      if (!linkElements.length) return;
-
-      let activeSectionId: string | null = null;
-
-      // When within top hero area, no section is active (clean hero presentation)
-      if (currentScrollY > winHeight * 0.35) {
-        // If scrolled close to bottom of document, activate the last section (contacts)
-        if (maxScroll > 0 && maxScroll - currentScrollY < 180) {
-          activeSectionId = 'contacts';
-        } else {
-          // Check from bottom to top of page
-          for (let i = trackedSections.length - 1; i >= 0; i--) {
-            const sec = trackedSections[i];
-            if (sec.el) {
-              const rect = sec.el.getBoundingClientRect();
-              // When section top reaches upper half of viewport and bottom is still visible
-              if (rect.top <= winHeight * 0.45 && rect.bottom > 80) {
-                activeSectionId = sec.id;
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      linkElements.forEach((link) => {
-        const targetId = link.getAttribute('data-nav-link');
-        if (targetId && targetId === activeSectionId) {
-          link.classList.add('is-active');
-        } else {
-          link.classList.remove('is-active');
-        }
-      });
-    }
 
     function update() {
       const currentScrollY = window.scrollY;
@@ -163,9 +91,6 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
 
       lastScrollY = clampedScrollY;
 
-      // Active section indicator update
-      updateActiveNav(clampedScrollY, winHeight, maxScroll);
-
       ticking = false;
     }
 
@@ -211,9 +136,14 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
       opacity 2000ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Smooth hide on scroll down */
+  /* Keep navigation fixed; only the brand hides while scrolling down. */
   .site-header.is-hidden {
-    transform: translateY(-100%);
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .site-header.is-hidden .brand {
+    transform: translateY(-1rem);
     opacity: 0;
     pointer-events: none;
   }
