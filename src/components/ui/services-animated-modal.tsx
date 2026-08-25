@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight, Check, X, RotateCcw, Clock, UserCheck, ShieldCheck } from 'lucide-react';
 import { submitLead } from '../../lib/crmStore';
+import { CoverflowCarousel } from './coverflow-carousel';
 
 export interface ServiceItem {
   id: string;
@@ -150,10 +151,6 @@ export default function ServicesAnimatedModal({
   const displayedServices = personal
     ? services.map((item) => ({ ...item, description: SERVICE_DESCRIPTIONS_PERSONAL[item.id] ?? item.description }))
     : services;
-  const ctaDescriptions = personal ? SERVICE_CTA_DESCRIPTIONS_PERSONAL : SERVICE_CTA_DESCRIPTIONS;
-  const defaultCtaDescription = personal
-    ? 'Расскажите о задаче или оставьте контактные данные — свяжусь с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.'
-    : 'Расскажите о задаче или оставьте контактные данные — мы свяжемся с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.';
   const [mounted, setMounted] = useState(false);
   const [hoverModal, setHoverModal] = useState<{ active: boolean; index: number }>({
     active: false,
@@ -215,21 +212,30 @@ export default function ServicesAnimatedModal({
         </div>
 
         {cards ? (
-          <div
-            className="grid auto-cols-[82vw] grid-flow-col items-stretch snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-3 pr-[12vw] touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:auto-cols-auto sm:grid-flow-row sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 sm:pr-0 lg:grid-cols-3"
-            role="list"
-            aria-label="Услуги — пролистывайте горизонтально"
-          >
-            {displayedServices.map((item) => (
-              <div
-                key={item.id}
-                role="listitem"
-                className="flex min-w-0 snap-start"
-              >
-                <ServiceCard item={item} isLight={isLight} onOpenModal={handleOpenModal} />
-              </div>
-            ))}
-          </div>
+          <CoverflowCarousel
+            slides={displayedServices.map((item) => ({
+              src: item.image,
+              alt: `Пример работы по услуге «${item.title}»`,
+              title: item.title,
+              subtitle: item.price,
+              meta: [{ label: 'Описание', value: item.description }],
+            }))}
+            cardWidth="clamp(210px, 28vw, 400px)"
+            aspectRatio={5 / 4}
+            activeScale={1.2}
+            rotate={42}
+            depth={0.58}
+            perspective={3.2}
+            gap={0.08}
+            fade={0.14}
+            showCaption
+            showPagination
+            showNavigation
+            label="Услуги — перетаскивайте или используйте стрелки"
+            className="relative left-1/2 w-screen -translate-x-1/2"
+            cardClassName={isLight ? 'border border-black/10' : 'border border-white/15'}
+            onSlideClick={(index) => handleOpenModal(displayedServices[index])}
+          />
         ) : (
           <div
             className={`relative flex flex-col ${isLight ? 'border-t border-black/10' : 'border-t border-white/15'}`}
@@ -272,71 +278,6 @@ export default function ServicesAnimatedModal({
           document.body
         )}
     </section>
-  );
-}
-
-function ServiceCard({
-  item,
-  isLight = false,
-  onOpenModal,
-}: {
-  item: ServiceItem;
-  isLight?: boolean;
-  onOpenModal: (service: ServiceItem) => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onOpenModal(item)}
-      className={`group flex h-full w-full cursor-pointer appearance-none flex-col overflow-hidden border p-0 text-left text-inherit transition-[transform,border-color,background-color] duration-300 active:scale-[0.985] ${
-        isLight
-          ? 'border-black/10 bg-white hover:border-[#FD4B32]/55'
-          : 'border-white/15 bg-white/[0.035] hover:border-[#FD4B32]/70 hover:bg-white/[0.055]'
-      }`}
-      aria-haspopup="dialog"
-      aria-label={`${item.title}, ${item.price}. Оставить заявку`}
-    >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#141416]">
-        <img
-          src={item.image}
-          alt=""
-          className="h-full w-full object-cover object-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.025]"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      <div className="flex min-h-[22rem] flex-1 flex-col p-5 sm:min-h-[20rem] sm:p-6">
-        <div className="flex items-start justify-between gap-4">
-          <h3
-            className={`m-0 text-[2rem] font-normal leading-none tracking-[-0.035em] sm:text-[2.25rem] ${
-              isLight ? 'text-[#1D1D1D]' : 'text-white'
-            }`}
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            {item.title}
-          </h3>
-          <ArrowUpRight
-            className={`mt-1 size-5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
-              isLight ? 'text-[#1D1D1D]/45' : 'text-white/45'
-            }`}
-            aria-hidden="true"
-          />
-        </div>
-
-        <p
-          className={`mb-10 mt-8 text-[0.95rem] leading-[1.4] sm:mb-12 sm:mt-7 ${
-            isLight ? 'text-[#1D1D1D]/65' : 'text-white/62'
-          }`}
-        >
-          {item.description}
-        </p>
-
-        <p className="mb-0 mt-auto w-full whitespace-nowrap border-t border-current/10 pt-5 text-base font-medium leading-none text-[#FD4B32] sm:text-lg">
-          {item.price}
-        </p>
-      </div>
-    </button>
   );
 }
 
@@ -700,75 +641,33 @@ function ServiceApplicationModal({
 
       {/* 12-Column Grid Container */}
       <div className="container min-h-screen py-4 md:py-6 flex flex-col justify-center relative">
-        <div className="grid grid-cols-1 md:grid-cols-12 md:gap-[var(--grid-gap)] items-stretch w-full my-auto gap-y-10 md:gap-y-12">
-          {/* Left Part: Title & CTA (Columns 1-4) */}
+        <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-[auto_1fr] md:gap-x-[var(--grid-gap)] items-stretch w-full my-auto gap-y-10 md:gap-y-12">
+          {/* Intro */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="col-span-1 md:col-start-1 md:col-span-4 flex flex-col justify-between h-full"
+            className="col-span-1 md:col-start-1 md:col-span-4 md:row-start-1"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Top section: Title and Description with generous breathing room */}
-            <div>
-              <h2
-                id="modal-service-title"
-                className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-[-0.04em] m-0 leading-[0.9] mb-6 sm:mb-8 md:mb-10 ${
-                  isLight ? 'text-[#1D1D1D]' : 'text-white'
-                }`}
-                style={{ fontFamily: 'var(--font-display)', lineHeight: '0.9' }}
-              >
-                Оставьте заявку
-              </h2>
+            <h2
+              id="modal-service-title"
+              className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-[-0.04em] m-0 leading-[0.9] mb-6 sm:mb-8 md:mb-10 ${
+                isLight ? 'text-[#1D1D1D]' : 'text-white'
+              }`}
+              style={{ fontFamily: 'var(--font-display)', lineHeight: '0.9' }}
+            >
+              Оставьте заявку
+            </h2>
 
-              <p
-                className={`text-base sm:text-lg md:text-xl leading-relaxed m-0 max-w-md ${
-                  isLight ? 'text-[#1D1D1D]/75' : 'text-white/75'
-                }`}
-              >
-                {ctaDescriptions[service.id] || defaultCtaDescription}
-              </p>
-            </div>
-
-            {/* Bottom section: CTAs aligned to bottom with standalone icons */}
-            <div className="pt-12 md:pt-28 mt-10 md:mt-auto space-y-8">
-              <div className="flex items-start gap-4">
-                <Clock className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
-                <div className="text-base sm:text-lg leading-snug">
-                  <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                    {personal ? 'Отвечаю в течение 2 часов' : 'Ответ в течение 2 часов'}
-                  </span>
-                  <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                    {personal ? 'в Telegram, WhatsApp или по телефону' : 'свяжемся в Telegram, WhatsApp или по телефону'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <UserCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
-                <div className="text-base sm:text-lg leading-snug">
-                  <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                    {personal ? 'Сам веду проект' : 'Прямой диалог'}
-                  </span>
-                  <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                    {personal ? 'и сам оцениваю задачи' : 'проект сразу ведёт и оценивает ключевой дизайнер'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <ShieldCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
-                <div className="text-base sm:text-lg leading-snug">
-                  <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
-                    {personal ? 'Смета фиксирует этапы' : 'Прозрачная смета'}
-                  </span>
-                  <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
-                    {personal ? 'и итоговую стоимость до старта работы' : 'фиксируем этапы и финальную стоимость до старта'}
-                  </span>
-                </div>
-              </div>
-            </div>
+            <p
+              className={`text-base sm:text-lg md:text-xl leading-relaxed m-0 max-w-md ${
+                isLight ? 'text-[#1D1D1D]/75' : 'text-white/75'
+              }`}
+            >
+              {ctaDescriptions[service.id] || defaultCtaDescription}
+            </p>
           </motion.div>
 
           {/* Right Part: Form Input Fields (Columns 8-12) */}
@@ -777,7 +676,7 @@ function ServiceApplicationModal({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
-            className="col-span-1 md:col-start-8 md:col-span-5 flex flex-col space-y-6"
+            className="col-span-1 md:col-start-8 md:col-span-5 md:row-start-1 md:row-span-2 flex flex-col space-y-6"
             onClick={(e) => e.stopPropagation()}
           >
           {isSubmitted ? (
@@ -1046,6 +945,52 @@ function ServiceApplicationModal({
               </div>
             </form>
           )}
+          </motion.div>
+
+          {/* Benefits follow the form on mobile and stay in the left column on desktop. */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="col-span-1 space-y-8 md:col-start-1 md:col-span-4 md:row-start-2 md:self-end"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-4">
+              <Clock className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
+              <div className="text-base sm:text-lg leading-snug">
+                <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
+                  {personal ? 'Отвечаю в течение 2 часов' : 'Ответ в течение 2 часов'}
+                </span>
+                <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                  {personal ? 'в Telegram, WhatsApp или по телефону' : 'свяжемся в Telegram, WhatsApp или по телефону'}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <UserCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
+              <div className="text-base sm:text-lg leading-snug">
+                <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
+                  {personal ? 'Сам веду проект' : 'Прямой диалог'}
+                </span>
+                <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                  {personal ? 'и сам оцениваю задачи' : 'проект сразу ведёт и оценивает ключевой дизайнер'}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <ShieldCheck className="size-6 text-[#FD4B32] shrink-0 mt-0.5" />
+              <div className="text-base sm:text-lg leading-snug">
+                <span className={`font-medium ${isLight ? 'text-[#1D1D1D]' : 'text-white'}`}>
+                  {personal ? 'Смета фиксирует этапы' : 'Прозрачная смета'}
+                </span>
+                <span className={`block text-xs sm:text-sm mt-1 ${isLight ? 'text-[#1D1D1D]/60' : 'text-white/60'}`}>
+                  {personal ? 'и итоговую стоимость до старта работы' : 'фиксируем этапы и финальную стоимость до старта'}
+                </span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

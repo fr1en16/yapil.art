@@ -21,11 +21,11 @@ const isLight = theme === 'light';
   }
 >
   <div class="container">
-    <div class="grid grid-cols-12 gap-x-[var(--grid-gap)] gap-y-8 items-center">
-      <div class="col-start-4 col-span-6 sm:col-start-1 sm:col-span-12 lg:col-start-3 lg:col-span-3">
+    <div class="mx-auto grid w-full max-w-[18.5rem] grid-cols-1 gap-y-8 items-center sm:max-w-none lg:grid-cols-12 lg:gap-x-[var(--grid-gap)]">
+      <div class="lg:col-start-3 lg:col-span-3">
         <div
           class:list={[
-            'relative aspect-[4/5] w-full max-w-[26rem] mx-auto lg:mx-0 overflow-hidden',
+            'relative aspect-[4/5] w-full max-w-[11.5rem] sm:max-w-[26rem] mx-auto lg:mx-0 overflow-hidden',
             isLight ? 'bg-black/[0.04]' : 'bg-white/[0.04]',
           ]}
         >
@@ -40,7 +40,7 @@ const isLight = theme === 'light';
         </div>
       </div>
 
-      <div class="col-start-4 col-span-9 sm:col-start-1 sm:col-span-12 lg:col-start-7 lg:col-span-4">
+      <div class="w-full text-center lg:col-start-7 lg:col-span-4 lg:text-left">
         <h2
           class:list={[
             'm-0 mb-6 text-[clamp(2rem,4vw,3rem)] font-normal leading-[1.05] tracking-[-0.04em]',

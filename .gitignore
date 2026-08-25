@@ -44,3 +44,4 @@ pnpm-debug.log*
 gallery/
 inspiring-home/
 Пример SEO оптимизации/
+.env*

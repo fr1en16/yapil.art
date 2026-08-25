@@ -262,7 +262,7 @@ export default function ReviewsSlider({
             className="relative mt-8 md:mt-12 lg:mt-16 touch-pan-y"
             aria-live="polite"
           >
-            <AnimatePresence mode="wait" custom={direction}>
+            <AnimatePresence initial={false} mode="wait" custom={direction}>
               <motion.div
                 key={currentItem.id}
                 custom={direction}
@@ -299,7 +299,7 @@ export default function ReviewsSlider({
                     <motion.div
                       custom={direction}
                       variants={imageVariants}
-                      initial="enter"
+                      initial={false}
                       animate="center"
                       exit="exit"
                       className="relative aspect-[4/3] w-full overflow-hidden bg-black/5"

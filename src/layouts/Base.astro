@@ -17,6 +17,7 @@ interface Props {
   noindex?: boolean;
   navOverlay?: boolean;
   navMinimal?: boolean;
+  bodyClass?: string;
 }
 
 const defaultImage = new URL('/social-cover.webp', Astro.site).href;
@@ -31,6 +32,7 @@ const {
   noindex = false,
   navOverlay,
   navMinimal = false,
+  bodyClass,
 } = Astro.props;
 const documentTitle = title.includes('Yapil')
   ? title
@@ -84,7 +86,7 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
     </script>
     <Analytics />
   </head>
-  <body class:list={{ 'is-home': isHome, 'theme-light': theme === 'light' }} data-theme={theme}>
+  <body class:list={[bodyClass, { 'is-home': isHome, 'theme-light': theme === 'light' }]} data-theme={theme}>
     <a class="skip-link" href="#main-content">К основному содержанию</a>
     <SiteBackground />
     <Nav overlay={isNavOverlay} theme={theme} minimal={navMinimal} />

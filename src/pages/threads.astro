@@ -8,6 +8,30 @@ import Founder from '../components/Founder.astro';
 import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
+import ProcessTimeline from '../components/ui/process-timeline';
+
+const processSteps = [
+  {
+    number: '01',
+    title: 'Обсуждаем задачу',
+    description: 'Пишете в форму ниже или в Telegram — коротко рассказываете о задаче, сроках и бюджете.',
+  },
+  {
+    number: '02',
+    title: 'Присылаю смету и сроки',
+    description: 'Точная стоимость и срок — фиксируем в договоре, без изменений задним числом.',
+  },
+  {
+    number: '03',
+    title: 'Делаю и присылаю на согласование',
+    description: 'Показываю концепцию, собираю обратную связь, довожу до финального варианта.',
+  },
+  {
+    number: '04',
+    title: 'Передаю результат',
+    description: 'Готовый сайт, макет или файл под печать — плюс исходники и все права на них.',
+  },
+];
 
 const threadsJsonLd = {
   '@context': 'https://schema.org',
@@ -71,14 +95,16 @@ const threadsJsonLd = {
   jsonLd={threadsJsonLd}
   noindex
   navMinimal
+  bodyClass="page-threads"
 >
   <Hero
-    title="Дизайн, который<br />работает на бизнес"
+    title="Дизайн<br />который<br />работает<br />на вас"
     description="Сайты, айдентика, упаковка и презентации, которые выделяют компанию среди конкурентов и приносят заявки — от первого эскиза до релиза или печати."
     casesHref="#cases"
   />
 
   <AboutCompact personal />
+  <Founder />
   <Services personal cards />
   <ProduxPortfolio />
   <ReviewsSlider />
@@ -86,36 +112,7 @@ const threadsJsonLd = {
   <section class="process section" aria-labelledby="process-title">
     <div class="container">
       <h2 class="display-title" id="process-title">Как строим<br />работу</h2>
-      <ol class="process-list">
-        <li class="process-step">
-          <span class="process-step-number">01</span>
-          <div>
-            <h3>Обсуждаем задачу</h3>
-            <p>Пишете в форму ниже или в Telegram — коротко рассказываете о задаче, сроках и бюджете.</p>
-          </div>
-        </li>
-        <li class="process-step">
-          <span class="process-step-number">02</span>
-          <div>
-            <h3>Присылаю смету и сроки</h3>
-            <p>Точная стоимость и срок — фиксируем в договоре, без изменений задним числом.</p>
-          </div>
-        </li>
-        <li class="process-step">
-          <span class="process-step-number">03</span>
-          <div>
-            <h3>Делаю и присылаю на согласование</h3>
-            <p>Показываю концепцию, собираю обратную связь, довожу до финального варианта.</p>
-          </div>
-        </li>
-        <li class="process-step">
-          <span class="process-step-number">04</span>
-          <div>
-            <h3>Передаю результат</h3>
-            <p>Готовый сайт, макет или файл под печать — плюс исходники и все права на них.</p>
-          </div>
-        </li>
-      </ol>
+      <ProcessTimeline client:visible steps={processSteps} />
     </div>
   </section>
 
@@ -125,29 +122,37 @@ const threadsJsonLd = {
       <div class="faq-list">
         <details class="faq-item">
           <summary>Сколько стоит проект?</summary>
-          <p>Зависит от задачи: лендинг, айдентика и упаковка стоят по-разному. Присылаю смету после короткого созвона или переписки — точную, без «от» и без сюрпризов в процессе.</p>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            <p>Зависит от задачи: лендинг, айдентика и упаковка стоят по-разному. Присылаю смету после короткого созвона или переписки — точную, без «от» и без сюрпризов в процессе.</p>
+          </div></div>
         </details>
         <details class="faq-item">
           <summary>Сколько занимает разработка?</summary>
-          <p>Лендинги и презентации — от 1 до 3 недель. Сайты и айдентика — от 3 до 6 недель. Срок фиксируется в договоре на старте.</p>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            <p>Лендинги и презентации — от 1 до 3 недель. Сайты и айдентика — от 3 до 6 недель. Срок фиксируется в договоре на старте.</p>
+          </div></div>
         </details>
         <details class="faq-item">
           <summary>Работаете официально?</summary>
-          <p>Да: договор, поэтапная оплата, акты выполненных работ и передача исключительных прав на исходники после финального платежа.</p>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            <p>Да: договор, поэтапная оплата, акты выполненных работ и передача исключительных прав на исходники после финального платежа.</p>
+          </div></div>
         </details>
         <details class="faq-item">
           <summary>Почему не студия, а один человек?</summary>
-          <p>Проект от эскиза до релиза веду сам — без передачи между отделами и потери смысла на стыках. При этом есть опыт агентства thePeak: там я работал с LUKOIL, Cadillac, PUMA и Gippo, и оттуда — процессы, которые держат сроки на больших проектах.</p>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            <p>Проект от эскиза до релиза веду сам — без передачи между отделами и потери смысла на стыках. При этом есть опыт агентства thePeak: там я работал с LUKOIL, Cadillac, PUMA и Gippo, и оттуда — процессы, которые держат сроки на больших проектах.</p>
+          </div></div>
         </details>
         <details class="faq-item">
           <summary>Что если моя задача не из списка услуг?</summary>
-          <p>Напишите — обсудим. Если задача не моя, честно скажу сразу, а не буду тянуть время.</p>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            <p>Напишите — обсудим. Если задача не моя, честно скажу сразу, а не буду тянуть время.</p>
+          </div></div>
         </details>
       </div>
     </div>
   </section>
-
-  <Founder />
 
   <Contacts
     title="Пишете<br />из Threads?"
@@ -160,79 +165,132 @@ const threadsJsonLd = {
   <Footer slot="footer" personal />
 </Base>
 
-<style>
-  .process {
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLDetailsElement>('.page-threads .faq-item').forEach((item) => {
+    const summary = item.querySelector('summary');
+    const answer = item.querySelector<HTMLElement>('.faq-answer');
+    if (!summary || !answer) return;
+
+    let transitionVersion = 0;
+
+    if (item.open) item.classList.add('is-expanded');
+
+    summary.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      summary.click();
+    });
+
+    summary.addEventListener('click', (event) => {
+      event.preventDefault();
+      const version = ++transitionVersion;
+      const isExpanded = item.classList.contains('is-expanded');
+
+      if (reduceMotion.matches) {
+        item.open = !isExpanded;
+        item.classList.toggle('is-expanded', !isExpanded);
+        return;
+      }
+
+      if (isExpanded) {
+        item.classList.remove('is-expanded');
+
+        const finishClosing = (transitionEvent?: TransitionEvent) => {
+          if (transitionEvent && transitionEvent.propertyName !== 'grid-template-rows') return;
+          if (version !== transitionVersion) return;
+          answer.removeEventListener('transitionend', finishClosing);
+          item.open = false;
+        };
+
+        answer.addEventListener('transitionend', finishClosing);
+        window.setTimeout(() => finishClosing(), 450);
+        return;
+      }
+
+      item.open = true;
+      answer.getBoundingClientRect();
+      requestAnimationFrame(() => {
+        if (version === transitionVersion) item.classList.add('is-expanded');
+      });
+    });
+  });
+</script>
+
+<style is:global>
+  /*
+   * Threads background flow. Every boundary shares the same color on both
+   * sides, so the fixed shader can appear through transparent stops without
+   * producing hard horizontal seams between independently rendered sections.
+   */
+  .page-threads .hero-cover {
+    background: linear-gradient(to bottom, transparent 0%, transparent 100%) !important;
+  }
+
+  .page-threads #about-compact {
+    background: linear-gradient(to bottom, transparent 0%, #181818 100%) !important;
+  }
+
+  .page-threads #services {
+    background: linear-gradient(to bottom, #181818 0%, #121213 50%, #0b0b0c 100%) !important;
+  }
+
+  .page-threads .portfolio {
+    background: linear-gradient(
+      to bottom,
+      #0b0b0c 0%,
+      #0b0b0c 15%,
+      rgba(11, 11, 12, 0.55) 45%,
+      transparent 85%,
+      transparent 100%
+    ) !important;
+  }
+
+  .page-threads #reviews {
+    background: linear-gradient(to bottom, transparent 0%, #181818 100%) !important;
+  }
+
+  .page-threads .process {
     position: relative;
     z-index: 2;
     color: #fff;
-    background: #0B0B0C;
+    background: linear-gradient(to bottom, #181818 0%, #121213 52%, #0b0b0c 100%);
   }
 
-  .process-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  @media (min-width: 58rem) {
-    .process-list {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-
-  .process-step {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    padding: clamp(1.5rem, 2.5vw, 2rem);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  .process-step-number {
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .process-step h3 {
-    margin: 0 0 0.4rem;
-    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
-    letter-spacing: -0.02em;
-  }
-
-  .process-step p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 0.92rem;
-    line-height: 1.35;
-  }
-
-  .faq {
+  .page-threads .faq {
     position: relative;
     z-index: 2;
     color: #fff;
     background: linear-gradient(to bottom, #0B0B0C 0%, #000000 100%);
   }
 
-  .faq-list {
+  .page-threads #founder {
+    background: linear-gradient(to bottom, #000 0%, #060606 48%, #090909 100%) !important;
+  }
+
+  .page-threads #contacts {
+    background: linear-gradient(to bottom, #090909 0%, #0b0b0c 42%, #0b0b0c 100%) !important;
+  }
+
+  .page-threads .site-footer {
+    background: linear-gradient(to bottom, #0b0b0c 0%, #0a0a0b 48%, #080809 100%) !important;
+  }
+
+  .page-threads .faq-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     max-width: 48rem;
   }
 
-  .faq-item {
+  .page-threads .faq-item {
     border: 1px solid rgba(255, 255, 255, 0.12);
     padding: clamp(1.1rem, 2vw, 1.4rem) clamp(1.25rem, 2.5vw, 1.6rem);
     background: rgba(255, 255, 255, 0.03);
   }
 
-  .faq-item summary {
+  .page-threads .faq-item summary {
     cursor: pointer;
     font-size: clamp(0.98rem, 1.4vw, 1.08rem);
     font-weight: 500;
@@ -244,24 +302,43 @@ const threadsJsonLd = {
     gap: 1rem;
   }
 
-  .faq-item summary::-webkit-details-marker {
+  .page-threads .faq-item summary::-webkit-details-marker {
     display: none;
   }
 
-  .faq-item summary::after {
+  .page-threads .faq-item summary::after {
     content: '+';
     flex-shrink: 0;
     font-family: var(--font-display);
     font-size: 1.3rem;
     color: var(--accent);
-    transition: transform 0.25s var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .faq-item[open] summary::after {
+  .page-threads .faq-item.is-expanded summary::after {
     transform: rotate(45deg);
   }
 
-  .faq-item p {
+  .page-threads .faq-answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.28s ease;
+  }
+
+  .page-threads .faq-item.is-expanded .faq-answer {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .page-threads .faq-answer-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .page-threads .faq-item p {
     margin: 0.85rem 0 0;
     color: rgba(255, 255, 255, 0.72);
     font-size: 0.92rem;
@@ -269,7 +346,8 @@ const threadsJsonLd = {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .faq-item summary::after {
+    .page-threads .faq-item summary::after,
+    .page-threads .faq-answer {
       transition: none;
     }
   }
