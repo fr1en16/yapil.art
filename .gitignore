@@ -31,6 +31,14 @@ pnpm-debug.log*
 /source-*.png
 /lh-*.json
 /design-qa.md
+/artifacts/
+/playwright-report/
+/test-results/
+/coverage/
+
+# local tool caches
+/.cache/
+*.tsbuildinfo
 
 # Standalone subprojects and reference projects
 gallery/

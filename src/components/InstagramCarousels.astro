@@ -1,0 +1,290 @@
+---
+const carousels = [
+  {
+    title: 'Наши объекты',
+    directory: 'carousel-1',
+    count: 11,
+    width: 1440,
+    height: 1800,
+  },
+  {
+    title: 'Прайс-лист',
+    directory: 'carousel-2',
+    count: 10,
+    width: 1080,
+    height: 1350,
+  },
+  {
+    title: 'Часто задаваемые вопросы',
+    directory: 'carousel-3',
+    count: 10,
+    width: 1440,
+    height: 1800,
+  },
+];
+---
+
+<section class="instagram-content" aria-labelledby="instagram-content-title">
+  <div class="instagram-content-heading">
+    <h2 id="instagram-content-title">Базовое наполнение для Instagram</h2>
+    <p>Три серии публикаций для знакомства с зоной отдыха.</p>
+  </div>
+
+  <div class="instagram-carousel-grid">
+    {carousels.map((carousel) => (
+      <article
+        class="instagram-carousel"
+        data-instagram-carousel
+        aria-roledescription="карусель"
+        aria-label={carousel.title}
+        tabindex="0"
+      >
+        <div class="instagram-carousel-viewport">
+          <div class="instagram-carousel-track" data-carousel-track>
+            {Array.from({ length: carousel.count }, (_, slideIndex) => (
+              <figure
+                class="instagram-carousel-slide"
+                data-carousel-slide
+                aria-hidden={slideIndex === 0 ? 'false' : 'true'}
+              >
+                <img
+                  src={`/case/yatut/instagram/${carousel.directory}/${slideIndex + 1}.jpg`}
+                  alt={`${carousel.title} — слайд ${slideIndex + 1}`}
+                  width={carousel.width}
+                  height={carousel.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            ))}
+          </div>
+        </div>
+
+        <div class="instagram-carousel-footer">
+          <div class="instagram-carousel-controls">
+            <button type="button" data-carousel-prev aria-label={`Предыдущий слайд: ${carousel.title}`}>
+              <span aria-hidden="true">←</span>
+            </button>
+            <span class="instagram-carousel-count" aria-live="polite">
+              <span data-carousel-current>1</span> / {carousel.count}
+            </span>
+            <button type="button" data-carousel-next aria-label={`Следующий слайд: ${carousel.title}`}>
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  function initInstagramCarousels() {
+    document.querySelectorAll<HTMLElement>('[data-instagram-carousel]').forEach((carousel) => {
+      if (carousel.dataset.initialized === 'true') return;
+      carousel.dataset.initialized = 'true';
+
+      const track = carousel.querySelector<HTMLElement>('[data-carousel-track]');
+      const slides = Array.from(carousel.querySelectorAll<HTMLElement>('[data-carousel-slide]'));
+      const prev = carousel.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+      const next = carousel.querySelector<HTMLButtonElement>('[data-carousel-next]');
+      const current = carousel.querySelector<HTMLElement>('[data-carousel-current]');
+      if (!track || !slides.length || !prev || !next || !current) return;
+
+      let index = 0;
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      const showSlide = (nextIndex: number) => {
+        index = (nextIndex + slides.length) % slides.length;
+        track.style.transform = `translate3d(-${index * 100}%, 0, 0)`;
+        current.textContent = String(index + 1);
+        slides.forEach((slide, slideIndex) => {
+          slide.setAttribute('aria-hidden', slideIndex === index ? 'false' : 'true');
+        });
+      };
+
+      prev.addEventListener('click', () => showSlide(index - 1));
+      next.addEventListener('click', () => showSlide(index + 1));
+
+      carousel.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          showSlide(index - 1);
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          showSlide(index + 1);
+        }
+      });
+
+      carousel.addEventListener('touchstart', (event) => {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+      }, { passive: true });
+
+      carousel.addEventListener('touchend', (event) => {
+        const distanceX = event.changedTouches[0].clientX - touchStartX;
+        const distanceY = event.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(distanceX) > 45 && Math.abs(distanceX) > Math.abs(distanceY)) {
+          showSlide(index + (distanceX < 0 ? 1 : -1));
+        }
+      }, { passive: true });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initInstagramCarousels, { once: true });
+  } else {
+    initInstagramCarousels();
+  }
+
+  document.addEventListener('astro:page-load', initInstagramCarousels);
+</script>
+
+<style>
+  .instagram-content {
+    margin-top: clamp(4.5rem, 9vw, 8rem);
+    margin-bottom: clamp(7rem, 14vw, 13rem);
+  }
+
+  .instagram-content-heading {
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .instagram-content h2 {
+    max-width: 46rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+  }
+
+  .instagram-content-heading p {
+    max-width: 34rem;
+    margin: 1rem 0 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
+    line-height: 1.35;
+  }
+
+  .instagram-carousel-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .instagram-carousel {
+    min-width: 0;
+    outline: none;
+  }
+
+  .instagram-carousel:focus-visible .instagram-carousel-viewport {
+    outline: 2px solid var(--accent-tint, #f7c8bf);
+    outline-offset: 4px;
+  }
+
+  .instagram-carousel-viewport {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    background: #111111;
+    touch-action: pan-y;
+  }
+
+  .instagram-carousel-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 620ms var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+    will-change: transform;
+  }
+
+  .instagram-carousel-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .instagram-carousel-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .instagram-carousel-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.85rem;
+  }
+
+  .instagram-carousel-controls {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .instagram-carousel-controls button {
+    display: inline-grid;
+    width: 2.15rem;
+    height: 2.15rem;
+    padding: 0;
+    place-items: center;
+    border: 1px solid var(--border-subtle);
+    border-radius: 50%;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  .instagram-carousel-controls button:hover,
+  .instagram-carousel-controls button:focus-visible {
+    background: #ffffff;
+    color: #111111;
+    transform: scale(1.06);
+  }
+
+  .instagram-carousel-controls button:focus-visible {
+    outline: 2px solid var(--accent-tint, #f7c8bf);
+    outline-offset: 2px;
+  }
+
+  .instagram-carousel-count {
+    min-width: 2.8rem;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 0.72rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 48rem) {
+    .instagram-carousel-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .instagram-carousel-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(0.75rem, 1.4vw, 1.25rem);
+    }
+
+    .instagram-carousel-controls {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .instagram-carousel-track,
+    .instagram-carousel-controls button {
+      transition: none;
+    }
+  }
+</style>
