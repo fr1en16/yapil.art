@@ -238,6 +238,7 @@ export default function ServicesAnimatedModal({
               <ServiceApplicationModal
                 service={activeServiceModal}
                 isLight={isLight}
+                personal={personal}
                 onClose={handleCloseModal}
               />
             )}
@@ -391,12 +392,18 @@ function HoverModalPreview({
 function ServiceApplicationModal({
   service,
   isLight = false,
+  personal = false,
   onClose,
 }: {
   service: ServiceItem;
   isLight?: boolean;
+  personal?: boolean;
   onClose: () => void;
 }) {
+  const ctaDescriptions = personal ? SERVICE_CTA_DESCRIPTIONS_PERSONAL : SERVICE_CTA_DESCRIPTIONS;
+  const defaultCtaDescription = personal
+    ? 'Расскажите о задаче или оставьте контактные данные — свяжусь с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.'
+    : 'Расскажите о задаче или оставьте контактные данные — мы свяжемся с вами, чтобы подробно обсудить проект, предложить лучшие варианты реализации и рассчитать сроки со сметой.';
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>([service.title]);
