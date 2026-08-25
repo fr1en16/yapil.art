@@ -4,9 +4,10 @@ import PrimaryMenu from './ui/PrimaryMenu';
 interface Props {
   overlay?: boolean;
   theme?: 'dark' | 'light';
+  minimal?: boolean;
 }
 
-const { overlay = false, theme = 'dark' } = Astro.props;
+const { overlay = false, theme = 'dark', minimal = false } = Astro.props;
 const homePath = '/';
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -24,11 +25,13 @@ const hasNoLocalContacts = pagesWithoutContacts.includes(pathname) || isBrief ||
 const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
 ---
 
-<header class:list={['site-header', { overlay, 'theme-light': theme === 'light' }]} data-site-header data-theme={theme}>
+<header class:list={['site-header', { overlay, minimal, 'theme-light': theme === 'light' }]} data-site-header data-theme={theme}>
   <div class="container nav-row" data-nav-row>
-    <a class="brand" href={homePath} aria-label="Yapil.art — на главную" data-nav-brand>
-      <span class="brand-text">Yapil.art</span>
-    </a>
+    {!minimal && (
+      <a class="brand" href={homePath} aria-label="Yapil.art — на главную" data-nav-brand>
+        <span class="brand-text">Yapil.art</span>
+      </a>
+    )}
     <PrimaryMenu contactsHref={contactsHref} client:load />
   </div>
 </header>
@@ -148,42 +151,9 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
     pointer-events: none;
   }
 
-  /* Seamless Frosted Glass Backdrop with Vertical Gradient Mask */
+  /* The compact action bar provides its own contrast; no full-width header backdrop. */
   .site-header::before {
-    content: '';
-    position: absolute;
-    inset: -6px 0 -22px 0;
-    z-index: -1;
-    pointer-events: none;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
-    opacity: 0;
-    transition: opacity 2000ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* When at top of page (overlay hero mode) */
-  .site-header.at-top.overlay::before {
-    opacity: 0;
-  }
-
-  /* When at top of page (non-overlay mode, e.g. case subpages) */
-  .site-header.at-top:not(.overlay)::before {
-    opacity: 1;
-  }
-
-  /* When scrolled down */
-  .site-header.is-scrolled::before {
-    opacity: 1;
-  }
-
-  /* Light Theme Overrides */
-  .site-header.theme-light::before {
-    background: rgba(247, 245, 242, 0.9);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    content: none;
   }
 
   .site-header.theme-light.is-scrolled {
@@ -209,6 +179,10 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
     justify-content: space-between;
     gap: 1.5rem;
     position: relative;
+  }
+
+  .site-header.minimal .nav-row {
+    justify-content: center;
   }
 
   .brand {

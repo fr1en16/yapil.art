@@ -10,6 +10,7 @@ export interface ServiceItem {
   number: string;
   title: string;
   description: string;
+  price: string;
   caseBadge: string;
   caseLink: string;
   image: string;
@@ -22,6 +23,7 @@ export const services: ServiceItem[] = [
     number: '01',
     title: 'Сайты',
     description: 'Проектируем структуру, рисуем макеты, верстаем, запускаем. Делаем лендинги, интернет-магазины, сервисы.',
+    price: 'от 150 000 ₸',
     caseBadge: 'Кейс // Compass',
     caseLink: '/case/compass',
     image: 'https://media.yapil.art/services/%D1%81%D0%B0%D0%B9%D1%82%D1%8B.webp',
@@ -32,6 +34,7 @@ export const services: ServiceItem[] = [
     number: '02',
     title: 'Айдентика',
     description: 'Придумываем логотип, типографику, графический язык. Собираем брендбук, по которому ваш подрядчик соберёт макет без вопросов к нам.',
+    price: 'от 180 000 ₸',
     caseBadge: 'Кейс // Compass Management',
     caseLink: '/case/compass-management',
     image: 'https://media.yapil.art/services/%D0%B0%D0%B9%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D0%BA%D0%B0.webp',
@@ -42,6 +45,7 @@ export const services: ServiceItem[] = [
     number: '03',
     title: 'Полиграфия',
     description: 'Разрабатываем упаковку, POS-материалы, мерч, многостраничные издания. Готовим файлы к печати, проверяем цветопробу в типографии.',
+    price: 'от 40 000 ₸',
     caseBadge: 'Кейс // Shanding',
     caseLink: '/case/shanding',
     image: 'https://media.yapil.art/services/%D0%BF%D0%BE%D0%BB%D0%B8%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.webp',
@@ -52,6 +56,7 @@ export const services: ServiceItem[] = [
     number: '04',
     title: 'SMM',
     description: 'Собираем концепцию профиля, шаблоны постов, рекламные креативы, сторис.',
+    price: 'от 40 000 ₸',
     caseBadge: 'Кейс // Gippo',
     caseLink: '/case/gippo',
     image: 'https://media.yapil.art/services/smm.webp',
@@ -62,6 +67,7 @@ export const services: ServiceItem[] = [
     number: '05',
     title: 'Презентации',
     description: 'Оформляем инвест-питчи, коммерческие предложения, годовые отчёты. Переводим цифры в схемы, графики, инфографику.',
+    price: 'от 60 000 ₸',
     caseBadge: 'Кейс // Parking24',
     caseLink: '/case/parking24',
     image: 'https://media.yapil.art/services/%D0%BF%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D0%B8.webp',
@@ -72,6 +78,7 @@ export const services: ServiceItem[] = [
     number: '06',
     title: 'Сопровождение',
     description: 'Работаем как ваш внешний арт-отдел: закрываем регулярные задачи, готовим промо, держим стиль по гайдлайну.',
+    price: 'от 150 000 ₸ / мес.',
     caseBadge: 'Кейс // ONmacabim',
     caseLink: '/case/onmacabim',
     image: 'https://media.yapil.art/services/support.webp?v=20260822',
@@ -133,9 +140,11 @@ const scaleAnimation = {
 export default function ServicesAnimatedModal({
   theme = 'dark',
   personal = false,
+  cards = false,
 }: {
   theme?: 'dark' | 'light';
   personal?: boolean;
+  cards?: boolean;
 }) {
   const isLight = theme === 'light';
   const displayedServices = personal
@@ -205,26 +214,43 @@ export default function ServicesAnimatedModal({
           </p>
         </div>
 
-        {/* Interactive Services List */}
-        <div
-          className={`relative flex flex-col ${isLight ? 'border-t border-black/10' : 'border-t border-white/15'}`}
-          role="list"
-        >
-          {displayedServices.map((item, index) => (
-            <div key={item.id} role="listitem" className="w-full">
-              <ServiceRow
-                item={item}
-                index={index}
-                isLight={isLight}
-                setHoverModal={setHoverModal}
-                onOpenModal={handleOpenModal}
-              />
-            </div>
-          ))}
-        </div>
+        {cards ? (
+          <div
+            className="grid auto-cols-[82vw] grid-flow-col items-stretch snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-3 pr-[12vw] touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:auto-cols-auto sm:grid-flow-row sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 sm:pr-0 lg:grid-cols-3"
+            role="list"
+            aria-label="Услуги — пролистывайте горизонтально"
+          >
+            {displayedServices.map((item) => (
+              <div
+                key={item.id}
+                role="listitem"
+                className="flex min-w-0 snap-start"
+              >
+                <ServiceCard item={item} isLight={isLight} onOpenModal={handleOpenModal} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div
+            className={`relative flex flex-col ${isLight ? 'border-t border-black/10' : 'border-t border-white/15'}`}
+            role="list"
+          >
+            {displayedServices.map((item, index) => (
+              <div key={item.id} role="listitem" className="w-full">
+                <ServiceRow
+                  item={item}
+                  index={index}
+                  isLight={isLight}
+                  setHoverModal={setHoverModal}
+                  onOpenModal={handleOpenModal}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Floating Modal Preview & Magnetic Cursor (only if no active dialog) */}
-        {!reduceMotion && !activeServiceModal && (
+        {!cards && !reduceMotion && !activeServiceModal && (
           <HoverModalPreview modal={hoverModal} services={services} isLight={isLight} />
         )}
       </div>
@@ -246,6 +272,71 @@ export default function ServicesAnimatedModal({
           document.body
         )}
     </section>
+  );
+}
+
+function ServiceCard({
+  item,
+  isLight = false,
+  onOpenModal,
+}: {
+  item: ServiceItem;
+  isLight?: boolean;
+  onOpenModal: (service: ServiceItem) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onOpenModal(item)}
+      className={`group flex h-full w-full cursor-pointer appearance-none flex-col overflow-hidden border p-0 text-left text-inherit transition-[transform,border-color,background-color] duration-300 active:scale-[0.985] ${
+        isLight
+          ? 'border-black/10 bg-white hover:border-[#FD4B32]/55'
+          : 'border-white/15 bg-white/[0.035] hover:border-[#FD4B32]/70 hover:bg-white/[0.055]'
+      }`}
+      aria-haspopup="dialog"
+      aria-label={`${item.title}, ${item.price}. Оставить заявку`}
+    >
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#141416]">
+        <img
+          src={item.image}
+          alt=""
+          className="h-full w-full object-cover object-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.025]"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div className="flex min-h-[22rem] flex-1 flex-col p-5 sm:min-h-[20rem] sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <h3
+            className={`m-0 text-[2rem] font-normal leading-none tracking-[-0.035em] sm:text-[2.25rem] ${
+              isLight ? 'text-[#1D1D1D]' : 'text-white'
+            }`}
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            {item.title}
+          </h3>
+          <ArrowUpRight
+            className={`mt-1 size-5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
+              isLight ? 'text-[#1D1D1D]/45' : 'text-white/45'
+            }`}
+            aria-hidden="true"
+          />
+        </div>
+
+        <p
+          className={`mb-10 mt-8 text-[0.95rem] leading-[1.4] sm:mb-12 sm:mt-7 ${
+            isLight ? 'text-[#1D1D1D]/65' : 'text-white/62'
+          }`}
+        >
+          {item.description}
+        </p>
+
+        <p className="mb-0 mt-auto w-full whitespace-nowrap border-t border-current/10 pt-5 text-base font-medium leading-none text-[#FD4B32] sm:text-lg">
+          {item.price}
+        </p>
+      </div>
+    </button>
   );
 }
 

@@ -76,7 +76,7 @@ export default function AboutCompact() {
                 {/* Top: Title and description (Headings perfectly aligned along the same horizontal line) */}
                 <div className="flex flex-col gap-5 sm:gap-6">
                   <h2
-                    className="m-0 p-0 text-2xl sm:text-[2rem] font-normal leading-[1.05] tracking-[-0.035em] text-white"
+                    className="m-0 p-0 text-[2rem] sm:text-[2.25rem] font-normal leading-[1.05] tracking-[-0.035em] text-white"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
                     {card.title}

@@ -4,6 +4,8 @@ interface Props {
   title?: string;
   description?: string;
   casesHref?: string;
+  ctaText?: string;
+  ripple?: boolean;
 }
 
 const {
@@ -11,6 +13,8 @@ const {
   title = 'Дизайн, который<br />работает на бизнес',
   description = 'Создаём айдентику и сайты, которые выделяют компанию среди конкурентов и приносят заявки.',
   casesHref = '#cases',
+  ctaText = 'Смотреть кейсы',
+  ripple = false,
 } = Astro.props;
 ---
 
@@ -20,9 +24,10 @@ const {
     <p class="hero-description hero-layer hero-layer--description">
       {description}
     </p>
-    <a class="hero-link hero-layer hero-layer--cta" href={casesHref}>
+    <a class="hero-link hero-layer hero-layer--cta" href={casesHref} data-hero-ripple={ripple ? '' : undefined}>
+      {ripple && <span class="hero-link-ripple" aria-hidden="true"></span>}
       <span class="hero-link-inner">
-        <span class="hero-link-text">Смотреть кейсы</span>
+        <span class="hero-link-text">{ctaText}</span>
         <span class="hero-link-arrow" aria-hidden="true">↓</span>
       </span>
     </a>
@@ -30,6 +35,28 @@ const {
 </section>
 
 <script>
+  document.querySelectorAll<HTMLElement>('[data-hero-ripple]').forEach((button) => {
+    if (button.dataset.rippleReady === 'true') return;
+    button.dataset.rippleReady = 'true';
+
+    const playRipple = (clientX?: number, clientY?: number) => {
+      const bounds = button.getBoundingClientRect();
+      const x = clientX === undefined ? bounds.width / 2 : clientX - bounds.left;
+      const y = clientY === undefined ? bounds.height / 2 : clientY - bounds.top;
+      button.style.setProperty('--ripple-x', `${x}px`);
+      button.style.setProperty('--ripple-y', `${y}px`);
+      button.classList.remove('is-rippling');
+      void button.offsetWidth;
+      button.classList.add('is-rippling');
+    };
+
+    button.addEventListener('pointerdown', (event) => playRipple(event.clientX, event.clientY));
+    button.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') playRipple();
+    });
+    button.addEventListener('animationend', () => button.classList.remove('is-rippling'));
+  });
+
   const hero = document.querySelector<HTMLElement>('[data-hero-cover]');
   if (hero && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let targetX = 0;
@@ -206,6 +233,37 @@ const {
       transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
       background-color var(--duration-btn-color, 770ms) ease,
       box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero-link-ripple {
+    position: absolute;
+    z-index: 0;
+    left: var(--ripple-x, 50%);
+    top: var(--ripple-y, 50%);
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    pointer-events: none;
+    background: rgb(255 255 255 / 0.34);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  .hero-link.is-rippling .hero-link-ripple {
+    animation: hero-ripple 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes hero-ripple {
+    0% {
+      opacity: 0.55;
+      transform: translate(-50%, -50%) scale(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1);
+    }
   }
 
   .hero-copy:has(.hero-link:hover) .hero-layer--cta,
@@ -224,6 +282,8 @@ const {
 
   /* 3. Independent Inner Text & Icon Scaling (Layer Separation & Stretch/Stagger) */
   .hero-link-inner {
+    position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -314,6 +374,10 @@ const {
     .hero-link-arrow {
       transform: none !important;
       transition: none !important;
+    }
+
+    .hero-link-ripple {
+      display: none;
     }
   }
 </style>
