@@ -484,7 +484,7 @@ export async function submitLead(payload: CreateLeadPayload): Promise<Lead> {
     try {
       new Notification(`Новая заявка от ${newLead.name}`, {
         body: `${newLead.services.join(', ')} — ${newLead.phone}`,
-        icon: '/favicon.svg',
+        icon: '/apple-touch-icon.png',
       });
     } catch {
       // ignore

@@ -1,0 +1,419 @@
+---
+import Base from '../layouts/Base.astro';
+import Contacts from '../components/Contacts.astro';
+import Footer from '../components/Footer.astro';
+import { getWhatsAppUrl } from '../utils/messengerLinks';
+import '../styles/proposal-pages.css';
+
+const title = 'Партнёрская программа Yapil — 10% за рекомендацию клиента';
+const description = 'Порекомендуйте студию Yapil бизнесу, которому нужен сайт, айдентика или полиграфия. Клиент оплатит проект — вы получите 10% от суммы.';
+const canonicalUrl = new URL('/partners', Astro.site).href;
+
+const faqItems = [
+  {
+    question: 'Нужно ли оформлять что-то заранее?',
+    answer: 'Нет. Напишите нам имя клиента, которого порекомендовали, — этого достаточно.',
+  },
+  {
+    question: 'Что если клиент напишет нам сам, раньше вашего сообщения?',
+    answer: 'Сообщите нам до первого разговора с клиентом. Так мы будем знать, что рекомендация уже была, и комиссия останется за вами.',
+  },
+  {
+    question: 'Комиссия разовая или на все проекты этого клиента?',
+    answer: 'Разовая. Начисляется с первого оплаченного проекта.',
+  },
+  {
+    question: 'В какой форме приходит вознаграждение?',
+    answer: 'Деньгами, переводом, сразу после оплаты клиента.',
+  },
+];
+
+const partnersJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${canonicalUrl}#webpage`,
+      name: title,
+      description,
+      url: canonicalUrl,
+      inLanguage: 'ru',
+      publisher: {
+        '@type': 'ProfessionalService',
+        name: 'Yapil',
+        url: 'https://yapil.art',
+        telephone: '+77067436197',
+        email: 'hi@yapil.art',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Главная',
+          item: 'https://yapil.art',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Партнёрская программа',
+          item: canonicalUrl,
+        },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    },
+  ],
+};
+
+const whatsappHref = getWhatsAppUrl({
+  pageTitle: 'Партнёрская программа',
+  pageUrl: canonicalUrl,
+  sourceContext: 'partners_hero',
+  customNote: 'Хочу порекомендовать клиента студии Yapil',
+});
+
+const telegramHref = 'https://t.me/yakov_pil?text=' + encodeURIComponent('Здравствуйте! Хочу порекомендовать клиента в студию Yapil.');
+---
+
+<Base
+  title={title}
+  description={description}
+  jsonLd={partnersJsonLd}
+  theme="light"
+  navOverlay={true}
+>
+  <article class="editorial-page partners-page">
+    <!-- Block 1: Hero -->
+    <header class="editorial-cover">
+      <div class="container editorial-cover__inner">
+        <div class="editorial-title-wrap">
+          <p class="partners-tag">Партнёрская программа</p>
+          <h1>Порекомендуйте нас. Получите&nbsp;10%</h1>
+        </div>
+        <div class="editorial-cover__bottom">
+          <div class="editorial-lead-wrap">
+            <p class="editorial-lead">
+              Знаете бизнес, которому нужен сайт, айдентика или полиграфия? Напишите нам, кого порекомендовали. Клиент оплатит проект — переведём вам 10% от суммы.
+            </p>
+            <div class="partners-hero-actions">
+              <a
+                href={telegramHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="partners-cta-btn"
+              >
+                <span>Написать в Telegram</span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="partners-secondary-btn"
+              >
+                <span>WhatsApp</span>
+                <span class="btn-arrow" aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+          <dl class="editorial-meta">
+            <div>
+              <dt>Вознаграждение</dt>
+              <dd>10% от суммы</dd>
+            </div>
+            <div>
+              <dt>Выплата</dt>
+              <dd>Сразу после оплаты</dd>
+            </div>
+            <div>
+              <dt>Условия</dt>
+              <dd>Без форм и кабинетов</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <div class="editorial-body">
+      <!-- Block 2: Mechanics (How it works) -->
+      <section class="editorial-section" id="mechanics" aria-labelledby="mechanics-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">01</p>
+          <div class="editorial-heading__content">
+            <span class="editorial-subtag">Механика</span>
+            <h2 id="mechanics-title">Три шага. Без форм и личного кабинета</h2>
+          </div>
+        </header>
+        <ol class="editorial-list">
+          <li class="editorial-row">
+            <span class="editorial-row__number">01</span>
+            <h3>Расскажите о нас.</h3>
+            <p>Знакомому бизнесу, коллеге, клиенту — любому, кому подойдёт наша работа.</p>
+          </li>
+          <li class="editorial-row">
+            <span class="editorial-row__number">02</span>
+            <h3>Напишите нам.</h3>
+            <p>Кого порекомендовали — сообщением в любом мессенджере.</p>
+          </li>
+          <li class="editorial-row">
+            <span class="editorial-row__number">03</span>
+            <h3>Получите 10%.</h3>
+            <p>Клиент оплатит проект — мы сразу переведём деньги.</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Block 3: Target Audience (Who can become a partner) -->
+      <section class="editorial-section" id="audience" aria-labelledby="audience-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">02</p>
+          <div class="editorial-heading__content">
+            <span class="editorial-subtag">Кто может стать партнёром</span>
+            <h2 id="audience-title">Любой, кто первым видит растущий бизнес</h2>
+          </div>
+        </header>
+        <div class="editorial-grid editorial-grid--three">
+          <article class="editorial-card">
+            <span class="editorial-card__number">01</span>
+            <h3>Агентства и фрилансеры смежного профиля</h3>
+            <p>Разработчики, таргетологи, копирайтеры, другие студии.</p>
+          </article>
+          <article class="editorial-card">
+            <span class="editorial-card__number">02</span>
+            <h3>Клиенты Yapil</h3>
+            <p>Те, кто уже получил результат и готов о нём рассказать.</p>
+          </article>
+          <article class="editorial-card">
+            <span class="editorial-card__number">03</span>
+            <h3>Консультанты и предприниматели</h3>
+            <p>Те, кто работает с бизнесом раньше, чем тот начинает искать дизайнера.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Block 4: Terms -->
+      <section class="editorial-section" id="terms" aria-labelledby="terms-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">03</p>
+          <div class="editorial-heading__content">
+            <span class="editorial-subtag">Условия</span>
+            <h2 id="terms-title">10% от суммы оплаченного проекта</h2>
+          </div>
+        </header>
+        <div class="terms-hero-text">
+          <p>Один процент для всех — без уровней, форм и промокодов. Деньги приходят сразу после оплаты клиента.</p>
+        </div>
+        <div class="editorial-grid editorial-grid--three">
+          <article class="editorial-card">
+            <span class="editorial-card__number">01</span>
+            <h3>Фиксированная ставка</h3>
+            <p>Прозрачные 10% с первого оплаченного проекта без скрытых удержаний и сложных ступеней.</p>
+          </article>
+          <article class="editorial-card">
+            <span class="editorial-card__number">02</span>
+            <h3>Прямой перевод</h3>
+            <p>Деньги приходят переводом на карту или банковский счёт сразу после оплаты клиента.</p>
+          </article>
+          <article class="editorial-card">
+            <span class="editorial-card__number">03</span>
+            <h3>Фиксация в диалоге</h3>
+            <p>Без договоров и личных кабинетов. Достаточно написать имя клиента до первого созвона.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Block 5: FAQ -->
+      <section class="editorial-section" id="faq" aria-labelledby="faq-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">04</p>
+          <div class="editorial-heading__content">
+            <span class="editorial-subtag">Частые вопросы</span>
+            <h2 id="faq-title">Вопросы о партнёрской программе</h2>
+          </div>
+        </header>
+        <div class="editorial-faq">
+          {faqItems.map((item, index) => (
+            <details open={index === 0}>
+              <summary>
+                <span>{item.question}</span>
+                <span aria-hidden="true">+</span>
+              </summary>
+              <div>
+                <p>{item.answer}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <!-- Block 6: Contacts CTA -->
+    <Contacts
+      theme="light"
+      title="Знаете, кому<br />мы нужны?"
+      lead="Напишите нам в Telegram или WhatsApp. Пришлём короткое сообщение — удобно переслать тому, кого рекомендуете."
+      source="contacts_form"
+      sourceDetails="Партнёрская программа"
+    />
+  </article>
+
+  <Footer slot="footer" theme="light" />
+</Base>
+
+<style>
+  .partners-tag {
+    grid-column: 1 / 13;
+    margin: 0 0 1.25rem;
+    color: #fff8f2;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .editorial-subtag {
+    display: block;
+    margin-bottom: 1rem;
+    color: #fd4b32;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .editorial-lead-wrap {
+    grid-column: 1 / 8;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .partners-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .partners-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.75rem;
+    background: #fff;
+    color: #171717;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 220ms ease, color 220ms ease, transform 220ms ease;
+  }
+
+  .partners-cta-btn:hover,
+  .partners-cta-btn:focus-visible {
+    background: #171717;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .partners-secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff8f2;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 400;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: background 220ms ease, border-color 220ms ease, color 220ms ease;
+  }
+
+  .partners-secondary-btn:hover,
+  .partners-secondary-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .btn-arrow {
+    display: inline-block;
+    transition: transform 220ms ease;
+  }
+
+  .partners-cta-btn:hover .btn-arrow {
+    transform: translateX(3px);
+  }
+
+  .partners-secondary-btn:hover .btn-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .terms-hero-text {
+    max-width: 52rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--editorial-line);
+  }
+
+  .terms-hero-text p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: var(--editorial-ink);
+  }
+
+  .editorial-grid--three .editorial-card {
+    grid-column: span 4;
+  }
+
+  .editorial-grid--three .editorial-card:nth-child(1),
+  .editorial-grid--three .editorial-card:nth-child(2) {
+    border-right: 1px solid var(--editorial-line);
+  }
+
+  .editorial-grid--three .editorial-card:nth-child(2),
+  .editorial-grid--three .editorial-card:nth-child(3) {
+    padding-left: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .editorial-grid--three .editorial-card:nth-child(1),
+  .editorial-grid--three .editorial-card:nth-child(2) {
+    padding-right: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  @media (max-width: 64rem) {
+    .editorial-grid--three .editorial-card {
+      grid-column: span 12;
+      border-right: 0 !important;
+      padding-inline: 1.5rem !important;
+    }
+  }
+
+  @media (max-width: 56rem) {
+    .editorial-lead-wrap {
+      grid-column: 1 / 13;
+      width: 100%;
+    }
+  }
+</style>

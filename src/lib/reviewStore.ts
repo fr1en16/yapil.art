@@ -245,7 +245,7 @@ export async function submitClientReview(payload: CreateReviewPayload): Promise<
     try {
       new Notification(`Новый отзыв от ${newReview.author}`, {
         body: `${newReview.company} — ${newReview.rating}★: ${newReview.quote.slice(0, 80)}...`,
-        icon: '/favicon.svg',
+        icon: '/apple-touch-icon.png',
       });
     } catch {
       // ignore
