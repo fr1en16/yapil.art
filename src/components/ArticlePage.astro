@@ -91,17 +91,6 @@ const publishedLabel = article.data.publishedAt
       <div class="article-copy">
         <slot />
       </div>
-
-      <footer class="article-footer">
-        <p>Основной запрос</p>
-        <strong>{article.data.primaryKeyword}</strong>
-        {article.data.relatedKeywords.length > 0 && (
-          <ul aria-label="Связанные темы">
-            {article.data.relatedKeywords.map((keyword) => <li>{keyword}</li>)}
-          </ul>
-        )}
-        <a href={`/articles/${slug}#main-content`} class="article-back-top">Наверх ↑</a>
-      </footer>
     </div>
   </div>
 
@@ -271,8 +260,7 @@ const publishedLabel = article.data.publishedAt
 
   .article-byline__label,
   .article-rail__title,
-  .article-cta__eyebrow,
-  .article-footer > p {
+  .article-cta__eyebrow {
     color: var(--article-muted);
     font-size: 0.68rem;
     letter-spacing: 0.09em;
@@ -398,48 +386,6 @@ const publishedLabel = article.data.publishedAt
     font-weight: 650;
   }
 
-  .article-footer {
-    position: relative;
-    margin-top: clamp(4rem, 8vw, 6rem);
-    padding: 2rem 0;
-    border-top: 1px solid var(--article-line);
-    border-bottom: 1px solid var(--article-line);
-  }
-
-  .article-footer > p {
-    margin-bottom: 0.35rem;
-  }
-
-  .article-footer > strong {
-    display: block;
-    margin-bottom: 1.25rem;
-    font-size: 1rem;
-    font-weight: 550;
-  }
-
-  .article-footer ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .article-footer li {
-    padding: 0.45rem 0.6rem;
-    color: #5b5752;
-    border: 1px solid var(--article-line);
-    font-size: 0.72rem;
-  }
-
-  .article-back-top {
-    display: inline-block;
-    margin-top: 1.75rem;
-    color: #fd4b32;
-    font-size: 0.8rem;
-    text-decoration: none;
-  }
 
   @media (max-width: 64rem) {
     .article-deck {

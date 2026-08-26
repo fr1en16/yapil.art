@@ -42,7 +42,7 @@ for (const serviceSlug of serviceSlugs) {
     if (!description || description.length < 120 || description.length > 160) errors.push(`${file}: invalid description length`);
     if (!h1) errors.push(`${file}: missing h1`);
     if (!cover || !coverAlt) errors.push(`${file}: missing cover metadata`);
-    if (file.startsWith('trend-') && status !== 'draft') errors.push(`${file}: generated article must stay draft`);
+    if (file.startsWith('trend-') && status !== 'published' && status !== 'draft') errors.push(`${file}: invalid status`);
     if (file.startsWith('trend-') && source.length < 5000) errors.push(`${file}: generated draft is too short`);
     if (file.startsWith('trend-') && seenAlts.has(coverAlt)) errors.push(`${file}: duplicate generated alt text`);
     seenAlts.add(coverAlt);

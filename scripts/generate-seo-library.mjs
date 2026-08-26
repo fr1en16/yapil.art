@@ -262,12 +262,6 @@ Google Trends показывает относительный поисковый
 ${topic.charAt(0).toUpperCase() + topic.slice(1)} следует оценивать как рабочую систему, а не как разовый визуальный эффект. Хороший результат решает исходную задачу, выдерживает реальные ограничения и остаётся понятным после передачи.
 
 Yapil помогает собрать ${service.promise}. [Подробнее об услуге](/services/${service.servicePath}) или [заполнить бриф](/brief?service=${service.servicePath}).
-
-## Источники
-
-- [Google Trends: данные по Казахстану](https://trends.google.com/trends/explore?geo=KZ&hl=ru)
-- [Как интерпретировать данные Google Trends](https://support.google.com/trends/answer/4365533?hl=ru)
-- [Как находить связанные и растущие запросы](https://support.google.com/trends/answer/4355000?hl=ru)
 `;
 }
 
@@ -362,11 +356,12 @@ async function generateLibrary() {
           coverAlt,
           trendCluster: cluster[0],
           trendBasis: 'Google Trends, Казахстан, последние 5 лет; редакционная кластеризация Yapil',
-          status: 'draft',
+          status: 'published',
+          publishedAt: '2026-08-26',
         };
         const body = articleBody({ service, cluster, angle, related: cluster[2] });
         await writeFile(join(dir, `${slug}.md`), `${frontmatter(data)}${body}`, 'utf8');
-        manifest.push({ slug, service: service.name, title: h1, seoTitle: title, cover, coverAlt, primaryKeyword: data.primaryKeyword, status: 'draft' });
+        manifest.push({ slug, service: service.name, title: h1, seoTitle: title, cover, coverAlt, primaryKeyword: data.primaryKeyword, status: 'published', publishedAt: '2026-08-26' });
       }
     }
   }
