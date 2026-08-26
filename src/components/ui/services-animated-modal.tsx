@@ -339,7 +339,7 @@ export default function ServicesAnimatedModal({
             showPagination
             showNavigation
             label={isEn ? 'Services — drag or use arrows' : 'Услуги — перетаскивайте или используйте стрелки'}
-            className="relative left-1/2 w-screen -translate-x-1/2"
+            className="services-coverflow relative left-1/2 w-screen -translate-x-1/2"
             cardClassName={isLight ? 'border border-black/10' : 'border border-white/15'}
             onSlideClick={(index) => handleOpenModal(displayedServices[index])}
           />
