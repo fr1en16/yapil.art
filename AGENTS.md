@@ -24,3 +24,11 @@ Consult these guides before working on related tasks:
 ## Homepage fidelity
 
 The homepage hero uses the transferred Inspiring-style cover: a live simplex-noise WebGL shader built around the Yapil orange `#FD4B32`, centered editorial typography, and one X/Y-tilting 3D text plane with distinct Z-depths. Keep the existing Yapil copy and navigation labels when refining this cover.
+
+## Запрет на надзаголовки (No Eyebrows / Overlines / Subtags)
+
+- **Строго запрещены любые надзаголовки (eyebrows, kickers, overlines, subtags, метки разделов)** над заголовками секций и страниц (например, мелкие плашки/текст капсом вроде `МЕХАНИКА`, `УСЛОВИЯ`, `ЧАСТЫЕ ВОПРОСЫ`, `УСЛУГА 01` над `H1`/`H2`/`H3`).
+- Заголовки должны быть чистыми и лаконичными: только порядковый номер блока (`01`, `02`, `03`), если это предусмотрено списком/структурой, и сам заголовок (`H1`/`H2`/`H3`) гарнитурой Oranienbaum.
+- Никаких служебных подтегов, надписей и мелкого цветного капса над заголовками.
+
+
