@@ -40,6 +40,7 @@ export default defineConfig({
           '/crm',
           '/kp',
           '/light',
+          '/shanding-3d',
           '/site-map',
         ].some((privatePath) => normalizedPath === privatePath || normalizedPath.startsWith(`${privatePath}/`));
       },

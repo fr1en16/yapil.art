@@ -1,0 +1,398 @@
+---
+import panel1 from '../../Preview3D-html/images/1.jpg';
+import panel2 from '../../Preview3D-html/images/2.jpg';
+import panel3 from '../../Preview3D-html/images/3.jpg';
+import panel4 from '../../Preview3D-html/images/4.jpg';
+import panel5 from '../../Preview3D-html/images/5.jpg';
+import panel6 from '../../Preview3D-html/images/6.jpg';
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>3D-превью стенда Shanding</title>
+    <meta
+      name="description"
+      content="Интерактивное 3D-превью оформления выставочного стенда Shanding."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Golos+Text:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="viewport" data-viewport>
+      <div class="artboard-shell" data-shell>
+        <div class="artboard" data-artboard>
+          <div class="brand-mark" aria-hidden="true"></div>
+
+          <div class="controls">
+            <div class="drag-hint">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M13 3v9.5"></path>
+                <path d="M9.5 8 13 4.5 16.5 8"></path>
+                <path d="M3 13c0 4.4 4 8 9 8s9-3.6 9-8"></path>
+                <path d="M3 13c1.2-1.6 3-2.5 5-2.5"></path>
+                <path d="M21 13c-1.2-1.6-3-2.5-5-2.5"></path>
+              </svg>
+              <span>Перетащите, чтобы повернуть</span>
+            </div>
+            <button class="reset" type="button" data-reset>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 1 2.6 6.4"></path>
+                <path d="M3 21v-6h6"></path>
+              </svg>
+              <span>Сбросить вид</span>
+            </button>
+          </div>
+
+          <div class="stand" data-stand>
+            <div class="wall-depth wall-depth--back"></div>
+            <div class="wall wall--back">
+              <div class="panels">
+                <div class="panel"><img src={panel1.src} alt="" draggable="false" /></div>
+                <div class="panel"><img src={panel2.src} alt="" draggable="false" /></div>
+                <div class="panel panel--wide"><img src={panel3.src} alt="" draggable="false" /></div>
+              </div>
+            </div>
+
+            <div class="wall-depth wall-depth--side"></div>
+            <div class="wall wall--side">
+              <div class="panels">
+                <div class="panel"><img src={panel4.src} alt="" draggable="false" /></div>
+                <div class="panel"><img src={panel5.src} alt="" draggable="false" /></div>
+                <div class="panel panel--wide"><img src={panel6.src} alt="" draggable="false" /></div>
+              </div>
+            </div>
+
+            <div class="floor floor--light">
+              <svg viewBox="0 0 28 22" aria-hidden="true"><polygon points="16,2 6,20 26,20"></polygon><polygon points="9,4 1,20 17,20"></polygon></svg>
+            </div>
+            <div class="floor floor--dark">
+              <svg viewBox="0 0 28 22" aria-hidden="true"><polygon points="16,2 6,20 26,20"></polygon><polygon points="9,4 1,20 17,20"></polygon></svg>
+            </div>
+            <div class="edge edge--back"></div>
+            <div class="edge edge--side"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const ARTBOARD_WIDTH = 1500;
+      const ARTBOARD_HEIGHT = 1020;
+      const INITIAL_ROTATION = { x: 22, y: -24 };
+
+      const viewport = document.querySelector<HTMLElement>('[data-viewport]');
+      const shell = document.querySelector<HTMLElement>('[data-shell]');
+      const artboard = document.querySelector<HTMLElement>('[data-artboard]');
+      const stand = document.querySelector<HTMLElement>('[data-stand]');
+      const reset = document.querySelector<HTMLButtonElement>('[data-reset]');
+
+      if (viewport && shell && artboard && stand && reset) {
+        let rotation = { ...INITIAL_ROTATION };
+        let drag: null | { pointerId: number; x: number; y: number; rotX: number; rotY: number } = null;
+
+        const renderRotation = () => {
+          stand.style.transform = `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
+        };
+
+        const fitArtboard = () => {
+          const scale = Math.min(window.innerWidth / ARTBOARD_WIDTH, window.innerHeight / ARTBOARD_HEIGHT, 1);
+          shell.style.width = `${ARTBOARD_WIDTH * scale}px`;
+          shell.style.height = `${ARTBOARD_HEIGHT * scale}px`;
+          artboard.style.transform = `scale(${scale})`;
+        };
+
+        artboard.addEventListener('pointerdown', (event) => {
+          if ((event.target as HTMLElement).closest('button')) return;
+          drag = {
+            pointerId: event.pointerId,
+            x: event.clientX,
+            y: event.clientY,
+            rotX: rotation.x,
+            rotY: rotation.y,
+          };
+          artboard.setPointerCapture(event.pointerId);
+          artboard.dataset.dragging = 'true';
+        });
+
+        artboard.addEventListener('pointermove', (event) => {
+          if (!drag || drag.pointerId !== event.pointerId) return;
+          rotation = {
+            x: drag.rotX - (event.clientY - drag.y) * 0.35,
+            y: drag.rotY + (event.clientX - drag.x) * 0.35,
+          };
+          renderRotation();
+        });
+
+        const finishDrag = (event: PointerEvent) => {
+          if (!drag || drag.pointerId !== event.pointerId) return;
+          drag = null;
+          delete artboard.dataset.dragging;
+        };
+
+        artboard.addEventListener('pointerup', finishDrag);
+        artboard.addEventListener('pointercancel', finishDrag);
+
+        reset.addEventListener('click', () => {
+          rotation = { ...INITIAL_ROTATION };
+          renderRotation();
+        });
+
+        window.addEventListener('resize', fitArtboard);
+        fitArtboard();
+        renderRotation();
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --navy: #16305c;
+    --floor-light: #eef0f3;
+    --floor-dark: #c7cbd1;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #e7e3d8;
+  }
+
+  button,
+  body {
+    font-family: 'Golos Text', sans-serif;
+  }
+
+  .viewport {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .artboard-shell {
+    position: relative;
+    flex: none;
+  }
+
+  .artboard {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 1500px;
+    height: 1020px;
+    overflow: hidden;
+    background: #e7e3d8;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    transform-origin: top left;
+  }
+
+  .artboard[data-dragging='true'] {
+    cursor: grabbing;
+  }
+
+  .brand-mark {
+    position: absolute;
+    top: 36px;
+    left: 56px;
+    width: 52px;
+    height: 5px;
+    border-radius: 3px;
+    background: #e8632f;
+    pointer-events: none;
+  }
+
+  .controls {
+    position: absolute;
+    z-index: 2;
+    top: 40px;
+    right: 56px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .drag-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(18, 35, 63, 0.55);
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .reset {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .reset:focus-visible {
+    outline: 3px solid #e8632f;
+    outline-offset: 3px;
+  }
+
+  .stand {
+    position: absolute;
+    top: 110px;
+    left: 560px;
+    width: 620px;
+    height: 600px;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .wall,
+  .wall-depth,
+  .floor,
+  .edge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+
+  .wall,
+  .wall-depth {
+    width: 620px;
+    height: 520px;
+  }
+
+  .wall-depth {
+    background: #84898f;
+  }
+
+  .wall-depth--back {
+    transform: translateZ(-4px);
+  }
+
+  .wall-depth--side {
+    transform: translate3d(0, 0, 620px) rotateY(90deg) translateZ(-4px);
+  }
+
+  .wall {
+    overflow: hidden;
+    background: var(--navy);
+    backface-visibility: hidden;
+  }
+
+  .wall--side {
+    transform: translate3d(0, 0, 620px) rotateY(90deg);
+  }
+
+  .panels {
+    width: 620px;
+    height: 520px;
+    display: flex;
+  }
+
+  .panel {
+    width: 206px;
+    height: 520px;
+    overflow: hidden;
+    flex: none;
+  }
+
+  .panel--wide {
+    width: 208px;
+  }
+
+  .panel + .panel {
+    border-left: 2px solid rgba(0, 0, 0, 0.22);
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .panel img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+  }
+
+  .floor {
+    width: 620px;
+    height: 620px;
+  }
+
+  .floor svg {
+    position: absolute;
+    left: 230px;
+    width: 160px;
+  }
+
+  .floor--light {
+    background: linear-gradient(to bottom, var(--floor-dark), var(--floor-light));
+    transform: translate3d(0, 520px, 0) rotateX(90deg);
+  }
+
+  .floor--light svg {
+    top: 10px;
+    opacity: 0.08;
+    fill: var(--navy);
+  }
+
+  .floor--dark {
+    background:
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 62px),
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 62px),
+      linear-gradient(155deg, #33383f 0%, #1b1e23 100%);
+    transform: translate3d(0, 546px, 0) rotateX(-90deg);
+  }
+
+  .floor--dark svg {
+    top: 230px;
+    opacity: 0.07;
+    fill: #fff;
+  }
+
+  .edge {
+    width: 620px;
+    height: 26px;
+    background: linear-gradient(#9aa0a8, #7d838c);
+  }
+
+  .edge--back {
+    transform: translate3d(0, 520px, 620px);
+  }
+
+  .edge--side {
+    transform: translate3d(620px, 520px, 620px) rotateY(90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stand {
+      will-change: auto;
+    }
+  }
+</style>
