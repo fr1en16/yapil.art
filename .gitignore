@@ -40,6 +40,9 @@ pnpm-debug.log*
 /.cache/
 *.tsbuildinfo
 
+# recoverable local cleanup
+/trash/
+
 # Standalone subprojects and reference projects
 gallery/
 inspiring-home/

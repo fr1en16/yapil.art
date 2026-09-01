@@ -1,10 +1,13 @@
 ---
-import panel1 from '../../Preview3D-html/images/1.jpg';
-import panel2 from '../../Preview3D-html/images/2.jpg';
-import panel3 from '../../Preview3D-html/images/3.jpg';
-import panel4 from '../../Preview3D-html/images/4.jpg';
-import panel5 from '../../Preview3D-html/images/5.jpg';
-import panel6 from '../../Preview3D-html/images/6.jpg';
+import image1 from '../assets/shanding-3d/1.jpg';
+import image2 from '../assets/shanding-3d/2.jpg';
+import image3 from '../assets/shanding-3d/3.jpg';
+import image4 from '../assets/shanding-3d/4.jpg';
+import image5 from '../assets/shanding-3d/5.jpg';
+import image6 from '../assets/shanding-3d/6.jpg';
+import image7 from '../assets/shanding-3d/7.jpg';
+import image8 from '../assets/shanding-3d/8.jpg';
+import image9 from '../assets/shanding-3d/9.jpg';
 ---
 
 <!doctype html>
@@ -29,44 +32,31 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
     <main class="viewport" data-viewport>
       <div class="artboard-shell" data-shell>
         <div class="artboard" data-artboard>
-          <div class="brand-mark" aria-hidden="true"></div>
-
-          <div class="controls">
-            <div class="drag-hint">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M13 3v9.5"></path>
-                <path d="M9.5 8 13 4.5 16.5 8"></path>
-                <path d="M3 13c0 4.4 4 8 9 8s9-3.6 9-8"></path>
-                <path d="M3 13c1.2-1.6 3-2.5 5-2.5"></path>
-                <path d="M21 13c-1.2-1.6-3-2.5-5-2.5"></path>
-              </svg>
-              <span>Перетащите, чтобы повернуть</span>
-            </div>
-            <button class="reset" type="button" data-reset>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M3 12a9 9 0 1 1 2.6 6.4"></path>
-                <path d="M3 21v-6h6"></path>
-              </svg>
-              <span>Сбросить вид</span>
-            </button>
-          </div>
-
           <div class="stand" data-stand>
             <div class="wall-depth wall-depth--back"></div>
             <div class="wall wall--back">
               <div class="panels">
-                <div class="panel"><img src={panel1.src} alt="" draggable="false" /></div>
-                <div class="panel"><img src={panel2.src} alt="" draggable="false" /></div>
-                <div class="panel panel--wide"><img src={panel3.src} alt="" draggable="false" /></div>
+                <div class="panel"><img src={image4.src} alt="" draggable="false" /></div>
+                <div class="panel"><img src={image5.src} alt="" draggable="false" /></div>
+                <div class="panel panel--wide"><img src={image6.src} alt="" draggable="false" /></div>
               </div>
             </div>
 
             <div class="wall-depth wall-depth--side"></div>
             <div class="wall wall--side">
               <div class="panels">
-                <div class="panel"><img src={panel4.src} alt="" draggable="false" /></div>
-                <div class="panel"><img src={panel5.src} alt="" draggable="false" /></div>
-                <div class="panel panel--wide"><img src={panel6.src} alt="" draggable="false" /></div>
+                <div class="panel"><img src={image1.src} alt="" draggable="false" /></div>
+                <div class="panel"><img src={image2.src} alt="" draggable="false" /></div>
+                <div class="panel panel--wide"><img src={image3.src} alt="" draggable="false" /></div>
+              </div>
+            </div>
+
+            <div class="wall-depth wall-depth--right"></div>
+            <div class="wall wall--right">
+              <div class="panels">
+                <div class="panel"><img src={image7.src} alt="" draggable="false" /></div>
+                <div class="panel"><img src={image9.src} alt="" draggable="false" /></div>
+                <div class="panel panel--wide"><img src={image8.src} alt="" draggable="false" /></div>
               </div>
             </div>
 
@@ -81,36 +71,35 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
           </div>
         </div>
       </div>
+      <div class="camera-edge-blur" aria-hidden="true"></div>
     </main>
 
     <script>
       const ARTBOARD_WIDTH = 1500;
       const ARTBOARD_HEIGHT = 1020;
-      const INITIAL_ROTATION = { x: 22, y: -24 };
+      const INITIAL_ROTATION = { x: 0, y: 0 };
 
       const viewport = document.querySelector<HTMLElement>('[data-viewport]');
       const shell = document.querySelector<HTMLElement>('[data-shell]');
       const artboard = document.querySelector<HTMLElement>('[data-artboard]');
       const stand = document.querySelector<HTMLElement>('[data-stand]');
-      const reset = document.querySelector<HTMLButtonElement>('[data-reset]');
 
-      if (viewport && shell && artboard && stand && reset) {
+      if (viewport && shell && artboard && stand) {
         let rotation = { ...INITIAL_ROTATION };
         let drag: null | { pointerId: number; x: number; y: number; rotX: number; rotY: number } = null;
 
         const renderRotation = () => {
-          stand.style.transform = `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
+          stand.style.transform = `translateZ(190px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
         };
 
         const fitArtboard = () => {
-          const scale = Math.min(window.innerWidth / ARTBOARD_WIDTH, window.innerHeight / ARTBOARD_HEIGHT, 1);
+          const scale = Math.min(window.innerWidth / ARTBOARD_WIDTH, window.innerHeight / ARTBOARD_HEIGHT);
           shell.style.width = `${ARTBOARD_WIDTH * scale}px`;
           shell.style.height = `${ARTBOARD_HEIGHT * scale}px`;
           artboard.style.transform = `scale(${scale})`;
         };
 
         artboard.addEventListener('pointerdown', (event) => {
-          if ((event.target as HTMLElement).closest('button')) return;
           drag = {
             pointerId: event.pointerId,
             x: event.clientX,
@@ -140,11 +129,6 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
         artboard.addEventListener('pointerup', finishDrag);
         artboard.addEventListener('pointercancel', finishDrag);
 
-        reset.addEventListener('click', () => {
-          rotation = { ...INITIAL_ROTATION };
-          renderRotation();
-        });
-
         window.addEventListener('resize', fitArtboard);
         fitArtboard();
         renderRotation();
@@ -170,7 +154,7 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
     height: 100%;
     margin: 0;
     overflow: hidden;
-    background: #e7e3d8;
+    background: #c9c5ba;
   }
 
   button,
@@ -185,6 +169,12 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    background:
+      radial-gradient(ellipse 62% 58% at 50% 34%, rgba(255, 255, 255, 0.92) 0%, rgba(245, 242, 234, 0.62) 38%, transparent 72%),
+      radial-gradient(ellipse 48% 30% at 50% 91%, rgba(15, 38, 71, 0.18) 0%, rgba(15, 38, 71, 0.07) 42%, transparent 76%),
+      radial-gradient(circle at 4% 45%, rgba(22, 48, 92, 0.14) 0%, transparent 38%),
+      radial-gradient(circle at 96% 45%, rgba(22, 48, 92, 0.14) 0%, transparent 38%),
+      linear-gradient(180deg, #c8c4ba 0%, #dfdbd1 43%, #d2cec4 68%, #b8b3aa 100%);
   }
 
   .artboard-shell {
@@ -197,77 +187,57 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
     inset: 0 auto auto 0;
     width: 1500px;
     height: 1020px;
-    overflow: hidden;
-    background: #e7e3d8;
+    overflow: visible;
+    background: transparent;
     cursor: grab;
     touch-action: none;
     user-select: none;
     transform-origin: top left;
+    perspective: 500px;
+    perspective-origin: 750px 380px;
   }
 
   .artboard[data-dragging='true'] {
     cursor: grabbing;
   }
 
-  .brand-mark {
-    position: absolute;
-    top: 36px;
-    left: 56px;
-    width: 52px;
-    height: 5px;
-    border-radius: 3px;
-    background: #e8632f;
+  .camera-edge-blur {
+    position: fixed;
+    z-index: 10;
+    inset: 0;
     pointer-events: none;
-  }
-
-  .controls {
-    position: absolute;
-    z-index: 2;
-    top: 40px;
-    right: 56px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .drag-hint {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(18, 35, 63, 0.55);
-    font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    pointer-events: none;
-  }
-
-  .reset {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--navy);
-    color: #fff;
-    font-family: 'Manrope', sans-serif;
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .reset:focus-visible {
-    outline: 3px solid #e8632f;
-    outline-offset: 3px;
+    background: radial-gradient(ellipse 72% 88% at 50% 48%, transparent 58%, rgba(15, 38, 71, 0.035) 100%);
+    -webkit-backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(1.5px);
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      rgba(0, 0, 0, 0.72) 9%,
+      transparent 28%,
+      transparent 72%,
+      rgba(0, 0, 0, 0.72) 91%,
+      #000 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      rgba(0, 0, 0, 0.72) 9%,
+      transparent 28%,
+      transparent 72%,
+      rgba(0, 0, 0, 0.72) 91%,
+      #000 100%
+    );
   }
 
   .stand {
     position: absolute;
-    top: 110px;
-    left: 560px;
+    top: 202px;
+    left: 440px;
     width: 620px;
     height: 600px;
     transform-style: preserve-3d;
+    transform: translateZ(190px) rotateX(0deg) rotateY(0deg);
+    transform-origin: 310px 178px 310px;
     will-change: transform;
   }
 
@@ -299,6 +269,10 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
     transform: translate3d(0, 0, 620px) rotateY(90deg) translateZ(-4px);
   }
 
+  .wall-depth--right {
+    transform: translate3d(620px, 0, 0) rotateY(-90deg) translateZ(-4px);
+  }
+
   .wall {
     overflow: hidden;
     background: var(--navy);
@@ -307,6 +281,10 @@ import panel6 from '../../Preview3D-html/images/6.jpg';
 
   .wall--side {
     transform: translate3d(0, 0, 620px) rotateY(90deg);
+  }
+
+  .wall--right {
+    transform: translate3d(620px, 0, 0) rotateY(-90deg);
   }
 
   .panels {
