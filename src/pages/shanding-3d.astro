@@ -71,6 +71,22 @@ import image9 from '../assets/shanding-3d/9.jpg';
           </div>
         </div>
       </div>
+      <button class="move-stick" type="button" data-move-stick aria-label="Стик движения">
+        <span class="move-stick__knob" aria-hidden="true"></span>
+      </button>
+      <aside class="controls-hint" data-controls-hint aria-label="Управление камерой">
+        <span class="controls-hint__desktop">
+          <span><kbd>Клик</kbd> обзор 360°</span>
+          <span><kbd>WASD</kbd> движение</span>
+          <span><kbd>Shift</kbd> бег</span>
+          <span><kbd>C</kbd> присесть</span>
+          <span><kbd>Esc</kbd> освободить курсор</span>
+        </span>
+        <span class="controls-hint__mobile">
+          <span>Стик — движение</span>
+          <span>Свайп — обзор</span>
+        </span>
+      </aside>
       <div class="camera-edge-blur" aria-hidden="true"></div>
     </main>
 
@@ -78,18 +94,45 @@ import image9 from '../assets/shanding-3d/9.jpg';
       const ARTBOARD_WIDTH = 1500;
       const ARTBOARD_HEIGHT = 1020;
       const INITIAL_ROTATION = { x: 0, y: 0 };
+      const CAMERA_Z = 190;
+      const WALK_SPEED = 112;
+      const RUN_MULTIPLIER = 1.75;
+      const CROUCH_MULTIPLIER = 0.55;
+      const CROUCH_OFFSET = -72;
+      const CAMERA_LIMITS = {
+        x: 225,
+        zMin: -220,
+        zMax: 205,
+      };
 
       const viewport = document.querySelector<HTMLElement>('[data-viewport]');
       const shell = document.querySelector<HTMLElement>('[data-shell]');
       const artboard = document.querySelector<HTMLElement>('[data-artboard]');
       const stand = document.querySelector<HTMLElement>('[data-stand]');
+      const moveStick = document.querySelector<HTMLButtonElement>('[data-move-stick]');
+      const controlsHint = document.querySelector<HTMLElement>('[data-controls-hint]');
 
       if (viewport && shell && artboard && stand) {
         let rotation = { ...INITIAL_ROTATION };
-        let drag: null | { pointerId: number; x: number; y: number; rotX: number; rotY: number } = null;
+        let targetRotation = { ...INITIAL_ROTATION };
+        let camera = { x: 0, z: 0 };
+        let stickInput = { x: 0, y: 0 };
+        let stickPointerId: number | null = null;
+        let lookPointer: null | { pointerId: number; x: number; y: number } = null;
+        let stepPhase = 0;
+        let walkAmount = 0;
+        let crouchAmount = 0;
+        let previousTime = performance.now();
+        const pressedKeys = new Set<string>();
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-        const renderRotation = () => {
-          stand.style.transform = `translateZ(190px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
+        const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+        const softenControlsHint = () => {
+          if (controlsHint) controlsHint.dataset.engaged = 'true';
+        };
+
+        const renderCamera = (bobX = 0, bobY = 0) => {
+          stand.style.transform = `translateZ(${CAMERA_Z}px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) translate3d(${-camera.x + bobX}px, ${bobY}px, ${-camera.z}px)`;
         };
 
         const fitArtboard = () => {
@@ -99,39 +142,157 @@ import image9 from '../assets/shanding-3d/9.jpg';
           artboard.style.transform = `scale(${scale})`;
         };
 
-        artboard.addEventListener('pointerdown', (event) => {
-          drag = {
-            pointerId: event.pointerId,
-            x: event.clientX,
-            y: event.clientY,
-            rotX: rotation.x,
-            rotY: rotation.y,
-          };
-          artboard.setPointerCapture(event.pointerId);
-          artboard.dataset.dragging = 'true';
-        });
+        const updateStick = (event: PointerEvent) => {
+          if (!moveStick) return;
+          const bounds = moveStick.getBoundingClientRect();
+          const radius = bounds.width * 0.31;
+          const dx = event.clientX - (bounds.left + bounds.width / 2);
+          const dy = event.clientY - (bounds.top + bounds.height / 2);
+          const distance = Math.hypot(dx, dy);
+          const scale = distance > radius ? radius / distance : 1;
+          const x = dx * scale;
+          const y = dy * scale;
 
-        artboard.addEventListener('pointermove', (event) => {
-          if (!drag || drag.pointerId !== event.pointerId) return;
-          rotation = {
-            x: drag.rotX - (event.clientY - drag.y) * 0.35,
-            y: drag.rotY + (event.clientX - drag.x) * 0.35,
-          };
-          renderRotation();
-        });
-
-        const finishDrag = (event: PointerEvent) => {
-          if (!drag || drag.pointerId !== event.pointerId) return;
-          drag = null;
-          delete artboard.dataset.dragging;
+          stickInput = { x: x / radius, y: y / radius };
+          moveStick.style.setProperty('--stick-x', `${x}px`);
+          moveStick.style.setProperty('--stick-y', `${y}px`);
         };
 
-        artboard.addEventListener('pointerup', finishDrag);
-        artboard.addEventListener('pointercancel', finishDrag);
+        const releaseStick = (event: PointerEvent) => {
+          if (!moveStick || event.pointerId !== stickPointerId) return;
+          stickPointerId = null;
+          stickInput = { x: 0, y: 0 };
+          moveStick.style.setProperty('--stick-x', '0px');
+          moveStick.style.setProperty('--stick-y', '0px');
+          delete moveStick.dataset.active;
+        };
+
+        moveStick?.addEventListener('pointerdown', (event) => {
+          event.preventDefault();
+          softenControlsHint();
+          stickPointerId = event.pointerId;
+          moveStick.setPointerCapture(event.pointerId);
+          moveStick.dataset.active = 'true';
+          updateStick(event);
+        });
+
+        moveStick?.addEventListener('pointermove', (event) => {
+          if (event.pointerId === stickPointerId) updateStick(event);
+        });
+        moveStick?.addEventListener('pointerup', releaseStick);
+        moveStick?.addEventListener('pointercancel', releaseStick);
+
+        viewport.addEventListener('pointerdown', (event) => {
+          if (event.pointerType === 'mouse') return;
+          if (moveStick?.contains(event.target as Node)) return;
+          softenControlsHint();
+          lookPointer = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+          viewport.setPointerCapture(event.pointerId);
+        });
+
+        viewport.addEventListener('click', (event) => {
+          if (!(event instanceof PointerEvent) || event.pointerType !== 'mouse') return;
+          softenControlsHint();
+          if (document.pointerLockElement !== viewport) viewport.requestPointerLock();
+        });
+
+        viewport.addEventListener('pointermove', (event) => {
+          if (event.pointerType === 'mouse') {
+            if (document.pointerLockElement === viewport) return;
+
+            const normalizedX = event.clientX / window.innerWidth - 0.5;
+            const normalizedY = event.clientY / window.innerHeight - 0.5;
+            targetRotation.y = clamp(normalizedX * 124, -62, 62);
+            targetRotation.x = clamp(normalizedY * -34, -17, 17);
+            return;
+          }
+
+          if (!lookPointer || lookPointer.pointerId !== event.pointerId) return;
+          const dx = event.clientX - lookPointer.x;
+          const dy = event.clientY - lookPointer.y;
+          targetRotation.y = clamp(targetRotation.y + dx * 0.2, -68, 68);
+          targetRotation.x = clamp(targetRotation.x - dy * 0.16, -19, 19);
+          lookPointer.x = event.clientX;
+          lookPointer.y = event.clientY;
+        });
+
+        document.addEventListener('mousemove', (event) => {
+          if (document.pointerLockElement !== viewport) return;
+          targetRotation.y += event.movementX * 0.16;
+          targetRotation.x = clamp(targetRotation.x - event.movementY * 0.13, -19, 19);
+        });
+
+        const finishLook = (event: PointerEvent) => {
+          if (lookPointer?.pointerId === event.pointerId) lookPointer = null;
+        };
+
+        viewport.addEventListener('pointerup', finishLook);
+        viewport.addEventListener('pointercancel', finishLook);
+
+        window.addEventListener('keydown', (event) => {
+          if (!['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyC', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'ShiftLeft', 'ShiftRight'].includes(event.code)) return;
+          event.preventDefault();
+          softenControlsHint();
+          pressedKeys.add(event.code);
+        });
+
+        window.addEventListener('keyup', (event) => {
+          pressedKeys.delete(event.code);
+        });
+
+        window.addEventListener('blur', () => {
+          pressedKeys.clear();
+          stickInput = { x: 0, y: 0 };
+          if (moveStick) {
+            moveStick.style.setProperty('--stick-x', '0px');
+            moveStick.style.setProperty('--stick-y', '0px');
+            delete moveStick.dataset.active;
+          }
+        });
+
+        const animate = (time: number) => {
+          const delta = Math.min((time - previousTime) / 1000, 0.04);
+          previousTime = time;
+
+          const rotationEase = 1 - Math.exp(-delta * 11);
+          rotation.x += (targetRotation.x - rotation.x) * rotationEase;
+          rotation.y += (targetRotation.y - rotation.y) * rotationEase;
+
+          let strafe = Number(pressedKeys.has('KeyD') || pressedKeys.has('ArrowRight')) - Number(pressedKeys.has('KeyA') || pressedKeys.has('ArrowLeft')) + stickInput.x;
+          let forward = Number(pressedKeys.has('KeyW') || pressedKeys.has('ArrowUp')) - Number(pressedKeys.has('KeyS') || pressedKeys.has('ArrowDown')) - stickInput.y;
+          const inputLength = Math.hypot(strafe, forward);
+          const isCrouching = pressedKeys.has('KeyC');
+          const isRunning = !isCrouching && (pressedKeys.has('ShiftLeft') || pressedKeys.has('ShiftRight'));
+
+          if (inputLength > 1) {
+            strafe /= inputLength;
+            forward /= inputLength;
+          }
+
+          const yaw = rotation.y * Math.PI / 180;
+          const speedMultiplier = isRunning ? RUN_MULTIPLIER : isCrouching ? CROUCH_MULTIPLIER : 1;
+          const currentSpeed = WALK_SPEED * speedMultiplier;
+          camera.x += (strafe * Math.cos(yaw) + forward * Math.sin(yaw)) * currentSpeed * delta;
+          camera.z += (strafe * Math.sin(yaw) - forward * Math.cos(yaw)) * currentSpeed * delta;
+          camera.x = clamp(camera.x, -CAMERA_LIMITS.x, CAMERA_LIMITS.x);
+          camera.z = clamp(camera.z, CAMERA_LIMITS.zMin, CAMERA_LIMITS.zMax);
+
+          const targetWalkAmount = inputLength > 0.04 ? 1 : 0;
+          walkAmount += (targetWalkAmount - walkAmount) * (1 - Math.exp(-delta * 10));
+          crouchAmount += (Number(isCrouching) - crouchAmount) * (1 - Math.exp(-delta * 12));
+          if (targetWalkAmount) stepPhase += delta * (isRunning ? 10.4 : isCrouching ? 4.6 : 6.8);
+
+          const bobStrength = isRunning ? 1.45 : isCrouching ? 0.45 : 1;
+          const bobX = reduceMotion.matches ? 0 : Math.sin(stepPhase) * 1.15 * walkAmount * bobStrength;
+          const bobY = CROUCH_OFFSET * crouchAmount + (reduceMotion.matches ? 0 : Math.sin(stepPhase * 2) * 2.3 * walkAmount * bobStrength);
+          renderCamera(bobX, bobY);
+          requestAnimationFrame(animate);
+        };
 
         window.addEventListener('resize', fitArtboard);
         fitArtboard();
-        renderRotation();
+        renderCamera();
+        requestAnimationFrame(animate);
       }
     </script>
   </body>
@@ -162,6 +323,10 @@ import image9 from '../assets/shanding-3d/9.jpg';
     font-family: 'Golos Text', sans-serif;
   }
 
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   .viewport {
     width: 100%;
     height: 100%;
@@ -189,16 +354,11 @@ import image9 from '../assets/shanding-3d/9.jpg';
     height: 1020px;
     overflow: visible;
     background: transparent;
-    cursor: grab;
     touch-action: none;
     user-select: none;
     transform-origin: top left;
     perspective: 500px;
     perspective-origin: 750px 380px;
-  }
-
-  .artboard[data-dragging='true'] {
-    cursor: grabbing;
   }
 
   .camera-edge-blur {
@@ -227,6 +387,107 @@ import image9 from '../assets/shanding-3d/9.jpg';
       rgba(0, 0, 0, 0.72) 91%,
       #000 100%
     );
+  }
+
+  .move-stick {
+    --stick-x: 0px;
+    --stick-y: 0px;
+    position: fixed;
+    z-index: 20;
+    left: max(22px, env(safe-area-inset-left));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    width: 112px;
+    height: 112px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background: rgba(15, 38, 71, 0.2);
+    box-shadow:
+      inset 0 0 0 10px rgba(255, 255, 255, 0.04),
+      0 10px 34px rgba(15, 38, 71, 0.2);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    touch-action: none;
+  }
+
+  .move-stick::before {
+    content: '';
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+  }
+
+  .move-stick__knob {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: 0 5px 18px rgba(15, 38, 71, 0.26);
+    transform: translate3d(var(--stick-x), var(--stick-y), 0);
+    transition: transform 140ms ease-out;
+  }
+
+  .move-stick[data-active='true'] .move-stick__knob {
+    transition: none;
+  }
+
+  .controls-hint {
+    position: fixed;
+    z-index: 30;
+    left: 50%;
+    bottom: max(18px, env(safe-area-inset-bottom));
+    max-width: calc(100vw - 32px);
+    padding: 9px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(15, 38, 71, 0.5);
+    box-shadow: 0 7px 24px rgba(15, 38, 71, 0.14);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transform: translateX(-50%);
+    transition: opacity 500ms ease;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .controls-hint[data-engaged='true'] {
+    opacity: 0.24;
+  }
+
+  .controls-hint__desktop,
+  .controls-hint__mobile {
+    align-items: center;
+    gap: 13px;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .controls-hint__desktop {
+    display: flex;
+  }
+
+  .controls-hint__mobile {
+    display: none;
+  }
+
+  .controls-hint kbd {
+    margin-right: 4px;
+    padding: 2px 5px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 4px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    font: inherit;
+    font-weight: 600;
   }
 
   .stand {
@@ -371,6 +632,32 @@ import image9 from '../assets/shanding-3d/9.jpg';
   @media (prefers-reduced-motion: reduce) {
     .stand {
       will-change: auto;
+    }
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .move-stick {
+      display: flex;
+    }
+
+    .controls-hint {
+      right: max(18px, env(safe-area-inset-right));
+      bottom: max(31px, env(safe-area-inset-bottom));
+      left: auto;
+      padding: 9px 11px;
+      transform: none;
+    }
+
+    .controls-hint__desktop {
+      display: none;
+    }
+
+    .controls-hint__mobile {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      font-size: 10px;
     }
   }
 </style>
