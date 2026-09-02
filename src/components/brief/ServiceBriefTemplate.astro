@@ -6,6 +6,7 @@ import '../../styles/proposal-pages.css';
 
 interface Props { brief: ServiceBrief; }
 const { brief } = Astro.props;
+const getOptionInputType = (question: BriefQuestion): 'radio' | 'checkbox' => question.type === 'radio' ? 'radio' : 'checkbox';
 
 const commonQuestions: BriefQuestion[] = [
   { name: 'company', label: 'Компания, продукт или проект', type: 'text', required: true, placeholder: 'Название и короткое описание' },
@@ -91,7 +92,7 @@ const groups = [
                     <div class="option-grid" role={question.type === 'radio' ? 'radiogroup' : 'group'} data-required-group={question.required ? question.name : undefined}>
                       {question.options?.map((option, optionIndex) => (
                         <label class="option-card">
-                          <input type={question.type} name={question.name} value={option.value} required={question.type === 'radio' && question.required && optionIndex === 0} />
+                          <input type={getOptionInputType(question)} name={question.name} value={option.value} required={question.type === 'radio' && question.required && optionIndex === 0} />
                           <span>{option.label}</span>
                         </label>
                       ))}

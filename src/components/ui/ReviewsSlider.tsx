@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ArrowUpRight, X } from 'lucide-react';
 import { reviewsData, reviewsDataEn, typograph, type ReviewItem } from '../../data/reviewsData';
 
@@ -110,7 +110,7 @@ export default function ReviewsSlider({
   }, [activeReviewModal]);
 
   // Slide transition animation variants
-  const slideVariants = {
+  const slideVariants: Variants = {
     enter: (dir: number) => ({
       x: dir > 0 ? 30 : -30,
       opacity: 0,
@@ -119,21 +119,21 @@ export default function ReviewsSlider({
       x: 0,
       opacity: 1,
       transition: {
-        x: { type: 'spring', stiffness: 350, damping: 32 },
-        opacity: { duration: 0.35, ease: 'easeOut' },
+        x: { type: 'spring' as const, stiffness: 350, damping: 32 },
+        opacity: { duration: 0.35, ease: 'easeOut' as const },
       },
     },
     exit: (dir: number) => ({
       x: dir > 0 ? -30 : 30,
       opacity: 0,
       transition: {
-        x: { type: 'spring', stiffness: 350, damping: 32 },
-        opacity: { duration: 0.25, ease: 'easeIn' },
+        x: { type: 'spring' as const, stiffness: 350, damping: 32 },
+        opacity: { duration: 0.25, ease: 'easeIn' as const },
       },
     }),
   };
 
-  const imageVariants = {
+  const imageVariants: Variants = {
     enter: () => ({
       scale: 0.96,
       opacity: 0,
@@ -143,7 +143,7 @@ export default function ReviewsSlider({
       opacity: 1,
       transition: {
         duration: 0.4,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.16, 1, 0.3, 1] as const,
       },
     },
     exit: () => ({
@@ -151,7 +151,7 @@ export default function ReviewsSlider({
       opacity: 0,
       transition: {
         duration: 0.25,
-        ease: 'easeIn',
+        ease: 'easeIn' as const,
       },
     }),
   };

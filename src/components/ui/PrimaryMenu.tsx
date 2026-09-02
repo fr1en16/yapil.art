@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type Lenis from "lenis";
 import { BriefcaseBusiness, Mail, MessageCircleMore } from "lucide-react";
 import {
   ExpandableActionBar,
@@ -70,9 +71,7 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
       window.history.pushState(null, "", target.hash);
 
       const alignSection = (duration: number) => {
-        const lenis = (window as Window & {
-          lenis?: { scrollTo: (element: HTMLElement, options: { offset: number; duration: number }) => void };
-        }).lenis;
+        const lenis = (window as typeof window & { __lenisInstance?: Lenis | null }).__lenisInstance;
 
         if (lenis) {
           lenis.scrollTo(section, { offset: -20, duration });

@@ -4,6 +4,7 @@ import type { BriefQuestion } from '../../data/briefsData';
 interface Props { question: BriefQuestion; idPrefix: string; }
 const { question, idPrefix } = Astro.props;
 const fieldId = `${idPrefix}-${question.name}`;
+const optionInputType: 'radio' | 'checkbox' = question.type === 'radio' ? 'radio' : 'checkbox';
 ---
 
 <div
@@ -30,7 +31,7 @@ const fieldId = `${idPrefix}-${question.name}`;
     <div class="option-grid" role={question.type === 'radio' ? 'radiogroup' : 'group'} data-required-group={question.required ? question.name : undefined}>
       {question.options?.map((option, optionIndex) => (
         <label class="option-card">
-          <input type={question.type} name={question.name} value={option.value} required={question.type === 'radio' && question.required && optionIndex === 0} />
+          <input type={optionInputType} name={question.name} value={option.value} required={question.type === 'radio' && question.required && optionIndex === 0} />
           <span>{option.label}</span>
         </label>
       ))}

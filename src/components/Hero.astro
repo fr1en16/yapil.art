@@ -5,6 +5,7 @@ interface Props {
   description?: string;
   casesHref?: string;
   ctaText?: string;
+  ctaExternal?: boolean;
   ripple?: boolean;
 }
 
@@ -14,6 +15,7 @@ const {
   description = 'Создаём айдентику и сайты, которые выделяют компанию среди конкурентов и приносят заявки.',
   casesHref = '#cases',
   ctaText = 'Смотреть кейсы',
+  ctaExternal = false,
   ripple = false,
 } = Astro.props;
 ---
@@ -24,7 +26,13 @@ const {
     <p class="hero-description hero-layer hero-layer--description">
       {description}
     </p>
-    <a class="hero-link hero-layer hero-layer--cta" href={casesHref} data-hero-ripple={ripple ? '' : undefined}>
+    <a
+      class="hero-link hero-layer hero-layer--cta"
+      href={casesHref}
+      target={ctaExternal ? '_blank' : undefined}
+      rel={ctaExternal ? 'noopener noreferrer' : undefined}
+      data-hero-ripple={ripple ? '' : undefined}
+    >
       {ripple && <span class="hero-link-ripple" aria-hidden="true"></span>}
       <span class="hero-link-inner">
         <span class="hero-link-text">{ctaText}</span>

@@ -233,17 +233,17 @@ const highlights = [
     { title: 'О бренде', slides: ['Обложка', 'История, цифры, УТП'] },
   ];
 
-  const dialog = document.querySelector('#postDialog');
-  const slideCount = document.querySelector('#slideCount');
-  const slideLabel = document.querySelector('#slideLabel');
-  const dialogFooter = document.querySelector('#dialogFooter');
-  const dialogDots = document.querySelector('#dialogDots');
-  const prevButton = document.querySelector('[data-prev]');
-  const nextButton = document.querySelector('[data-next]');
+  const dialog = document.querySelector<HTMLElement>('#postDialog');
+  const slideCount = document.querySelector<HTMLElement>('#slideCount');
+  const slideLabel = document.querySelector<HTMLElement>('#slideLabel');
+  const dialogFooter = document.querySelector<HTMLElement>('#dialogFooter');
+  const dialogDots = document.querySelector<HTMLElement>('#dialogDots');
+  const prevButton = document.querySelector<HTMLButtonElement>('[data-prev]');
+  const nextButton = document.querySelector<HTMLButtonElement>('[data-next]');
   let currentPost = 0;
   let currentSlide = 0;
   let mode = 'single';
-  let trigger = null;
+  let trigger: HTMLButtonElement | null = null;
 
   function renderDialog() {
     if (!(slideCount instanceof HTMLElement) || !(slideLabel instanceof HTMLElement) || !(dialogFooter instanceof HTMLElement) || !(dialogDots instanceof HTMLElement)) return;
@@ -263,8 +263,8 @@ const highlights = [
     }));
   }
 
-  function openDialog(button) {
-    if (!(dialog instanceof HTMLElement)) return;
+  function openDialog(button: HTMLButtonElement) {
+    if (!dialog) return;
     trigger = button;
     currentPost = Number(button.dataset.post || 0);
     currentSlide = 0;
@@ -272,28 +272,25 @@ const highlights = [
     renderDialog();
     dialog.hidden = false;
     document.body.classList.add('dialog-open');
-    const closeButton = dialog.querySelector('.dialog-close');
-    if (closeButton instanceof HTMLButtonElement) closeButton.focus();
+    dialog.querySelector<HTMLButtonElement>('.dialog-close')?.focus();
   }
 
   function closeDialog() {
-    if (!(dialog instanceof HTMLElement)) return;
+    if (!dialog) return;
     dialog.hidden = true;
     document.body.classList.remove('dialog-open');
-    if (trigger instanceof HTMLButtonElement) trigger.focus();
+    trigger?.focus();
   }
 
-  document.querySelectorAll('.panorama').forEach((button) => {
-    if (button instanceof HTMLButtonElement) button.addEventListener('click', () => openDialog(button));
-  });
-  document.querySelectorAll('[data-close]').forEach((button) => button.addEventListener('click', closeDialog));
+  document.querySelectorAll<HTMLButtonElement>('.panorama').forEach((button) => button.addEventListener('click', () => openDialog(button)));
+  document.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((button) => button.addEventListener('click', closeDialog));
   prevButton?.addEventListener('click', () => { if (currentSlide > 0) { currentSlide -= 1; renderDialog(); } });
   nextButton?.addEventListener('click', () => {
     const total = mode === 'single' ? 1 : posts[currentPost].slides.length;
     if (currentSlide < total - 1) { currentSlide += 1; renderDialog(); }
   });
   document.addEventListener('keydown', (event) => {
-    if (!(dialog instanceof HTMLElement) || dialog.hidden) return;
+    if (!dialog || dialog.hidden) return;
     if (event.key === 'Escape') closeDialog();
     if (event.key === 'ArrowLeft' && currentSlide > 0) { currentSlide -= 1; renderDialog(); }
     if (event.key === 'ArrowRight') {

@@ -1,5 +1,6 @@
 ---
 import Nav from '../components/Nav.astro';
+import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
 import SiteBackground from '../components/SiteBackground.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import SmoothScroll from '../components/SmoothScroll.astro';
@@ -153,6 +154,7 @@ const schemaJsonLd = {
       <slot />
     </main>
     <slot name="footer" />
+    <FloatingWhatsApp lang={lang} pageUrl={Astro.url.href} />
     {import.meta.env.DEV && <GridOverlay />}
     <SmoothScroll />
   </body>
