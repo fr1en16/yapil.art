@@ -500,7 +500,7 @@ function HoverModalPreview({
       variants={scaleAnimation}
       initial="initial"
       animate={active ? 'enter' : 'closed'}
-      className={`pointer-events-none fixed z-30 hidden md:flex h-[22rem] w-[26rem] lg:h-[24rem] lg:w-[30rem] items-center justify-center overflow-hidden ${
+      className={`pointer-events-none fixed z-30 hidden aspect-[5/4] w-[22rem] md:flex lg:w-[24rem] items-center justify-center overflow-hidden ${
         isLight
           ? 'border border-black/10 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)]'
           : 'border border-white/20 bg-[#161616] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)]'
