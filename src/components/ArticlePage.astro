@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Contacts from './Contacts.astro';
+import { servicesData } from '../data/servicesData';
+import { resolveServiceSlug } from '../utils/serviceLinks';
 
 interface Heading {
   depth: number;
@@ -20,6 +22,9 @@ const toc = headings.filter((heading) => heading.depth === 2);
 const publishedLabel = article.data.publishedAt
   ? new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).format(article.data.publishedAt)
   : 'Редакционный шаблон';
+const serviceSlug = resolveServiceSlug(article.data.service);
+const service = servicesData[serviceSlug];
+const caseSlug = service?.caseSlugs[0];
 ---
 
 <article class="article-page">
@@ -93,6 +98,16 @@ const publishedLabel = article.data.publishedAt
       </div>
     </div>
   </div>
+
+  <section class="article-offer container" aria-labelledby="article-offer-title">
+    <h2 id="article-offer-title">Следующий шаг по задаче «{article.data.service}»</h2>
+    <p>Посмотрите состав услуги, этапы, сроки и результат. Если задача уже сформулирована, переходите сразу к брифу.</p>
+    <div class="article-offer__links">
+      <a href={`/services/${serviceSlug}`}>Условия услуги «{service?.name ?? article.data.service}» <span aria-hidden="true">→</span></a>
+      {caseSlug && <a href={`/case/${caseSlug}`}>Релевантный кейс <span aria-hidden="true">↗</span></a>}
+      <a href={`/brief?service=${serviceSlug}`}>Заполнить бриф <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
 
   <Contacts
     title={`Нужна помощь с направлением<br />«${article.data.service}»?`}
@@ -386,6 +401,51 @@ const publishedLabel = article.data.publishedAt
     font-weight: 650;
   }
 
+  .article-offer {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .8fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-block: clamp(4rem, 8vw, 7rem);
+    border-top: 1px solid var(--article-line);
+  }
+
+  .article-offer h2 {
+    margin: 0;
+    font-size: clamp(2.4rem, 5vw, 5.5rem);
+    line-height: .96;
+    letter-spacing: -.05em;
+  }
+
+  .article-offer > p {
+    margin: 0;
+    color: var(--article-muted);
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .article-offer__links {
+    grid-column: 1 / -1;
+    display: grid;
+    margin-top: clamp(1rem, 3vw, 2.5rem);
+    border-top: 1px solid var(--article-ink);
+  }
+
+  .article-offer__links a {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--article-line);
+    color: inherit;
+    font-size: clamp(1rem, 1.6vw, 1.3rem);
+    text-decoration: none;
+  }
+
+  .article-offer__links a:hover,
+  .article-offer__links a:focus-visible {
+    color: #e63a22;
+  }
+
 
   @media (max-width: 64rem) {
     .article-deck {
@@ -447,6 +507,10 @@ const publishedLabel = article.data.publishedAt
 
     .article-copy :global(h2) {
       font-size: clamp(2.35rem, 12vw, 3.5rem);
+    }
+
+    .article-offer {
+      grid-template-columns: 1fr;
     }
   }
 </style>

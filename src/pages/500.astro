@@ -1,0 +1,83 @@
+---
+import Footer from '../components/Footer.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Временная ошибка — Yapil"
+  description="Сервис временно недоступен. Попробуйте обновить страницу или вернуться на главную."
+  noindex={true}
+  navOverlay={true}
+>
+  <section class="system-error container" aria-labelledby="system-error-title">
+    <p aria-hidden="true">500</p>
+    <h1 id="system-error-title">Что-то пошло не так</h1>
+    <div>
+      <p>Мы уже можем разбираться с ошибкой. Обновите страницу через минуту или вернитесь к основному маршруту.</p>
+      <a href="/">Вернуться на главную <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .system-error {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 2rem var(--grid-gap, 1rem);
+    min-height: 80svh;
+    align-content: center;
+    padding-block: 8rem 5rem;
+    color: #fff;
+  }
+
+  .system-error > p,
+  .system-error h1 {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  .system-error > p {
+    color: #fd4b32;
+    font-size: clamp(5rem, 18vw, 15rem);
+    line-height: .72;
+  }
+
+  .system-error h1 {
+    max-width: 12ch;
+    font-size: clamp(3rem, 8vw, 8rem);
+    line-height: .9;
+    letter-spacing: -.055em;
+  }
+
+  .system-error > div {
+    grid-column: 7 / -1;
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .system-error > div > p {
+    margin: 0;
+    color: rgba(255, 255, 255, .75);
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+
+  .system-error a {
+    display: flex;
+    justify-content: space-between;
+    padding-block: 1rem;
+    border-block: 1px solid rgba(255, 255, 255, .45);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  @media (max-width: 47.99rem) {
+    .system-error > div {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

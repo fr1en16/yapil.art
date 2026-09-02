@@ -41,6 +41,11 @@ const props = Astro.props;
 const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead } = props;
 const source = 'contacts_form';
 const sectionName = section === 'services' ? 'Услуга' : 'Решение';
+const deadline = metrics.find((metric) => /срок/iu.test(metric.label))?.text ?? 'фиксируем после короткого брифа';
+const result = secondCards[0]?.title ?? secondTitle;
+const processNumber = section === 'services' ? '04' : '03';
+const faqNumber = section === 'services' ? (rows.length ? '05' : '04') : (rows.length ? '04' : '03');
+const linksNumber = section === 'services' ? '06' : '05';
 ---
 
 <Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" navOverlay={true}>
@@ -89,9 +94,20 @@ const sectionName = section === 'services' ? 'Услуга' : 'Решение';
         </div>
       </section>
 
-      {rows.length > 0 && rowsTitle && (
+      {section === 'services' && (
         <section class="editorial-section" aria-labelledby="process-title">
-          <header class="editorial-heading"><p class="editorial-heading__number">03</p><div class="editorial-heading__content"><h2 id="process-title">{rowsTitle}</h2></div></header>
+          <header class="editorial-heading"><p class="editorial-heading__number">03</p><div class="editorial-heading__content"><h2 id="process-title">Цена, срок и результат</h2></div></header>
+          <div class="editorial-grid">
+            <article class="editorial-card"><span class="editorial-card__number">01</span><h3>Стоимость</h3><p>Готовим персональную смету после короткого брифа и фиксируем состав работ до старта.</p></article>
+            <article class="editorial-card"><span class="editorial-card__number">02</span><h3>Срок</h3><p>{deadline}. Календарь и точки согласования входят в предложение.</p></article>
+            <article class="editorial-card"><span class="editorial-card__number">03</span><h3>Результат</h3><p>{result}. Полный комплект и правила передачи описываем в договоре.</p></article>
+          </div>
+        </section>
+      )}
+
+      {rows.length > 0 && rowsTitle && (
+        <section class="editorial-section" aria-labelledby="steps-title">
+          <header class="editorial-heading"><p class="editorial-heading__number">{processNumber}</p><div class="editorial-heading__content"><h2 id="steps-title">Как мы делаем: {rowsTitle.toLocaleLowerCase('ru')}</h2></div></header>
           <ol class="editorial-list">{rows.map((row) => <li class="editorial-row"><span class="editorial-row__number">{row.number}</span><h3>{row.title}</h3><p>{row.text}</p></li>)}</ol>
         </section>
       )}
@@ -100,14 +116,14 @@ const sectionName = section === 'services' ? 'Услуга' : 'Решение';
     <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />
     <div class="editorial-body">
       <section class="editorial-section" aria-labelledby="faq-title">
-        <header class="editorial-heading"><p class="editorial-heading__number">{rows.length ? '05' : '04'}</p><div class="editorial-heading__content"><h2 id="faq-title">{faqTitle}</h2></div></header>
+        <header class="editorial-heading"><p class="editorial-heading__number">{faqNumber}</p><div class="editorial-heading__content"><h2 id="faq-title">{faqTitle}</h2></div></header>
         <div class="editorial-faq">{faq.map((item, index) => <details open={index === 0}><summary><span>{item.question}</span><span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div>
       </section>
 
       {links.length > 0 && linksTitle && (
         <section class="editorial-section editorial-section--compact" aria-labelledby="links-title">
           <header class="editorial-compact-header">
-            <span class="editorial-compact-header__number">06</span>
+            <span class="editorial-compact-header__number">{linksNumber}</span>
             <h2 id="links-title">{linksTitle}</h2>
           </header>
           <div class="editorial-compact-grid">
@@ -138,7 +154,7 @@ const sectionName = section === 'services' ? 'Услуга' : 'Решение';
                 <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
               </div>
               <h3>Алматы</h3>
-              <p>{name} для бизнеса Алматы и страницы по районам города.</p>
+              <p>{name} для бизнеса Алматы: условия, этапы и релевантные проекты.</p>
             </a>
             <a class="editorial-compact-card" href={`/services/${slug}/astana`}>
               <div class="editorial-compact-card__top">
@@ -146,7 +162,7 @@ const sectionName = section === 'services' ? 'Услуга' : 'Решение';
                 <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
               </div>
               <h3>Астана</h3>
-              <p>{name} для компаний Астаны и страницы по районам столицы.</p>
+              <p>{name} для компаний Астаны: условия, этапы и релевантные проекты.</p>
             </a>
             <a class="editorial-compact-card" href={`/services/${slug}/shymkent`}>
               <div class="editorial-compact-card__top">
@@ -154,15 +170,15 @@ const sectionName = section === 'services' ? 'Услуга' : 'Решение';
                 <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
               </div>
               <h3>Шымкент</h3>
-              <p>{name} для бизнеса Шымкента и страницы по районам города.</p>
+              <p>{name} для бизнеса Шымкента: условия, этапы и релевантные проекты.</p>
             </a>
             <a class="editorial-compact-card" href="/cities">
               <div class="editorial-compact-card__top">
-                <span class="editorial-compact-card__number">17 городов</span>
+                <span class="editorial-compact-card__number">15 городов</span>
                 <span class="editorial-compact-card__arrow" aria-hidden="true">↗</span>
               </div>
               <h3>Вся география</h3>
-              <p>Выбрать город с населением от 200 тысяч человек.</p>
+              <p>Выбрать один из приоритетных рынков Казахстана.</p>
             </a>
           </div>
         </section>

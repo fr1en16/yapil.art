@@ -2,12 +2,12 @@
 import Base from '../../layouts/Base.astro';
 import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
-import { citiesList } from '../../data/citiesData';
+import { indexableCitiesList } from '../../data/citiesData';
 import { servicesList } from '../../data/servicesData';
 import '../../styles/proposal-pages.css';
 
 const title = 'Услуги дизайн-студии по городам Казахстана — Yapil';
-const description = 'Разработка сайтов, айдентики, упаковки, презентаций, SMM-дизайна и дизайн-сопровождения для бизнеса в 17 крупных городах Казахстана.';
+const description = 'Разработка сайтов, айдентики, упаковки, презентаций, SMM-дизайна и дизайн-сопровождения для бизнеса в 15 приоритетных городах Казахстана.';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -16,7 +16,7 @@ const jsonLd = {
       name: 'Услуги Yapil по городам Казахстана',
       description,
       url: 'https://yapil.art/cities',
-      hasPart: citiesList.map((city) => ({
+      hasPart: indexableCitiesList.map((city) => ({
         '@type': 'CollectionPage',
         name: `Услуги дизайна в ${city.prepositional}`,
         url: `https://yapil.art/cities/${city.slug}`,
@@ -39,9 +39,9 @@ const jsonLd = {
       <div class="container editorial-cover__inner">
         <div class="editorial-title-wrap"><h1>Услуги по городам Казахстана</h1></div>
         <div class="editorial-cover__bottom">
-          <p class="editorial-lead">Работаем с компаниями из 17 городов с населением от 200 тысяч человек. Проекты ведём онлайн, а очные встречи и выезды согласовываем отдельно.</p>
+          <p class="editorial-lead">Работаем с компаниями из 15 приоритетных городов Казахстана. Проекты ведём онлайн, а очные встречи и выезды согласовываем отдельно.</p>
           <dl class="editorial-meta">
-            <div><dt>Города</dt><dd>{citiesList.length}</dd></div>
+            <div><dt>Города</dt><dd>{indexableCitiesList.length}</dd></div>
             <div><dt>Услуги</dt><dd>{servicesList.length}</dd></div>
             <div><dt>Формат</dt><dd>по всему Казахстану</dd></div>
           </dl>
@@ -56,7 +56,7 @@ const jsonLd = {
           <div class="editorial-heading__content"><h2 id="million-title">Города-миллионники</h2></div>
         </header>
         <div class="editorial-grid">
-          {citiesList.filter((city) => city.tier === 'million').map((city, index) => (
+          {indexableCitiesList.filter((city) => city.tier === 'million').map((city, index) => (
             <a class="editorial-card" href={`/cities/${city.slug}`}>
               <span class="editorial-card__number">{String(index + 1).padStart(2, '0')} / ↗</span>
               <h2>{city.name}</h2><p>{city.businessFocus.join(' / ')}</p>
@@ -71,7 +71,7 @@ const jsonLd = {
           <div class="editorial-heading__content"><h2 id="large-title">Города с населением 200 тысяч+</h2></div>
         </header>
         <div class="editorial-grid">
-          {citiesList.filter((city) => city.tier === 'large').map((city, index) => (
+          {indexableCitiesList.filter((city) => city.tier === 'large').map((city, index) => (
             <a class="editorial-card" href={`/cities/${city.slug}`}>
               <span class="editorial-card__number">{String(index + 1).padStart(2, '0')} / ↗</span>
               <h2>{city.name}</h2><p>{city.businessFocus.join(' / ')}</p>

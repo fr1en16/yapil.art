@@ -356,12 +356,11 @@ async function generateLibrary() {
           coverAlt,
           trendCluster: cluster[0],
           trendBasis: 'Google Trends, Казахстан, последние 5 лет; редакционная кластеризация Yapil',
-          status: 'published',
-          publishedAt: '2026-08-26',
+          status: 'draft',
         };
         const body = articleBody({ service, cluster, angle, related: cluster[2] });
         await writeFile(join(dir, `${slug}.md`), `${frontmatter(data)}${body}`, 'utf8');
-        manifest.push({ slug, service: service.name, title: h1, seoTitle: title, cover, coverAlt, primaryKeyword: data.primaryKeyword, status: 'published', publishedAt: '2026-08-26' });
+        manifest.push({ slug, service: service.name, title: h1, seoTitle: title, cover, coverAlt, primaryKeyword: data.primaryKeyword, status: 'draft' });
       }
     }
   }

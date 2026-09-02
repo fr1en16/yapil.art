@@ -14,7 +14,7 @@ const whatsappHref = getWhatsAppUrl({
 });
 ---
 
-<Base title={title} description={description} navOverlay={false}>
+<Base title={title} description={description} navOverlay={false} noindex={true}>
   <div class="review-page-container">
     <div class="container py-12 md:py-20 lg:py-24">
       {/* 12-Column Grid Layout */}
@@ -23,14 +23,6 @@ const whatsappHref = getWhatsAppUrl({
         {/* Left Column: Editorial Intro & Quick Contacts (Columns 1-4) */}
         <aside class="lg:col-span-4 flex flex-col justify-between gap-8 lg:sticky lg:top-28">
           <div>
-            {/* Section Tag */}
-            <div class="flex items-center gap-2 mb-4">
-              <span class="text-[#FD4B32] text-sm font-bold select-none" aria-hidden="true">+</span>
-              <span class="text-xs font-semibold tracking-wider uppercase text-white/90 font-mono">
-                Обратная связь
-              </span>
-            </div>
-
             {/* Display Title */}
             <h1
               class="text-4xl sm:text-5xl lg:text-6xl font-normal tracking-[-0.04em] text-white m-0 mb-6 leading-[0.95]"

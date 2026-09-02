@@ -6,7 +6,7 @@ import ProduxPortfolio from './ProduxPortfolio.astro';
 import type { ServiceData } from '../data/servicesData';
 import { servicesList } from '../data/servicesData';
 import type { CityData, DistrictData } from '../data/citiesData';
-import { citiesList } from '../data/citiesData';
+import { indexableCitiesList } from '../data/citiesData';
 import { geoServicesData } from '../data/geoServicesData';
 import '../styles/proposal-pages.css';
 
@@ -52,6 +52,10 @@ const localCards = [
     title: 'Понятный результат',
     text: `На старте фиксируем состав работ, этапы и сроки. По завершении передаём ${geoCopy.audienceResult}, а также все предусмотренные договором исходники.`,
   },
+  {
+    title: 'Стоимость и календарь',
+    text: `После короткого брифа готовим смету и календарь проекта для компании ${locationGenitive}. Цена зависит от объёма и не меняется без согласования новых задач.`,
+  },
 ];
 
 const localFaq = [
@@ -81,8 +85,8 @@ const otherServices = servicesList
     text: `${item.name} для компаний ${locationGenitive}.`,
   }));
 
-const currentCityIndex = citiesList.findIndex((item) => item.slug === city.slug);
-const neighboringCities = [...citiesList.slice(currentCityIndex + 1), ...citiesList.slice(0, currentCityIndex)]
+const currentCityIndex = indexableCitiesList.findIndex((item) => item.slug === city.slug);
+const neighboringCities = [...indexableCitiesList.slice(currentCityIndex + 1), ...indexableCitiesList.slice(0, currentCityIndex)]
   .slice(0, 4)
   .map((item) => ({
     title: item.name,
@@ -227,7 +231,13 @@ const jsonLd = {
       </section>
     </div>
 
-    <ProduxPortfolio theme="light" title={`Релевантные проекты для бизнеса ${locationGenitive}`} projectSlugs={service.caseSlugs} seamless />
+    <ProduxPortfolio
+      theme="light"
+      title={`Релевантные проекты для бизнеса ${locationGenitive}`}
+      lead={`Подборка по типу задачи и отраслям — ${businessFocus.join(', ')}. География кейса не заявляется, если она не подтверждена материалами проекта.`}
+      projectSlugs={service.caseSlugs}
+      seamless
+    />
 
     <div class="editorial-body">
       <section class="editorial-section" aria-labelledby="faq-title">

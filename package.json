@@ -10,6 +10,7 @@
     "build": "astro build",
     "seo:generate": "node scripts/generate-seo-library.mjs",
     "seo:verify": "node scripts/verify-seo-library.mjs",
+    "seo:audit": "node scripts/verify-seo-integrity.mjs",
     "verify:geo": "node scripts/verify-geo-pages.mjs",
     "preview": "astro preview",
     "astro": "astro"

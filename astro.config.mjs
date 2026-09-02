@@ -5,6 +5,7 @@ import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 import { readdirSync, readFileSync } from 'node:fs';
+import { buildPermanentRedirects, isIndexableGeoPath, isPrivatePath } from './src/data/seoPolicy.mjs';
 
 const articlesRoot = new URL('./content-drafts/seo/', import.meta.url);
 const articleEntries = /** @type {string[]} */ (readdirSync(articlesRoot, { recursive: true, encoding: 'utf8' }));
@@ -21,6 +22,7 @@ export default defineConfig({
   trailingSlash: 'never',
   output: 'static',
   adapter: vercel(),
+  redirects: buildPermanentRedirects(),
   server: {
     port: 4321,
   },
@@ -33,16 +35,7 @@ export default defineConfig({
         if (normalizedPath === '/articles') return publishedArticlePaths.size > 0;
         if (normalizedPath.startsWith('/articles/')) return publishedArticlePaths.has(normalizedPath);
 
-        return ![
-          '/anal',
-          '/archive/shanding',
-          '/brief',
-          '/crm',
-          '/kp',
-          '/light',
-          '/shanding-3d',
-          '/site-map',
-        ].some((privatePath) => normalizedPath === privatePath || normalizedPath.startsWith(`${privatePath}/`));
+        return !isPrivatePath(normalizedPath) && isIndexableGeoPath(normalizedPath);
       },
     }),
     react(),

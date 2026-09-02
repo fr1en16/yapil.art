@@ -7,9 +7,10 @@ interface Props {
   title?: string;
   seamless?: boolean;
   lang?: 'ru' | 'en';
+  lead?: string;
 }
 
-const { theme = 'dark', projectSlugs, title, seamless = false, lang = 'ru' } = Astro.props;
+const { theme = 'dark', projectSlugs, title, seamless = false, lang = 'ru', lead } = Astro.props;
 const isLight = theme === 'light';
 const isEn = lang === 'en';
 
@@ -203,6 +204,7 @@ const positions = [
 <section class:list={['portfolio', { 'theme-light': isLight, 'is-seamless': seamless }]} id="cases" aria-labelledby="portfolio-title">
   <div class="portfolio__header container">
     <h2 id="portfolio-title">{title ?? (isEn ? <Fragment>Featured<br />projects</Fragment> : <Fragment>Избранные<br />проекты</Fragment>)}</h2>
+    {lead && <p>{lead}</p>}
   </div>
 
   <div class="portfolio__grid container">
@@ -348,7 +350,23 @@ const positions = [
   }
 
   .portfolio__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .8fr);
+    gap: 2rem clamp(2rem, 7vw, 8rem);
+    align-items: end;
     margin-bottom: clamp(3rem, 7vw, 6rem);
+  }
+
+  .portfolio__header > p {
+    max-width: 42rem;
+    margin: 0;
+    color: rgba(242, 242, 242, .7);
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    line-height: 1.45;
+  }
+
+  .portfolio.theme-light .portfolio__header > p {
+    color: rgba(29, 29, 29, .7);
   }
 
   h2 {
@@ -593,6 +611,10 @@ const positions = [
   }
 
   @media (max-width: 47.99rem) {
+    .portfolio__header {
+      grid-template-columns: 1fr;
+    }
+
     .portfolio {
       padding-block: 4.5rem 6rem;
     }

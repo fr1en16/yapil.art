@@ -12,6 +12,7 @@ const seenSlugs = new Set();
 const seenAlts = new Set();
 let trendCount = 0;
 let totalCount = 0;
+let publishedCoreCount = 0;
 
 const field = (source, name) => {
   const match = source.match(new RegExp(`^${name}: (.+)$`, 'm'));
@@ -42,7 +43,8 @@ for (const serviceSlug of serviceSlugs) {
     if (!description || description.length < 120 || description.length > 160) errors.push(`${file}: invalid description length`);
     if (!h1) errors.push(`${file}: missing h1`);
     if (!cover || !coverAlt) errors.push(`${file}: missing cover metadata`);
-    if (file.startsWith('trend-') && status !== 'published' && status !== 'draft') errors.push(`${file}: invalid status`);
+    if (file.startsWith('trend-') && status !== 'draft') errors.push(`${file}: generated article must remain draft until editorial review`);
+    if (!file.startsWith('trend-') && status === 'published') publishedCoreCount += 1;
     if (file.startsWith('trend-') && source.length < 5000) errors.push(`${file}: generated draft is too short`);
     if (file.startsWith('trend-') && seenAlts.has(coverAlt)) errors.push(`${file}: duplicate generated alt text`);
     seenAlts.add(coverAlt);
@@ -64,10 +66,11 @@ for (const serviceSlug of serviceSlugs) {
 
 if (trendCount !== 600) errors.push(`expected 600 generated drafts, found ${trendCount}`);
 if (totalCount !== 624) errors.push(`expected 624 total articles, found ${totalCount}`);
+if (publishedCoreCount !== 24) errors.push(`expected 24 curated published articles, found ${publishedCoreCount}`);
 
 if (errors.length > 0) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
 
-console.log(`SEO library verified: ${totalCount} articles, ${trendCount} generated drafts, all covers and metadata valid.`);
+console.log(`SEO library verified: ${publishedCoreCount} published articles, ${trendCount} generated drafts, all covers and metadata valid.`);

@@ -286,7 +286,9 @@ export const citiesData: Record<string, CityData> = {
 };
 
 export const citiesList = Object.values(citiesData);
+export const indexableCitiesList = citiesList.filter((city) => isIndexableCitySlug(city.slug));
 export const millionCities = citiesList.filter((city) => city.tier === 'million');
 export const districtsList = millionCities.flatMap((city) =>
   city.districts.map((district) => ({ city, district })),
 );
+import { isIndexableCitySlug } from './seoPolicy.mjs';

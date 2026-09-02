@@ -20,14 +20,14 @@ const cityPages = relativeHtml.filter((file) => /^services\/[^/]+\/[^/]+\/index\
 const districtPages = relativeHtml.filter((file) => /^services\/[^/]+\/[^/]+\/[^/]+\/index\.html$/.test(file));
 const cityHubs = relativeHtml.filter((file) => /^cities\/(?:[^/]+\/)?index\.html$/.test(file));
 
-const expected = { cityPages: 102, districtPages: 114, cityHubs: 18 };
+const expected = { cityPages: 90, districtPages: 0, cityHubs: 16 };
 const actual = { cityPages: cityPages.length, districtPages: districtPages.length, cityHubs: cityHubs.length };
 
 for (const [key, count] of Object.entries(expected)) {
   if (actual[key] !== count) throw new Error(`${key}: expected ${count}, received ${actual[key]}`);
 }
 
-const geoPages = [...cityPages, ...districtPages];
+const geoPages = cityPages;
 const titles = new Set();
 let checkedInternalLinks = 0;
 const sitemapFiles = files.filter((file) => /sitemap-\d+\.xml$/.test(file));
@@ -37,7 +37,7 @@ for (const relative of geoPages) {
   const html = await readFile(path.join(root, relative), 'utf8');
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
-  const pathname = `/${relative.replace(/index\.html$/, '')}`;
+  const pathname = `/${relative.replace(/\/index\.html$/, '')}`;
   const expectedCanonical = `https://yapil.art${pathname}`;
 
   if (!title) throw new Error(`Missing title: ${relative}`);
@@ -69,4 +69,8 @@ for (const relative of [...geoPages, ...cityHubs]) {
   }
 }
 
-console.log(JSON.stringify({ ...actual, uniqueTitles: titles.size, checkedInternalLinks, sitemapFiles: sitemapFiles.length }, null, 2));
+const vercelConfig = await readFile(path.resolve('.vercel/output/config.json'), 'utf8');
+const permanentRedirects = [...vercelConfig.matchAll(/"status":\s*301/g)].length;
+if (permanentRedirects !== 128) throw new Error(`permanent redirects: expected 128, received ${permanentRedirects}`);
+
+console.log(JSON.stringify({ ...actual, uniqueTitles: titles.size, checkedInternalLinks, sitemapFiles: sitemapFiles.length, permanentRedirects }, null, 2));

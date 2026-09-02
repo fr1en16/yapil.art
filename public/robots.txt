@@ -3,5 +3,6 @@ Allow: /
 Disallow: /crm
 Disallow: /anal
 Disallow: /site-map
+Disallow: /api/
 
-Sitemap: https://yapil.art/sitemap-index.xml
+Sitemap: https://yapil.art/sitemap.xml

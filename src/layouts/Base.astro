@@ -44,6 +44,60 @@ const canonical = new URL(normalizedPathname, Astro.site);
 const resolvedImage = new URL(image, Astro.site).href;
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/light' || Astro.url.pathname === '/light/';
 const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
+
+const jsonLdGraph = Array.isArray(jsonLd?.['@graph'])
+  ? jsonLd['@graph'] as Record<string, unknown>[]
+  : jsonLd
+    ? [jsonLd]
+    : [];
+
+const hasSchemaType = (type: string) => jsonLdGraph.some((node) => {
+  const nodeType = node['@type'];
+  return Array.isArray(nodeType) ? nodeType.includes(type) : nodeType === type;
+});
+
+const defaultSchemaGraph: Record<string, unknown>[] = [];
+
+if (!hasSchemaType('WebSite')) {
+  defaultSchemaGraph.push({
+    '@type': 'WebSite',
+    '@id': 'https://yapil.art/#website',
+    name: 'Yapil',
+    url: 'https://yapil.art',
+    inLanguage: lang,
+    publisher: { '@id': 'https://yapil.art/#organization' },
+  });
+}
+
+if (!hasSchemaType('Organization') && !hasSchemaType('ProfessionalService')) {
+  defaultSchemaGraph.push({
+    '@type': ['Organization', 'ProfessionalService'],
+    '@id': 'https://yapil.art/#organization',
+    name: 'Yapil',
+    url: 'https://yapil.art',
+    logo: 'https://yapil.art/apple-touch-icon.png',
+    email: 'hi@yapil.art',
+    telephone: '+77067436197',
+    areaServed: ['KZ', 'UZ', 'RU', 'Worldwide'],
+  });
+}
+
+if (!hasSchemaType('BreadcrumbList')) {
+  defaultSchemaGraph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: normalizedPathname === '/'
+      ? [{ '@type': 'ListItem', position: 1, name: 'Главная', item: canonical.href }]
+      : [
+          { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://yapil.art' },
+          { '@type': 'ListItem', position: 2, name: documentTitle, item: canonical.href },
+        ],
+  });
+}
+
+const schemaJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [...defaultSchemaGraph, ...jsonLdGraph],
+};
 ---
 
 <!doctype html>
@@ -85,7 +139,7 @@ const isNavOverlay = navOverlay !== undefined ? navOverlay : isHome;
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="manifest" href="/site.webmanifest" />
     <title>{documentTitle}</title>
-    {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaJsonLd)} />
     <script is:inline>
       window.webAnalyticsBeforeSend = (event) => event.url.includes('/anal') ? null : event;
     </script>

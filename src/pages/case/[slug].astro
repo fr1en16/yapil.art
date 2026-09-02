@@ -5,6 +5,8 @@ import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
 import PdfSlider from '../../components/PdfSlider.astro';
 import InstagramCarousels from '../../components/InstagramCarousels.astro';
+import { servicesData } from '../../data/servicesData';
+import { resolveServiceSlug } from '../../utils/serviceLinks';
 
 export async function getStaticPaths() {
   const cases = await getCollection('cases');
@@ -35,6 +37,8 @@ const metaDescriptionParts = [
 const metaDescription = metaDescriptionParts.length <= 160
   ? metaDescriptionParts
   : `${metaDescriptionParts.slice(0, 157).replace(/\s+\S*$/, '')}…`;
+const serviceSlug = resolveServiceSlug(c.data.services);
+const linkedService = servicesData[serviceSlug];
 const creativeWorkJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -179,6 +183,14 @@ const creativeWorkJsonLd = {
       {c.id === 'yatut' && <InstagramCarousels />}
       <PdfSlider />
     </div>
+
+    <section class="case-service container" aria-labelledby="case-service-title">
+      <h2 id="case-service-title">Нужен похожий результат?</h2>
+      <p>Посмотрите состав, сроки и этапы услуги, которая лежит в основе этого проекта.</p>
+      <a href={`/services/${serviceSlug}`}>
+        <span>{linkedService?.name ?? 'Услуги Yapil'}</span><span aria-hidden="true">→</span>
+      </a>
+    </section>
 
     <Contacts
       title="Понравился проект?"
@@ -451,6 +463,46 @@ const creativeWorkJsonLd = {
     display: block;
   }
 
+  .case-service {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(18rem, .85fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-block: clamp(5rem, 10vw, 9rem);
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .case-service h2 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2.5rem, 6vw, 6rem);
+    line-height: .95;
+  }
+
+  .case-service > p {
+    margin: 0;
+    color: rgba(255, 255, 255, .75);
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .case-service > a {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding: 1.5rem 0;
+    border-block: 1px solid rgba(255, 255, 255, .4);
+    color: #fff;
+    font-size: clamp(1.15rem, 2vw, 1.6rem);
+    text-decoration: none;
+  }
+
+  .case-service > a:hover,
+  .case-service > a:focus-visible {
+    color: var(--accent-tint, #F7C8BF);
+  }
+
   @media (min-width: 48rem) {
     .case-heading {
       grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.55fr);
@@ -464,6 +516,12 @@ const creativeWorkJsonLd = {
 
     .case-brief section:last-child {
       border-bottom: 0;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .case-service {
+      grid-template-columns: 1fr;
     }
   }
 

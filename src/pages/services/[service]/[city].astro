@@ -1,11 +1,11 @@
 ---
 import GeoServicePage from '../../../components/GeoServicePage.astro';
 import { servicesList, type ServiceData } from '../../../data/servicesData';
-import { citiesList, type CityData } from '../../../data/citiesData';
+import { indexableCitiesList, type CityData } from '../../../data/citiesData';
 
 export function getStaticPaths() {
   return servicesList.flatMap((service) =>
-    citiesList.map((city) => ({
+    indexableCitiesList.map((city) => ({
       params: { service: service.slug, city: city.slug },
       props: { service, city },
     })),

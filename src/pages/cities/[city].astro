@@ -2,13 +2,13 @@
 import Base from '../../layouts/Base.astro';
 import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
-import { citiesList, type CityData } from '../../data/citiesData';
+import { indexableCitiesList, type CityData } from '../../data/citiesData';
 import { servicesList } from '../../data/servicesData';
 import { geoServicesData } from '../../data/geoServicesData';
 import '../../styles/proposal-pages.css';
 
 export function getStaticPaths() {
-  return citiesList.map((city) => ({ params: { city: city.slug }, props: { city } }));
+  return indexableCitiesList.map((city) => ({ params: { city: city.slug }, props: { city } }));
 }
 
 interface Props { city: CityData; }
@@ -75,26 +75,17 @@ const jsonLd = {
         </div>
       </section>
 
-      {city.districts.length > 0 && (
-        <section class="editorial-section" aria-labelledby="districts-title">
-          <header class="editorial-heading">
-            <p class="editorial-heading__number">02</p>
-            <div class="editorial-heading__content"><h2 id="districts-title">Услуги по районам {city.genitive}</h2></div>
-          </header>
-          <div class="district-list">
-            {city.districts.map((district, index) => (
-              <article class="district-row">
-                <div><span>{String(index + 1).padStart(2, '0')}</span><h3>{district.name}</h3><p>{district.context}</p></div>
-                <nav aria-label={`Услуги: ${district.name}`}>
-                  {servicesList.map((service) => (
-                    <a href={`/services/${service.slug}/${city.slug}/${district.slug}`}>{geoServicesData[service.slug].shortName}</a>
-                  ))}
-                </nav>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
+      <section class="editorial-section" aria-labelledby="conditions-title">
+        <header class="editorial-heading">
+          <p class="editorial-heading__number">02</p>
+          <div class="editorial-heading__content"><h2 id="conditions-title">Условия работы с командами {city.genitive}</h2></div>
+        </header>
+        <ol class="editorial-list">
+          <li class="editorial-row"><span class="editorial-row__number">01</span><h3>Формат</h3><p>{city.workFormat}</p></li>
+          <li class="editorial-row"><span class="editorial-row__number">02</span><h3>Контекст</h3><p>Учитываем специфику направлений: {city.businessFocus.join(', ')}.</p></li>
+          <li class="editorial-row"><span class="editorial-row__number">03</span><h3>Результат</h3><p>До старта фиксируем состав работ, календарь, точки согласования и комплект передаваемых материалов.</p></li>
+        </ol>
+      </section>
     </div>
 
     <Contacts theme="light" title={`Обсудим проект в ${city.prepositional}`} lead="Опишите задачу — предложим подход, сроки и состав работ." source="contacts_form" sourceDetails={`Город: ${city.name}`} />
@@ -105,14 +96,5 @@ const jsonLd = {
 <style>
   .city-breadcrumbs { display: flex; gap: .5rem; padding-top: 7rem; color: rgba(23,23,23,.58); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
   .city-breadcrumbs a { color: inherit; text-decoration: none; }
-  .district-list { border-top: 1px solid rgba(23,23,23,.18); }
-  .district-row { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(18rem,.85fr); gap: clamp(2rem,5vw,6rem); padding: 2rem 0; border-bottom: 1px solid rgba(23,23,23,.18); }
-  .district-row > div { display: grid; grid-template-columns: 2.5rem minmax(0,1fr); gap: .5rem 1rem; }
-  .district-row span { color: #fd4b32; font-size: .75rem; }
-  .district-row h3 { margin: 0; font-size: clamp(1.6rem,3vw,3rem); font-weight: 500; letter-spacing: -.035em; }
-  .district-row p { grid-column: 2; margin: .75rem 0 0; max-width: 45rem; color: rgba(23,23,23,.7); line-height: 1.55; }
-  .district-row nav { display: flex; flex-wrap: wrap; align-content: flex-start; gap: .5rem; }
-  .district-row nav a { padding: .7rem .85rem; border: 1px solid rgba(23,23,23,.22); color: inherit; font-size: .82rem; text-decoration: none; }
-  .district-row nav a:hover,.district-row nav a:focus-visible { border-color: #fd4b32; color: #fd4b32; }
-  @media (max-width: 800px) { .city-breadcrumbs { padding-top: 5.5rem; } .district-row { grid-template-columns: 1fr; } }
+  @media (max-width: 800px) { .city-breadcrumbs { padding-top: 5.5rem; } }
 </style>

@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { servicesList } from '../data/servicesData';
 import { solutionsList } from '../data/solutionsData';
-import { citiesList } from '../data/citiesData';
+import { indexableCitiesList } from '../data/citiesData';
 
 const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
 
@@ -67,11 +67,11 @@ const pageGroups = [
     title: 'Города',
     description: 'Посадочные страницы услуг для крупных городов Казахстана.',
     pages: [
-      { title: 'Все города', path: '/cities', note: `${citiesList.length} городов с населением 200 тысяч+` },
-      ...citiesList.map((city) => ({
+      { title: 'Все города', path: '/cities', note: `${indexableCitiesList.length} приоритетных городов` },
+      ...indexableCitiesList.map((city) => ({
         title: city.name,
         path: `/cities/${city.slug}`,
-        note: city.tier === 'million' ? `${city.districts.length} районов · 6 услуг` : '6 услуг',
+        note: '6 услуг',
       })),
     ],
   },
