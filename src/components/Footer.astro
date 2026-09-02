@@ -16,7 +16,6 @@ const homePath = isEn ? '/en' : '/';
 const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
 const whatsappHref = getWhatsAppUrl({
-  pageTitle: isEn ? 'Website footer' : 'Футер сайта',
   pageUrl: currentUrl,
   sourceContext: 'footer_link',
 });

@@ -3,30 +3,29 @@
  */
 
 export interface MessengerLinkOptions {
-  pageTitle?: string;
   pageUrl?: string;
   sourceContext?: string;
-  customNote?: string;
 }
 
 export function getWhatsAppUrl(options: MessengerLinkOptions = {}): string {
   const phone = '77067436197';
-  const lines: string[] = ['Здравствуйте! Хочу обсудить проект с командой Yapil.'];
+  let page = '/';
 
-  if (options.pageTitle) {
-    lines.push(`Тема / Услуга: ${options.pageTitle}`);
-  }
-  if (options.sourceContext) {
-    lines.push(`Контекст: ${options.sourceContext}`);
-  }
-  if (options.customNote) {
-    lines.push(`Детали: ${options.customNote}`);
-  }
   if (options.pageUrl) {
-    lines.push(`Страница: ${options.pageUrl}`);
-  } else {
-    lines.push('Канал: Сайт yapil.art');
+    try {
+      const url = new URL(options.pageUrl, 'https://yapil.art');
+      page = `${url.pathname}${url.search}${url.hash}` || '/';
+    } catch {
+      page = options.pageUrl;
+    }
   }
+
+  const lines = [
+    'Здравствуйте! Хочу обсудить проект',
+    '',
+    `Страница: ${page}`,
+    `Форма: ${options.sourceContext || 'site_contact'}`,
+  ];
 
   const message = lines.join('\n');
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;

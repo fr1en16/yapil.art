@@ -249,9 +249,8 @@ export default function AiCalculator() {
     }).catch((err) => console.error('CRM submit error:', err));
 
     const waUrl = getWhatsAppUrl({
-      pageTitle: result.projectName,
-      sourceContext: 'Калькулятор стоимости сайта',
-      customNote: summary.replace(/\n/g, '. '),
+      pageUrl: window.location.href,
+      sourceContext: 'calculator',
     });
 
     setTimeout(() => {

@@ -40,7 +40,6 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
 const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
 const whatsappHref = getWhatsAppUrl({
-  pageTitle: displaySourceDetails,
   pageUrl: currentUrl,
   sourceContext: source,
 });

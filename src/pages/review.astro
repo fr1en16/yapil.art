@@ -9,7 +9,6 @@ const description = 'Форма обратной связи для клиент�
 
 const currentUrl = new URL(Astro.url.pathname, Astro.site).href;
 const whatsappHref = getWhatsAppUrl({
-  pageTitle: 'Форма отзыва клиента',
   pageUrl: currentUrl,
   sourceContext: 'review_page',
 });
