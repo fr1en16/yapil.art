@@ -391,24 +391,40 @@ const positions = [
   }
 
   .project--lead {
-    grid-column: 1 / span 7;
+    grid-column: 2 / span 4;
+    grid-row: 1;
   }
 
   .project--side {
     grid-column: 9 / span 4;
-    align-self: end;
+    grid-row: 1;
+    margin-top: clamp(4rem, 8vw, 8rem);
   }
 
   .project--center {
-    grid-column: 2 / span 10;
+    grid-column: 4 / span 5;
+    grid-row: 2;
   }
 
   .project--small {
     grid-column: 1 / span 4;
+    grid-row: 3;
   }
 
   .project--wide {
-    grid-column: 6 / span 7;
+    grid-column: 8 / span 4;
+    grid-row: 3;
+    margin-top: clamp(4rem, 8vw, 8rem);
+  }
+
+  .project:nth-child(6) {
+    grid-column: 3 / span 4;
+    grid-row: 4;
+  }
+
+  .project:nth-child(7) {
+    grid-column: 9 / span 4;
+    grid-row: 4;
   }
 
   .project__link {
@@ -587,12 +603,34 @@ const positions = [
       gap-block: clamp(4rem, 9vw, 6rem);
     }
 
-    .project--lead,
-    .project--side,
-    .project--center,
-    .project--small,
-    .project--wide {
+    .project,
+    .project:nth-child(n) {
       grid-column: 1 / -1;
+      grid-row: auto;
+      margin-top: 0;
+    }
+
+    .project--lead,
+    .project--center,
+    .project--wide {
+      width: 50%;
+    }
+
+    .project--lead {
+      margin-left: 8.333%;
+    }
+
+    .project--center {
+      justify-self: center;
+    }
+
+    .project--wide {
+      justify-self: end;
+      margin-right: 8.333%;
+    }
+
+    .project:nth-child(6) {
+      margin-left: 16.667%;
     }
 
     .project--side,
@@ -638,12 +676,12 @@ const positions = [
       min-width: 0;
     }
 
-    /* Крупные карточки (90%) */
+    /* Крупные карточки уменьшены вдвое от исходных 90%. */
     .project--lead,
     .project--center,
     .project--wide {
-      width: 90%;
-      max-width: 90%;
+      width: 45%;
+      max-width: 45%;
     }
 
     /* Мелкие карточки (60%) */
@@ -677,6 +715,10 @@ const positions = [
     .project--wide {
       align-self: flex-end;
       margin-inline: auto 0;
+    }
+
+    .project:nth-child(6) {
+      margin-inline: 16.667% auto;
     }
 
     .project__media {
