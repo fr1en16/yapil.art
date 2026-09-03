@@ -22,22 +22,21 @@ const homePageJsonLd = {
     {
       '@type': 'WebSite',
       '@id': 'https://yapil.art/#website',
-      name: 'Яков Пилипюк',
+      name: 'Yapil',
       url: 'https://yapil.art',
       inLanguage: 'ru',
       publisher: {
-        '@id': 'https://yapil.art/#person',
+        '@id': 'https://yapil.art/#organization',
       },
     },
     {
-      '@type': 'Person',
-      '@id': 'https://yapil.art/#person',
-      name: 'Яков Пилипюк',
-      alternateName: 'Yapil',
+      '@type': ['Organization', 'ProfessionalService'],
+      '@id': 'https://yapil.art/#organization',
+      name: 'Yapil',
+      alternateName: 'Дизайн-агентство Yapil',
       url: 'https://yapil.art',
-      image: 'https://media.yapil.art/me.d04a3d1afc9c1316.webp?v=2',
-      jobTitle: 'Дизайнер',
-      description: 'Я — дизайнер Яков Пилипюк: разрабатываю сайты, создаю айдентику, делаю брендинг, полиграфию, презентации и веду дизайн-сопровождение для бизнеса.',
+      logo: 'https://yapil.art/apple-touch-icon.png',
+      description: 'Мы — дизайн-агентство Yapil. Разрабатываем сайты, создаём айдентику, полиграфию и презентации, ведём дизайн-сопровождение бизнеса.',
       email: 'hi@yapil.art',
       telephone: '+77067436197',
       sameAs: [
@@ -66,7 +65,7 @@ const homePageJsonLd = {
             itemOffered: {
               '@type': 'Service',
               name: 'Разработка сайтов под ключ',
-              description: 'Проектирую структуру, рисую интерфейсы и быстро разрабатываю на Astro/React с оценкой PageSpeed 95+.',
+              description: 'Проектируем структуру, создаём интерфейсы и разрабатываем сайты на Astro/React с оценкой PageSpeed 95+.',
               url: 'https://yapil.art/services/websites',
             },
           },
@@ -117,7 +116,7 @@ const homePageJsonLd = {
           name: 'Какие услуги вы предоставляете?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Я создаю сайты под ключ (Astro, React, Tailwind), разрабатываю айдентику и фирменный стиль, верстаю полиграфию и упаковку, проектирую инвест-презентации и веду абонентское дизайн-сопровождение.',
+            text: 'Мы создаём сайты под ключ (Astro, React, Tailwind), разрабатываем айдентику и фирменный стиль, оформляем полиграфию и упаковку, готовим инвестиционные презентации и ведём дизайн-сопровождение.',
           },
         },
         {
@@ -133,7 +132,7 @@ const homePageJsonLd = {
           name: 'Работаете ли вы официально по договору?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Да, работаю официально с заключением договора, поэтапной оплатой, актами выполненных работ и передачей всех исключительных прав на исходные материалы.',
+            text: 'Да, работаем официально с заключением договора, поэтапной оплатой, актами выполненных работ и передачей всех исключительных прав на исходные материалы.',
           },
         },
       ],
@@ -143,30 +142,30 @@ const homePageJsonLd = {
 ---
 
 <Base
-  title="Яков Пилипюк — дизайнер сайтов и айдентики | Yapil"
-  description="Я Яков Пилипюк, дизайнер: разрабатываю сайты, создаю айдентику, брендинг и полиграфию для бизнеса — от первой концепции до релиза и печати."
+  title="Yapil — дизайн-агентство: сайты и айдентика"
+  description="Мы — дизайн-агентство Yapil. Разрабатываем сайты, создаём айдентику, брендинг и полиграфию для бизнеса — от первой концепции до релиза и печати."
   jsonLd={homePageJsonLd}
 >
   <Hero
     title="Дизайн, который<br />работает на бизнес"
-    description="Создаю сайты и айдентику, которые выделяют компанию среди конкурентов и приносят заявки."
+    description="Мы — дизайн-агентство Yapil. Создаём сайты и айдентику, которые выделяют компанию среди конкурентов и приносят заявки."
     casesHref={heroWhatsAppHref}
     ctaText="Связаться"
     ctaExternal
     ripple
   />
-  <AboutCompact personal />
-  <Services personal homepage />
+  <AboutCompact />
+  <Services homepage />
   <ProduxPortfolio />
   <VsyachinaInfinite />
   <ReviewsSlider />
-  <Founder />
+  <Founder description="Яков Пилипюк — дизайнер с восьмилетним опытом, который лежит в основе подхода Yapil. Мы уделяем внимание деталям и смыслу, объединяем сайты, айдентику и печатные материалы в единый визуальный язык и доводим проекты от первой идеи до запуска." />
   <Contacts
     title="Нашли задачу,<br />похожую на вашу?"
-    lead="Расскажите о задаче или заполните форму — отвечу в течение 2 часов и подготовлю предложение."
-    successText="Спасибо за обращение. Изучу вашу задачу и отвечу в течение 2 часов."
+    lead="Расскажите о задаче или заполните форму — ответим в течение 2 часов и подготовим предложение."
+    successText="Спасибо за обращение. Изучим вашу задачу и ответим в течение 2 часов."
     source="contacts_form"
     sourceDetails="Форма контактов на главной странице"
   />
-  <Footer slot="footer" personal />
+  <Footer slot="footer" />
 </Base>

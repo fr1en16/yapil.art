@@ -2,9 +2,10 @@
 interface Props {
   theme?: 'dark' | 'light';
   lang?: 'ru' | 'en';
+  description?: string;
 }
 
-const { theme = 'dark', lang = 'ru' } = Astro.props;
+const { theme = 'dark', lang = 'ru', description } = Astro.props;
 const isLight = theme === 'light';
 const isEn = lang === 'en';
 ---
@@ -58,7 +59,7 @@ const isEn = lang === 'en';
             isLight ? 'text-[#1D1D1D]/75' : 'text-white/80',
           ]}
         >
-          {isEn ? (
+          {description ? description : isEn ? (
             <>I believe great design begins with attention to detail, clarity, and what truly matters. For eight years, I have been translating ideas into tangible form: websites, identities, and print you want to hold in your hands. I handle every phase personally without dilution or handoffs.</>
           ) : (
             <>Верю, что хороший дизайн начинается с&nbsp;внимания к&nbsp;деталям, к&nbsp;смыслу, к&nbsp;тому, что действительно важно сказать. Восемь лет я&nbsp;превращаю идеи в&nbsp;форму: сайты, знаки, бумагу, которую хочется держать в&nbsp;руках. Не&nbsp;люблю разбивать проект на&nbsp;цеха и&nbsp;довожу всё сам.</>

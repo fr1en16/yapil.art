@@ -1,4 +1,5 @@
 ---
+import ProcessWork from '../../components/process-work/ProcessWork.astro';
 import OfferingDetailTemplate from '../../components/proposal/OfferingDetailTemplate.astro';
 import { servicesData, type ServiceData } from '../../data/servicesData';
 
@@ -47,4 +48,6 @@ const jsonLd = {
   links={service.crossLinks}
   ctaTitle={service.ctaTitle}
   ctaLead={service.ctaLead}
-/>
+>
+  {service.slug === 'websites' && <ProcessWork slot="process-work" embedded />}
+</OfferingDetailTemplate>

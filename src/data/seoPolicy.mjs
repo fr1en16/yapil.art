@@ -62,6 +62,7 @@ export const PRIVATE_PATH_PREFIXES = Object.freeze([
   '/en',
   '/kp',
   '/light',
+  '/process-work',
   '/review',
   '/shanding-3d',
   '/site-map',

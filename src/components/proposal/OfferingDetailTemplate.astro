@@ -40,6 +40,7 @@ interface Props {
 const props = Astro.props;
 const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead } = props;
 const source = 'contacts_form';
+const hasProcessWork = section === 'services' && slug === 'websites' && Astro.slots.has('process-work');
 const sectionName = section === 'services' ? 'Услуга' : 'Решение';
 const deadline = metrics.find((metric) => /срок/iu.test(metric.label))?.text ?? 'фиксируем после короткого брифа';
 const result = secondCards[0]?.title ?? secondTitle;
@@ -63,6 +64,8 @@ const linksNumber = section === 'services' ? '06' : '05';
         </div>
       </div>
     </header>
+
+    {hasProcessWork && <slot name="process-work" />}
 
     <div class="editorial-body">
       <section class="editorial-section" id="scope" aria-labelledby="scope-title">
@@ -105,7 +108,7 @@ const linksNumber = section === 'services' ? '06' : '05';
         </section>
       )}
 
-      {rows.length > 0 && rowsTitle && (
+      {!hasProcessWork && rows.length > 0 && rowsTitle && (
         <section class="editorial-section" aria-labelledby="steps-title">
           <header class="editorial-heading"><p class="editorial-heading__number">{processNumber}</p><div class="editorial-heading__content"><h2 id="steps-title">Как мы делаем: {rowsTitle.toLocaleLowerCase('ru')}</h2></div></header>
           <ol class="editorial-list">{rows.map((row) => <li class="editorial-row"><span class="editorial-row__number">{row.number}</span><h3>{row.title}</h3><p>{row.text}</p></li>)}</ol>
@@ -113,7 +116,7 @@ const linksNumber = section === 'services' ? '06' : '05';
       )}
 
     </div>
-    <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />
+    {!hasProcessWork && <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />}
     <div class="editorial-body">
       <section class="editorial-section" aria-labelledby="faq-title">
         <header class="editorial-heading"><p class="editorial-heading__number">{faqNumber}</p><div class="editorial-heading__content"><h2 id="faq-title">{faqTitle}</h2></div></header>
