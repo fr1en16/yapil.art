@@ -7,6 +7,7 @@ interface Props {
   cards?: boolean;
   currency?: 'kzt' | 'usd';
   lang?: 'ru' | 'en';
+  homepage?: boolean;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   cards = false,
   currency = 'kzt',
   lang = 'ru',
+  homepage = false,
 } = Astro.props;
 ---
 
@@ -25,4 +27,5 @@ const {
   cards={cards}
   currency={currency}
   lang={lang}
+  homepage={homepage}
 />

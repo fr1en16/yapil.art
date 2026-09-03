@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, ArrowRight, Check, X, RotateCcw, Clock, UserCheck, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ChevronRight, Check, X, RotateCcw, Clock, UserCheck, ShieldCheck } from 'lucide-react';
 import { submitLead } from '../../lib/crmStore';
 import { CoverflowCarousel } from './coverflow-carousel';
+import './homepage-services.css';
 
 export interface ServiceItem {
   id: string;
@@ -27,7 +28,7 @@ export const services: ServiceItem[] = [
     price: 'от 150 000 ₸',
     caseBadge: 'Кейс // Compass',
     caseLink: '/case/compass',
-    image: 'https://media.yapil.art/services/%D1%81%D0%B0%D0%B9%D1%82%D1%8B.webp',
+    image: '/services/sites.png',
     color: '#141416',
   },
   {
@@ -49,7 +50,7 @@ export const services: ServiceItem[] = [
     price: 'от 40 000 ₸',
     caseBadge: 'Кейс // Shanding',
     caseLink: '/case/shanding',
-    image: 'https://media.yapil.art/services/%D0%BF%D0%BE%D0%BB%D0%B8%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.webp',
+    image: '/services/polygraphy.png',
     color: '#141416',
   },
   {
@@ -60,7 +61,7 @@ export const services: ServiceItem[] = [
     price: 'от 40 000 ₸',
     caseBadge: 'Кейс // Gippo',
     caseLink: '/case/gippo',
-    image: 'https://media.yapil.art/services/smm.webp',
+    image: '/services/smm.png',
     color: '#141416',
   },
   {
@@ -71,7 +72,7 @@ export const services: ServiceItem[] = [
     price: 'от 60 000 ₸',
     caseBadge: 'Кейс // Parking24',
     caseLink: '/case/parking24',
-    image: 'https://media.yapil.art/services/%D0%BF%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D0%B8.webp',
+    image: '/services/presentations.png',
     color: '#141416',
   },
   {
@@ -82,7 +83,7 @@ export const services: ServiceItem[] = [
     price: 'от 150 000 ₸',
     caseBadge: 'Кейс // ONmacabim',
     caseLink: '/case/onmacabim',
-    image: 'https://media.yapil.art/services/support.webp?v=20260822',
+    image: '/services/support.png',
     color: '#141416',
   },
 ];
@@ -217,12 +218,14 @@ export default function ServicesAnimatedModal({
   cards = false,
   currency = 'kzt',
   lang = 'ru',
+  homepage = false,
 }: {
   theme?: 'dark' | 'light';
   personal?: boolean;
   cards?: boolean;
   currency?: 'kzt' | 'usd';
   lang?: 'ru' | 'en';
+  homepage?: boolean;
 }) {
   const isLight = theme === 'light';
   const isEn = lang === 'en';
@@ -350,20 +353,20 @@ export default function ServicesAnimatedModal({
           >
             {displayedServices.map((item, index) => (
               <div key={item.id} role="listitem" className="w-full">
-                <ServiceRow
+                {homepage ? <HomepageServiceRow item={item} isLight={isLight} onOpenModal={handleOpenModal} /> : <ServiceRow
                   item={item}
                   index={index}
                   isLight={isLight}
                   setHoverModal={setHoverModal}
                   onOpenModal={handleOpenModal}
-                />
+                />}
               </div>
             ))}
           </div>
         )}
 
         {/* Floating Modal Preview & Magnetic Cursor (only if no active dialog) */}
-        {!cards && !reduceMotion && !activeServiceModal && (
+        {!homepage && !cards && !reduceMotion && !activeServiceModal && (
           <HoverModalPreview modal={hoverModal} services={displayedServices} isLight={isLight} />
         )}
       </div>
@@ -386,6 +389,64 @@ export default function ServicesAnimatedModal({
           document.body
         )}
     </section>
+  );
+}
+
+function HomepageServiceRow({
+  item,
+  isLight,
+  onOpenModal,
+}: {
+  item: ServiceItem;
+  isLight: boolean;
+  onOpenModal: (service: ServiceItem) => void;
+}) {
+  const rowRef = useRef<HTMLButtonElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const mobileMotion = window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)');
+    let observer: IntersectionObserver | undefined;
+
+    const updateObserver = () => {
+      observer?.disconnect();
+      setIsInView(false);
+      if (!mobileMotion.matches || !rowRef.current) return;
+
+      observer = new IntersectionObserver(
+        ([entry]) => setIsInView(entry.isIntersecting),
+        { rootMargin: '0px 0px -25% 0px', threshold: 0 },
+      );
+      observer.observe(rowRef.current);
+    };
+
+    updateObserver();
+    mobileMotion.addEventListener('change', updateObserver);
+    return () => {
+      observer?.disconnect();
+      mobileMotion.removeEventListener('change', updateObserver);
+    };
+  }, []);
+
+  return (
+    <button
+      ref={rowRef}
+      type="button"
+      className={`homepage-service-row${isLight ? ' homepage-service-row--light' : ''}${isInView ? ' homepage-service-row--in-view' : ''}`}
+      onClick={() => onOpenModal(item)}
+      aria-haspopup="dialog"
+    >
+      <span className="homepage-service-media" aria-hidden="true">
+        <img src={item.image} alt="" loading="lazy" decoding="async" width={1000} height={576} />
+      </span>
+      <span className="homepage-service-copy">
+        <span className="homepage-service-heading">
+          <h3>{item.title}</h3>
+          <ChevronRight className="homepage-service-arrow" aria-hidden="true" />
+        </span>
+        <span className="homepage-service-description">{item.description}</span>
+      </span>
+    </button>
   );
 }
 
@@ -667,25 +728,16 @@ function ServiceApplicationModal({
     e.preventDefault();
     const newErrors: { name?: string; phone?: string; privacy?: string } = {};
 
-    if (!name.trim()) {
-      newErrors.name = isEn ? 'Please enter your name' : 'Пожалуйста, укажите ваше имя';
-    }
-
     if (isEn) {
-      if (!phone.trim()) {
-        newErrors.phone = 'Please provide your phone number, Telegram or WhatsApp';
+      const digits = phone.replace(/\D/g, '');
+      if (!phone.trim() || digits.length < 7 || digits.length > 15) {
+        newErrors.phone = 'Please enter your full phone number';
       }
     } else {
       const digits = phone.replace(/\D/g, '');
       if (!phone.trim() || digits.length < 11) {
         newErrors.phone = 'Пожалуйста, укажите полный номер телефона';
       }
-    }
-
-    if (!privacy) {
-      newErrors.privacy = isEn
-        ? 'Consent with privacy policy is required'
-        : 'Необходимо согласие с политикой конфиденциальности';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -879,7 +931,7 @@ function ServiceApplicationModal({
                     htmlFor="service-name-input"
                     className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
-                    {isEn ? 'Name' : 'Имя'} <span className="text-[#FD4B32]">*</span>
+                    {isEn ? 'Name' : 'Имя'}
                   </label>
                   <input
                     ref={nameInputRef}
@@ -907,7 +959,6 @@ function ServiceApplicationModal({
                               : 'border-white/10 bg-white/[0.04] text-white placeholder-white/30 hover:border-white/25 hover:bg-white/[0.08] focus:border-[#FD4B32] focus:bg-white/[0.08]'
                           }`
                     }`}
-                    required
                   />
                   {errors.name && (
                     <span className="block text-xs text-red-500">{errors.name}</span>
@@ -920,11 +971,11 @@ function ServiceApplicationModal({
                     htmlFor="service-phone-input"
                     className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
                   >
-                    {isEn ? 'Phone / Telegram / WhatsApp' : 'Телефон'} <span className="text-[#FD4B32]">*</span>
+                    {isEn ? 'Phone number' : 'Телефон'} <span className="text-[#FD4B32]">*</span>
                   </label>
                   <input
                     id="service-phone-input"
-                    type={isEn ? 'text' : 'tel'}
+                    type="tel"
                     value={phone}
                     onChange={handlePhoneChange}
                     onKeyDown={handlePhoneKeyDown}
@@ -936,7 +987,7 @@ function ServiceApplicationModal({
                         setPhone('');
                       }
                     }}
-                    placeholder={isEn ? '+1 (___) ___ ____ or @username' : '+7 (___) ___-__-__'}
+                    placeholder={isEn ? '+1 (___) ___ ____' : '+7 (___) ___-__-__'}
                     style={{ outline: 'none' }}
                     className={`w-full px-5 py-4 sm:py-4.5 rounded-none backdrop-blur-2xl border text-sm sm:text-base outline-none focus:outline-none focus-visible:outline-none transition-all duration-300 ${
                       isLight
@@ -952,7 +1003,7 @@ function ServiceApplicationModal({
                           }`
                     }`}
                     required
-                    inputMode={isEn ? 'text' : 'tel'}
+                    inputMode="tel"
                   />
                   {errors.phone && (
                     <span className="block text-xs text-red-500">{errors.phone}</span>

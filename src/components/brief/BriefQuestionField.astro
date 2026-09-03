@@ -20,7 +20,7 @@ const optionInputType: 'radio' | 'checkbox' = question.type === 'radio' ? 'radio
   {question.hint && <p class="question-hint">{question.hint}</p>}
 
   {question.type === 'textarea' && <textarea id={fieldId} name={question.name} rows="4" placeholder={question.placeholder} required={question.required}></textarea>}
-  {(question.type === 'text' || question.type === 'url' || question.type === 'number') && <input id={fieldId} name={question.name} type={question.type} placeholder={question.placeholder} required={question.required} />}
+  {(question.type === 'text' || question.type === 'tel' || question.type === 'url' || question.type === 'number') && <input id={fieldId} name={question.name} type={question.type} placeholder={question.placeholder} required={question.required} />}
   {question.type === 'select' && (
     <select id={fieldId} name={question.name} required={question.required}>
       <option value="">Выберите вариант</option>

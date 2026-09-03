@@ -87,7 +87,7 @@ const whatsappHref = getWhatsAppUrl({
             <!-- 1. Name -->
             <div class="form-group">
               <label class="form-label" for="client-name">
-                {isEn ? 'Name' : 'Имя'} <span class="required-star" aria-hidden="true">*</span>
+                {isEn ? 'Name' : 'Имя'}
               </label>
               <input
                 type="text"
@@ -95,7 +95,6 @@ const whatsappHref = getWhatsAppUrl({
                 name="name"
                 class="form-control"
                 placeholder={isEn ? 'How to address you' : 'Как к вам обращаться'}
-                required
                 autocomplete="name"
               />
               <span class="field-error field-error-name" id="name-error" aria-live="polite"></span>
@@ -104,17 +103,17 @@ const whatsappHref = getWhatsAppUrl({
             <!-- 2. Phone with automatic mask -->
             <div class="form-group">
               <label class="form-label" for="client-phone">
-                {isEn ? 'Phone / Telegram / WhatsApp' : 'Номер телефона'} <span class="required-star" aria-hidden="true">*</span>
+                {isEn ? 'Phone number' : 'Номер телефона'} <span class="required-star" aria-hidden="true">*</span>
               </label>
               <input
-                type={isEn ? 'text' : 'tel'}
+                type="tel"
                 id="client-phone"
                 name="phone"
                 class="form-control"
-                placeholder={isEn ? '+1 (___) ___ ____ or @username' : '+7 (___) ___-__-__'}
+                placeholder={isEn ? '+1 (___) ___ ____' : '+7 (___) ___-__-__'}
                 required
                 autocomplete="tel"
-                inputmode={isEn ? 'text' : 'tel'}
+                inputmode="tel"
               />
               <span class="field-error field-error-phone" id="phone-error" aria-live="polite"></span>
             </div>
@@ -173,7 +172,6 @@ const whatsappHref = getWhatsAppUrl({
                   id="privacy-consent"
                   class="consent-checkbox"
                   checked
-                  required
                 />
                 <span class="consent-custom-box" aria-hidden="true">
                   <svg class="consent-check-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square">
@@ -324,20 +322,12 @@ const whatsappHref = getWhatsAppUrl({
         clearErrors();
 
         let hasError = false;
-        const nameVal = nameInput.value.trim();
         const phoneVal = phoneInput.value.trim();
         const phoneDigits = phoneVal.replace(/\D/g, '');
 
-        if (!nameVal) {
-          if (nameError) nameError.textContent = isEn ? 'Please enter your name' : 'Пожалуйста, укажите имя';
-          nameInput.classList.add('has-error');
-          nameInput.focus();
-          hasError = true;
-        }
-
         if (isEn) {
-          if (!phoneVal) {
-            if (phoneError) phoneError.textContent = 'Please enter your phone or handle';
+          if (!phoneVal || phoneDigits.length < 7 || phoneDigits.length > 15) {
+            if (phoneError) phoneError.textContent = 'Please enter your full phone number';
             phoneInput.classList.add('has-error');
             if (!hasError) phoneInput.focus();
             hasError = true;
@@ -349,13 +339,6 @@ const whatsappHref = getWhatsAppUrl({
             if (!hasError) phoneInput.focus();
             hasError = true;
           }
-        }
-
-        if (privacyCheckbox && !privacyCheckbox.checked) {
-          if (privacyError) privacyError.textContent = isEn ? 'Privacy policy consent is required' : 'Необходимо согласие с условиями';
-          privacyCheckbox.classList.add('has-error');
-          if (!hasError) privacyCheckbox.focus();
-          hasError = true;
         }
 
         if (hasError) return;

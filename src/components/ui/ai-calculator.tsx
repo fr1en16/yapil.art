@@ -468,6 +468,9 @@ export default function AiCalculator() {
                   <div className="flex flex-col sm:flex-row gap-3">
                     <input
                       type="tel"
+                      name="phone"
+                      aria-label="Номер телефона"
+                      required
                       inputMode="tel"
                       value={phone}
                       onChange={handlePhoneChange}

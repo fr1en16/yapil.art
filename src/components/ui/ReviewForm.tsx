@@ -132,25 +132,9 @@ export default function ReviewForm({ theme = 'dark' }: ReviewFormProps) {
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!author.trim()) {
-      newErrors.author = 'Пожалуйста, укажите ваше имя и фамилию';
-    }
-    if (!role.trim()) {
-      newErrors.role = 'Укажите вашу роль или должность (например, Основатель или Продюсер)';
-    }
-    if (!company.trim()) {
-      newErrors.company = 'Укажите название вашей компании или бренда';
-    }
-    if (!quote.trim()) {
-      newErrors.quote = 'Пожалуйста, напишите краткое главное впечатление (1–3 предложения)';
-    } else if (quote.trim().length < 15) {
-      newErrors.quote = 'Краткий отзыв должен быть чуть более развернутым (минимум 15 символов)';
-    }
-
-    if (formatMode === 'structured' && !likedMost.trim() && !likedSpecial.trim() && !toImprove.trim()) {
-      newErrors.structured = 'Пожалуйста, ответьте хотя бы на один из развернутых вопросов';
-    } else if (formatMode === 'freeform' && !fullReviewText.trim()) {
-      newErrors.freeform = 'Пожалуйста, напишите ваш развернутый отзыв';
+    const digits = contact.replace(/\D/g, '');
+    if (!contact.trim() || digits.length < 7 || digits.length > 15) {
+      newErrors.contact = 'Пожалуйста, укажите полный номер телефона';
     }
 
     setErrors(newErrors);
@@ -158,7 +142,7 @@ export default function ReviewForm({ theme = 'dark' }: ReviewFormProps) {
     if (Object.keys(newErrors).length > 0) {
       // Scroll to first error
       const firstKey = Object.keys(newErrors)[0];
-      const el = document.getElementById(`field-${firstKey}`);
+      const el = document.getElementById(`${firstKey}-input`);
       el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       el?.focus();
       return false;
@@ -355,7 +339,7 @@ export default function ReviewForm({ theme = 'dark' }: ReviewFormProps) {
                 <div className="flex flex-col gap-1.5" id="field-author">
                   <label className="text-xs sm:text-sm font-semibold flex items-center justify-between" htmlFor="author-input">
                     <span>
-                      Имя и Фамилия <span className="text-[#FD4B32]">*</span>
+                      Имя и Фамилия
                     </span>
                     <span className={`text-[11px] font-normal ${isLight ? 'text-black/40' : 'text-white/40'}`}>
                       Как указать в отзыве
@@ -385,7 +369,7 @@ export default function ReviewForm({ theme = 'dark' }: ReviewFormProps) {
                 <div className="flex flex-col gap-1.5" id="field-role">
                   <label className="text-xs sm:text-sm font-semibold flex items-center justify-between" htmlFor="role-input">
                     <span>
-                      Ваша должность / Роль <span className="text-[#FD4B32]">*</span>
+                      Ваша должность / Роль
                     </span>
                     <span className={`text-[11px] font-normal ${isLight ? 'text-black/40' : 'text-white/40'}`}>
                       Основатель, Продюсер...
@@ -413,7 +397,7 @@ export default function ReviewForm({ theme = 'dark' }: ReviewFormProps) {
                 <div className="flex flex-col gap-1.5" id="field-company">
                   <label className="text-xs sm:text-sm font-semibold flex items-center justify-between" htmlFor="company-input">
                     <span>
-                      Компания / Бренд <span className="text-[#FD4B32]">*</span>
+                      Компания / Бренд
                     </span>
                     <span className={`text-[11px] font-normal ${isLight ? 'text-black/40' : 'text-white/40'}`}>
                       Название проекта
@@ -459,26 +443,36 @@ export default function ReviewForm({ theme = 'dark' }: ReviewFormProps) {
                   />
                 </div>
 
-                {/* 5. Contact (Telegram / Phone / Email) */}
+                {/* 5. Phone */}
                 <div className="flex flex-col gap-1.5 sm:col-span-2">
                   <label className="text-xs sm:text-sm font-semibold flex items-center justify-between" htmlFor="contact-input">
-                    <span>Контакт для связи (Telegram, WhatsApp или Email)</span>
+                    <span>Номер телефона <span className="text-[#FD4B32]">*</span></span>
                     <span className={`text-[11px] font-normal ${isLight ? 'text-black/40' : 'text-white/40'}`}>
                       Только для связи студии с вами (не публикуется)
                     </span>
                   </label>
                   <input
                     id="contact-input"
-                    type="text"
+                    name="phone"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    required
+                    aria-invalid={Boolean(errors.contact)}
+                    aria-describedby="contact-error"
                     value={contact}
-                    onChange={(e) => setContact(e.target.value)}
-                    placeholder="@telegram_username или +7 (___) ___-__-__"
+                    onChange={(e) => {
+                      setContact(e.target.value);
+                      if (errors.contact) setErrors((prev) => ({ ...prev, contact: '' }));
+                    }}
+                    placeholder="+7 (___) ___-__-__"
                     className={`w-full px-4 py-3 text-sm sm:text-base border outline-none transition-all ${
                       isLight
                         ? 'bg-[#FDFDFD] text-[#1D1D1D] border-[#D5D2CE] focus:border-[#FD4B32]'
                         : 'bg-white/[0.04] text-white border-white/15 focus:border-[#FD4B32]'
                     }`}
                   />
+                  <span id="contact-error" className="text-xs text-red-500" aria-live="polite">{errors.contact}</span>
                 </div>
 
                 {/* 6. Photo / Avatar Upload */}
@@ -642,7 +636,7 @@ export default function ReviewForm({ theme = 'dark' }: ReviewFormProps) {
               <div className="flex flex-col gap-1.5 mb-8" id="field-quote">
                 <label className="text-xs sm:text-sm font-semibold flex items-center justify-between" htmlFor="quote-input">
                   <span>
-                    Главное впечатление в 1–3 предложениях <span className="text-[#FD4B32]">*</span>
+                    Главное впечатление в 1–3 предложениях
                   </span>
                   <span className={`text-[11px] font-normal ${isLight ? 'text-black/50' : 'text-white/50'}`}>
                     Цитата для главного слайдера

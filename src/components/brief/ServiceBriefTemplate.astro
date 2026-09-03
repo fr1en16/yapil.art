@@ -9,13 +9,13 @@ const { brief } = Astro.props;
 const getOptionInputType = (question: BriefQuestion): 'radio' | 'checkbox' => question.type === 'radio' ? 'radio' : 'checkbox';
 
 const commonQuestions: BriefQuestion[] = [
-  { name: 'company', label: 'Компания, продукт или проект', type: 'text', required: true, placeholder: 'Название и короткое описание' },
+  { name: 'company', label: 'Компания, продукт или проект', type: 'text', placeholder: 'Название и короткое описание' },
   { name: 'deadline', label: 'Желаемый срок запуска', type: 'text', placeholder: 'Конкретная дата или ориентир' },
   { name: 'budget', label: 'Ориентир по бюджету', type: 'select', options: [
     { value: 'До $500', label: 'До $500' }, { value: '$500–1 000', label: '$500–1 000' }, { value: '$1 000–3 000', label: '$1 000–3 000' }, { value: '$3 000+', label: '$3 000+' }, { value: 'Нужно оценить', label: 'Нужно оценить' },
   ] },
-  { name: 'name', label: 'Ваше имя', type: 'text', required: true, placeholder: 'Как к вам обращаться' },
-  { name: 'phone', label: 'Телефон или WhatsApp', type: 'text', required: true, placeholder: '+7 000 000 00 00' },
+  { name: 'name', label: 'Ваше имя', type: 'text', placeholder: 'Как к вам обращаться' },
+  { name: 'phone', label: 'Телефон или WhatsApp', type: 'tel', required: true, placeholder: '+7 000 000 00 00' },
   { name: 'email', label: 'Email', type: 'text', placeholder: 'name@company.com' },
   { name: 'links', label: 'Ссылки на материалы', type: 'textarea', placeholder: 'Папка, презентация, сайт, референсы — каждая ссылка с новой строки' },
   { name: 'comment', label: 'Что ещё важно знать?', type: 'textarea' },
@@ -79,7 +79,7 @@ const groups = [
                   {question.type === 'textarea' && (
                     <textarea id={`field-${question.name}`} name={question.name} rows="4" placeholder={question.placeholder} required={question.required}></textarea>
                   )}
-                  {(question.type === 'text' || question.type === 'url' || question.type === 'number') && (
+                  {(question.type === 'text' || question.type === 'tel' || question.type === 'url' || question.type === 'number') && (
                     <input id={`field-${question.name}`} name={question.name} type={question.type} placeholder={question.placeholder} required={question.required} />
                   )}
                   {question.type === 'select' && (
@@ -105,7 +105,7 @@ const groups = [
 
             {groupIndex === groups.length - 1 && (
               <label class="consent">
-                <input type="checkbox" name="privacy" required />
+                <input type="checkbox" name="privacy" />
                 <span>Согласен с <a href="/privacy" target="_blank">политикой конфиденциальности</a>.</span>
               </label>
             )}
@@ -152,6 +152,11 @@ const groups = [
     };
 
     const validateForm = () => {
+      const phone = form.querySelector<HTMLInputElement>('[name="phone"]');
+      if (phone) {
+        const digits = phone.value.replace(/\D/g, '');
+        phone.setCustomValidity(digits.length >= 7 && digits.length <= 15 ? '' : 'Укажите полный номер телефона.');
+      }
       const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select')).filter((field) => !field.disabled);
       for (const field of fields) {
         if (!field.checkValidity()) {

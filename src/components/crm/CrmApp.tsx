@@ -1735,7 +1735,7 @@ export function CrmApp() {
                 const priority = fd.get('priority') as LeadPriority;
                 const services = fd.getAll('services') as string[];
 
-                if (!name || !phone) return;
+                if (!phone?.trim()) return;
 
                 submitLead({
                   name,
@@ -1754,11 +1754,10 @@ export function CrmApp() {
               className="space-y-4 text-xs"
             >
               <div>
-                <label className="block text-white/70 mb-1 font-medium">Имя клиента *</label>
+                <label className="block text-white/70 mb-1 font-medium">Имя клиента</label>
                 <input
                   name="name"
                   type="text"
-                  required
                   placeholder="Имя или название компании"
                   className={`w-full px-3 py-2 border outline-none ${
                     isDarkTheme ? 'bg-black/50 border-white/15 text-white' : 'bg-black/5 border-black/15'
