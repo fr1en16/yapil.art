@@ -28,6 +28,18 @@ if (!import.meta.env.DEV) {
   <div class="grid-center-axis"></div>
 </div>
 
+<!-- Text Typography Inspector (Hover Layer) -->
+<div id="yapil-typo-inspector" class="grid-typo-inspector" aria-hidden="true">
+  <div class="grid-typo-box" id="grid-typo-box"></div>
+  <div class="grid-typo-badge" id="grid-typo-badge">
+    <span class="typo-tag" id="grid-typo-tag">H1</span>
+    <span class="typo-size" id="grid-typo-size">32px</span>
+    <span class="typo-slash">/</span>
+    <span class="typo-lh" id="grid-typo-lh">40px</span>
+    <span class="typo-ratio" id="grid-typo-ratio">1.25×</span>
+  </div>
+</div>
+
 <!-- Floating HUD Toolbar -->
 <div class="grid-hud" id="yapil-grid-hud">
   <!-- Minimized trigger button -->
@@ -96,6 +108,12 @@ if (!import.meta.env.DEV) {
         <span class="custom-check"></span>
         <span class="toggle-text">Центральная ось</span>
       </label>
+
+      <label class="hud-toggle-item">
+        <input type="checkbox" id="toggle-typography" checked />
+        <span class="custom-check"></span>
+        <span class="toggle-text">Размеры текста (hover)</span>
+      </label>
     </div>
 
     <div class="hud-opacity">
@@ -113,21 +131,137 @@ if (!import.meta.env.DEV) {
 </div>
 
 <script>
+  let isWindowBound = false;
+  let currentTarget: HTMLElement | null = null;
+  let pendingEvent: PointerEvent | null = null;
+  let moveRafId: number | null = null;
+  let scrollRafId: number | null = null;
+
+  let isInspectorActive = () => false;
+  let updatePosition = (_target: HTMLElement) => {};
+  let hideHighlighter = () => {};
+
+  function formatPx(val: number): string {
+    const rounded = Math.round(val * 10) / 10;
+    return Number.isInteger(rounded) ? `${rounded}px` : `${rounded.toFixed(1)}px`;
+  }
+
+  function getLineHeight(style: CSSStyleDeclaration, fontPx: number): { text: string; ratio: string } {
+    const lhStr = style.lineHeight;
+
+    if (!lhStr || lhStr === 'normal') {
+      const approx = Math.round(fontPx * 1.2 * 10) / 10;
+      return {
+        text: formatPx(approx),
+        ratio: '1.2',
+      };
+    }
+
+    const parsed = parseFloat(lhStr);
+    if (isNaN(parsed) || parsed <= 0) {
+      const approx = Math.round(fontPx * 1.2 * 10) / 10;
+      return {
+        text: formatPx(approx),
+        ratio: '1.2',
+      };
+    }
+
+    if (lhStr.endsWith('px')) {
+      const ratioVal = fontPx > 0 ? (parsed / fontPx).toFixed(2).replace(/\.?0+$/, '') : '1';
+      return {
+        text: formatPx(parsed),
+        ratio: ratioVal || '1',
+      };
+    }
+
+    const computedPx = parsed * fontPx;
+    const ratioVal = parsed.toFixed(2).replace(/\.?0+$/, '');
+    return {
+      text: formatPx(computedPx),
+      ratio: ratioVal || '1',
+    };
+  }
+
+  function getTextTarget(el: HTMLElement | null): HTMLElement | null {
+    if (!el || !(el instanceof HTMLElement)) return null;
+    if (el.closest('#yapil-grid-hud') || el.closest('#yapil-grid-overlay') || el.closest('#yapil-typo-inspector')) {
+      return null;
+    }
+
+    const IGNORE_TAGS = new Set([
+      'HTML', 'BODY', 'SVG', 'PATH', 'CIRCLE', 'RECT', 'POLYGON', 'LINE', 'G',
+      'IMG', 'VIDEO', 'CANVAS', 'IFRAME', 'SCRIPT', 'STYLE',
+      'INPUT', 'TEXTAREA', 'SELECT', 'OPTION'
+    ]);
+    if (IGNORE_TAGS.has(el.tagName)) return null;
+
+    // Heading elements (h1-h6)
+    const heading = el.closest('h1, h2, h3, h4, h5, h6') as HTMLElement | null;
+    if (heading) {
+      if (el === heading) return heading;
+      const headingStyle = window.getComputedStyle(heading);
+      const elStyle = window.getComputedStyle(el);
+      if (headingStyle.fontSize !== elStyle.fontSize) {
+        return el;
+      }
+      return heading;
+    }
+
+    const text = (el.textContent || '').trim();
+    if (!text) return null;
+
+    const hasDirectText = Array.from(el.childNodes).some(
+      (n) => n.nodeType === Node.TEXT_NODE && Boolean(n.textContent?.trim())
+    );
+
+    const blockQuoteOrP = el.closest('p, blockquote, figcaption') as HTMLElement | null;
+    if (blockQuoteOrP && blockQuoteOrP !== el) {
+      const pStyle = window.getComputedStyle(blockQuoteOrP);
+      const elStyle = window.getComputedStyle(el);
+      if (el.tagName === 'A' || el.tagName === 'CODE' || pStyle.fontSize !== elStyle.fontSize) {
+        return el;
+      }
+      return blockQuoteOrP;
+    }
+
+    if (hasDirectText) {
+      return el;
+    }
+
+    const hasBlockChildren = Array.from(el.children).some((c) =>
+      ['DIV', 'SECTION', 'ARTICLE', 'MAIN', 'NAV', 'HEADER', 'FOOTER', 'UL', 'OL', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(c.tagName)
+    );
+
+    if (!hasBlockChildren) {
+      return el;
+    }
+
+    return null;
+  }
+
   function initGridOverlay() {
     const overlay = document.getElementById('yapil-grid-overlay');
     const hud = document.getElementById('yapil-grid-hud');
     const toggleBtn = document.getElementById('grid-hud-toggle-btn');
-    const panel = document.getElementById('grid-hud-panel');
     const closePanelBtn = document.getElementById('hud-close-panel-btn');
     const statusDot = document.getElementById('hud-status-dot');
     const viewportSizeEl = document.getElementById('hud-viewport-size');
     const breakpointTagEl = document.getElementById('hud-breakpoint-tag');
     const containerSizeEl = document.getElementById('hud-container-size');
 
+    const typoInspector = document.getElementById('yapil-typo-inspector');
+    const typoBox = document.getElementById('grid-typo-box');
+    const typoBadge = document.getElementById('grid-typo-badge');
+    const typoTag = document.getElementById('grid-typo-tag');
+    const typoSize = document.getElementById('grid-typo-size');
+    const typoLh = document.getElementById('grid-typo-lh');
+    const typoRatio = document.getElementById('grid-typo-ratio');
+
     const toggleCols = document.getElementById('toggle-columns') as HTMLInputElement | null;
     const toggleOutline = document.getElementById('toggle-container-outline') as HTMLInputElement | null;
     const toggleBaseline = document.getElementById('toggle-baseline') as HTMLInputElement | null;
     const toggleAxis = document.getElementById('toggle-center-axis') as HTMLInputElement | null;
+    const toggleTypo = document.getElementById('toggle-typography') as HTMLInputElement | null;
     const opacityRange = document.getElementById('grid-opacity-range') as HTMLInputElement | null;
     const opacityLabel = document.getElementById('opacity-val-label');
 
@@ -142,6 +276,7 @@ if (!import.meta.env.DEV) {
       outline: true,
       baseline: false,
       axis: true,
+      typography: true,
       opacity: 50,
     };
 
@@ -149,6 +284,9 @@ if (!import.meta.env.DEV) {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         settings = { ...settings, ...JSON.parse(saved) };
+      }
+      if (typeof settings.typography !== 'boolean') {
+        settings.typography = true;
       }
     } catch (e) {
       // ignore JSON parse error
@@ -160,6 +298,79 @@ if (!import.meta.env.DEV) {
       } catch (e) {}
     }
 
+    function hideHighlighterImpl() {
+      currentTarget = null;
+      if (typoBox) typoBox.style.display = 'none';
+      if (typoBadge) typoBadge.style.display = 'none';
+    }
+    hideHighlighter = hideHighlighterImpl;
+
+    function updatePositionImpl(target: HTMLElement) {
+      if (!typoInspector || !typoBox || !typoBadge || !typoTag || !typoSize || !typoLh || !typoRatio) return;
+
+      const rect = target.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) {
+        hideHighlighterImpl();
+        return;
+      }
+
+      if (rect.bottom < 0 || rect.top > window.innerHeight || rect.right < 0 || rect.left > window.innerWidth) {
+        hideHighlighterImpl();
+        return;
+      }
+
+      const style = window.getComputedStyle(target);
+      const fontPx = parseFloat(style.fontSize) || 16;
+      const lhData = getLineHeight(style, fontPx);
+
+      const tagName = target.tagName.toLowerCase();
+      typoTag.textContent = tagName;
+      typoSize.textContent = formatPx(fontPx);
+      typoLh.textContent = lhData.text;
+      typoRatio.textContent = `${lhData.ratio}×`;
+
+      typoBox.style.display = 'block';
+      typoBadge.style.display = 'inline-flex';
+
+      const pad = 2;
+      const boxTop = Math.max(0, rect.top - pad);
+      const boxLeft = Math.max(0, rect.left - pad);
+      const boxWidth = rect.width + pad * 2;
+      const boxHeight = rect.height + pad * 2;
+
+      typoBox.style.top = `${Math.round(boxTop)}px`;
+      typoBox.style.left = `${Math.round(boxLeft)}px`;
+      typoBox.style.width = `${Math.round(boxWidth)}px`;
+      typoBox.style.height = `${Math.round(boxHeight)}px`;
+
+      const badgeWidth = typoBadge.offsetWidth || 150;
+      const badgeHeight = typoBadge.offsetHeight || 22;
+      const margin = 6;
+
+      let bTop = rect.top - badgeHeight - 4;
+      if (bTop < margin) {
+        bTop = rect.bottom + 4;
+        if (bTop + badgeHeight > window.innerHeight - margin) {
+          bTop = Math.max(margin, rect.top + 4);
+        }
+      }
+
+      let bLeft = rect.left;
+      const maxLeft = window.innerWidth - badgeWidth - margin;
+      if (bLeft > maxLeft) {
+        bLeft = maxLeft;
+      }
+      if (bLeft < margin) {
+        bLeft = margin;
+      }
+
+      typoBadge.style.top = `${Math.round(bTop)}px`;
+      typoBadge.style.left = `${Math.round(bLeft)}px`;
+    }
+    updatePosition = updatePositionImpl;
+
+    isInspectorActive = () => Boolean(settings.visible && settings.typography);
+
     function applyState() {
       overlay?.classList.toggle('is-active', settings.visible);
       statusDot?.classList.toggle('is-active', settings.visible);
@@ -170,12 +381,19 @@ if (!import.meta.env.DEV) {
       overlay?.classList.toggle('show-baseline', settings.baseline);
       overlay?.classList.toggle('hide-axis', !settings.axis);
 
+      const typoActive = settings.visible && settings.typography;
+      typoInspector?.classList.toggle('is-active', typoActive);
+      if (!typoActive) {
+        hideHighlighterImpl();
+      }
+
       overlay?.style.setProperty('--grid-opacity', (settings.opacity / 100).toString());
 
       if (toggleCols) toggleCols.checked = settings.columns;
       if (toggleOutline) toggleOutline.checked = settings.outline;
       if (toggleBaseline) toggleBaseline.checked = settings.baseline;
       if (toggleAxis) toggleAxis.checked = settings.axis;
+      if (toggleTypo) toggleTypo.checked = settings.typography;
       if (opacityRange) opacityRange.value = settings.opacity.toString();
       if (opacityLabel) opacityLabel.textContent = `${settings.opacity}%`;
     }
@@ -260,35 +478,96 @@ if (!import.meta.env.DEV) {
       saveSettings();
     });
 
+    toggleTypo?.addEventListener('change', () => {
+      settings.typography = Boolean(toggleTypo.checked);
+      applyState();
+      saveSettings();
+    });
+
     opacityRange?.addEventListener('input', () => {
       settings.opacity = Number(opacityRange.value);
       applyState();
       saveSettings();
     });
 
-    // Keyboard shortcut 'G'
-    window.addEventListener('keydown', (e) => {
-      // Avoid triggering when user is typing in form inputs
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.tagName === 'SELECT' ||
-        target.isContentEditable
-      ) {
+    function processPointerMove() {
+      moveRafId = null;
+      if (!pendingEvent || !isInspectorActive()) return;
+
+      const target = getTextTarget(pendingEvent.target as HTMLElement | null);
+      if (!target) {
+        hideHighlighter();
         return;
       }
 
-      if (e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') {
-        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-          e.preventDefault();
-          toggleGridVisibility();
-        }
-      }
-    });
+      currentTarget = target;
+      updatePosition(target);
+    }
 
-    // Update on resize
-    window.addEventListener('resize', updateViewportInfo);
+    if (!isWindowBound) {
+      window.addEventListener('keydown', (e) => {
+        const target = e.target as HTMLElement;
+        if (
+          target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable
+        ) {
+          return;
+        }
+
+        if (e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') {
+          if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            toggleGridVisibility();
+          }
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        updateViewportInfo();
+        if (currentTarget && document.body.contains(currentTarget)) {
+          updatePosition(currentTarget);
+        }
+      });
+
+      window.addEventListener(
+        'pointermove',
+        (e) => {
+          if (!isInspectorActive()) return;
+          pendingEvent = e;
+          if (moveRafId === null) {
+            moveRafId = requestAnimationFrame(processPointerMove);
+          }
+        },
+        { passive: true }
+      );
+
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (!isInspectorActive() || !currentTarget) return;
+          if (scrollRafId === null) {
+            scrollRafId = requestAnimationFrame(() => {
+              scrollRafId = null;
+              if (currentTarget && document.body.contains(currentTarget)) {
+                updatePosition(currentTarget);
+              } else {
+                hideHighlighter();
+              }
+            });
+          }
+        },
+        { passive: true }
+      );
+
+      document.addEventListener('mouseleave', () => {
+        hideHighlighter();
+      });
+
+      isWindowBound = true;
+    }
+
     updateViewportInfo();
     applyState();
   }
@@ -299,6 +578,7 @@ if (!import.meta.env.DEV) {
     } else {
       initGridOverlay();
     }
+    document.addEventListener('astro:page-load', initGridOverlay);
   }
 </script>
 
@@ -309,6 +589,92 @@ if (!import.meta.env.DEV) {
     --grid-guide-border: rgba(253, 75, 50, 0.28);
     --grid-guide-outline: rgba(253, 75, 50, 0.45);
     --grid-opacity: 0.5;
+  }
+
+  /* ---------------- Typography Inspector (Hover) ---------------- */
+  .grid-typo-inspector {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    pointer-events: none;
+    display: none;
+  }
+
+  .grid-typo-inspector.is-active {
+    display: block;
+  }
+
+  .grid-typo-box {
+    position: fixed;
+    pointer-events: none;
+    display: none;
+    border: 1px dashed rgba(253, 75, 50, 0.75);
+    background: rgba(253, 75, 50, 0.04);
+    border-radius: 2px;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    z-index: 10001;
+  }
+
+  .grid-typo-badge {
+    position: fixed;
+    pointer-events: none;
+    display: none;
+    align-items: center;
+    gap: 4.5px;
+    padding: 3px 6px;
+    background: rgba(18, 18, 20, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+    color: #f2f2f2;
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+    font-size: 11px;
+    line-height: 1.15;
+    white-space: nowrap;
+    z-index: 10002;
+    user-select: none;
+  }
+
+  .grid-typo-badge .typo-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 1.5px 4px;
+    background: rgba(253, 75, 50, 0.2);
+    color: #ff6b57;
+    border: 1px solid rgba(253, 75, 50, 0.35);
+    border-radius: 2px;
+    line-height: 1;
+  }
+
+  .grid-typo-badge .typo-size {
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .grid-typo-badge .typo-slash {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 10px;
+    font-weight: 400;
+    margin-inline: 0.5px;
+  }
+
+  .grid-typo-badge .typo-lh {
+    color: #d4d4d8;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .grid-typo-badge .typo-ratio {
+    color: #a1a1aa;
+    font-size: 9.5px;
+    font-weight: 400;
+    padding-left: 1px;
   }
 
   /* ---------------- Grid Overlay (Fixed) ---------------- */

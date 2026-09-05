@@ -38,10 +38,10 @@ export const reviewsData: ReviewItem[] = [
     author: 'Роман Рыкунов',
     role: 'Продюсер',
     company: 'Рыкунов и Кудряшов',
-    avatar: '/reviews/roman-rykunov.webp',
+    avatar: 'https://media.yapil.art/reviews/roman-rykunov.04a394fe23c867f2.webp',
     projectTitle: 'Рыкунов и Кудряшов',
     projectUrl: '/case/rv',
-    projectImage: '/case/rv.webp',
+    projectImage: 'https://media.yapil.art/case/rv.564e517acee7b483.webp',
     quote:
       'Сотрудничаем с Яшей с 2020 года. За это время реализовали огромный объем работы и запустили множество сайтов. Это специалист, который работает быстро, качественно и всегда готов выручить в сжатые сроки. Яша не только крутой профессионал, но и отличный человек. Он всегда делает свою работу качественно, а его визуальные решения одни из лучших. Однозначно рекомендую к сотрудничеству!',
     fullReview: {
@@ -58,10 +58,10 @@ export const reviewsData: ReviewItem[] = [
     author: 'Сайёра Аюпова',
     role: 'Управляющий партнер',
     company: 'Compass',
-    avatar: '/reviews/sayora-ayupova.webp',
+    avatar: 'https://media.yapil.art/reviews/sayora-ayupova.24e1945995e49890.webp',
     projectTitle: 'Compass',
     projectUrl: '/case/compass',
-    projectImage: '/case/compass.webp',
+    projectImage: 'https://media.yapil.art/case/compass.43224367a0a82ebc.webp',
     quote:
       'Проектом довольна и хочу продолжать сотрудничество! Яша предложил современный дизайн в точном соответствии с брифом. Понравилась четкая техническая работа, отработка комментариев и конструктивная коммуникация. Разработка сайта и визиток прошла комфортно. Были заминки со сроками и начальным SEO, но итоговый результат перекрыл эти нюансы. Спасибо за работу!',
     fullReview: {
@@ -100,10 +100,10 @@ export const reviewsData: ReviewItem[] = [
     author: 'Александр Кугуенко',
     role: 'CEO',
     company: 'Shanding Partners',
-    avatar: '/reviews/shanding.webp',
+    avatar: 'https://media.yapil.art/reviews/shanding.e266d4a797de87da.webp',
     projectTitle: 'Shanding',
     projectUrl: '/case/shanding',
-    projectImage: '/case/shanding.webp',
+    projectImage: 'https://media.yapil.art/case/shanding.d6eb5d5dc754711d.webp',
     quote:
       'Сотрудничали по созданию лендинга и разработке POS-материалов. Главный показатель профессионализма для нас, что макеты не потребовали правок и сразу ушли в печать. Результатом довольны на сто процентов. Периодически обращаемся к Якову, когда появляются новые задачи.',
   },
@@ -115,10 +115,10 @@ export const reviewsDataEn: ReviewItem[] = [
     author: 'Roman Rykunov',
     role: 'Producer',
     company: 'Rykunov & Kudryashov',
-    avatar: '/reviews/roman-rykunov.webp',
+    avatar: 'https://media.yapil.art/reviews/roman-rykunov.04a394fe23c867f2.webp',
     projectTitle: 'Rykunov & Kudryashov',
     projectUrl: '/case/rv',
-    projectImage: '/case/rv.webp',
+    projectImage: 'https://media.yapil.art/case/rv.564e517acee7b483.webp',
     quote:
       'I have been collaborating with Yakov since 2020. Over this time, we have delivered a massive volume of work and launched numerous websites. He works fast, delivers top quality, and is always ready to step in under tight deadlines. Yakov is not only a great professional but also a pleasure to work with. His visual solutions are truly top-tier. Highly recommended!',
     fullReview: {
@@ -135,10 +135,10 @@ export const reviewsDataEn: ReviewItem[] = [
     author: 'Sayora Ayupova',
     role: 'Managing Partner',
     company: 'Compass',
-    avatar: '/reviews/sayora-ayupova.webp',
+    avatar: 'https://media.yapil.art/reviews/sayora-ayupova.24e1945995e49890.webp',
     projectTitle: 'Compass',
     projectUrl: '/case/compass',
-    projectImage: '/case/compass.webp',
+    projectImage: 'https://media.yapil.art/case/compass.43224367a0a82ebc.webp',
     quote:
       'Very pleased with the project and looking forward to ongoing collaboration! Yakov proposed a modern design fully aligned with our brief. I appreciated the precise technical execution, quick responses to feedback, and constructive communication. The website and business card development went smoothly. Thank you for great work!',
     fullReview: {
@@ -161,10 +161,10 @@ export const reviewsDataEn: ReviewItem[] = [
     author: 'Alexander Kuguyenko',
     role: 'CEO',
     company: 'Shanding Partners',
-    avatar: '/reviews/shanding.webp',
+    avatar: 'https://media.yapil.art/reviews/shanding.e266d4a797de87da.webp',
     projectTitle: 'Shanding',
     projectUrl: '/case/shanding',
-    projectImage: '/case/shanding.webp',
+    projectImage: 'https://media.yapil.art/case/shanding.d6eb5d5dc754711d.webp',
     quote:
       'We collaborated on landing page development and POS materials. The clearest sign of professionalism was that the layouts required zero revisions and went straight to print production. 100% satisfied with the outcome. We consistently turn to Yakov whenever new design challenges arise.',
   },

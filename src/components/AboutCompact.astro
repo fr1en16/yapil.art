@@ -3,9 +3,10 @@ interface Props {
   theme?: 'dark' | 'light';
   personal?: boolean;
   lang?: 'ru' | 'en';
+  websites?: boolean;
 }
 
-const { theme = 'dark', personal = false, lang = 'ru' } = Astro.props;
+const { theme = 'dark', personal = false, lang = 'ru', websites = false } = Astro.props;
 const isLight = theme === 'light';
 
 const cardsStudioRu = [
@@ -89,11 +90,41 @@ const cardsPersonalEn = [
   },
 ];
 
-const cards = lang === 'en'
+const cardsWebsitesRu = [
+  {
+    id: 'structure',
+    title: 'Структура<br />под заявки',
+    text: 'Выстраиваем путь от первого экрана до формы: раскрываем ценность, отвечаем на вопросы и снимаем возражения.',
+    icon: 'shapes',
+  },
+  {
+    id: 'design',
+    title: 'Дизайн<br />без шаблонов',
+    text: 'Создаём визуальную систему под характер бренда и адаптируем каждый экран для смартфонов, планшетов и компьютеров.',
+    icon: 'award',
+  },
+  {
+    id: 'performance',
+    title: 'Быстрый<br />сайт',
+    text: 'Собираем сайт на современном стеке, оптимизируем загрузку и готовим техническую основу для продвижения.',
+    icon: 'refresh-cw',
+  },
+  {
+    id: 'launch',
+    title: 'Запуск<br />под ключ',
+    text: 'Подключаем формы, аналитику, домен и CRM, проверяем сайт перед релизом и остаёмся на связи после запуска.',
+    icon: 'briefcase',
+  },
+];
+
+const cards = websites
+  ? cardsWebsitesRu
+  : lang === 'en'
   ? cardsPersonalEn
   : personal
     ? cardsPersonalRu
     : cardsStudioRu;
+const CardHeading = websites ? 'h3' : 'h2';
 ---
 
 <section
@@ -105,7 +136,9 @@ const cards = lang === 'en'
   ]}
   style={
     isLight
-      ? 'background: #F7F5F2;'
+      ? websites
+        ? 'background: linear-gradient(to bottom, transparent 0%, rgba(245, 245, 245, 0.32) 22%, rgba(245, 245, 245, 0.82) 54%, #f5f5f5 82%, #f5f5f5 100%);'
+        : 'background: #F7F5F2;'
       : 'background: linear-gradient(to bottom, transparent 0%, #181818 100%);'
   }
 >
@@ -116,15 +149,15 @@ const cards = lang === 'en'
           class:list={[
             'group relative flex flex-col justify-between overflow-hidden rounded-none p-7 sm:p-8 backdrop-blur-2xl transition-all duration-300 min-h-[20rem] sm:min-h-[26rem] lg:min-h-[30rem]',
             isLight
-              ? 'border border-black/[0.08] bg-white/80 hover:border-[#FD4B32]/50 hover:bg-white hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.06)]'
+              ? (websites ? 'border-0 bg-white/80' : 'border border-black/[0.08] bg-white/80 hover:border-[#FD4B32]/50 hover:bg-white hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.06)]')
               : 'border border-white/10 bg-white/[0.04] hover:border-white/25 hover:bg-white/[0.08]',
           ]}
         >
           <div class="flex flex-col gap-5 sm:gap-6">
-            <h2
+            <CardHeading
               class:list={[
                 'm-0 p-0 text-[2rem] sm:text-[2.25rem] font-normal leading-[1.05] tracking-[-0.035em]',
-                isLight ? 'text-[#1D1D1D]' : 'text-white',
+                isLight ? (websites ? 'text-[#FD4B32]' : 'text-[#1D1D1D]') : 'text-white',
               ]}
               style="font-family: var(--font-display);"
               set:html={card.title}
@@ -141,13 +174,13 @@ const cards = lang === 'en'
 
           <div class="mt-auto pt-8 flex items-end">
             {card.icon === 'award' && (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300 group-hover:scale-110', isLight ? 'text-[#1D1D1D] group-hover:text-[#FD4B32]' : 'text-white']}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300', isLight ? (websites ? 'text-[#1D1D1D]' : 'text-[#1D1D1D] group-hover:text-[#FD4B32] group-hover:scale-110') : 'text-white group-hover:scale-110']}>
                 <circle cx="12" cy="8" r="6" />
                 <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
               </svg>
             )}
             {card.icon === 'refresh-cw' && (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300 group-hover:scale-110', isLight ? 'text-[#1D1D1D] group-hover:text-[#FD4B32]' : 'text-white']}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300', isLight ? (websites ? 'text-[#1D1D1D]' : 'text-[#1D1D1D] group-hover:text-[#FD4B32] group-hover:scale-110') : 'text-white group-hover:scale-110']}>
                 <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
                 <path d="M21 3v5h-5" />
                 <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
@@ -155,13 +188,13 @@ const cards = lang === 'en'
               </svg>
             )}
             {card.icon === 'briefcase' && (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300 group-hover:scale-110', isLight ? 'text-[#1D1D1D] group-hover:text-[#FD4B32]' : 'text-white']}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300', isLight ? (websites ? 'text-[#1D1D1D]' : 'text-[#1D1D1D] group-hover:text-[#FD4B32] group-hover:scale-110') : 'text-white group-hover:scale-110']}>
                 <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                 <rect width="20" height="14" x="2" y="6" rx="2" />
               </svg>
             )}
             {card.icon === 'shapes' && (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300 group-hover:scale-110', isLight ? 'text-[#1D1D1D] group-hover:text-[#FD4B32]' : 'text-white']}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class:list={['size-6 sm:size-7 transition-transform duration-300', isLight ? (websites ? 'text-[#1D1D1D]' : 'text-[#1D1D1D] group-hover:text-[#FD4B32] group-hover:scale-110') : 'text-white group-hover:scale-110']}>
                 <path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3.1a.7.7 0 0 1 1.198 0l3.726 5.82A.7.7 0 0 1 15.7 10z" />
                 <circle cx="17.5" cy="17.5" r="4.5" />
                 <rect width="7" height="7" x="3" y="14" rx="1" />

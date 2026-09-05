@@ -1,3 +1,4 @@
+import reviewProjectImages from '../data/review-project-images.json';
 import type { ClientReview, CreateReviewPayload, ReviewStatus, ReviewStats } from './reviewTypes';
 import { getCrmSettings, isSupabaseConfigured, playLeadChime } from './crmStore';
 
@@ -16,7 +17,7 @@ export const INITIAL_DEMO_REVIEWS: ClientReview[] = [
     company: 'Compass',
     websiteUrl: 'https://yapil.art/case/compass',
     contact: '@sayora_compass',
-    avatar: '/reviews/sayora-ayupova.webp',
+    avatar: 'https://media.yapil.art/reviews/sayora-ayupova.24e1945995e49890.webp',
     rating: 5,
     services: ['Сайты', 'Полиграфия'],
     quote:
@@ -41,7 +42,7 @@ export const INITIAL_DEMO_REVIEWS: ClientReview[] = [
     company: 'Рыкунов и Кудряшов',
     websiteUrl: 'https://yapil.art/case/rv',
     contact: '+7 (999) 000-00-00',
-    avatar: '/reviews/roman-rykunov.webp',
+    avatar: 'https://media.yapil.art/reviews/roman-rykunov.04a394fe23c867f2.webp',
     rating: 5,
     services: ['Сайты', 'Айдентика', 'Презентации'],
     quote:
@@ -62,7 +63,7 @@ export const INITIAL_DEMO_REVIEWS: ClientReview[] = [
     company: 'Shanding Partners',
     websiteUrl: 'https://yapil.art/case/shanding',
     contact: '+7 (777) 000-00-00',
-    avatar: '/reviews/shanding.webp',
+    avatar: 'https://media.yapil.art/reviews/shanding.e266d4a797de87da.webp',
     rating: 5,
     services: ['Лендинг', 'Полиграфия'],
     quote:
@@ -245,7 +246,7 @@ export async function submitClientReview(payload: CreateReviewPayload): Promise<
     try {
       new Notification(`Новый отзыв от ${newReview.author}`, {
         body: `${newReview.company} — ${newReview.rating}★: ${newReview.quote.slice(0, 80)}...`,
-        icon: '/apple-touch-icon.png',
+        icon: 'https://media.yapil.art/apple-touch-icon.f863e8a7cc523f9f.webp',
       });
     } catch {
       // ignore
@@ -444,10 +445,10 @@ ${paragraphs}
     author: '${review.author.replace(/'/g, "\\'")}',
     role: '${review.role.replace(/'/g, "\\'")}',
     company: '${review.company.replace(/'/g, "\\'")}',
-    avatar: '${review.avatar || '/reviews/avatar-placeholder.webp'}',
+    avatar: '${review.avatar || 'https://media.yapil.art/logo.7e892e1d72bbd355.svg'}',
     projectTitle: '${review.company.replace(/'/g, "\\'")}',
     projectUrl: '${review.websiteUrl || `/case/${slug}`}',
-    projectImage: '/case/${slug}.webp',
+    projectImage: '${(reviewProjectImages as Record<string, string>)[slug] || 'https://media.yapil.art/logo.7e892e1d72bbd355.svg'}',
     quote:
       '${review.quote.replace(/'/g, "\\'")}'${fullReviewCode}
   },`;

@@ -7,6 +7,7 @@ import sharp from 'sharp';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CONTENT_ROOT = join(ROOT, 'content-drafts/seo');
 const COVER_ROOT = join(ROOT, 'public/articles/covers');
+const mediaManifest = JSON.parse(await readFile(join(ROOT, 'media-manifest.json'), 'utf8')).assets;
 
 const angles = [
   { slug: 'guide', label: 'что это и зачем бизнесу', seoLabel: 'что это и зачем', intent: 'информационный' },
@@ -306,12 +307,12 @@ async function writeCover(slug, serviceSlug, serviceIndex) {
   const path = join(dir, `${slug}.webp`);
   try {
     await access(path);
-    return `/articles/covers/${serviceSlug}/${slug}.webp`;
+    return mediaManifest[`/articles/covers/${serviceSlug}/${slug}.webp`]?.url ?? `/articles/covers/${serviceSlug}/${slug}.webp`;
   } catch {
     // Render only missing covers so interrupted batches can resume safely.
   }
   await sharp(Buffer.from(coverSvg({ slug, serviceIndex }))).webp({ quality: 86 }).toFile(path);
-  return `/articles/covers/${serviceSlug}/${slug}.webp`;
+  return mediaManifest[`/articles/covers/${serviceSlug}/${slug}.webp`]?.url ?? `/articles/covers/${serviceSlug}/${slug}.webp`;
 }
 
 async function updateExistingArticles() {

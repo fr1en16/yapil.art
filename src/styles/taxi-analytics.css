@@ -1,0 +1,27 @@
+.taxi-analytics { display: block; margin-block: 2rem 1.25rem; color: #fff; }
+.taxi-analytics-cards { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .65rem; }
+.taxi-analytics button { font: inherit; text-align: left; border-radius: 0; cursor: pointer; color: inherit; }
+.taxi-analytics-cards button { display: flex; flex-direction: column; gap: .75rem; padding: 1.2rem; border: 1px solid #ffffff55; background: #281008d9; min-height: 210px; }
+.taxi-analytics .analytics-label { font-family: var(--font-display); font-size: 1.45rem; }
+.taxi-analytics-cards strong { font-size: clamp(1.8rem,3vw,2.6rem); font-weight: 600; line-height: 1.1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.taxi-analytics-cards small { font-size: .6em; }
+.taxi-analytics-cards .analytics-change { margin-top: auto; font-size: .9rem; }
+.taxi-analytics button[aria-pressed="true"] { background: #ffce32; color: #23180b; border-color: #ffce32; }
+.taxi-analytics button:hover { border-color: #ffce32; }
+.taxi-analytics button:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.taxi-analytics-detail { padding: 1.5rem; background: #281008d9; border: 1px solid #ffffff55; margin-top: .65rem; }
+.case-body .taxi-analytics-detail h3 { margin: 0 0 .75rem; }
+.case-body .taxi-analytics-detail p { margin: 0; font-size: 1rem; line-height: 1.5; }
+.taxi-analytics [data-devices-panel] { padding: 1.5rem; background: #281008d9; border: 1px solid #ffffff55; border-top: 0; }
+.taxi-analytics [hidden] { display: none; }
+.analytics-device-bar { display: flex; height: 28px; margin-bottom: 1rem; }
+.analytics-device-bar span:first-child { width: 93.27%; background: #ffce32; }
+.analytics-device-bar span:last-child { width: 6.73%; background: #fff; opacity: .35; }
+.analytics-device-bar.is-desktop span:first-child { opacity: .25; }
+.analytics-device-bar.is-desktop span:last-child { opacity: 1; }
+.analytics-device-options { display: flex; gap: .65rem; }
+.analytics-device-options button { padding: .75rem; border: 1px solid #ffffff55; background: transparent; flex: 1; }
+.analytics-device-options strong { display: block; margin-top: .35rem; }
+.case-body .taxi-analytics [data-device-copy] { margin: 1rem 0 0; font-size: .9rem; }
+@media(max-width: 52rem) { .taxi-analytics-cards { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media(max-width: 24rem) { .taxi-analytics-cards button { padding: .85rem; } }

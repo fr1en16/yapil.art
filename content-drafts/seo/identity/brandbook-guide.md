@@ -9,7 +9,7 @@ relatedKeywords:
   - "брендбук пример"
   - "структура брендбука"
   - "разработка брендбука"
-cover: "/articles/covers/identity/brandbook-guide.webp"
+cover: "https://media.yapil.art/articles/covers/identity/brandbook-guide.a4ffe18b06d3a17f.webp"
 coverAlt: "Редакционный коллаж Yapil о теме «Что такое брендбук и что в него входит»"
 status: "published"
 publishedAt: "2026-08-26"

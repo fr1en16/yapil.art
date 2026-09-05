@@ -484,7 +484,7 @@ export async function submitLead(payload: CreateLeadPayload): Promise<Lead> {
     try {
       new Notification(`Новая заявка от ${newLead.name}`, {
         body: `${newLead.services.join(', ')} — ${newLead.phone}`,
-        icon: '/apple-touch-icon.png',
+        icon: 'https://media.yapil.art/apple-touch-icon.f863e8a7cc523f9f.webp',
       });
     } catch {
       // ignore

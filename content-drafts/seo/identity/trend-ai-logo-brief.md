@@ -7,7 +7,7 @@ primaryKeyword: "логотип с помощью ИИ как составить
 searchIntent: "информационный"
 relatedKeywords: ["ИИ логотип","нейросеть для логотипа","создать логотип нейросетью"]
 author: "Yapil"
-cover: "/articles/covers/identity/trend-ai-logo-brief.webp"
+cover: "https://media.yapil.art/articles/covers/identity/trend-ai-logo-brief.1e9fc3318168d6b7.webp"
 coverAlt: "Редакционный коллаж к статье «Логотип с помощью ИИ: как составить техническое задание» в модульной визуальной системе Yapil"
 trendCluster: "ai-logo"
 trendBasis: "Google Trends, Казахстан, последние 5 лет; редакционная кластеризация Yapil"

@@ -5,7 +5,7 @@ summary: "Лакокрасочные материалы"
 services:
   - "Сайт"
   - "Брендинг"
-cover: "/case/boya.webp"
+cover: "https://media.yapil.art/case/boya.162ad8cb7b7af238.webp"
 order: 9
 featured: false
 task: "Собрать бренд производителя лакокрасочных материалов и сайт с каталогом продукции."
@@ -25,4 +25,4 @@ reviewed: false
 
 Руководство по фирменному стилю, палитре, верстке каталогов и упаковке продукции.
 
-<div class="pdf-slider" data-url="/case/boya/brandbook.pdf" data-title="Брендбук Boya"></div>
+<div class="pdf-slider" data-url="https://media.yapil.art/case/boya/brandbook.0e5990b40db04e76.pdf" data-title="Брендбук Boya"></div>

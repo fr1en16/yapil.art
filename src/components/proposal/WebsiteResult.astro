@@ -1,0 +1,22 @@
+---
+interface Props { title: string; cards: {title: string; text: string}[]; }
+const { title, cards } = Astro.props;
+const titleBreak = 'а не просто картинки';
+const hasTitleBreak = title.toLocaleLowerCase('ru').includes(titleBreak);
+const titleStart = hasTitleBreak ? title.slice(0, title.toLocaleLowerCase('ru').indexOf(titleBreak)).trimEnd() : title;
+const titleEnd = hasTitleBreak ? title.slice(title.toLocaleLowerCase('ru').indexOf(titleBreak)) : '';
+---
+<section class="website-result" aria-labelledby="result-title">
+  <header class="result-header"><h2 id="result-title">{titleStart}{hasTitleBreak && <><br />{titleEnd}</>}</h2></header>
+  <div class="result-cells">{cards.map((card, index) => (
+    <article class="result-cell">
+      <span class:list={['result-icon', `result-icon--${index}`]} aria-hidden="true"><i></i><i></i><i></i></span>
+      <h3>{card.title}</h3><p>{card.text}</p>
+    </article>
+  ))}</div>
+</section>
+<style>
+.website-result{margin-top:clamp(84px,9vw,144px);background:#f5f5f5;color:#1d1d1d}.result-header{padding:clamp(28px,3vw,48px) 0}.result-header h2{margin:0;font-family:Oranienbaum,Georgia,serif;font-size:clamp(40px,4.3vw,68px);font-weight:400;line-height:1.02;letter-spacing:-.025em;color:#fd4b32}.result-cells{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.result-cell{min-width:0;padding:clamp(24px,2.6vw,40px);border-right:1px solid #1d1d1d1a}.result-cell:first-child{padding-left:0}.result-cell:last-child{padding-right:0;border-right:0}.result-cell h3{margin:24px 0 16px;font-family:Oranienbaum,Georgia,serif;font-size:clamp(24px,2vw,32px);font-weight:400;line-height:1.1;color:#fd4b32}.result-cell p{margin:0;font-size:clamp(14px,1vw,17px);line-height:1.45;color:#1d1d1d}.result-icon{display:block;position:relative;width:56px;height:56px;transform:rotate(-16deg) skewY(6deg);color:#1d1d1d}.result-icon i{position:absolute;left:7px;top:7px;width:38px;height:43px;border:1px solid currentColor;border-radius:7px}.result-icon i:nth-child(2){transform:translate(6px,-5px)}.result-icon i:nth-child(3){left:21px;top:17px;width:16px;height:19px;border-radius:2px}.result-icon--1 i{width:44px;height:44px;border-radius:50%}.result-icon--1 i:nth-child(3){left:19px;top:19px;width:21px;height:21px;border-radius:50%}.result-icon--2 i{width:27px;height:27px;border-radius:5px}.result-icon--2 i:nth-child(2){transform:translate(20px,19px)}.result-icon--2 i:nth-child(3),.result-icon--3 i:nth-child(3){width:27px;height:1px;left:18px;top:29px;transform:rotate(45deg);border:0;background:currentColor}.result-icon--3 i{width:37px;height:37px;border-radius:50%}.result-icon--3 i:nth-child(3){left:36px;top:45px;width:22px;transform:rotate(48deg)}
+@media(max-width:991px){.result-cells{grid-template-columns:repeat(2,minmax(0,1fr))}.result-cell:nth-child(2n){border-right:0}.result-cell:nth-child(3){padding-left:0}}
+@media(max-width:520px){.result-cells{grid-template-columns:1fr}.result-cell,.result-cell:nth-child(3){padding:28px 0;border-right:0}}
+</style>

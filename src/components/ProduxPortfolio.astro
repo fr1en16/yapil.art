@@ -1,4 +1,5 @@
 ---
+import { videoPoster } from '../lib/media';
 import { getCollection } from 'astro:content';
 
 interface Props {
@@ -211,7 +212,7 @@ const positions = [
     {projects.map((project, index) => {
       const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(project.data.cover);
       const poster = isVideo
-        ? project.data.cover.replace(/\.(mp4|webm)(?:\?.*)?$/i, '.webp')
+        ? videoPoster(project.data.cover)
         : project.data.cover;
 
       return (

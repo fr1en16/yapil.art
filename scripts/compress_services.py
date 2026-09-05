@@ -4,7 +4,7 @@ import base64
 import urllib.request
 import urllib.error
 
-TINIFY_API_KEY = "mzchvzm2dZNj8yZD80WctJcNNRg5JtWf"
+TINIFY_API_KEY = os.environ["TINIFY_API_KEY"]
 auth_header = "Basic " + base64.b64encode(f"api:{TINIFY_API_KEY}".encode()).decode("utf-8")
 
 os.makedirs("public/services", exist_ok=True)

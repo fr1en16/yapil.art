@@ -4,7 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 // A single scroll coordinate drives the road, rolling polygon, and card reveals.
 export function initProcessWork() {
   const root = document.querySelector<HTMLElement>('.process-work');
-  if (!root) return;
+  if (!root || root.dataset.motionReady === 'true') return;
+  root.dataset.motionReady = 'true';
   gsap.registerPlugin(ScrollTrigger);
   const media = gsap.matchMedia();
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -48,7 +49,7 @@ export function initProcessWork() {
       const copyHeight = Math.max(...cards.map(card => card.querySelector<HTMLElement>('.step-copy')!.offsetHeight));
       const roadY = Math.min(height * .52, height - copyHeight - 48);
       const axleY = roadY - apothem - (radius-apothem)*circular;
-      ctx.strokeStyle = '#fff'; ctx.fillStyle = '#fff'; ctx.lineWidth = 1.5;
+      ctx.strokeStyle = '#f5f5f5'; ctx.fillStyle = '#f5f5f5'; ctx.lineWidth = 1.5;
       ctx.beginPath();
       for (let px=0;px<=width;px+=2) {
         const local = ((px + radius + side/2) % side) - side/2;
@@ -84,33 +85,42 @@ export function initProcessWork() {
     gsap.fromTo(state,{progress:.1},{progress:1,ease:'none',onUpdate:draw,scrollTrigger:{trigger:section,start:'top top',end:'bottom bottom',scrub:.25}});
 
     const work=root.querySelector<HTMLElement>('.work-section')!;
-    const pin=root.querySelector<HTMLElement>('.work-pin')!;
+    if (!work) {
+      return ()=>{observer.disconnect();cards.forEach(card=>card.style.removeProperty('clip-path'));};
+    }
     const items=gsap.utils.toArray<HTMLButtonElement>('.work-item', root);
     const slides=gsap.utils.toArray<HTMLAnchorElement>('.work-slide', root);
     const images=slides.map(slide=>slide.querySelector('img')!);
     gsap.set(items,{opacity:.28});gsap.set(slides,{clipPath:'inset(100% 0 0 100%)'});gsap.set(images,{scale:1.1});
+    gsap.set(slides[0],{clipPath:'inset(0% 0 0 0%)'});
+    gsap.set(images[0],{scale:1});
+    gsap.set(items[0],{opacity:1});
+    const transitions=slides.length-1;
+    gsap.set(work, {'--work-screens': slides.length});
     const timeline=gsap.timeline();
     slides.forEach((slide,i)=> {
-      timeline.to(slide,{clipPath:'inset(0% 0 0 0%)',duration:.8,ease:'power2.inOut'},i)
-        .to(images[i],{scale:1,duration:.8,ease:'none'},i)
-        .to(items[i],{opacity:1,duration:.28},i);
-      if(i)timeline.to(images[i-1],{scale:1.2,duration:.8,ease:'none'},i).to(items[i-1],{opacity:.28,duration:.28},i);
+      if(i===0)return;
+      const at=i-1;
+      timeline.to(slide,{clipPath:'inset(0% 0 0 0%)',duration:.8,ease:'power2.inOut'},at)
+        .to(images[i],{scale:1,duration:.8,ease:'none'},at)
+        .to(items[i],{opacity:1,duration:.28},at);
+      if(i)timeline.to(images[i-1],{scale:1.2,duration:.8,ease:'none'},at).to(items[i-1],{opacity:.28,duration:.28},at);
     });
     timeline.to({}, {duration:.2});
     let active=-1;
     const updateActive = () => {
-      const next=Math.max(0,Math.min(2,Math.floor(timeline.time()-.4)));
+      const next=Math.max(0,Math.min(transitions,Math.floor(timeline.time()+.6)));
       if(next===active)return;active=next;
       slides.forEach((slide,i)=>{slide.inert=i!==active;items[i].setAttribute('aria-pressed',String(i===active));});
     };
     timeline.eventCallback('onUpdate',updateActive);
     updateActive();
-    const trigger=ScrollTrigger.create({trigger:work,pin,animation:timeline,start:'top top',end:()=>`+=${innerHeight*3}`,scrub:.8,invalidateOnRefresh:true,
-      snap:{snapTo:[0,1/3,2/3,1],duration:{min:.35,max:.55},delay:.08,inertia:false}});
+    const trigger=ScrollTrigger.create({trigger:work,animation:timeline,start:'top top',end:()=>`+=${innerHeight*transitions}`,scrub:.8,invalidateOnRefresh:true,
+      snap:{snapTo:items.map((_,i)=>i/transitions),duration:{min:.35,max:.55},delay:.08,inertia:false}});
     const clickHandlers=items.map((item,i)=> {
       const listener=()=>{
-        const top=trigger.start+(trigger.end-trigger.start)*(i+1)/3;
-        const lenis=(window as Window & {lenis?: {scrollTo: (target:number, options:{duration:number})=>void}}).lenis;
+        const top=trigger.start+(trigger.end-trigger.start)*i/transitions;
+        const lenis=(window as unknown as {lenis?: {scrollTo: (target:number, options:{duration:number})=>void}}).lenis;
         if(lenis) lenis.scrollTo(top,{duration:.8});
         else window.scrollTo({top,behavior:'smooth'});
       };
@@ -123,5 +133,112 @@ export function initProcessWork() {
     });
     return ()=>{observer.disconnect();cards.forEach(card=>card.style.removeProperty('clip-path'));items.forEach((item,i)=>{item.removeEventListener('click',clickHandlers[i]);item.removeAttribute('aria-pressed');});slides.forEach((slide,i)=>{slide.inert=false;slide.removeEventListener('pointermove',pointerHandlers[i]);});};
   });
-  window.addEventListener('pagehide',()=>media.revert(),{once:true});
+  media.add('(max-width: 991px) and (prefers-reduced-motion: no-preference)', () => {
+    const section = root.querySelector<HTMLElement>('.process-section');
+    const stage = root.querySelector<HTMLElement>('.process-stage');
+    const track = root.querySelector<HTMLElement>('.process-grid');
+    const canvas = root.querySelector<HTMLCanvasElement>('.road-canvas');
+    const cards = gsap.utils.toArray<HTMLElement>('.process-card', root);
+    const ctx = canvas?.getContext('2d');
+    if (!section || !stage || !track || !canvas || !ctx || cards.length < 2) return;
+
+    const state = { progress: 0 };
+    let width = 0;
+    let height = 0;
+    const clamp = gsap.utils.clamp(0, 1);
+    const smooth = (value: number) => value * value * (3 - 2 * value);
+
+    const draw = () => {
+      if (!width || !height) return;
+      const progress = clamp(state.progress);
+      const radius = Math.min(stage.clientWidth, height) * .13;
+      const x = radius * 1.4 + progress * (width - radius * 2.8);
+      const sides = 4 + 8 * smooth(progress);
+      const lower = Math.floor(sides);
+      const upper = Math.min(12, lower + 1);
+      const fraction = sides - lower;
+      const polygon = (count: number) => Array.from({ length: count }, (_, index) => {
+        const angle = Math.PI / 2 + 2 * Math.PI * index / count;
+        return [Math.cos(angle) * radius, Math.sin(angle) * radius];
+      });
+      const base = polygon(lower);
+      const target = polygon(upper);
+      const start = upper === lower ? base : [base[0], [(base[0][0] + base[1][0]) / 2, (base[0][1] + base[1][1]) / 2], ...base.slice(1)];
+      const vertices = start.map((vertex, index) => [
+        vertex[0] + (target[index][0] - vertex[0]) * fraction,
+        vertex[1] + (target[index][1] - vertex[1]) * fraction,
+      ]);
+      const roadY = Math.min(height * .43, height - 250);
+      const axleY = roadY - radius;
+      const cardWidth = stage.clientWidth;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = '#f5f5f5';
+      ctx.fillStyle = '#f5f5f5';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let px = 0; px <= width; px += 2) {
+        const localCardX = ((px % cardWidth) + cardWidth) % cardWidth;
+        const wave = Math.abs(((localCardX / 64) % 1) - .5) * 2;
+        const y = roadY + Math.pow(1 - wave, 2) * 14;
+        if (px === 0) ctx.moveTo(px, y); else ctx.lineTo(px, y);
+      }
+      ctx.stroke();
+      ctx.save();
+      ctx.setLineDash([5, 10]);
+      ctx.beginPath();
+      ctx.moveTo(0, axleY);
+      ctx.lineTo(width, axleY);
+      ctx.stroke();
+      ctx.restore();
+      ctx.save();
+      ctx.translate(x, axleY);
+      ctx.rotate(progress * Math.PI * 8 - Math.PI / 4);
+      ctx.beginPath();
+      vertices.forEach((vertex, index) => index ? ctx.lineTo(vertex[0], vertex[1]) : ctx.moveTo(vertex[0], vertex[1]));
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const resize = () => {
+      width = track.scrollWidth;
+      height = stage.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.style.width = `${width}px`;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw();
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(stage);
+    resize();
+    const travel = () => Math.max(0, track.scrollWidth - stage.clientWidth);
+    const timeline = gsap.timeline()
+      .to([track, canvas], { x: () => -travel(), duration: 1, ease: 'none' }, 0)
+      .to(state, { progress: 1, duration: 1, ease: 'none', onUpdate: draw }, 0);
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      animation: timeline,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: .35,
+      invalidateOnRefresh: true,
+      snap: { snapTo: 1 / (cards.length - 1), duration: { min: .25, max: .45 }, delay: .06, inertia: false },
+    });
+    return () => {
+      observer.disconnect();
+      trigger.kill();
+      timeline.kill();
+      gsap.set([track, canvas], { clearProps: 'transform' });
+    };
+  });
+  const refresh = () => ScrollTrigger.refresh();
+  document.fonts.ready.then(refresh);
+  if (document.readyState !== 'complete') window.addEventListener('load', refresh, { once: true });
+  window.addEventListener('pagehide',()=>{ media.revert(); delete root.dataset.motionReady; },{once:true});
 }

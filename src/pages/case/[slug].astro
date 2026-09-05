@@ -1,10 +1,12 @@
 ---
+import { mediaUrl, videoPoster } from '../../lib/media';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
 import PdfSlider from '../../components/PdfSlider.astro';
 import InstagramCarousels from '../../components/InstagramCarousels.astro';
+import '../../styles/taxi-analytics.css';
 
 export async function getStaticPaths() {
   const cases = await getCollection('cases');
@@ -19,9 +21,9 @@ const { c } = Astro.props;
 const { Content } = await render(c);
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.data.cover);
 const poster = isVideo
-  ? c.data.cover.replace(/\.(mp4|webm)(?:\?.*)?$/i, '.webp')
+  ? videoPoster(c.data.cover)
   : c.data.cover;
-const ogImage = new URL(`/open-graph/${c.id}.png`, Astro.site).href;
+const ogImage = mediaUrl(`/open-graph/${c.id}.png`);
 const caseCoverUrl = c.data.cover.startsWith('http')
   ? c.data.cover
   : new URL(c.data.cover, Astro.site).href;
@@ -189,6 +191,10 @@ const creativeWorkJsonLd = {
   </article>
   <Footer slot="footer" />
 </Base>
+
+<script>
+  import '../../scripts/taxi-analytics';
+</script>
 
 <style>
   .case-hero {
@@ -403,6 +409,106 @@ const creativeWorkJsonLd = {
     display: grid;
     gap: 1.5rem;
     margin-block: 2.5rem;
+  }
+
+  .case-body :global(.taxi-dashboard) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-block: 2rem 1.25rem;
+  }
+
+  .case-body :global(.taxi-metric) {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.1rem, 2.2vw, 1.75rem);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 0;
+    background: rgba(35, 13, 8, 0.65);
+    color: #fff;
+  }
+
+  .case-body :global(.taxi-metric-lead) {
+    background: #ffce32;
+    border-color: #ffce32;
+    color: #23180b;
+  }
+
+  .case-body :global(.taxi-metric h3) {
+    margin: 0 0 1.75rem;
+    color: inherit;
+    font-size: 1.6rem;
+  }
+
+  .case-body :global(.taxi-metric-value) {
+    display: block;
+    font-size: clamp(2.5rem, 4.6vw, 3.75rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .case-body :global(.taxi-metric-value span) {
+    font-size: 0.55em;
+    margin-left: 0.12em;
+  }
+
+  .case-body :global(.taxi-metric-description) {
+    display: block;
+    margin-block: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+
+  .case-body :global(.taxi-metric-breakdown) {
+    display: grid;
+    gap: 0.6rem;
+    border-top: 1px solid currentColor;
+    padding-top: 1rem;
+    margin-top: auto;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .case-body :global(.taxi-metric-breakdown > span) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem;
+  }
+
+  .case-body :global(.taxi-results-note),
+  .case-body :global(.taxi-results-details p) {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .case-body :global(.taxi-results-details) {
+    border-block: 1px solid var(--border-subtle);
+    padding-block: 1rem;
+  }
+
+  .case-body :global(.taxi-results-details summary) {
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #fff;
+  }
+
+  .case-body :global(.taxi-results-details summary:focus-visible) {
+    outline: 2px solid #ffce32;
+    outline-offset: 5px;
+  }
+
+  .case-body :global(.taxi-results-details p) {
+    margin: 1rem 0 0;
+  }
+
+  @media (max-width: 40rem) {
+    .case-body :global(.taxi-dashboard) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .case-body :global(.media-grid-2) {

@@ -5,7 +5,7 @@ summary: "База отдыха в горах под Алматы"
 services:
   - "Логотип"
   - "Поддержка"
-cover: "/case/yatut.webp"
+cover: "https://media.yapil.art/case/yatut.a596ffbdeb5aecc7.webp"
 order: 4
 featured: false
 task: "Создать графичный, узнаваемый знак для базы отдыха в горах под Алматы, без шаблонной туристической приторности."
@@ -22,7 +22,7 @@ reviewed: false
 Фирменный знак в форме геолокационной метки и композиция айдентики для базы отдыха.
 
 <figure>
-  <img src="/case/yatut/signs.webp" alt="Цветная и контурная версии фирменного знака «Я тут» в форме геолокационной метки" width="1920" height="1080" loading="lazy" decoding="async" />
+  <img src="https://media.yapil.art/case/yatut/signs.e808264e8d47adf0.webp" alt="Цветная и контурная версии фирменного знака «Я тут» в форме геолокационной метки" width="1920" height="1080" loading="lazy" decoding="async" />
   <figcaption>Цветная и контурная версии фирменного знака «Я тут»</figcaption>
 </figure>
 
@@ -30,11 +30,11 @@ reviewed: false
 
 <div class="media-grid media-grid-2">
   <figure>
-    <img src="/case/yatut.webp" alt="Стакан с фирменным знаком «Я тут»" width="1440" height="1152" loading="lazy" decoding="async" />
+    <img src="https://media.yapil.art/case/yatut.a596ffbdeb5aecc7.webp" alt="Стакан с фирменным знаком «Я тут»" width="1440" height="1152" loading="lazy" decoding="async" />
     <figcaption>Фирменный стакан</figcaption>
   </figure>
   <figure>
-    <img src="/case/yatut/yatut.webp" alt="Сумка-шопер с фирменным знаком «Я тут»" width="3000" height="2000" loading="lazy" decoding="async" />
+    <img src="https://media.yapil.art/case/yatut/yatut.fb2cc2794d5af691.webp" alt="Сумка-шопер с фирменным знаком «Я тут»" width="3000" height="2000" loading="lazy" decoding="async" />
     <figcaption>Сумка-шопер</figcaption>
   </figure>
 </div>

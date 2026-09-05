@@ -1,12 +1,14 @@
-import { access, readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { createHash } from 'node:crypto';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CONTENT_ROOT = join(ROOT, 'content-drafts/seo');
 const PUBLIC_ROOT = join(ROOT, 'public');
 const serviceSlugs = ['websites', 'identity', 'print', 'presentations', 'smm', 'support'];
+const mediaManifest = JSON.parse(await readFile(join(ROOT, 'media-manifest.json'), 'utf8')).assets;
 const errors = [];
 const seenSlugs = new Set();
 const seenAlts = new Set();
@@ -50,10 +52,20 @@ for (const serviceSlug of serviceSlugs) {
     seenAlts.add(coverAlt);
 
     if (cover) {
-      const coverPath = join(PUBLIC_ROOT, cover.replace(/^\//, ''));
+      const migrated = Object.values(mediaManifest).find(asset => asset.url === cover);
+      const coverPath = migrated
+        ? join(ROOT, '.cache/media-migration', `${migrated.sourceHash}.webp`)
+        : join(PUBLIC_ROOT, cover.replace(/^\//, ''));
+      if (cover.startsWith('http') && !migrated?.verifiedAt) errors.push(`${file}: remote cover has not been verified`);
       try {
-        await access(coverPath);
-        const metadata = await sharp(coverPath).metadata();
+        const bytes = await readFile(coverPath).catch(async (error) => {
+          if (!migrated || error.code !== 'ENOENT') throw error;
+          const response = await fetch(cover);
+          if (!response.ok) throw new Error(`Cover HTTP ${response.status}`);
+          return Buffer.from(await response.arrayBuffer());
+        });
+        if (migrated && createHash('sha256').update(bytes).digest('hex') !== migrated.sha256) errors.push(`${file}: migrated cover checksum mismatch`);
+        const metadata = await sharp(bytes).metadata();
         if (metadata.width !== 1600 || metadata.height !== 840 || metadata.format !== 'webp') {
           errors.push(`${file}: cover must be 1600×840 WebP`);
         }

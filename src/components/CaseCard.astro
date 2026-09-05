@@ -1,4 +1,5 @@
 ---
+import { videoPoster } from '../lib/media';
 interface Props {
   slug: string;
   title: string;
@@ -12,7 +13,7 @@ interface Props {
 const { slug, title, year, summary, services, cover, index } = Astro.props;
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
 const poster = isVideo
-  ? cover.replace(/\.(mp4|webm)(?:\?.*)?$/i, '.webp')
+  ? videoPoster(cover)
   : cover;
 ---
 

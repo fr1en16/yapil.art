@@ -1,4 +1,5 @@
 ---
+import { mediaUrl } from '../lib/media';
 const carousels = [
   {
     title: 'Наши объекты',
@@ -48,7 +49,7 @@ const carousels = [
                 aria-hidden={slideIndex === 0 ? 'false' : 'true'}
               >
                 <img
-                  src={`/case/yatut/instagram/${carousel.directory}/${slideIndex + 1}.jpg`}
+                  src={mediaUrl(`/case/yatut/instagram/${carousel.directory}/${slideIndex + 1}.jpg`)}
                   alt={`${carousel.title} — слайд ${slideIndex + 1}`}
                   width={carousel.width}
                   height={carousel.height}

@@ -1,0 +1,70 @@
+<section class="kolesa-cta" aria-labelledby="kolesa-cta-title">
+  <header class="kolesa-header">
+    <h2 id="kolesa-cta-title">Превращаем посетителей в заявки</h2>
+    <p>Для Taxi Kolesa сделали лендинг для курьеров — и 27,9% посетителей оставили заявку.</p>
+  </header>
+  <div class="kolesa-visuals">
+    <courier-gauge>
+      <div class="gauge-display">
+        <canvas aria-hidden="true"></canvas>
+        <div class="gauge-value"><strong>27,9<span>%</span></strong><span>Конверсия лендинга<br />для курьеров</span></div>
+      </div>
+      <div class="gauge-scale" aria-hidden="true"><span>0%</span><span>100%</span></div>
+    </courier-gauge>
+    <a class="kolesa-project" href="/case/taxikolesa" aria-label="Смотреть кейс Taxi Kolesa — лендинг для курьеров">
+      <div class="kolesa-image"><img src="https://media.yapil.art/case/taxikolesa/couriers.8ece4cf6fa4b4729.webp" alt="Макет лендинга Taxi Kolesa для курьеров" width="1200" height="4366" loading="lazy" decoding="async" /></div>
+      <div class="kolesa-project-caption"><span>Taxi Kolesa — лендинг для курьеров</span><span aria-hidden="true">↗</span></div>
+    </a>
+  </div>
+  <footer class="kolesa-footer">
+    <p>Такой результат — у одного лендинга Taxi Kolesa.<br />Хотите так же для своего бизнеса?</p>
+    <a class="kolesa-button" href="#contacts">Хочу так же <span aria-hidden="true">↗</span></a>
+  </footer>
+</section>
+<style>
+.kolesa-cta{padding-block:clamp(48px,6vw,88px);background:#f5f5f5;color:#1d1d1d}
+.kolesa-header{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gap);align-items:end;margin-bottom:32px}
+.kolesa-header h2{grid-column:span 7;font:400 clamp(40px,4.6vw,72px)/1.02 Oranienbaum,Georgia,serif;letter-spacing:-.025em;margin:0;color:#fd4b32;max-width:17ch}
+.kolesa-header p{grid-column:9 / -1;font-size:clamp(16px,1.3vw,20px);line-height:1.45;margin:0}
+.kolesa-visuals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--grid-gap);align-items:start}
+courier-gauge,.kolesa-image{aspect-ratio:4/3;min-width:0}
+courier-gauge{display:flex;flex-direction:column;justify-content:center;padding:clamp(20px,3vw,48px);background:#111;color:#f5f5f5}
+.gauge-display{position:relative;width:100%;max-width:460px;aspect-ratio:2/1.15;margin:0 auto}.gauge-display canvas{display:block;width:100%;height:100%}
+.gauge-value{position:absolute;inset:40% 0 8%;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:10px;pointer-events:none}.gauge-value strong{font:400 clamp(48px,5.6vw,80px)/1 Oranienbaum,serif;color:#f5f5f5}.gauge-value strong span{font-size:.55em}.gauge-value>span{font-size:clamp(11px,1vw,14px);line-height:1.4;text-align:center;color:#aaa}
+.gauge-scale{display:flex;justify-content:space-between;width:100%;max-width:420px;margin:4px auto 0;font:12px monospace;color:#aaa}
+.kolesa-project{min-width:0;color:#1d1d1d;text-decoration:none;display:block}.kolesa-image{overflow:hidden;background:#ffdb46;padding:clamp(20px,3vw,48px) clamp(28px,5vw,80px) 0}.kolesa-image img{width:100%;height:auto;display:block;box-shadow:0 8px 40px #0002;transition:transform .45s;transform-origin:top center}.kolesa-project:hover img{transform:translateY(-8px)}
+.kolesa-project-caption{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:16px;font-size:clamp(14px,1.2vw,18px);line-height:1.4}.kolesa-project-caption>span:last-child{font-size:28px;color:#fd4b32}
+.kolesa-footer{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:28px;padding-top:24px}.kolesa-footer p{font-size:12px;line-height:1.5;margin:0}
+.kolesa-button{display:inline-flex;align-items:center;justify-content:space-between;gap:64px;padding:20px 24px;background:#fd4b32;color:#f5f5f5;text-decoration:none;font-size:18px;transition:background .2s}.kolesa-button:hover{background:#1d1d1d}.kolesa-button:focus-visible,.kolesa-project:focus-visible{outline:2px solid #fd4b32;outline-offset:5px}.kolesa-button span{font-size:24px}
+@media(max-width:767px){.kolesa-header{grid-template-columns:1fr;gap:20px}.kolesa-header h2,.kolesa-header p{grid-column:auto}.kolesa-header p{max-width:48ch}.kolesa-visuals{grid-template-columns:1fr;gap:24px}.gauge-value strong{font-size:clamp(48px,10vw,72px)}.kolesa-footer{align-items:stretch;flex-direction:column}.kolesa-button{width:100%}}
+@media(prefers-reduced-motion:reduce){.kolesa-image img{transition:none}.kolesa-project:hover img{transform:none}}
+</style>
+<script>
+if(!customElements.get('courier-gauge'))customElements.define('courier-gauge',class extends HTMLElement{
+ frame=0; observer?:IntersectionObserver; resize?:ResizeObserver;
+ connectedCallback(){
+  const canvas=this.querySelector('canvas')!;const ctx=canvas.getContext('2d');if(!ctx)return;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let progress=1;
+  const draw=()=>{
+   const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(devicePixelRatio,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+   const x=w/2,y=h-12,r=w*.42;
+   const arc=(radius:number,start:number,end:number,color:string,width:number)=>{ctx.beginPath();ctx.arc(x,y,radius,start,end);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();};
+   arc(r,Math.PI,Math.PI*2,'#252525',r*.17);
+   for(let i=0;i<=80;i++){
+    const a=Math.PI+i/80*Math.PI;const major=i%10===0;
+    ctx.beginPath();ctx.moveTo(x+Math.cos(a)*(r*1.13),y+Math.sin(a)*(r*1.13));ctx.lineTo(x+Math.cos(a)*(r*(major?1.2:1.17)),y+Math.sin(a)*(r*(major?1.2:1.17)));ctx.strokeStyle=major?'#aaa':'#505050';ctx.lineWidth=major?1.5:1;ctx.stroke();
+   }
+   arc(r,Math.PI,Math.PI+Math.PI*.279*progress,'#f5f5f5',r*.17);
+   const angle=Math.PI+Math.PI*.279*progress;
+   ctx.beginPath();ctx.arc(x+Math.cos(angle)*r,y+Math.sin(angle)*r,4,0,Math.PI*2);ctx.fillStyle='#fd4b32';ctx.fill();
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(angle)*18,y+Math.sin(angle)*18);ctx.strokeStyle='#f5f5f5';ctx.lineWidth=2;ctx.stroke();
+   ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#f5f5f5';ctx.fill();
+  };
+  const play=()=>{cancelAnimationFrame(this.frame);if(reduced.matches){progress=1;draw();return;}const start=performance.now();const tick=(now:number)=>{const t=Math.min((now-start)/1100,1);progress=1-Math.pow(1-t,3);draw();if(t<1)this.frame=requestAnimationFrame(tick);};this.frame=requestAnimationFrame(tick);};
+  this.resize=new ResizeObserver(draw);this.resize.observe(canvas);draw();
+  this.observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){play();this.observer?.disconnect();}},{threshold:.4});this.observer.observe(this);
+ }
+ disconnectedCallback(){cancelAnimationFrame(this.frame);this.observer?.disconnect();this.resize?.disconnect();}
+});
+</script>

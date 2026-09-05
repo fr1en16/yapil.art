@@ -24,7 +24,7 @@ const readingMinutes = Math.max(1, Math.ceil(words / 180));
 const articleUrl = new URL(`/articles/${slug}`, Astro.site).href;
 const coverUrl = article.data.cover
   ? new URL(article.data.cover, Astro.site).href
-  : new URL('/social-cover.webp', Astro.site).href;
+  : new URL('https://media.yapil.art/social-cover.9512ed9be1051235.webp', Astro.site).href;
 
 const articleJsonLd = {
   '@context': 'https://schema.org',

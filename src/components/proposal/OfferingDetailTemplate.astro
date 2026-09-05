@@ -1,5 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Hero from '../Hero.astro';
+import AboutCompact from '../AboutCompact.astro';
+import WebsiteResult from './WebsiteResult.astro';
+import KolesaCta from './KolesaCta.astro';
+import SelectedWebProjects from './SelectedWebProjects.astro';
+import ServicesAnimatedModal from '../ui/services-animated-modal';
 import Contacts from '../Contacts.astro';
 import Footer from '../Footer.astro';
 import ProduxPortfolio from '../ProduxPortfolio.astro';
@@ -40,6 +46,15 @@ interface Props {
 const props = Astro.props;
 const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead } = props;
 const source = 'contacts_form';
+const isWebsiteService = section === 'services' && slug === 'websites';
+const showKolesaCase = false;
+const showSecondaryNavigation = false;
+const formatImages = ['https://media.yapil.art/services/landing-pages.06f68f54ad8a6e08.webp', 'https://media.yapil.art/services/corporate-websites.13154da07ccc903e.webp', 'https://media.yapil.art/services/catalogs.1339a4386de88793.webp'];
+const websiteFormats = firstCards.map((card, index) => ({
+  id: `website-format-${index}`, number: String(index + 1).padStart(2, '0'),
+  title: card.title, description: card.text, price: 'По задаче',
+  caseBadge: '', caseLink: '#contacts', image: formatImages[index % formatImages.length], color: '#141416',
+}));
 const hasProcessWork = section === 'services' && slug === 'websites' && Astro.slots.has('process-work');
 const sectionName = section === 'services' ? 'Услуга' : 'Решение';
 const deadline = metrics.find((metric) => /срок/iu.test(metric.label))?.text ?? 'фиксируем после короткого брифа';
@@ -49,8 +64,11 @@ const faqNumber = section === 'services' ? (rows.length ? '05' : '04') : (rows.l
 const linksNumber = section === 'services' ? '06' : '05';
 ---
 
-<Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" navOverlay={true}>
+<Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" navOverlay={true} bodyClass={isWebsiteService ? 'website-service-page' : undefined}>
   <article class="editorial-page">
+    {section === 'services' && slug === 'websites' ? (
+      <Hero title={heroH1} description={heroLead} casesHref="#contacts" ctaText="Обсудить проект" ripple />
+    ) : (
     <header class="editorial-cover">
       <div class="container editorial-cover__inner">
         <div class="editorial-title-wrap">
@@ -64,11 +82,33 @@ const linksNumber = section === 'services' ? '06' : '05';
         </div>
       </div>
     </header>
+    )}
+
+    {isWebsiteService && <AboutCompact theme="light" websites />}
 
     {hasProcessWork && <slot name="process-work" />}
 
+    {isWebsiteService && <ServicesAnimatedModal client:visible homepage theme="light" sectionId="scope" heading="Подбираем формат под задачу бизнеса" intro="Выберите тип сайта, чтобы обсудить проект." items={websiteFormats} />}
+
     <div class="editorial-body">
-      <section class="editorial-section" id="scope" aria-labelledby="scope-title">
+      {isWebsiteService && (
+        <section class="website-facts" aria-label="Условия разработки сайта">
+          <article class="website-fact" aria-label="Стоимость">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7.5 4.5h17v23h-17zM11 10h10M11 15h10M11 20h6" /></svg>
+            <p>Готовим персональную смету после короткого брифа и фиксируем состав работ до старта.</p>
+          </article>
+          <article class="website-fact" aria-label="Срок">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="11" /><path d="M16 10v7l5 3M12 3h8" /></svg>
+            <p>{deadline}. Календарь и точки согласования входят в предложение.</p>
+          </article>
+          <article class="website-fact" aria-label="Результат">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11.5" /><path d="m10.5 16 3.5 3.5 7.5-8" /></svg>
+            <p>{result}. Полный комплект и правила передачи описываем в договоре.</p>
+          </article>
+        </section>
+      )}
+
+      {!isWebsiteService && <section class="editorial-section" id="scope" aria-labelledby="scope-title">
         <header class="editorial-heading">
           <p class="editorial-heading__number">01</p>
           <div class="editorial-heading__content">
@@ -83,8 +123,11 @@ const linksNumber = section === 'services' ? '06' : '05';
             </article>
           ))}
         </div>
-      </section>
+      </section>}
 
+      {isWebsiteService && <SelectedWebProjects />}
+
+      {isWebsiteService ? <WebsiteResult title={secondTitle} cards={secondCards} /> : (
       <section class="editorial-section" aria-labelledby="result-title">
         <header class="editorial-heading">
           <p class="editorial-heading__number">02</p>
@@ -96,8 +139,9 @@ const linksNumber = section === 'services' ? '06' : '05';
           ))}
         </div>
       </section>
+      )}
 
-      {section === 'services' && (
+      {section === 'services' && !isWebsiteService && (
         <section class="editorial-section" aria-labelledby="process-title">
           <header class="editorial-heading"><p class="editorial-heading__number">03</p><div class="editorial-heading__content"><h2 id="process-title">Цена, срок и результат</h2></div></header>
           <div class="editorial-grid">
@@ -118,12 +162,43 @@ const linksNumber = section === 'services' ? '06' : '05';
     </div>
     {!hasProcessWork && <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />}
     <div class="editorial-body">
-      <section class="editorial-section" aria-labelledby="faq-title">
-        <header class="editorial-heading"><p class="editorial-heading__number">{faqNumber}</p><div class="editorial-heading__content"><h2 id="faq-title">{faqTitle}</h2></div></header>
-        <div class="editorial-faq">{faq.map((item, index) => <details open={index === 0}><summary><span>{item.question}</span><span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div>
-      </section>
+      {isWebsiteService && showKolesaCase && <KolesaCta />}
+      {isWebsiteService ? (
+        <section class="editorial-section website-faq" aria-labelledby="faq-title">
+          <header class="website-faq__heading">
+            <h2 id="faq-title">{faqTitle}</h2>
+          </header>
+          <div class="website-faq__list">
+            {faq.map((item, index) => (
+              <details class="website-faq__item" open={index === 0}>
+                <summary>
+                  <span class="website-faq__icon" aria-hidden="true">
+                    {index === 0 ? (
+                      <svg viewBox="0 0 32 32"><path d="m11 9-7 7 7 7M21 9l7 7-7 7M18.5 5l-5 22" /></svg>
+                    ) : index === 1 ? (
+                      <svg viewBox="0 0 32 32"><path d="M7 5.5h13M7 11h13M7 16.5h8M6 26l1.2-5.2L21.8 6.2a2.5 2.5 0 0 1 3.5 0l.5.5a2.5 2.5 0 0 1 0 3.5L11.2 24.8 6 26Z" /></svg>
+                    ) : (
+                      <svg viewBox="0 0 32 32"><path d="M5 7.5h22M5 16h22M5 24.5h22" /><circle cx="11" cy="7.5" r="2.5" /><circle cx="21" cy="16" r="2.5" /><circle cx="14" cy="24.5" r="2.5" /></svg>
+                    )}
+                  </span>
+                  <span class="website-faq__question">{item.question}</span>
+                  <span class="website-faq__toggle" aria-hidden="true"></span>
+                </summary>
+                <div class="website-faq__answer">
+                  <div class="website-faq__answer-inner"><p>{item.answer}</p></div>
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section class="editorial-section" aria-labelledby="faq-title">
+          <header class="editorial-heading"><p class="editorial-heading__number">{faqNumber}</p><div class="editorial-heading__content"><h2 id="faq-title">{faqTitle}</h2></div></header>
+          <div class="editorial-faq">{faq.map((item, index) => <details open={index === 0}><summary><span>{item.question}</span><span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div>
+        </section>
+      )}
 
-      {links.length > 0 && linksTitle && (
+      {showSecondaryNavigation && links.length > 0 && linksTitle && (
         <section class="editorial-section editorial-section--compact" aria-labelledby="links-title">
           <header class="editorial-compact-header">
             <span class="editorial-compact-header__number">{linksNumber}</span>
@@ -144,7 +219,7 @@ const linksNumber = section === 'services' ? '06' : '05';
         </section>
       )}
 
-      {section === 'services' && (
+      {showSecondaryNavigation && section === 'services' && (
         <section class="editorial-section editorial-section--compact" aria-labelledby="cities-title">
           <header class="editorial-compact-header">
             <span class="editorial-compact-header__number">07</span>
@@ -189,27 +264,260 @@ const linksNumber = section === 'services' ? '06' : '05';
 
     </div>
 
-    {section === 'services' && (
-      <div class="editorial-body">
-        <section class="brief-cta" aria-labelledby="brief-cta-title">
-          <p>Расскажите о задаче</p>
-          <h2 id="brief-cta-title">Подробный<br />бриф</h2>
-          <a href={`/brief?service=${slug}`}>
-            <span>Заполнить бриф по услуге «{name}»</span><span aria-hidden="true">→</span>
-          </a>
-        </section>
-      </div>
-    )}
-
     <Contacts theme="light" title={ctaTitle} lead={ctaLead} source={source} sourceDetails={`${sectionName}: ${name}`} />
   </article>
   <Footer slot="footer" theme="light" />
 </Base>
 
+<script>
+  const websiteFaqItems = Array.from(document.querySelectorAll<HTMLDetailsElement>('.website-faq__item'));
+  const websiteFaqReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const setWebsiteFaqState = (item: HTMLDetailsElement, shouldOpen: boolean) => {
+    const answer = item.querySelector<HTMLElement>('.website-faq__answer');
+    if (!answer) return;
+
+    answer.getAnimations().forEach((animation) => animation.cancel());
+
+    if (websiteFaqReduceMotion.matches) {
+      item.open = shouldOpen;
+      delete item.dataset.faqState;
+      return;
+    }
+
+    if (shouldOpen) item.open = true;
+    item.dataset.faqState = shouldOpen ? 'opening' : 'closing';
+
+    const startHeight = shouldOpen ? 0 : answer.getBoundingClientRect().height;
+    const endHeight = shouldOpen ? answer.scrollHeight : 0;
+    const animation = answer.animate(
+      [
+        { height: `${startHeight}px`, opacity: shouldOpen ? 0 : 1 },
+        { height: `${endHeight}px`, opacity: shouldOpen ? 1 : 0 },
+      ],
+      { duration: 460, easing: 'cubic-bezier(.22, 1, .36, 1)' },
+    );
+
+    animation.onfinish = () => {
+      item.open = shouldOpen;
+      delete item.dataset.faqState;
+      animation.cancel();
+    };
+  };
+
+  websiteFaqItems.forEach((item) => {
+    const summary = item.querySelector('summary');
+    summary?.addEventListener('click', (event) => {
+      event.preventDefault();
+      const shouldOpen = !item.open || item.dataset.faqState === 'closing';
+
+      if (shouldOpen) {
+        websiteFaqItems.forEach((otherItem) => {
+          if (otherItem !== item && otherItem.open) setWebsiteFaqState(otherItem, false);
+        });
+      }
+
+      setWebsiteFaqState(item, shouldOpen);
+    });
+  });
+</script>
+
 <style>
-  .brief-cta { padding: clamp(5rem, 9vw, 9rem) 0; border-top: 1px solid rgba(23, 23, 23, .18); }
-  .brief-cta > p { margin: 0 0 2rem; color: #fd4b32; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
-  .brief-cta h2 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem, 7.3vw, 7.5rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
-  .brief-cta a { display: flex; justify-content: space-between; align-items: center; margin-top: clamp(3rem, 7vw, 7rem); padding: 1.5rem 0; border-block: 1px solid #171717; color: inherit; font-size: clamp(1.1rem, 2vw, 1.5rem); text-decoration: none; transition: padding 220ms ease, color 220ms ease, background 220ms ease; }
-  .brief-cta a:hover,.brief-cta a:focus-visible { padding-inline: 1.5rem; color: #fff; background: #fd4b32; outline-offset: 4px; }
+  :global(body.website-service-page) { --page-neutral-surface: #f5f5f5; --bg-primary: #f5f5f5; --bg-card: #f5f5f5; --bg-section-light: #f5f5f5; }
+  :global(body.website-service-page [class~="bg-white"]),
+  :global(body.website-service-page [class~="bg-white/80"]) { background-color: #f5f5f5 !important; }
+  :global(body.website-service-page .editorial-page) { --paper: #f5f5f5; }
+  :global(body.website-service-page #scope) { padding-bottom: 0; }
+  :global(body.website-service-page .editorial-body) { display: flow-root; }
+  :global(body.website-service-page .editorial-page) { --editorial-muted: #1d1d1d; }
+  :global(body.website-service-page .editorial-cover__bottom),
+  :global(body.website-service-page .editorial-meta > div) { border-block-color: transparent; }
+  :global(body.website-service-page .editorial-section--compact) { border-top: 0; }
+  :global(body.website-service-page .hero-cover .hero-layer--title) { font-size: clamp(3.4rem, 5.8vw, 5.6rem); }
+  :global(body.website-service-page main h2) { font-size: 46px !important; }
+  :global(body.website-service-page main h3) { font-size: 32px !important; }
+  :global(body.website-service-page .editorial-compact-header h2) { font-size: clamp(1.2rem, 1.75vw, 1.55rem) !important; }
+  :global(body.website-service-page .editorial-compact-card h3) { font-size: clamp(1.15rem, 1.35vw, 1.3rem) !important; }
+  :global(body.website-service-page :is(.editorial-body, #scope, .contacts.theme-light) :is(h2, h3, h4)),
+  :global(body.website-service-page .process-heading .process-title),
+  :global(body.website-service-page .work-left h2) { color: #fd4b32; }
+  :global(body.website-service-page #scope p),
+  :global(body.website-service-page #scope .homepage-service-description),
+  :global(body.website-service-page .process-heading p),
+  :global(body.website-service-page .process-heading .route),
+  :global(body.website-service-page .work-left :is(.project-number, .project-tags)),
+  :global(body.website-service-page .contacts.theme-light p) { color: #1d1d1d; }
+  :global(body.website-service-page .editorial-compact-card:is(:hover, :focus-visible) :is(h3, p)) { color: #f5f5f5; }
+
+  .website-facts {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+  }
+  .website-fact {
+    position: relative;
+    grid-column: span 4;
+    min-height: 11rem;
+    padding: clamp(2rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 2rem);
+  }
+  .website-fact + .website-fact::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: calc(var(--grid-gap) / -2);
+    width: 1px;
+    background: rgba(29, 29, 29, .18);
+  }
+  .website-fact svg {
+    width: 2rem;
+    height: 2rem;
+    fill: none;
+    stroke: #fd4b32;
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .website-fact p {
+    max-width: 38ch;
+    margin: 2rem 0 0;
+    font-size: clamp(.95rem, 1.15vw, 1.1rem);
+    line-height: 1.35;
+  }
+
+  .website-faq {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    align-items: start;
+  }
+  .website-faq__heading {
+    grid-column: 1 / 6;
+  }
+  :global(body.website-service-page main .website-faq__heading h2) {
+    max-width: 7ch;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(3.75rem, 6.8vw, 7rem) !important;
+    font-weight: 400;
+    line-height: .88;
+    letter-spacing: -.045em;
+    text-wrap: balance;
+  }
+  .website-faq__list {
+    grid-column: 7 / 13;
+    border-top: 1px solid rgba(29, 29, 29, .72);
+  }
+  .website-faq__item {
+    border-bottom: 1px solid rgba(29, 29, 29, .18);
+  }
+  .website-faq__item summary {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) 2.5rem;
+    column-gap: clamp(.65rem, 1vw, 1rem);
+    align-items: center;
+    min-height: clamp(5.25rem, 7vw, 6.75rem);
+    padding-block: 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .website-faq__item summary::-webkit-details-marker { display: none; }
+  .website-faq__icon {
+    display: flex;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    color: #fd4b32;
+    transition: transform 400ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .website-faq__icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .website-faq__question {
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -.02em;
+  }
+  .website-faq__toggle {
+    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid rgba(29, 29, 29, .18);
+    border-radius: 50%;
+    transition: border-color 240ms ease, background 240ms ease, transform 400ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .website-faq__toggle::before,
+  .website-faq__toggle::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: .75rem;
+    height: 1px;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+  }
+  .website-faq__toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .website-faq__answer {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+  .website-faq__answer-inner {
+    min-height: 0;
+  }
+  .website-faq__answer p {
+    max-width: 44rem;
+    margin: 0;
+    padding: 0 3.5rem 1.75rem 4.5rem;
+    color: rgba(29, 29, 29, .72);
+    font-size: clamp(.95rem, 1.1vw, 1.08rem);
+    line-height: 1.45;
+  }
+  .website-faq__item[open] .website-faq__answer {
+    height: auto;
+    opacity: 1;
+  }
+  .website-faq__item[open] .website-faq__toggle {
+    border-color: #fd4b32;
+    background: #fd4b32;
+    color: #f5f5f5;
+    transform: rotate(45deg);
+  }
+  .website-faq__item[open] .website-faq__icon { transform: translateX(.2rem); }
+  @media (hover: hover) {
+    .website-faq__item summary:hover .website-faq__toggle { border-color: #fd4b32; }
+    .website-faq__item summary:hover .website-faq__question { color: #fd4b32; }
+  }
+
+  @media (max-width: 48rem) {
+    .website-facts { grid-template-columns: 1fr; }
+    .website-fact { grid-column: auto; min-height: 0; padding: 1.5rem 0; border-bottom: 0; }
+    .website-fact + .website-fact { padding-left: 0; border-left: 0; }
+    .website-fact + .website-fact::before { content: none; }
+    .website-faq { display: block; }
+    .website-faq__heading { margin-bottom: 3.5rem; }
+    :global(body.website-service-page main .website-faq__heading h2) {
+      max-width: 9ch;
+      font-size: clamp(3.25rem, 14vw, 5rem) !important;
+    }
+    .website-faq__item summary {
+      grid-template-columns: 2.75rem minmax(0, 1fr) 2.25rem;
+      min-height: 5rem;
+    }
+    .website-faq__icon { width: 1.65rem; height: 1.65rem; }
+    .website-faq__answer p { padding: 0 2.75rem 1.5rem 2.75rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .website-faq__answer,
+    .website-faq__icon,
+    .website-faq__toggle { transition: none; }
+  }
 </style>

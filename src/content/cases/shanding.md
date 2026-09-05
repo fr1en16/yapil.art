@@ -5,7 +5,7 @@ summary: "Логистическая компания"
 services:
   - "Лендинг"
   - "Полиграфия"
-cover: "/case/shanding.webp"
+cover: "https://media.yapil.art/case/shanding.d6eb5d5dc754711d.webp"
 order: 10
 featured: false
 task: "Объяснить услуги логистической компании и собрать складной буклет для встреч с партнёрами."
@@ -23,7 +23,7 @@ Shanding перевозит грузы авиа, авто и по железно
 Интерактивный интерфейс и логика презентации направлений доставки.
 
 <div class="video-container">
-  <video src="/case/shanding/shanding.mp4" autoplay muted loop playsinline controls aria-label="Демонстрация сайта Shanding"></video>
+  <video src="https://media.yapil.art/case/shanding/shanding.1443be999dffef15.mp4" autoplay muted loop playsinline controls aria-label="Демонстрация сайта Shanding"></video>
 </div>
 
 ---
@@ -34,11 +34,11 @@ Shanding перевозит грузы авиа, авто и по железно
 
 <div class="media-grid media-grid-2">
   <figure>
-    <img src="/case/shanding/shanding1.webp" alt="Презентационный буклет Shanding — обложка и разворот" loading="lazy" decoding="async" />
+    <img src="https://media.yapil.art/case/shanding/shanding1.0b892d963a189469.webp" alt="Презентационный буклет Shanding — обложка и разворот" loading="lazy" decoding="async" />
     <figcaption>Обложка и разворот складного буклета</figcaption>
   </figure>
   <figure>
-    <img src="/case/shanding/shanding2.webp" alt="Презентационный буклет Shanding — схема логистических маршрутов и условия" loading="lazy" decoding="async" />
+    <img src="https://media.yapil.art/case/shanding/shanding2.bdad63ac2ceed1e8.webp" alt="Презентационный буклет Shanding — схема логистических маршрутов и условия" loading="lazy" decoding="async" />
     <figcaption>Схема маршрутов и направлений перевозок</figcaption>
   </figure>
 </div>

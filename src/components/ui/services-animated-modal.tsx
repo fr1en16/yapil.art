@@ -28,7 +28,7 @@ export const services: ServiceItem[] = [
     price: 'от 150 000 ₸',
     caseBadge: 'Кейс // Compass',
     caseLink: '/case/compass',
-    image: '/services/sites.png',
+    image: 'https://media.yapil.art/services/sites.d7a0bf3e30b3f1df.webp',
     color: '#141416',
   },
   {
@@ -50,7 +50,7 @@ export const services: ServiceItem[] = [
     price: 'от 40 000 ₸',
     caseBadge: 'Кейс // Shanding',
     caseLink: '/case/shanding',
-    image: '/services/polygraphy.png',
+    image: 'https://media.yapil.art/services/polygraphy.de6b0b9d86fc262c.webp',
     color: '#141416',
   },
   {
@@ -61,7 +61,7 @@ export const services: ServiceItem[] = [
     price: 'от 40 000 ₸',
     caseBadge: 'Кейс // Gippo',
     caseLink: '/case/gippo',
-    image: '/services/smm.png',
+    image: 'https://media.yapil.art/services/smm.6daf973a8ce29345.webp',
     color: '#141416',
   },
   {
@@ -72,7 +72,7 @@ export const services: ServiceItem[] = [
     price: 'от 60 000 ₸',
     caseBadge: 'Кейс // Parking24',
     caseLink: '/case/parking24',
-    image: '/services/presentations.png',
+    image: 'https://media.yapil.art/services/presentations.4d39d5565335b0b1.webp',
     color: '#141416',
   },
   {
@@ -83,7 +83,7 @@ export const services: ServiceItem[] = [
     price: 'от 150 000 ₸',
     caseBadge: 'Кейс // ONmacabim',
     caseLink: '/case/onmacabim',
-    image: '/services/support.png',
+    image: 'https://media.yapil.art/services/support.5dc90c0aa5331630.webp',
     color: '#141416',
   },
 ];
@@ -219,6 +219,10 @@ export default function ServicesAnimatedModal({
   currency = 'kzt',
   lang = 'ru',
   homepage = false,
+  items = services,
+  heading,
+  intro,
+  sectionId = 'services',
 }: {
   theme?: 'dark' | 'light';
   personal?: boolean;
@@ -226,11 +230,15 @@ export default function ServicesAnimatedModal({
   currency?: 'kzt' | 'usd';
   lang?: 'ru' | 'en';
   homepage?: boolean;
+  items?: ServiceItem[];
+  heading?: string;
+  intro?: string;
+  sectionId?: string;
 }) {
   const isLight = theme === 'light';
   const isEn = lang === 'en';
 
-  const displayedServices: ServiceItem[] = services.map((item) => {
+  const displayedServices: ServiceItem[] = items.map((item) => {
     let title = item.title;
     let description = personal
       ? (SERVICE_DESCRIPTIONS_PERSONAL_RU[item.id] ?? item.description)
@@ -281,14 +289,14 @@ export default function ServicesAnimatedModal({
 
   return (
     <section
-      id="services"
-      aria-labelledby="services-title"
+      id={sectionId}
+      aria-labelledby={`${sectionId}-title`}
       className={`relative z-10 py-20 md:py-32 overflow-hidden transition-colors duration-300 ${
         isLight ? 'text-[#1D1D1D]' : 'text-white'
       }`}
       style={{
         background: isLight
-          ? 'linear-gradient(to bottom, #F7F5F2 0%, #F0ECE7 50%, #EAE5DF 100%)'
+          ? 'var(--page-neutral-surface, linear-gradient(to bottom, #F7F5F2 0%, #F0ECE7 50%, #EAE5DF 100%))'
           : 'linear-gradient(to bottom, #181818 0%, #121213 50%, #0b0b0c 100%)',
       }}
     >
@@ -297,13 +305,13 @@ export default function ServicesAnimatedModal({
         <div className="mb-12 md:mb-18 grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-[var(--grid-gap)] md:items-end">
           <div className="col-span-1 md:col-span-7">
             <h2
-              id="services-title"
+              id={`${sectionId}-title`}
               className={`text-[clamp(2.75rem,7vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.04em] m-0 ${
                 isLight ? 'text-[#1D1D1D]' : 'text-white'
               }`}
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              {isEn ? 'Services' : 'Услуги'}
+              {heading ?? (isEn ? 'Services' : 'Услуги')}
             </h2>
           </div>
           <p
@@ -311,13 +319,13 @@ export default function ServicesAnimatedModal({
               isLight ? 'text-[#1D1D1D]/65' : 'text-white/60'
             }`}
           >
-            {isEn
+            {intro ?? (isEn
               ? (personal
                   ? 'Structuring websites, brands, and visual communications: from strategy to daily content. Click any service to discuss your project.'
                   : 'Building websites, brands, and visual communications — from strategy to daily content. Click any service to discuss your project.')
               : (personal
                   ? 'Собираю сайты, бренды и коммуникации: делаю стратегию, веду контент каждый день. Нажмите на услугу, чтобы обсудить задачу и заказать проект.'
-                  : 'Собираем сайты, бренды и коммуникации — от стратегии до ежедневного контента. Нажмите на услугу, чтобы обсудить задачу и заказать проект.')}
+                  : 'Собираем сайты, бренды и коммуникации — от стратегии до ежедневного контента. Нажмите на услугу, чтобы обсудить задачу и заказать проект.'))}
           </p>
         </div>
 
@@ -1012,7 +1020,7 @@ function ServiceApplicationModal({
               </div>
 
               {/* Service Selection Chips */}
-              <div className="space-y-3.5">
+              <div className="space-y-3.5" hidden style={{ display: 'none' }}>
                 <label
                   id="service-select-label"
                   className={`block text-sm sm:text-base font-medium ${isLight ? 'text-[#1D1D1D]/70' : 'text-white/70'}`}
