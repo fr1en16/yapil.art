@@ -57,6 +57,8 @@ function initSelectedWork(){
       let startX=0;
       let startY=0;
       let suppressClick=false;
+      let inViewport=false;
+      let transitionTimeline:gsap.core.Timeline|null=null;
       const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
       const full='polygon(0% 0%,100% 0%,100% 101%,0% 101%)';
       const hiddenRight='polygon(100% 100%,100% 100%,100% 100%,100% 100%)';
@@ -72,6 +74,7 @@ function initSelectedWork(){
         if(nextIndex===active&&animate)return;
         const outgoing=slides[active];
         const incoming=slides[nextIndex];
+        transitionTimeline?.kill();
         gsap.killTweensOf([outgoing,incoming,outgoing.querySelector('img'),incoming.querySelector('img')]);
         active=nextIndex;
         slides.forEach((slide,i)=>{
@@ -80,6 +83,8 @@ function initSelectedWork(){
           slide.inert=!selected;
           slide.setAttribute('aria-hidden',String(!selected));
           slide.style.zIndex=selected?'2':'0';
+          if(selected)slide.style.visibility='visible';
+          else if(slide!==outgoing)slide.style.visibility='hidden';
         });
         updateMeta(incoming);
         if(!animate||reduceMotion.matches){
@@ -90,15 +95,16 @@ function initSelectedWork(){
         gsap.set(outgoing,{zIndex:1,clipPath:full,visibility:'visible'});
         gsap.set(incoming,{zIndex:2,clipPath:direction>0?hiddenRight:hiddenLeft});
         gsap.set(incoming.querySelector('img'),{scale:1.08});
-        gsap.timeline({defaults:{duration:.8,ease:'power2.inOut'}})
+        transitionTimeline=gsap.timeline({defaults:{duration:.8,ease:'power2.inOut'}})
           .to(incoming,{clipPath:full},0)
           .to(incoming.querySelector('img'),{scale:1,ease:'none'},0)
-          .set(outgoing,{clipPath:direction>0?hiddenLeft:hiddenRight,zIndex:0,visibility:'hidden'});
+          .set(outgoing,{clipPath:direction>0?hiddenLeft:hiddenRight,zIndex:0,visibility:'hidden'})
+          .eventCallback('onComplete',()=>{transitionTimeline=null});
       };
       const stopAutoplay=()=>{window.clearInterval(autoplay);autoplay=0};
       const startAutoplay=()=>{
         stopAutoplay();
-        if(document.hidden)return;
+        if(document.hidden||!inViewport)return;
         autoplay=window.setInterval(()=>show(active+1,1),3000);
       };
       const restartAutoplay=()=>{startAutoplay()};
@@ -123,17 +129,26 @@ function initSelectedWork(){
         if(Math.abs(dx)>42&&Math.abs(dx)>Math.abs(dy)){suppressClick=true;show(active+(dx<0?1:-1),dx<0?1:-1)}
         startAutoplay();
       };
+      const cancelPointer=(event:PointerEvent)=>{
+        if(event.pointerId!==pointerId)return;
+        pointerId=null;suppressClick=false;startAutoplay();
+      };
       const onSlideClick=(event:MouseEvent)=>{if(suppressClick){event.preventDefault();suppressClick=false}};
       const onVisibility=()=>document.hidden?stopAutoplay():startAutoplay();
       slideFrame?.addEventListener('pointerdown',onPointerDown);
       slideFrame?.addEventListener('pointermove',onPointerMove);
       slideFrame?.addEventListener('pointerup',finishPointer);
-      slideFrame?.addEventListener('pointercancel',finishPointer);
+      slideFrame?.addEventListener('pointercancel',cancelPointer);
       slideFrame?.addEventListener('click',onSlideClick);
       document.addEventListener('visibilitychange',onVisibility);
-      slides.forEach((slide,i)=>gsap.set(slide,{clipPath:i===0?full:hiddenRight,zIndex:i===0?2:0}));
-      show(0,1,false);startAutoplay();
-      return()=>{stopAutoplay();previous.removeEventListener('click',onPrevious);next.removeEventListener('click',onNext);slideFrame?.removeEventListener('pointerdown',onPointerDown);slideFrame?.removeEventListener('pointermove',onPointerMove);slideFrame?.removeEventListener('pointerup',finishPointer);slideFrame?.removeEventListener('pointercancel',finishPointer);slideFrame?.removeEventListener('click',onSlideClick);document.removeEventListener('visibilitychange',onVisibility);slides.forEach(slide=>{slide.inert=false;slide.removeAttribute('aria-hidden');gsap.set(slide,{clearProps:'clipPath,zIndex'})})};
+      const viewportObserver=new IntersectionObserver(([entry])=>{
+        inViewport=entry.isIntersecting&&entry.intersectionRatio>=.35;
+        if(inViewport)startAutoplay();else stopAutoplay();
+      },{threshold:[0,.35]});
+      viewportObserver.observe(root);
+      slides.forEach((slide,i)=>gsap.set(slide,{clipPath:i===0?full:hiddenRight,zIndex:i===0?2:0,visibility:i===0?'visible':'hidden'}));
+      show(0,1,false);
+      return()=>{stopAutoplay();transitionTimeline?.kill();viewportObserver.disconnect();previous.removeEventListener('click',onPrevious);next.removeEventListener('click',onNext);slideFrame?.removeEventListener('pointerdown',onPointerDown);slideFrame?.removeEventListener('pointermove',onPointerMove);slideFrame?.removeEventListener('pointerup',finishPointer);slideFrame?.removeEventListener('pointercancel',cancelPointer);slideFrame?.removeEventListener('click',onSlideClick);document.removeEventListener('visibilitychange',onVisibility);slides.forEach(slide=>{slide.inert=false;slide.removeAttribute('aria-hidden');gsap.set(slide,{clearProps:'clipPath,zIndex,visibility'})})};
     });
     media.add('(min-width: 992px) and (prefers-reduced-motion: no-preference)',()=>{
       const items=gsap.utils.toArray<HTMLButtonElement>('.work-item',root);
