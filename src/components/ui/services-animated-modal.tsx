@@ -223,6 +223,7 @@ export default function ServicesAnimatedModal({
   heading,
   intro,
   sectionId = 'services',
+  typographyOff = false,
 }: {
   theme?: 'dark' | 'light';
   personal?: boolean;
@@ -234,6 +235,7 @@ export default function ServicesAnimatedModal({
   heading?: string;
   intro?: string;
   sectionId?: string;
+  typographyOff?: boolean;
 }) {
   const isLight = theme === 'light';
   const isEn = lang === 'en';
@@ -291,6 +293,7 @@ export default function ServicesAnimatedModal({
     <section
       id={sectionId}
       aria-labelledby={`${sectionId}-title`}
+      data-typography={typographyOff ? 'off' : undefined}
       className={`relative z-10 py-20 md:py-32 overflow-hidden transition-colors duration-300 ${
         isLight ? 'text-[#1D1D1D]' : 'text-white'
       }`}
@@ -361,7 +364,7 @@ export default function ServicesAnimatedModal({
           >
             {displayedServices.map((item, index) => (
               <div key={item.id} role="listitem" className="w-full">
-                {homepage ? <HomepageServiceRow item={item} isLight={isLight} onOpenModal={handleOpenModal} /> : <ServiceRow
+                {homepage ? <HomepageServiceRow item={item} isLight={isLight} /> : <ServiceRow
                   item={item}
                   index={index}
                   isLight={isLight}
@@ -403,13 +406,11 @@ export default function ServicesAnimatedModal({
 function HomepageServiceRow({
   item,
   isLight,
-  onOpenModal,
 }: {
   item: ServiceItem;
   isLight: boolean;
-  onOpenModal: (service: ServiceItem) => void;
 }) {
-  const rowRef = useRef<HTMLButtonElement>(null);
+  const rowRef = useRef<HTMLAnchorElement>(null);
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
@@ -437,12 +438,10 @@ function HomepageServiceRow({
   }, []);
 
   return (
-    <button
+    <a
       ref={rowRef}
-      type="button"
+      href={`/services/${item.id}`}
       className={`homepage-service-row${isLight ? ' homepage-service-row--light' : ''}${isInView ? ' homepage-service-row--in-view' : ''}`}
-      onClick={() => onOpenModal(item)}
-      aria-haspopup="dialog"
     >
       <span className="homepage-service-media" aria-hidden="true">
         <img src={item.image} alt="" loading="lazy" decoding="async" width={1000} height={576} />
@@ -454,7 +453,7 @@ function HomepageServiceRow({
         </span>
         <span className="homepage-service-description">{item.description}</span>
       </span>
-    </button>
+    </a>
   );
 }
 

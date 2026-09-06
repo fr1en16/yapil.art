@@ -1,5 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Hero from '../Hero.astro';
+import AboutCompact from '../AboutCompact.astro';
+import ServicesAnimatedModal from '../ui/services-animated-modal';
 import Contacts from '../Contacts.astro';
 import Footer from '../Footer.astro';
 import '../../styles/proposal-pages.css';
@@ -28,10 +31,45 @@ interface Props {
 
 const { title, description, jsonLd, section, heading, lead, items, catalogTitle, contactsTitle, contactsLead, source } = Astro.props;
 const isServices = section === 'services';
+const serviceImages: Record<string, string> = {
+  websites: 'https://media.yapil.art/services/sites.d7a0bf3e30b3f1df.webp',
+  identity: 'https://media.yapil.art/services/%D0%B0%D0%B9%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D0%BA%D0%B0.webp',
+  print: 'https://media.yapil.art/services/polygraphy.de6b0b9d86fc262c.webp',
+  smm: 'https://media.yapil.art/services/smm.6daf973a8ce29345.webp',
+  presentations: 'https://media.yapil.art/services/presentations.4d39d5565335b0b1.webp',
+  support: 'https://media.yapil.art/services/support.5dc90c0aa5331630.webp',
+};
+const catalogItems = items.map((item) => ({
+  id: item.slug,
+  number: item.number,
+  title: item.name,
+  description: item.heroH1,
+  price: '',
+  caseBadge: '',
+  caseLink: `/${section}/${item.slug}`,
+  image: serviceImages[item.slug] ?? serviceImages.websites,
+  color: '#141416',
+}));
 ---
 
-<Base title={title} description={description} jsonLd={jsonLd} theme="light" navOverlay={true}>
+<Base title={title} description={description} jsonLd={jsonLd} theme="light" navOverlay={true} bodyClass={isServices ? 'services-index-page' : undefined}>
   <article class="editorial-page">
+    {isServices ? (
+      <>
+        <Hero title={heading} description={lead} casesHref="#services-catalog" ctaText="Выбрать услугу" ripple />
+        <AboutCompact theme="light" catalog />
+        <ServicesAnimatedModal
+          client:visible
+          theme="light"
+          homepage
+          sectionId="services-catalog"
+          typographyOff
+          heading={catalogTitle}
+          intro="Выберите направление — на странице каждой услуги подробно рассказали о формате, процессе и результате."
+          items={catalogItems}
+        />
+      </>
+    ) : (
     <header class="editorial-cover">
       <div class="container editorial-cover__inner">
         <div class="editorial-title-wrap">
@@ -47,9 +85,10 @@ const isServices = section === 'services';
         </div>
       </div>
     </header>
+    )}
 
     <div class="editorial-body">
-      <section class="editorial-section" aria-labelledby="catalog-title">
+      {!isServices && <section class="editorial-section" aria-labelledby="catalog-title">
         <header class="editorial-heading">
           <p class="editorial-heading__number">01</p>
           <div class="editorial-heading__content">
@@ -65,11 +104,11 @@ const isServices = section === 'services';
             </a>
           ))}
         </div>
-      </section>
+      </section>}
 
       <section class="editorial-section" aria-labelledby="principles-title">
         <header class="editorial-heading">
-          <p class="editorial-heading__number">02</p>
+          <p class="editorial-heading__number">{isServices ? '01' : '02'}</p>
           <div class="editorial-heading__content"><h2 id="principles-title">Принципы работы</h2></div>
         </header>
         <ol class="editorial-list">
@@ -82,7 +121,7 @@ const isServices = section === 'services';
       {isServices && (
         <section class="editorial-section" aria-labelledby="cities-title">
           <header class="editorial-heading">
-            <p class="editorial-heading__number">03</p>
+            <p class="editorial-heading__number">02</p>
             <div class="editorial-heading__content"><h2 id="cities-title">Услуги по городам Казахстана</h2></div>
           </header>
           <div class="editorial-grid">
@@ -100,7 +139,61 @@ const isServices = section === 'services';
 
     </div>
 
-    <Contacts theme="light" title={contactsTitle} lead={contactsLead} source={source} sourceDetails={isServices ? 'Каталог услуг' : 'Каталог отраслевых решений'} />
+    <Contacts theme="light" title={contactsTitle} lead={contactsLead} source={source} sourceDetails={isServices ? 'Каталог услуг' : 'Каталог отраслевых решений'} gradientToDark />
   </article>
-  <Footer slot="footer" theme="light" />
+  <Footer slot="footer" theme="dark" />
 </Base>
+
+<style>
+  :global(body.services-index-page) {
+    --page-neutral-surface: #f5f5f5;
+    --bg-primary: #f5f5f5;
+    --bg-card: #f5f5f5;
+    --bg-section-light: #f5f5f5;
+  }
+
+  :global(body.services-index-page [class~="bg-white/80"]) {
+    background-color: #f5f5f5 !important;
+  }
+
+  :global(body.services-index-page .editorial-page) {
+    --paper: #f5f5f5;
+    --editorial-muted: #1d1d1d;
+  }
+
+  :global(body.services-index-page .hero-cover .hero-layer--title) {
+    max-width: 12ch;
+    margin-inline: auto;
+  }
+
+  :global(body.services-index-page #services-catalog) {
+    padding-bottom: clamp(4rem, 8vw, 8rem);
+  }
+
+  :global(body.services-index-page #services-catalog h2),
+  :global(body.services-index-page .editorial-heading h2) {
+    color: #fd4b32;
+  }
+
+  :global(body.services-index-page #services-catalog p),
+  :global(body.services-index-page #services-catalog .homepage-service-description) {
+    color: #1d1d1d;
+  }
+
+  :global(body.services-index-page .editorial-body) {
+    display: flow-root;
+  }
+
+  :global(body.services-index-page .editorial-section:first-child) {
+    padding-top: clamp(4rem, 7vw, 7rem);
+  }
+
+  :global(body.services-index-page .editorial-row) {
+    min-height: clamp(8rem, 12vw, 11rem);
+  }
+
+  :global(body.services-index-page .editorial-row h3) {
+    color: #fd4b32;
+    font-size: clamp(1.8rem, 3vw, 3rem);
+  }
+</style>

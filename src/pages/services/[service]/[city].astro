@@ -1,6 +1,5 @@
 ---
-import GeoServicePage from '../../../components/GeoServicePage.astro';
-import GeoWebsitePage from '../../../components/GeoWebsitePage.astro';
+import GeoOfferingPage from '../../../components/GeoOfferingPage.astro';
 import { servicesList, type ServiceData } from '../../../data/servicesData';
 import { indexableCitiesList, type CityData } from '../../../data/citiesData';
 
@@ -21,8 +20,4 @@ interface Props {
 const { service, city } = Astro.props;
 ---
 
-{service.slug === 'websites' ? (
-  <GeoWebsitePage {service} {city} />
-) : (
-  <GeoServicePage {service} {city} />
-)}
+<GeoOfferingPage {service} {city} />

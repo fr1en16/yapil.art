@@ -46,7 +46,8 @@ interface Props {
 const props = Astro.props;
 const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead } = props;
 const source = 'contacts_form';
-const isWebsiteService = section === 'services' && slug === 'websites';
+const isEnhancedService = section === 'services';
+const hasFormatShowcase = section === 'services' && slug === 'websites';
 const showKolesaCase = true;
 const showSecondaryNavigation = false;
 const formatImages = ['https://media.yapil.art/services/landing-pages.06f68f54ad8a6e08.webp', 'https://media.yapil.art/services/corporate-websites.13154da07ccc903e.webp', 'https://media.yapil.art/services/catalogs.1339a4386de88793.webp'];
@@ -55,7 +56,7 @@ const websiteFormats = firstCards.map((card, index) => ({
   title: card.title, description: card.text, price: 'По задаче',
   caseBadge: '', caseLink: '#contacts', image: formatImages[index % formatImages.length], color: '#141416',
 }));
-const hasProcessWork = section === 'services' && slug === 'websites' && Astro.slots.has('process-work');
+const hasProcessWork = section === 'services' && Astro.slots.has('process-work');
 const sectionName = section === 'services' ? 'Услуга' : 'Решение';
 const deadline = metrics.find((metric) => /срок/iu.test(metric.label))?.text ?? 'фиксируем после короткого брифа';
 const result = secondCards[0]?.title ?? secondTitle;
@@ -64,9 +65,9 @@ const faqNumber = section === 'services' ? (rows.length ? '05' : '04') : (rows.l
 const linksNumber = section === 'services' ? '06' : '05';
 ---
 
-<Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" navOverlay={true} bodyClass={isWebsiteService ? 'website-service-page' : undefined}>
+<Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" navOverlay={true} bodyClass={isEnhancedService ? 'website-service-page' : undefined}>
   <article class="editorial-page">
-    {section === 'services' && slug === 'websites' ? (
+    {isEnhancedService ? (
       <Hero title={heroH1} description={heroLead} casesHref="#contacts" ctaText="Обсудить проект" ripple />
     ) : (
     <header class="editorial-cover">
@@ -84,14 +85,14 @@ const linksNumber = section === 'services' ? '06' : '05';
     </header>
     )}
 
-    {isWebsiteService && <AboutCompact theme="light" websites />}
+    {isEnhancedService && <AboutCompact theme="light" websites />}
 
     {hasProcessWork && <slot name="process-work" />}
 
-    {isWebsiteService && <ServicesAnimatedModal client:visible homepage theme="light" sectionId="scope" heading="Подбираем формат под задачу бизнеса" intro="Выберите тип сайта, чтобы обсудить проект." items={websiteFormats} />}
+    {hasFormatShowcase && <ServicesAnimatedModal client:visible homepage theme="light" sectionId="scope" heading="Подбираем формат под задачу бизнеса" intro="Выберите тип сайта, чтобы обсудить проект." items={websiteFormats} />}
 
     <div class="editorial-body">
-      {isWebsiteService && (
+      {isEnhancedService && (
         <section class="website-facts" aria-label="Условия разработки сайта">
           <article class="website-fact" aria-label="Стоимость">
             <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7.5 4.5h17v23h-17zM11 10h10M11 15h10M11 20h6" /></svg>
@@ -108,7 +109,7 @@ const linksNumber = section === 'services' ? '06' : '05';
         </section>
       )}
 
-      {!isWebsiteService && <section class="editorial-section" id="scope" aria-labelledby="scope-title">
+      {!hasFormatShowcase && <section class="editorial-section" id="scope" aria-labelledby="scope-title">
         <header class="editorial-heading">
           <p class="editorial-heading__number">01</p>
           <div class="editorial-heading__content">
@@ -125,11 +126,11 @@ const linksNumber = section === 'services' ? '06' : '05';
         </div>
       </section>}
 
-      {isWebsiteService && <SelectedWebProjects />}
+      {isEnhancedService && <SelectedWebProjects />}
 
-      {isWebsiteService && showKolesaCase && <KolesaCta />}
+      {isEnhancedService && showKolesaCase && <KolesaCta />}
 
-      {isWebsiteService ? <WebsiteResult title={secondTitle} cards={secondCards} /> : (
+      {isEnhancedService ? <WebsiteResult title={secondTitle} cards={secondCards} /> : (
       <section class="editorial-section" aria-labelledby="result-title">
         <header class="editorial-heading">
           <p class="editorial-heading__number">02</p>
@@ -143,7 +144,7 @@ const linksNumber = section === 'services' ? '06' : '05';
       </section>
       )}
 
-      {section === 'services' && !isWebsiteService && (
+      {section === 'services' && !isEnhancedService && (
         <section class="editorial-section" aria-labelledby="process-title">
           <header class="editorial-heading"><p class="editorial-heading__number">03</p><div class="editorial-heading__content"><h2 id="process-title">Цена, срок и результат</h2></div></header>
           <div class="editorial-grid">
@@ -164,7 +165,7 @@ const linksNumber = section === 'services' ? '06' : '05';
     </div>
     {!hasProcessWork && <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />}
     <div class="editorial-body">
-      {isWebsiteService ? (
+      {isEnhancedService ? (
         <section class="editorial-section website-faq" aria-labelledby="faq-title">
           <header class="website-faq__heading">
             <h2 id="faq-title">{faqTitle}</h2>
@@ -271,10 +272,10 @@ const linksNumber = section === 'services' ? '06' : '05';
       lead={ctaLead}
       source={source}
       sourceDetails={`${sectionName}: ${name}`}
-      gradientToDark={isWebsiteService}
+      gradientToDark
     />
   </article>
-  <Footer slot="footer" theme={isWebsiteService ? 'dark' : 'light'} />
+  <Footer slot="footer" theme="dark" />
 </Base>
 
 <script>

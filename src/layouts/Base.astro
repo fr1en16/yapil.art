@@ -5,6 +5,7 @@ import SiteBackground from '../components/SiteBackground.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import SmoothScroll from '../components/SmoothScroll.astro';
 import Analytics from '@vercel/analytics/astro';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/inter-tight.css';
 import '../styles/global.css';
 
@@ -141,6 +142,7 @@ const schemaJsonLd = {
     <link rel="shortcut icon" href="https://media.yapil.art/favicon.fc586ad7fa9972d8.ico" />
     <link rel="manifest" href="/site.webmanifest" />
     <title>{documentTitle}</title>
+    <ClientRouter fallback="animate" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaJsonLd)} />
     <script is:inline>
       window.webAnalyticsBeforeSend = (event) => event.url.includes('/anal') ? null : event;
@@ -162,6 +164,130 @@ const schemaJsonLd = {
       import { installTypographyRules } from '../scripts/typography';
 
       installTypographyRules();
+
+      type LenisLike = {
+        scrollTo: (target: number, options?: { immediate?: boolean; force?: boolean }) => void;
+      };
+
+      const setScrollToTop = () => {
+        const pageWindow = window as typeof window & {
+          lenis?: LenisLike;
+          __lenisInstance?: LenisLike;
+        };
+        const lenis = pageWindow.__lenisInstance ?? pageWindow.lenis;
+
+        lenis?.scrollTo(0, { immediate: true, force: true });
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
+      };
+
+      const resetPageScroll = () => {
+        if (window.location.hash) return;
+
+        const currentState = window.history.state;
+        if (currentState && typeof currentState === 'object') {
+          window.history.replaceState(
+            { ...currentState, scrollX: 0, scrollY: 0 },
+            '',
+            window.location.href,
+          );
+        }
+
+        setScrollToTop();
+        requestAnimationFrame(() => {
+          setScrollToTop();
+          requestAnimationFrame(setScrollToTop);
+        });
+      };
+
+      document.addEventListener('astro:after-swap', resetPageScroll);
+      document.addEventListener('astro:page-load', resetPageScroll);
     </script>
   </body>
 </html>
+
+<style is:global>
+  ::view-transition-image-pair(root) {
+    isolation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-fill-mode: both;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    animation: yapil-page-out 300ms cubic-bezier(0.4, 0, 0.7, 0.2) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: yapil-page-in 480ms 70ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  html[data-astro-transition='back']::view-transition-old(root) {
+    animation-name: yapil-page-out-back;
+  }
+
+  html[data-astro-transition='back']::view-transition-new(root) {
+    animation-name: yapil-page-in-back;
+  }
+
+  html[data-astro-transition-fallback='old'] {
+    animation: yapil-fallback-out 180ms cubic-bezier(0.4, 0, 0.7, 0.2) both;
+  }
+
+  html[data-astro-transition-fallback='new'] {
+    animation: yapil-fallback-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes yapil-page-out {
+    to {
+      opacity: 0;
+      transform: translate3d(0, -5px, 0) scale(0.998);
+    }
+  }
+
+  @keyframes yapil-page-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0) scale(1.002);
+    }
+  }
+
+  @keyframes yapil-page-out-back {
+    to {
+      opacity: 0;
+      transform: translate3d(0, 5px, 0) scale(0.998);
+    }
+  }
+
+  @keyframes yapil-page-in-back {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -10px, 0) scale(1.002);
+    }
+  }
+
+  @keyframes yapil-fallback-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes yapil-fallback-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+</style>

@@ -332,3 +332,13 @@ textarea {
   transform: scale(0.99);
   transition-duration: 90ms;
 }
+/* Section headings stay typographically clean; numbers remain inside cards and ordered steps. */
+.editorial-heading__number,
+.editorial-compact-header__number,
+.section-number {
+  display: none !important;
+}
+
+.editorial-heading__content {
+  grid-column: 1 / 13 !important;
+}
