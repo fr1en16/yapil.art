@@ -1,0 +1,127 @@
+---
+import OfferingDetailTemplate from './proposal/OfferingDetailTemplate.astro';
+import ProcessWork from './process-work/ProcessWork.astro';
+import type { ServiceData } from '../data/servicesData';
+import type { CityData, DistrictData } from '../data/citiesData';
+import { geoServicesData } from '../data/geoServicesData';
+
+interface Props {
+  service: ServiceData;
+  city: CityData;
+  district?: DistrictData;
+}
+
+const { service, city, district } = Astro.props;
+const geoCopy = geoServicesData[service.slug];
+
+if (!geoCopy) {
+  throw new Error(`Missing geo copy for service: ${service.slug}`);
+}
+
+const locationPrepositional = district?.prepositional ?? city.prepositional;
+const locationGenitive = district?.genitive ?? city.genitive;
+const localContext = district?.context ?? city.context;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const serviceUrl = new URL(`/services/${service.slug}`, Astro.site).href;
+const cityUrl = new URL(`/services/${service.slug}/${city.slug}`, Astro.site).href;
+
+const title = `${geoCopy.titleName ?? geoCopy.searchName} в ${locationPrepositional} — Yapil`;
+const description = `${geoCopy.action} для бизнеса ${locationGenitive}. ${geoCopy.metaResult}`;
+const heroH1 = `${geoCopy.searchName} в ${locationPrepositional}`;
+const heroLead = `${localContext} ${geoCopy.localValue}`;
+const ctaTitle = `${service.ctaTitle} Работаем с компаниями ${locationGenitive}.`;
+
+const localFaq = [
+  {
+    question: district
+      ? `Работаете ли вы с компаниями ${locationGenitive}?`
+      : `Работаете ли вы с компаниями из ${city.genitive}?`,
+    answer: district
+      ? `Да. География не меняет качество процесса: проводим интервью, показываем решения и собираем обратную связь онлайн. При необходимости отдельно согласуем очную рабочую сессию в ${district.prepositional}.`
+      : city.workFormat,
+  },
+  {
+    question: `Сколько стоит ${geoCopy.priceObject} для компании ${locationGenitive}?`,
+    answer: 'Стоимость зависит от объёма, количества форматов, глубины исследования и сроков. После короткого брифа мы предложим состав работ, календарь и прозрачную смету без обязательства заказывать лишние этапы.',
+  },
+  ...service.faq,
+];
+
+const breadcrumbs = [
+  { name: 'Главная', item: new URL('/', Astro.site).href },
+  { name: 'Услуги', item: new URL('/services', Astro.site).href },
+  { name: service.name, item: serviceUrl },
+  { name: city.name, item: cityUrl },
+];
+if (district) breadcrumbs.push({ name: district.name, item: canonical });
+
+const areaServed = district
+  ? { '@type': 'AdministrativeArea', name: district.name, containedInPlace: { '@type': 'City', name: city.name } }
+  : { '@type': 'City', name: city.name };
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      name: heroH1,
+      serviceType: service.seo.h1,
+      description,
+      url: canonical,
+      areaServed,
+      provider: {
+        '@type': 'ProfessionalService',
+        name: 'Yapil',
+        url: 'https://yapil.art',
+        telephone: '+77067436197',
+        email: 'hi@yapil.art',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        ...item,
+      })),
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: localFaq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    },
+  ],
+};
+---
+
+<OfferingDetailTemplate
+  {title}
+  {description}
+  {jsonLd}
+  section="services"
+  slug={service.slug}
+  name={service.name}
+  {heroH1}
+  {heroLead}
+  metrics={service.metrics}
+  firstTitle={service.formatsTitle}
+  firstCards={service.formats.map((item) => ({ title: item.title, text: item.description }))}
+  secondTitle={service.deliverablesTitle}
+  secondCards={service.deliverables}
+  rowsTitle={service.processTitle}
+  rows={service.steps}
+  casesTitle={service.casesTitle}
+  caseSlugs={service.caseSlugs}
+  faqTitle={service.faqTitle}
+  faq={localFaq}
+  linksTitle={service.crossLinksTitle}
+  links={service.crossLinks}
+  {ctaTitle}
+  ctaLead={service.ctaLead}
+>
+  <ProcessWork slot="process-work" embedded />
+</OfferingDetailTemplate>
