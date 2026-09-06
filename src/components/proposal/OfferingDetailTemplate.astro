@@ -47,7 +47,7 @@ const props = Astro.props;
 const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead } = props;
 const source = 'contacts_form';
 const isWebsiteService = section === 'services' && slug === 'websites';
-const showKolesaCase = false;
+const showKolesaCase = true;
 const showSecondaryNavigation = false;
 const formatImages = ['https://media.yapil.art/services/landing-pages.06f68f54ad8a6e08.webp', 'https://media.yapil.art/services/corporate-websites.13154da07ccc903e.webp', 'https://media.yapil.art/services/catalogs.1339a4386de88793.webp'];
 const websiteFormats = firstCards.map((card, index) => ({
@@ -127,6 +127,8 @@ const linksNumber = section === 'services' ? '06' : '05';
 
       {isWebsiteService && <SelectedWebProjects />}
 
+      {isWebsiteService && showKolesaCase && <KolesaCta />}
+
       {isWebsiteService ? <WebsiteResult title={secondTitle} cards={secondCards} /> : (
       <section class="editorial-section" aria-labelledby="result-title">
         <header class="editorial-heading">
@@ -162,7 +164,6 @@ const linksNumber = section === 'services' ? '06' : '05';
     </div>
     {!hasProcessWork && <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />}
     <div class="editorial-body">
-      {isWebsiteService && showKolesaCase && <KolesaCta />}
       {isWebsiteService ? (
         <section class="editorial-section website-faq" aria-labelledby="faq-title">
           <header class="website-faq__heading">
@@ -501,6 +502,10 @@ const linksNumber = section === 'services' ? '06' : '05';
   }
 
   @media (max-width: 48rem) {
+    :global(body.website-service-page main .result-header h2) {
+      font-size: clamp(2rem, 8.5vw, 2.25rem) !important;
+      line-height: 1.04;
+    }
     :global(body.website-service-page main #scope .homepage-service-description),
     :global(body.website-service-page main .mobile-work-intro),
     :global(body.website-service-page main .step-copy p),
