@@ -264,9 +264,16 @@ const linksNumber = section === 'services' ? '06' : '05';
 
     </div>
 
-    <Contacts theme="light" title={ctaTitle} lead={ctaLead} source={source} sourceDetails={`${sectionName}: ${name}`} />
+    <Contacts
+      theme="light"
+      title={ctaTitle}
+      lead={ctaLead}
+      source={source}
+      sourceDetails={`${sectionName}: ${name}`}
+      gradientToDark={isWebsiteService}
+    />
   </article>
-  <Footer slot="footer" theme="light" />
+  <Footer slot="footer" theme={isWebsiteService ? 'dark' : 'light'} />
 </Base>
 
 <script>

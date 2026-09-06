@@ -11,6 +11,7 @@ interface Props {
   sourceDetails?: string;
   selectedService?: string;
   blendFromAccent?: boolean;
+  gradientToDark?: boolean;
   lang?: 'ru' | 'en';
 }
 
@@ -23,6 +24,7 @@ const {
   sourceDetails,
   selectedService,
   blendFromAccent = false,
+  gradientToDark = false,
   lang = 'ru',
 } = Astro.props;
 const isLight = theme === 'light';
@@ -46,7 +48,14 @@ const whatsappHref = getWhatsAppUrl({
 ---
 
 <section
-  class:list={['contacts section', { 'theme-light': isLight, 'blend-from-accent': blendFromAccent && !isLight }]}
+  class:list={[
+    'contacts section',
+    {
+      'theme-light': isLight,
+      'blend-from-accent': blendFromAccent && !isLight,
+      'gradient-to-dark': gradientToDark,
+    },
+  ]}
   id="contacts"
   aria-labelledby="contacts-title"
 >
@@ -451,6 +460,16 @@ const whatsappHref = getWhatsAppUrl({
     background: var(--page-neutral-surface, #EAE5DF);
   }
 
+  .contacts.gradient-to-dark {
+    background: linear-gradient(
+      to bottom,
+      #f5f5f5 0%,
+      #f5f5f5 14%,
+      var(--bg-section-dark) 78%,
+      var(--bg-section-dark) 100%
+    );
+  }
+
   .contacts.blend-from-accent {
     padding-top: clamp(7rem, 12vw, 12rem);
     background: linear-gradient(
@@ -496,6 +515,10 @@ const whatsappHref = getWhatsAppUrl({
 
   .contacts.theme-light .feedback-card {
     border: 1px solid #D5D2CE;
+  }
+
+  .contacts.gradient-to-dark :is(.contacts-cover, .feedback-card) {
+    border: 0;
   }
 
   .contacts-grid {
