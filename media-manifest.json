@@ -1722,14 +1722,14 @@
       "verifiedAt": "2026-09-04T12:50:16.282Z"
     },
     "/services/identity.webp": {
-      "url": "https://media.yapil.art/services/identity.f2b4b2919d10d98e.webp",
-      "sourceHash": "d83e647e0eb6f46f72862098abc16bbbeca9665e8c53f9608110cda22892e476",
-      "sha256": "f2b4b2919d10d98ef5db301e51edc6527fffd89a3f1265494c5a27c478e2af9d",
-      "inputBytes": 80202,
-      "bytes": 79558,
+      "url": "https://media.yapil.art/services/identity.7f63efde96bd547f.webp",
+      "sourceHash": "7f63efde96bd547f2b5087ccc8837a32aca881c5776649e52d2fbadbe560061b",
+      "sha256": "7f63efde96bd547f2b5087ccc8837a32aca881c5776649e52d2fbadbe560061b",
+      "inputBytes": 10216,
+      "bytes": 10216,
       "contentType": "image/webp",
       "processing": "tinify-webp",
-      "verifiedAt": "2026-09-04T12:50:16.411Z"
+      "verifiedAt": "2026-09-06T19:37:00.000Z"
     },
     "/social-cover.webp": {
       "url": "https://media.yapil.art/social-cover.9512ed9be1051235.webp",

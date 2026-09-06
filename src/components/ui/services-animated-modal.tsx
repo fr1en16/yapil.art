@@ -39,7 +39,7 @@ export const services: ServiceItem[] = [
     price: 'от 180 000 ₸',
     caseBadge: 'Кейс // Compass Management',
     caseLink: '/case/compass-management',
-    image: 'https://media.yapil.art/services/%D0%B0%D0%B9%D0%B4%D0%B5%D0%BD%D1%82%D0%B8%D0%BA%D0%B0.webp',
+    image: 'https://media.yapil.art/services/identity.7f63efde96bd547f.webp',
     color: '#141416',
   },
   {
