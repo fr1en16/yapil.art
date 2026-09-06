@@ -110,7 +110,7 @@ const schemaJsonLd = {
     <meta name="description" content={description} />
     <meta
       name="robots"
-      content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+      content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
     />
     <meta name="author" content="Yapil" />
     <meta name="format-detection" content="telephone=no" />
@@ -118,6 +118,7 @@ const schemaJsonLd = {
     <link rel="preload" href="https://media.yapil.art/fonts/oranienbaum-cyrillic.076ad3ef04f90d2d.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="https://media.yapil.art/hero-cover/dm-sans.468d56b6b25b05b7.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content={type} />
     <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ru_RU'} />
     <meta property="og:site_name" content="Yapil" />

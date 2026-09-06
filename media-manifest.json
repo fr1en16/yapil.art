@@ -1622,24 +1622,24 @@
       "verifiedAt": "2026-09-04T12:50:14.413Z"
     },
     "/services/catalogs.png": {
-      "url": "https://media.yapil.art/services/catalogs.1339a4386de88793.webp",
-      "sourceHash": "886a7265491033bd733c029a668e41606dce47567d586e6ab9930dd86471df53",
-      "sha256": "1339a4386de887932ef88d2ab1189ae919551d56659f046f7e69530cfe209e00",
-      "inputBytes": 383754,
-      "bytes": 18966,
+      "url": "https://media.yapil.art/services/catalogs.d69e0f5db30eb08e.webp",
+      "sourceHash": "8666cc35fd15524610c144e59949438571d840159c42054ebd83d08348f992da",
+      "sha256": "d69e0f5db30eb08eb7b4dd52f6e7f1ff036a5bba0094f74d0492b2cf810f3baf",
+      "inputBytes": 378309,
+      "bytes": 18918,
       "contentType": "image/webp",
       "processing": "tinify-webp",
-      "verifiedAt": "2026-09-04T12:50:14.903Z"
+      "verifiedAt": "2026-09-06T08:12:39.562Z"
     },
     "/services/corporate-websites.png": {
-      "url": "https://media.yapil.art/services/corporate-websites.13154da07ccc903e.webp",
-      "sourceHash": "a955909eab9640cb28bb6aee4995704d7fc7d9d51c8165e680fff594193b09f4",
-      "sha256": "13154da07ccc903ee47f5289abc71d29e68bf18bb84d0792aabfcb1b95ecb152",
-      "inputBytes": 252311,
-      "bytes": 11110,
+      "url": "https://media.yapil.art/services/corporate-websites.008347db67038063.webp",
+      "sourceHash": "c0f54da86d8bd8722b3cc9220709452a7ee7d1449a2f49efb105f3b01f19f9c9",
+      "sha256": "008347db6703806334aed986e6f75d7e573c31dfe13d4d686f768f8221fd603a",
+      "inputBytes": 247928,
+      "bytes": 11164,
       "contentType": "image/webp",
       "processing": "tinify-webp",
-      "verifiedAt": "2026-09-04T12:50:15.299Z"
+      "verifiedAt": "2026-09-06T08:12:39.134Z"
     },
     "/services/polygraphy.webp": {
       "url": "https://media.yapil.art/services/polygraphy.b133ff7cf5dce033.webp",
@@ -1742,14 +1742,14 @@
       "verifiedAt": "2026-09-04T12:50:16.412Z"
     },
     "/services/landing-pages.png": {
-      "url": "https://media.yapil.art/services/landing-pages.06f68f54ad8a6e08.webp",
-      "sourceHash": "e6c698b4b3148db3244d2f887ebdbe8e42c3dfaf6c9d06628dca941b3c7b2efa",
-      "sha256": "06f68f54ad8a6e08158e0d63613eb8d0c388cd6fbafd4aa2ddcbe01b4d08e85e",
-      "inputBytes": 219409,
-      "bytes": 12844,
+      "url": "https://media.yapil.art/services/landing-pages.db120fa774f2f30e.webp",
+      "sourceHash": "462a9c062f94206723af4a6fd999fab3c3f342b18df026d69316f46a988c785a",
+      "sha256": "db120fa774f2f30e2cead0aee4dd34b44502e8cf443a671162580067f25cba38",
+      "inputBytes": 216640,
+      "bytes": 12858,
       "contentType": "image/webp",
       "processing": "tinify-webp",
-      "verifiedAt": "2026-09-04T12:50:16.453Z"
+      "verifiedAt": "2026-09-06T08:12:39.541Z"
     },
     "/services/polygraphy.png": {
       "url": "https://media.yapil.art/services/polygraphy.de6b0b9d86fc262c.webp",
@@ -4850,6 +4850,1496 @@
       "contentType": "image/svg+xml",
       "processing": "original",
       "verifiedAt": "2026-09-04T14:11:25.067Z"
+    },
+    "https://static.tildacdn.pro/tild3135-6638-4264-a636-333363663466/2.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/2.2e4dff8527a7c080.webp",
+      "sourceHash": "946c600f1d3ae1d202b7e28de6a256cae51d5f9fb8af489692829f8ae3ccfdd9",
+      "sha256": "2e4dff8527a7c080a7c24ad2151da076797a01057dd6ad8aa4afab60b090ae18",
+      "inputBytes": 10511,
+      "bytes": 3154,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:38.415Z"
+    },
+    "https://static.tildacdn.pro/tild3334-6566-4838-b266-343739346535/8.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/8.01efc82a6fd84a5c.webp",
+      "sourceHash": "e0174adafaa7f2739c1fe243f0da90aca33d2870c6b5457a1c4766a6399d082e",
+      "sha256": "01efc82a6fd84a5ceba6454f18a3504a0657455f3af97d9d630f09875d664b10",
+      "inputBytes": 5932,
+      "bytes": 3070,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:38.789Z"
+    },
+    "https://static.tildacdn.pro/tild3138-6432-4639-a432-373262336139/Frame_1000010998.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/Frame_1000010998.b457367e76d9e80c.webp",
+      "sourceHash": "c5f83a1c4f735406ae23f79c12ce5fbaa7879b447be69534ec971ae857277b73",
+      "sha256": "b457367e76d9e80c2791ccbd90db45aa3db97e192580fdf7aedf28ed5fda7085",
+      "inputBytes": 21808,
+      "bytes": 12940,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:38.920Z"
+    },
+    "https://static.tildacdn.pro/tild3061-3837-4937-b963-623430343162/Frame_427321093.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/Frame_427321093.7f4fd2a9452f1372.webp",
+      "sourceHash": "63747b9bb59a756e24b81b3dd3e511a7aed866a16a7b1a73bb745a9d66360702",
+      "sha256": "7f4fd2a9452f13723d8e6df2e1d6d95ae5464d2079182b65c26c53220f8ad0b4",
+      "inputBytes": 106097,
+      "bytes": 15302,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:39.131Z"
+    },
+    "https://static.tildacdn.pro/tild3037-3033-4432-b861-323431383438/1_.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/1_.464b571bbe93b01c.webp",
+      "sourceHash": "c7697088486e90c51d5537e21bccea13899dd18250a9466711e31d7e760f7a65",
+      "sha256": "464b571bbe93b01ce6aca7cc66686b136574fc9e2d46eb74124e046c0ca91f8f",
+      "inputBytes": 23729,
+      "bytes": 17168,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:39.289Z"
+    },
+    "https://static.tildacdn.pro/tild3237-3033-4535-b338-373332346163/_.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/_.f4883dda520a6742.webp",
+      "sourceHash": "719f3f1ef1b4af21638939a6c1dbaf3e62f496a81f11db17d89bac5bf92d9cd4",
+      "sha256": "f4883dda520a67429e1253319f67178cf61e98c961763b9a47e8a2ed45772938",
+      "inputBytes": 108096,
+      "bytes": 17032,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:39.861Z"
+    },
+    "https://static.tildacdn.pro/tild3361-3739-4233-b735-343033376631/image_33.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image_33.236fd902458a37bd.webp",
+      "sourceHash": "c887fb80eaf0c484610cdb0cd0fa29e2bac711844f54f7a087ea5ade4d79dd35",
+      "sha256": "236fd902458a37bda4236965e391620a8c18f49ba59911101a285ddbcec3d0f7",
+      "inputBytes": 105711,
+      "bytes": 60430,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:39.931Z"
+    },
+    "https://static.tildacdn.pro/tild3433-6533-4165-b038-623230383261/2__AAEngineering.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/2__AAEngineering.05365537c3acd049.webp",
+      "sourceHash": "70f7b09937fe4d7b2917de7bd816a047b0a86751f4e7aae5a68f5e24920f870c",
+      "sha256": "05365537c3acd04936edfc91d26ffa2ad7f470652d5356245a28b1abb5ee9a09",
+      "inputBytes": 2632,
+      "bytes": 1838,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:40.648Z"
+    },
+    "https://static.tildacdn.pro/tild3166-3230-4132-b534-666339376137/IMG_7994-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7994-min.13acdeead1edde08.webp",
+      "sourceHash": "0d7cfabe66c08bbb5bfc0e5f4c9250df067159ad12cac7bd92f94d144e9701fd",
+      "sha256": "13acdeead1edde087be228ca9a94bbc6a7903ea4f0a1b35d44bb544e308cbb07",
+      "inputBytes": 153007,
+      "bytes": 78990,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:40.740Z"
+    },
+    "https://static.tildacdn.pro/tild3230-3538-4361-b338-346633356237/954c0e62e603b42507ce.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/954c0e62e603b42507ce.b7d2edb680ae8e29.webp",
+      "sourceHash": "ebc9599b76ae4fb986472595636c2cad5d1a90a58e49980c5e8b3265c6ceec0d",
+      "sha256": "b7d2edb680ae8e297948e6d5f96cc7bd6067a22ce8d8d27e60c46b16508f64b2",
+      "inputBytes": 184802,
+      "bytes": 107412,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:40.855Z"
+    },
+    "https://static.tildacdn.pro/tild3239-6633-4363-a339-333437393162/6e111246-fc3a-4dcf-b.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/6e111246-fc3a-4dcf-b.92fdf86f5591af04.webp",
+      "sourceHash": "9bb3c36a6931159c7b474bc20caa57f65f827e24a6100a394c164bf582eda23e",
+      "sha256": "92fdf86f5591af0452d4a19878f4f5380a2dec74cecaee60d28c31eede6278ec",
+      "inputBytes": 212184,
+      "bytes": 155076,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:41.239Z"
+    },
+    "https://static.tildacdn.pro/tild3534-3665-4366-b765-346335323037/7.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/7.50dd90c5c546bdc8.webp",
+      "sourceHash": "0d64a490c3ee2ef36d5b7ac2ae81a1c523d84f8930df8e8811910059854d4248",
+      "sha256": "50dd90c5c546bdc8b2c256096a6b22c3b3f0251266ea5e310885f974066b744b",
+      "inputBytes": 5656,
+      "bytes": 5540,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:41.301Z"
+    },
+    "https://static.tildacdn.pro/tild3538-6265-4130-a433-363965323963/15.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/15.75ecaee175134034.webp",
+      "sourceHash": "b376249b671b6ec8f127ffd6f5458bfa320a98a3d30ed730c0f4f653452351e0",
+      "sha256": "75ecaee175134034dd0589d0adbe0760707890cbe7b4daf5916440620f0de757",
+      "inputBytes": 6513,
+      "bytes": 4132,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:41.507Z"
+    },
+    "https://static.tildacdn.pro/tild3538-6530-4633-b466-356166656164/16.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/16.6ce2df8a15d428cd.webp",
+      "sourceHash": "99b5136ba88e61ab45dd867792edc3e28976bf107bd74db1e1f3ce330601af75",
+      "sha256": "6ce2df8a15d428cda5885d4944638330bc592e6b1c43edee9e8f1bf727067eee",
+      "inputBytes": 3187,
+      "bytes": 2440,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:41.573Z"
+    },
+    "https://static.tildacdn.pro/tild3461-3865-4161-b934-326534636232/photo.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/photo.ee5aad24922afff4.webp",
+      "sourceHash": "b22f3b3b818c754ad711604aa537acad23c9e9b5b6f7c8729e42da6add36b7f3",
+      "sha256": "ee5aad24922afff4a33f7bef1e1295f2b06a46216f2425508a68ba8ba1036d15",
+      "inputBytes": 114547,
+      "bytes": 18178,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:41.812Z"
+    },
+    "https://static.tildacdn.pro/tild3463-3664-4532-b436-666237373638/Frame_1000010996.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/Frame_1000010996.4b0dccd5aeeb3ab5.webp",
+      "sourceHash": "196f10a11dc3191434ab9a6fdd91463b20d5b952abdc0df207a98eb65688c6da",
+      "sha256": "4b0dccd5aeeb3ab54ad250e21a2855cd6a2d5349aa609e70883c359c78588b31",
+      "inputBytes": 53625,
+      "bytes": 19290,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:41.984Z"
+    },
+    "https://static.tildacdn.pro/tild3066-6164-4261-a536-356130643465/IMG_0059-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0059-min.223e01900997aa16.webp",
+      "sourceHash": "38cf57fed70a869e89f0fd4a804958cecc1c33572dcf081c6d96b13d5aa7c007",
+      "sha256": "223e01900997aa163088f5ab40d8907ad9cea9b2d74719257128cf22e81bee9d",
+      "inputBytes": 380889,
+      "bytes": 343568,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:42.148Z"
+    },
+    "https://static.tildacdn.pro/tild3363-3439-4864-b535-653238313766/IMG_1654-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_1654-min.6170eddb1f85e4c8.webp",
+      "sourceHash": "eb10c360eb8a1ca4d51100c4ff2bf7de77fb8c43ce117c5475b1e550817b26c1",
+      "sha256": "6170eddb1f85e4c804a7bc4af77607fcbf360c1abb7c5abda9b9ff7b5b303443",
+      "inputBytes": 201817,
+      "bytes": 113252,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:42.896Z"
+    },
+    "https://static.tildacdn.pro/tild3736-3961-4831-b233-656266626233/10.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/10.aacc7a9aa3dd1d5e.webp",
+      "sourceHash": "863d4b0425098095d8c0e4730abf14b4a69edaba818691cee69233b49f5bfd14",
+      "sha256": "aacc7a9aa3dd1d5e237b544646198ed5eef12ffeb135e4f5ea5881d0eea6f101",
+      "inputBytes": 3235,
+      "bytes": 2832,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:43.413Z"
+    },
+    "https://static.tildacdn.pro/tild3761-6531-4761-a133-353232383130/9__Silkway_transit.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/9__Silkway_transit.3ab94a873442f465.webp",
+      "sourceHash": "0ed9b853f6408fd265a11adaf348eee15e5e53bd2ff4ea7e20f1ebea92f86177",
+      "sha256": "3ab94a873442f4658ecbf4ca34fbafca4a76b80440a25981f055158309dd5baa",
+      "inputBytes": 11997,
+      "bytes": 2264,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:43.603Z"
+    },
+    "https://static.tildacdn.pro/tild3632-3238-4361-b662-343264656133/_-2_1.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/_-2_1.e789a835c523e11f.webp",
+      "sourceHash": "ae657ed43ed27f4ae933f865c5f1ef004f38a357be27f1b33ecf509a78063c28",
+      "sha256": "e789a835c523e11f5d2265556a541cc998295d87929d114a212766d1a432fa11",
+      "inputBytes": 63985,
+      "bytes": 32824,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:43.693Z"
+    },
+    "https://static.tildacdn.pro/tild3465-6438-4466-b839-633639343466/IMG_0230-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0230-min.0062bd661841a930.webp",
+      "sourceHash": "ee2d0a0c38b7a4f0b72e1a3d73fd1661927cf555f503a2bb46df3b6ff4fb7273",
+      "sha256": "0062bd661841a930e855eabcb1b5b3aa83a0e6c5410ed2024fad19cf32680869",
+      "inputBytes": 196272,
+      "bytes": 115216,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:43.709Z"
+    },
+    "https://static.tildacdn.pro/tild3539-3562-4465-b862-643535316435/IMG_0225-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0225-min.deae871e7f1588d7.webp",
+      "sourceHash": "1ce2c330875976c304e8fd0d265c21de80572d2a7652a9303bad09ab63e20c4b",
+      "sha256": "deae871e7f1588d741a652aaa93fd361ea9c47a5f80b8afd06bbb5e1a6439238",
+      "inputBytes": 138636,
+      "bytes": 79836,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:43.786Z"
+    },
+    "https://static.tildacdn.pro/tild3362-3836-4339-b962-636338613339/___page-0001.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/___page-0001.54c0a4de983b40de.webp",
+      "sourceHash": "0a500b203fee71d16c5f4f997a0211e005cfb7cdd336255f86e19a9d1118c7f5",
+      "sha256": "54c0a4de983b40def5b0871cd6586399fd87c636ff77e6c4ab477ccfd5f060b3",
+      "inputBytes": 208492,
+      "bytes": 94582,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:44.107Z"
+    },
+    "https://static.tildacdn.pro/tild3462-6230-4530-b964-313166326365/IMG_4498-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_4498-min.31aa0dc426586e44.webp",
+      "sourceHash": "0820aecea28133dbe359832fabc627620503203e3fdc9438cf776d9f60f86fe4",
+      "sha256": "31aa0dc426586e449556e2c63640b23800bcd98b1beccacd5e0f94490e90de10",
+      "inputBytes": 250067,
+      "bytes": 185070,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:44.120Z"
+    },
+    "https://static.tildacdn.pro/tild3736-6339-4537-a565-383132393339/Yiwu_Aozhe-1_1.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/Yiwu_Aozhe-1_1.405e9241f0385ef0.webp",
+      "sourceHash": "a9e1b4cf996ae95f98691d0201f83c63c0cec0af2d0b2a74b0311bf8ce8e4e26",
+      "sha256": "405e9241f0385ef092027cb0a6eb327841c4c0f47c8b70a8637cb8a2f73ed9db",
+      "inputBytes": 57289,
+      "bytes": 49992,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:44.399Z"
+    },
+    "https://static.tildacdn.pro/tild3034-3364-4536-a431-356339616666/__200825.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/__200825.70710c5aaa2015a4.webp",
+      "sourceHash": "f4bb77cfffa55e99e55383770628bf535623fa8f96a1fba8e45dd612a7b98001",
+      "sha256": "70710c5aaa2015a4b4f46357ba7e7fc38179ff2c96f3799f3bc29e5c4082d398",
+      "inputBytes": 251028,
+      "bytes": 106054,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:44.403Z"
+    },
+    "https://static.tildacdn.pro/tild3633-3632-4437-a239-613361663463/IMG_7357_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7357_2-min.4d1d7630a10c4261.webp",
+      "sourceHash": "ec56bd99e15b4fc3f014d91c4305796c24c2f075469792722cc25e57b725e18b",
+      "sha256": "4d1d7630a10c42611703f10ab39e252fd913ef195ab342e2f0add613510c26e0",
+      "inputBytes": 174902,
+      "bytes": 92162,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:44.864Z"
+    },
+    "https://static.tildacdn.pro/tild3637-3263-4134-b661-366263386333/5cb33c6f-bdcf-4912-9.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/5cb33c6f-bdcf-4912-9.933649d1708bf56c.webp",
+      "sourceHash": "d1ee54834b337e66f704c587b71aaf5c013eebb27564fbc1cb1166e1409724ea",
+      "sha256": "933649d1708bf56cd86e8af30924d7208ee384706392d976c1c9ad0901b2427d",
+      "inputBytes": 149435,
+      "bytes": 83416,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:44.949Z"
+    },
+    "https://static.tildacdn.pro/tild3539-3832-4237-b330-363535386663/be5d38c2d738f0222c93.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/be5d38c2d738f0222c93.c8a0bbac908e736c.webp",
+      "sourceHash": "9fb4fcf2e8d347d7a8d616a2081e5086a47db2a6769d146f3102c0b034e20082",
+      "sha256": "c8a0bbac908e736c5142c64e28e8c229f7dac9ee3af1c57c6897d7074999df5f",
+      "inputBytes": 170928,
+      "bytes": 88964,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:44.988Z"
+    },
+    "https://static.tildacdn.pro/tild3662-6336-4066-a264-356436396436/5092125594914eb8803e.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/5092125594914eb8803e.abc41338d6aa3bd9.webp",
+      "sourceHash": "9f1b4ca67a5128b87f3b452c4543cacece96a6895c92d3d0595ebed8722ca1e4",
+      "sha256": "abc41338d6aa3bd9b69b4418fa2c29f47e75408153f811efa6dbace4e41f52b9",
+      "inputBytes": 144766,
+      "bytes": 79902,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:45.326Z"
+    },
+    "https://static.tildacdn.pro/tild3762-6430-4566-b362-663538306361/c4b68b9e08db5c9da7fb.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/c4b68b9e08db5c9da7fb.e41395235c88ab50.webp",
+      "sourceHash": "0d43a8af48e72d030a5e5b36c8fd515fa98e467ae4fd5a9879b66c4669407671",
+      "sha256": "e41395235c88ab50f7816af06023e87b2cd0c8603b2e5115adf56b9f6a1ef4e0",
+      "inputBytes": 183544,
+      "bytes": 119478,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:45.713Z"
+    },
+    "https://static.tildacdn.pro/tild3930-3362-4232-b635-316465383965/Frame_1000011000.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/Frame_1000011000.14fa8d594322a2c0.webp",
+      "sourceHash": "1c3faba035ffc5d59bc78f2984b9f16937b9532c891bb15b16abb8362b77984a",
+      "sha256": "14fa8d594322a2c083f2d3f718606f61fa8767ad02613db48cddce3211b0e211",
+      "inputBytes": 24804,
+      "bytes": 14216,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:46.364Z"
+    },
+    "https://static.tildacdn.pro/tild3736-3035-4638-a165-396636363335/__page-0001.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/__page-0001.7002e4553bf77043.webp",
+      "sourceHash": "c21962bd10bddfca9356313fe47ee074578cb298990970415f5998580b0eca99",
+      "sha256": "7002e4553bf77043c8efd214335f1f7540bf5bbccca2690bbc0a62c8849d4902",
+      "inputBytes": 285671,
+      "bytes": 75710,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:46.371Z"
+    },
+    "https://static.tildacdn.pro/tild3763-6634-4562-a437-616265323235/77e12190-87ee-444e-b.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/77e12190-87ee-444e-b.f1819c21b46228c6.webp",
+      "sourceHash": "9897a3b9f9bdc67e05f4ae376f8bb5190d28eb4f23b70eebdc33bcf305b03818",
+      "sha256": "f1819c21b46228c6783a5bf51cdae3955c3146c5e2d7fca052978f0ad367c4ee",
+      "inputBytes": 155826,
+      "bytes": 93196,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:46.757Z"
+    },
+    "https://static.tildacdn.pro/tild3830-3162-4132-a532-396130326133/ce25d7f4c0c2b7ab6231.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/ce25d7f4c0c2b7ab6231.5b3b7336efdaf4ae.webp",
+      "sourceHash": "3f04063a0b534799e73579f1b0b54e47985338fe52c6025da4e507cafb2c5182",
+      "sha256": "5b3b7336efdaf4ae9edc0a5ecd0cd9404855b836ed3cf5bd9e802df8f4dcf4fe",
+      "inputBytes": 115694,
+      "bytes": 57010,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:47.103Z"
+    },
+    "https://static.tildacdn.pro/tild3832-3165-4630-a132-316630353633/IMG_7368_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7368_2-min.645ce87b628fcc19.webp",
+      "sourceHash": "3a2ab794d5c7eec4c847c78c78894cea4c2a77aa337d63aeb315a5cef84bcf5b",
+      "sha256": "645ce87b628fcc19e92e45d0e0cbf0cc8ecd4f69ebb9676a79987c9fe0a2190d",
+      "inputBytes": 147711,
+      "bytes": 74962,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:47.539Z"
+    },
+    "https://static.tildacdn.pro/tild3862-6466-4136-b332-393931393738/IMG_7371_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7371_2-min.f80231174046970a.webp",
+      "sourceHash": "fece0e0de1a0dc2f24437c30118c5768e6166476439bc2f44d7b5d4732b65c96",
+      "sha256": "f80231174046970ac4fa54691b2bfa2d3bf62076fa146bafb0718a1620efa15e",
+      "inputBytes": 139357,
+      "bytes": 64334,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:47.623Z"
+    },
+    "https://static.tildacdn.pro/tild3837-3164-4335-b330-313338643364/IMG_1582-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_1582-min.b27afe36d011280a.webp",
+      "sourceHash": "fa385cc112faf0937e5bf5f8b763abb170d86804f1775430933e619addbed8e6",
+      "sha256": "b27afe36d011280afaef49746433dbf54da1ea30d4e5ee93b40125f0e1e9dc04",
+      "inputBytes": 219883,
+      "bytes": 159198,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:47.630Z"
+    },
+    "https://static.tildacdn.pro/tild6162-6136-4165-b535-353736383162/image-1.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image-1.a5a3d23103dd6a7c.webp",
+      "sourceHash": "79c5f551c34dd25dcab65b0e262a9c5ba365ab795d23a09d8cab66e3e25bfb8f",
+      "sha256": "a5a3d23103dd6a7c8d71530b36d2ecc89ea505a19788a6d200aec88f2a330752",
+      "inputBytes": 30783,
+      "bytes": 20874,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:47.721Z"
+    },
+    "https://static.tildacdn.pro/tild6161-3863-4165-b138-303937623062/Frame_1000011002.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/Frame_1000011002.02240757e74a5448.webp",
+      "sourceHash": "8ea3eeea2fa40e5b3a61097149ffe43b619a7d0b73e665838cb84815d061394c",
+      "sha256": "02240757e74a5448347c5991d057fc089610703f1b0064165121de85674e66eb",
+      "inputBytes": 23360,
+      "bytes": 12956,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:47.854Z"
+    },
+    "https://static.tildacdn.pro/tild3930-3633-4230-a361-623563383366/IMG_0196-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0196-min.d87518fd6162e73d.webp",
+      "sourceHash": "b9ea8b9b64ea1c420320cdf43b93d4e5dc1b75656724d80d214197419e3ea970",
+      "sha256": "d87518fd6162e73d73e6d5f3c85bceb76b46b8b24d7c69f26354953bfd3b8485",
+      "inputBytes": 243863,
+      "bytes": 174538,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:48.116Z"
+    },
+    "https://static.tildacdn.pro/tild6139-3065-4030-b463-653239306565/01_1.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/01_1.346429d7371a4600.webp",
+      "sourceHash": "489fadc45ec15cc179febf0615a1267bff087bebf9e9dceec9422d1cf846249a",
+      "sha256": "346429d7371a4600ea9ea7183a28777038bedcdfd918f4fadd09f6ad6f365457",
+      "inputBytes": 91815,
+      "bytes": 58790,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:48.212Z"
+    },
+    "https://static.tildacdn.pro/tild6131-6535-4130-a139-656462616439/IMG_0141-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0141-min.ad81d6f381537853.webp",
+      "sourceHash": "ab6b6147bc884b242c2b9caf7a19c72d8b799f9d51ca53005f01ef460fdefff4",
+      "sha256": "ad81d6f3815378532c2984e28c7f7ddc054fb8bf7588dba594a44de5e42a0913",
+      "inputBytes": 146764,
+      "bytes": 69376,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:48.226Z"
+    },
+    "https://static.tildacdn.pro/tild6135-3362-4138-b962-393537663134/image_29.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image_29.c79c62b6069182d8.webp",
+      "sourceHash": "94dca38240025b7353082725c5159529afaa25d138260aa06aa4d5b7195b69a2",
+      "sha256": "c79c62b6069182d86d23d0d62aea6404a9e8770a51b26308c608489432dc4ce7",
+      "inputBytes": 203363,
+      "bytes": 109762,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:48.683Z"
+    },
+    "https://static.tildacdn.pro/tild6234-3730-4864-a437-393036653465/image-2.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image-2.1047b47c6f1bdafe.webp",
+      "sourceHash": "425af56d76b3b8a5c6394bfd9fa31b0006097bad4f2b03b0833d76a93a7e581e",
+      "sha256": "1047b47c6f1bdafef488444da90ed7f4468a9f872cd9ac7ae7442c74657d97ef",
+      "inputBytes": 39637,
+      "bytes": 25004,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:48.768Z"
+    },
+    "https://static.tildacdn.pro/tild6137-6432-4638-a463-313365313863/IMG_7356_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7356_2-min.3096a10caeea9439.webp",
+      "sourceHash": "6f39f628d558f7aa5a17db79e7113513bb2cd49e0a1729a6ea5fffe4028b6a50",
+      "sha256": "3096a10caeea9439bee6c10a92b0cefb38872652ec28ea006a90e6c82f49ebc6",
+      "inputBytes": 191279,
+      "bytes": 114890,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:48.804Z"
+    },
+    "https://static.tildacdn.pro/tild3934-3161-4535-b664-323461663137/IMG_0231-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0231-min.e023be57b5ba33ce.webp",
+      "sourceHash": "b396a5e9025e3fb203eb1971074e5e092c70311ac2fb9a505a7870d0ab72957a",
+      "sha256": "e023be57b5ba33ce762af687670b184828fc91ce4bdf417cddff67903bc9a0cb",
+      "inputBytes": 208708,
+      "bytes": 130608,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:48.813Z"
+    },
+    "https://static.tildacdn.pro/tild6335-3232-4362-b239-656435373233/4.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/4.eb43574f321b8ef5.webp",
+      "sourceHash": "167ca708f2a98f2b0129be541811c6cfea8efe4b1ec74ef3b41cbb48421adf2d",
+      "sha256": "eb43574f321b8ef5fe7097134dedce596f07075ee675443150f4e6af431636be",
+      "inputBytes": 31105,
+      "bytes": 17708,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:50.066Z"
+    },
+    "https://static.tildacdn.pro/tild6332-6435-4238-b736-636161373366/_AVAGRO.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/_AVAGRO.540a8c6237534493.webp",
+      "sourceHash": "44f9199578a0e74d819aa0b9d67e33d5bdbdb6e06cd3ce79109fa0dd1a251caa",
+      "sha256": "540a8c6237534493d18c987a28905264f9ce64d32c26d421f486f0638d128c5c",
+      "inputBytes": 102034,
+      "bytes": 9812,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:50.251Z"
+    },
+    "https://static.tildacdn.pro/tild6234-3434-4963-b165-323764356538/23069a1e918fce918594.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/23069a1e918fce918594.59079514ebe0aa19.webp",
+      "sourceHash": "665724e27681a1ca983626ab8adce1a314b252d1877f45c39d9d7815069f97d9",
+      "sha256": "59079514ebe0aa1908adb924a4ec25104513e055090ac03a822b09b55dbb977e",
+      "inputBytes": 97343,
+      "bytes": 43590,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:50.375Z"
+    },
+    "https://static.tildacdn.pro/tild6238-6532-4338-a630-336431663230/IMG_0158-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0158-min.dd3e4171a9da0421.webp",
+      "sourceHash": "c791a44cb44aaa85a6993b4cfb4f75c4b7624f1a2da685266a8aec871cc6ce9d",
+      "sha256": "dd3e4171a9da0421494a9343876cb20ad4bf41d9bef9343f25b6905ba8c68374",
+      "inputBytes": 184108,
+      "bytes": 121942,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:50.474Z"
+    },
+    "https://static.tildacdn.pro/tild6263-3464-4331-b031-663732373962/IMG_7364_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7364_2-min.7d85897a73f1e07b.webp",
+      "sourceHash": "825bda8d952f6a950e281c5026543771f462e8793d06aff4b4a706bd10459ac3",
+      "sha256": "7d85897a73f1e07b0261274db04a0bb1ee99d38afa6823987736db010137a227",
+      "inputBytes": 147176,
+      "bytes": 76728,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:50.603Z"
+    },
+    "https://static.tildacdn.pro/tild6335-3961-4438-b738-386665363330/02_1.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/02_1.05fb515f8e285323.webp",
+      "sourceHash": "0e508527ec20420d45c08b75f8b775a2c398d63aa20bb3a2ab9e4308100dd106",
+      "sha256": "05fb515f8e285323fb7c4bb18436a10c0820da157677c0a04073c6ea70d64f14",
+      "inputBytes": 71944,
+      "bytes": 44746,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:50.735Z"
+    },
+    "https://static.tildacdn.pro/tild6363-3165-4465-a338-663133336262/17.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/17.a466ad3b37524313.webp",
+      "sourceHash": "e202626db160ab06e6b46a2472a5b4b30a379489ae5ec6386dc608c1447c5d03",
+      "sha256": "a466ad3b37524313a252c8c4178fb44867a7e73dbdabfff592f052d6002b167b",
+      "inputBytes": 5740,
+      "bytes": 3728,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:50.829Z"
+    },
+    "https://static.tildacdn.pro/tild6266-3061-4735-a661-386134663533/IMG_0226-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0226-min.5ca3d904059a93bb.webp",
+      "sourceHash": "b5e3705e0d3a7447fc535991c33bd9f1e8db98378747ea518e193e47364ef16e",
+      "sha256": "5ca3d904059a93bbcde0f7c42e7ef39a8ef11a428fb7a88f03568a5b2aeccd00",
+      "inputBytes": 149192,
+      "bytes": 78798,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:51.479Z"
+    },
+    "https://static.tildacdn.pro/tild6337-6130-4165-b834-653564363934/photo.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/photo.63477afa65d5ea3f.webp",
+      "sourceHash": "2dbc1568b7fc12d8ec8e126e62a7059886250e229eec0df84083fffa09c9b115",
+      "sha256": "63477afa65d5ea3fad1ad86a4b8ba21c3b9d2fe59f624a3a3253c6b17526a6d1",
+      "inputBytes": 82085,
+      "bytes": 14422,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:51.783Z"
+    },
+    "https://static.tildacdn.pro/tild6361-3262-4464-b838-373139336538/IMG_7370_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7370_2-min.b903904600222665.webp",
+      "sourceHash": "1536058249a25233260793f5667b0f4454d3d88cbdca85c0c08085309d5c6a3f",
+      "sha256": "b9039046002226654ed69e4d4bd66bfdaa492a8580448b8c209b895daee0ac77",
+      "inputBytes": 163605,
+      "bytes": 95460,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:51.914Z"
+    },
+    "https://static.tildacdn.pro/tild6338-6137-4531-a334-303961303531/IMG_0171-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0171-min.24c25e9ba6851725.webp",
+      "sourceHash": "4ca1ea64607d41cdeba5d1d2196fe6f9da2201aeac547b56bc6ff094dfeba2f9",
+      "sha256": "24c25e9ba685172585f399e9f08133507c52e295a057df4bdbfecde7dd7a3365",
+      "inputBytes": 175880,
+      "bytes": 115974,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:52.032Z"
+    },
+    "https://static.tildacdn.pro/tild6361-3866-4430-b533-333435643137/IMG_0137-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0137-min.63c9849659c8c31c.webp",
+      "sourceHash": "6e1cd1de808debf7259b5a20760094f799efde5d70a6dcb29cd5d2b50ac27645",
+      "sha256": "63c9849659c8c31c3c41b961a629385adcf04550cbbbe9b196ec09a2b514318d",
+      "inputBytes": 194768,
+      "bytes": 121768,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:52.098Z"
+    },
+    "https://static.tildacdn.pro/tild3863-3835-4564-a461-623335346331/__page-0001.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/__page-0001.317bd8ea161f3636.webp",
+      "sourceHash": "ff5d42176a09ee072b575de3d3fdaf066cce0b7d583877f53386c9f59f3f5d2f",
+      "sha256": "317bd8ea161f36360c051de2a5f68c34053b1981973757f9bc13e5b56b698ef3",
+      "inputBytes": 604166,
+      "bytes": 126480,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:52.194Z"
+    },
+    "https://static.tildacdn.pro/tild6462-6230-4235-b561-303533333965/image_31-1.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image_31-1.0d0e100d1fba004f.webp",
+      "sourceHash": "ea0bc713a44a78372efd2d67af6948bc02d15693d3c21d64f8ea10f99f208424",
+      "sha256": "0d0e100d1fba004ff244303747f475ee8bce9b70672cc5977966f0dff3ddf36e",
+      "inputBytes": 33664,
+      "bytes": 21284,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:52.720Z"
+    },
+    "https://static.tildacdn.pro/tild6434-3539-4931-a364-353535626634/free-icon-whatsapp-5.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/free-icon-whatsapp-5.cffaff1350ebff1b.webp",
+      "sourceHash": "5305969bb24af7407573cc2ccf155ece9d2d2fbff12ad02fca16ab0db5fa523f",
+      "sha256": "cffaff1350ebff1b7bf4014ef6dc93bedf68e30702ed298ff1b5a00330971ee2",
+      "inputBytes": 47271,
+      "bytes": 11742,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:52.746Z"
+    },
+    "https://static.tildacdn.pro/tild6431-6538-4530-a363-383735646565/IMG_7363_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7363_2-min.5c80bb71992d3be8.webp",
+      "sourceHash": "cce45ca91ad2ae74f9e2769fcfe4838383eef4035013c974f9d16b139c76d7d1",
+      "sha256": "5c80bb71992d3be8a4f9c09dfef1d2d4c73fad21f72c20b2d8914516c86f4cb6",
+      "inputBytes": 138801,
+      "bytes": 72274,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:52.980Z"
+    },
+    "https://static.tildacdn.pro/tild6362-3232-4163-a437-353166643131/IMG_0233-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0233-min.4e6d0b2820cbb803.webp",
+      "sourceHash": "73b07096faa882ec19aa8ef862c206405f2de554595fd5839527f96fe752fdc1",
+      "sha256": "4e6d0b2820cbb80391e985c60e82a89b5aebec3a75939871c31243df90744cc0",
+      "inputBytes": 228505,
+      "bytes": 147490,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:53.120Z"
+    },
+    "https://static.tildacdn.pro/tild6435-3438-4365-b631-656463353237/0a71f78c350a7b4998c8.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/0a71f78c350a7b4998c8.48c1264141c184c3.webp",
+      "sourceHash": "31dc7b1c1635287c0267a5abba1b5ae98babb88333cb4f1c3c7c550094f9d228",
+      "sha256": "48c1264141c184c34b941fa3aa845d5f4eafe67b1d9916cfb1e0515300666517",
+      "inputBytes": 115875,
+      "bytes": 60022,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:53.691Z"
+    },
+    "https://static.tildacdn.pro/tild6435-3232-4531-b535-613239663636/IMG_0227-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0227-min.17e049743e1035cb.webp",
+      "sourceHash": "afa07c46e2f9a6a8dd26d8a3f787684b05e53313000cd24022aa17f3dcb896f7",
+      "sha256": "17e049743e1035cba6d10ffd236f2c5c05945d315424b6cb45496a8fd3079ce2",
+      "inputBytes": 133300,
+      "bytes": 68448,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:53.761Z"
+    },
+    "https://static.tildacdn.pro/tild6531-3333-4763-b731-383639623331/image.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image.4e86943a5de1d20a.webp",
+      "sourceHash": "7d434e87cf13bca4b7a1d0757f7ec9ce938738275601b6c8d82d1a796ec24191",
+      "sha256": "4e86943a5de1d20a49ef4f3956134b1110908eb1fe414f3df4a54d1956bbf43c",
+      "inputBytes": 29592,
+      "bytes": 20904,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:53.844Z"
+    },
+    "https://static.tildacdn.pro/tild6531-3337-4166-b133-323563343939/3_.png": {
+      "url": "https://media.yapil.art/archive/shanding/originals/3_.f95a02664429c329.webp",
+      "sourceHash": "4c6d020bacd8be0d0608db4f93ea85b8b9a035c86c88274a733d5306d45763b2",
+      "sha256": "f95a02664429c3294c1f981292f886ccbebf15b17d35e101e523b61ab2a43599",
+      "inputBytes": 128332,
+      "bytes": 25538,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:54.219Z"
+    },
+    "https://static.tildacdn.pro/tild6461-3032-4836-a661-313466613364/IMG_0228-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0228-min.b32c2852aa058747.webp",
+      "sourceHash": "84c7b370a837de7a7fb60010020c077f66726ae60b7a5a17dfb0dc7a5e050e2c",
+      "sha256": "b32c2852aa058747a8ae6b02839fe96811082ec54c6826b0083827a731ff3f14",
+      "inputBytes": 89638,
+      "bytes": 40350,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:54.228Z"
+    },
+    "https://static.tildacdn.pro/tild6432-3963-4533-b733-356163653832/IMG_7361_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7361_2-min.33dfc598a5343ac9.webp",
+      "sourceHash": "6ef69db5ec03a0156465bf610edbb1fd472e2981839b701330ce877cc684f412",
+      "sha256": "33dfc598a5343ac9cfea5ee356967abbe3b7eebe939e549dd72511a1abfa40bc",
+      "inputBytes": 259501,
+      "bytes": 189492,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:54.501Z"
+    },
+    "https://static.tildacdn.pro/tild6465-6537-4164-b635-306164313561/IMG_0229-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0229-min.393abf7a13b8e82c.webp",
+      "sourceHash": "e910a55e87555a6e129685b99d83626b86a8783bd76ad227c241aa87cccf5150",
+      "sha256": "393abf7a13b8e82c2da0698a2d50aacf743f31cac1186d6284987f764c949b25",
+      "inputBytes": 131590,
+      "bytes": 64120,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:54.962Z"
+    },
+    "https://static.tildacdn.pro/tild6637-3030-4634-b037-313238616334/Frame_1000010995.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/Frame_1000010995.e25a27db7cb6b25d.webp",
+      "sourceHash": "47ac0078857b23e909830f520631cf277b982c9064fbbdc8357c7408378e2525",
+      "sha256": "e25a27db7cb6b25d28aefa84ab59cc18241602eab9277d0c91796b2ccb068758",
+      "inputBytes": 28342,
+      "bytes": 17254,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:55.285Z"
+    },
+    "https://static.tildacdn.pro/tild6632-3461-4637-b837-313337636538/6.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/6.e51186c0dec2ba9c.webp",
+      "sourceHash": "1f0b745b28946cdaf65532265b0faa203a72d35800331068cb7d1c87f008a146",
+      "sha256": "e51186c0dec2ba9c2f300e8650110dfebb5d3ecd6654c51fac3c17ab514a717c",
+      "inputBytes": 31456,
+      "bytes": 18304,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:55.310Z"
+    },
+    "https://static.tildacdn.pro/tild6264-3336-4834-b464-343833363866/_.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/_.6a4cec0ed22a9201.webp",
+      "sourceHash": "c26e2828ba165e145572a9f28adea76dd02f56cdf50c683a8cbdaa204bce6462",
+      "sha256": "6a4cec0ed22a92019c1e015d599620aa055323ca058682998ade4555a0860eae",
+      "inputBytes": 216117,
+      "bytes": 105404,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:55.399Z"
+    },
+    "https://static.tildacdn.pro/tild6562-6635-4637-a239-386530336263/image_34.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image_34.414dad6736024130.webp",
+      "sourceHash": "5626511fb4012c0f241fce6a7b03d974f0c13173ff1a603f3a96fa79f5354e7a",
+      "sha256": "414dad6736024130d582c89209422f4de8adabbe17763230f9019416b1341a0a",
+      "inputBytes": 67732,
+      "bytes": 35692,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:55.705Z"
+    },
+    "https://static.tildacdn.pro/tild6666-6661-4361-a538-396235396338/image_31.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/image_31.b0639bdf43a092f9.webp",
+      "sourceHash": "5ff020e1c4fd1f974cd6f3af3f47c7d40e1b043c7e1d59ddd4bf99700e184088",
+      "sha256": "b0639bdf43a092f9181cb9abfe8e2963c3842826ce0137c4afb1d0138eb1202e",
+      "inputBytes": 25234,
+      "bytes": 17602,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:55.784Z"
+    },
+    "https://static.tildacdn.pro/tild6465-3666-4232-b665-353361313331/IMG_7398.jpeg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7398.a13487dea40da4a7.webp",
+      "sourceHash": "77eb8d6a5ca6ba13347161d0dd4b0f3a15782bfff8e397e27a4eb722d490a422",
+      "sha256": "a13487dea40da4a7d9ed41ea586820c2990f666814b74d91d48f17bfb98fef1b",
+      "inputBytes": 244173,
+      "bytes": 201540,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:55.933Z"
+    },
+    "https://static.tildacdn.pro/tild6661-3335-4363-b562-386165313732/___Print_Store-1_1.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/___Print_Store-1_1.7e288664ebe4392c.webp",
+      "sourceHash": "03bdb3d80fae7bce0103c3e412eaf3c8fa7c0b22ac9d8c9ada58c9500d09579a",
+      "sha256": "7e288664ebe4392c873fd56270afc0208f01e42019a4e7e0f8d2d1ab94962826",
+      "inputBytes": 45566,
+      "bytes": 37288,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:55.981Z"
+    },
+    "https://static.tildacdn.pro/tild6664-3361-4138-a161-376266303732/3.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/3.a10b6e13c5306431.webp",
+      "sourceHash": "9751665f2fa2f6d8823c8753586773e7f5716ebe23c085c80dc9e1f7f4e72784",
+      "sha256": "a10b6e13c530643171827c91b7392c0a425a132f564717e45e9b6f6fc16e27ff",
+      "inputBytes": 28050,
+      "bytes": 15346,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:56.132Z"
+    },
+    "https://static.tildacdn.pro/tild6537-3038-4136-a463-336461333433/IMG_7354_2-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_7354_2-min.dc38175b867ac781.webp",
+      "sourceHash": "694971dc62408048bb84b88536fb9fd0a9a85cc7e227ff5feb05f558e9194d4f",
+      "sha256": "dc38175b867ac781e3db2a0c4cb81e36be4084c37703ecee37b24d8fddd54590",
+      "inputBytes": 191289,
+      "bytes": 111636,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:56.280Z"
+    },
+    "https://static.tildacdn.pro/tild6531-3435-4462-b535-333032633432/IMG_0232-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_0232-min.816a7fdae55b34b6.webp",
+      "sourceHash": "e86af4e2d393bd1f77d2c66fe1623491fc6c7b2e45dbb080bdc8dc7274cfb987",
+      "sha256": "816a7fdae55b34b601aeb3454616eff3598472d341e75b05d19a3559f8bd99d3",
+      "inputBytes": 176489,
+      "bytes": 108126,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:56.362Z"
+    },
+    "https://static.tildacdn.pro/tild6562-6464-4364-b732-363435346137/IMG_4617-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_4617-min.140559471b6342e2.webp",
+      "sourceHash": "973cb101ce0eb9402c8c68db47af5140fed35913bca208f7652232c4862f1c25",
+      "sha256": "140559471b6342e2b305741a7552fa74f6c76f138394b6548b46cbff2cbfcac4",
+      "inputBytes": 200115,
+      "bytes": 113512,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:56.589Z"
+    },
+    "/articles/covers/concepts/what-is-brand-identity/01-editorial-3d.webp": {
+      "url": "https://media.yapil.art/articles/covers/concepts/what-is-brand-identity/01-editorial-3d.b73b6d833938e2bc.webp",
+      "sourceHash": "171680cf0680d3ef31a7133e0def3e45c98c9c1f053dbe22a819595ba3f12765",
+      "sha256": "b73b6d833938e2bc49c0e5164beddd3d532656028cd8cd0684a9821a4ebdf9d7",
+      "inputBytes": 70140,
+      "bytes": 38748,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:57.222Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-audit.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-audit.2dbdbbef8709a5f2.webp",
+      "sourceHash": "926403f12e19bc4d8f7bc709ab7331ffff88e72e284731e084581773b3159829",
+      "sha256": "2dbdbbef8709a5f24ad31a7216dcff161f5d49cc798d21b0f679f42330db0700",
+      "inputBytes": 22016,
+      "bytes": 15518,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:57.505Z"
+    },
+    "/articles/covers/concepts/what-is-brand-identity/02-swiss-collage.webp": {
+      "url": "https://media.yapil.art/articles/covers/concepts/what-is-brand-identity/02-swiss-collage.e09e3b8ce0b13933.webp",
+      "sourceHash": "331aba95d97733ba81dd99bb1c49a390eaeade3562fb4a51edef4704046cfc68",
+      "sha256": "e09e3b8ce0b13933ceeb785487a42e64380c4d8eb702478395747731a9462625",
+      "inputBytes": 102952,
+      "bytes": 60074,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:57.572Z"
+    },
+    "/articles/covers/identity/logo-vs-brand-identity.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/logo-vs-brand-identity.ee44c4038b0e7660.webp",
+      "sourceHash": "c5af94b46b6a00882e4c175f08a4b88cc42ac851390bc79a2028408021a67ecf",
+      "sha256": "ee44c4038b0e76609300bc1d6fab04ea6e079c9ab412f1726a41caf90f7eefc3",
+      "inputBytes": 21506,
+      "bytes": 15612,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:57.608Z"
+    },
+    "/articles/covers/concepts/what-is-brand-identity/03-dark-modular.webp": {
+      "url": "https://media.yapil.art/articles/covers/concepts/what-is-brand-identity/03-dark-modular.6586f1a0e0380829.webp",
+      "sourceHash": "ac47d3dbf755c7f9b79698a8051bb02012f3187c3e517277b534769e00a3017f",
+      "sha256": "6586f1a0e0380829778f89b0ae86e9df723a6c48c79f3be465a40638e199a663",
+      "inputBytes": 72932,
+      "bytes": 35490,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:57.672Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-checklist.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-checklist.8e795374eb2cc0cc.webp",
+      "sourceHash": "912f129da7c3ccdc925a5a241be0339f3d1ec976d9e44fdb983948503737fbc6",
+      "sha256": "8e795374eb2cc0cc34b65346e5d97e628d0ed081498739a414911f6f123ee2fd",
+      "inputBytes": 21402,
+      "bytes": 15768,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:57.857Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-comparison.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-comparison.9bf7f4704bc2dd86.webp",
+      "sourceHash": "dd85acfd31d4fbba5111edd5aa6a8a21e5f830087d3652ce86a5e42b2130d162",
+      "sha256": "9bf7f4704bc2dd86381d7255517813195d2bb74b3317fbebb9bb0fc781008e57",
+      "inputBytes": 21380,
+      "bytes": 14974,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.207Z"
+    },
+    "/articles/covers/concepts/what-is-brand-identity/04-tactile-stationery.webp": {
+      "url": "https://media.yapil.art/articles/covers/concepts/what-is-brand-identity/04-tactile-stationery.165349de109af71f.webp",
+      "sourceHash": "ef407fbf5b0bcc522a8cdee3febf7d0a0eb9b0d9fee04114694a4d3f0ca5f044",
+      "sha256": "165349de109af71f5fb7cbe155b46e3bd6d2cae262ba727ae0daef6727825590",
+      "inputBytes": 70428,
+      "bytes": 26806,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.233Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-guide.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-guide.d4920f935018447e.webp",
+      "sourceHash": "5233ffcf81d77f2ac82a35eef25bc9c7e65163f99bc4e96515d547b1b06300f7",
+      "sha256": "d4920f935018447e622d5cd7d427ecca036f7487cf5b204f4e800c9101937160",
+      "inputBytes": 20228,
+      "bytes": 14760,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.282Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-how-to-choose.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-how-to-choose.c8659daa0a41eb67.webp",
+      "sourceHash": "0a13e5d3e4d3996cab7c2c1431e659d8e73de095a8961dadded100bfda8782de",
+      "sha256": "c8659daa0a41eb6777acf5b60ea320803a1483ad1200e16ae18e6a9ad79c5420",
+      "inputBytes": 23772,
+      "bytes": 16694,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.456Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-cost.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-cost.5cb4399b5f52fdc9.webp",
+      "sourceHash": "b6a5658491b54f2d1031fba7db577a60429b70f1c25305d3f21c7a2d205181a2",
+      "sha256": "5cb4399b5f52fdc9538bf12fc90d3f76d9d0c2add73ae8697524aaa5e2cca561",
+      "inputBytes": 21874,
+      "bytes": 15616,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.504Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-trends-2026.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-trends-2026.b75e743c10b542c4.webp",
+      "sourceHash": "e4c00be6179935b2e3da9724c6df14a78fe648c0ccd02ce716f8020c48fd45f9",
+      "sha256": "b75e743c10b542c475e9e49c80edaa2dd40f0978f0a1ff909ff01f128331fb09",
+      "inputBytes": 22070,
+      "bytes": 15732,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.548Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-mistakes.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-mistakes.a614685d7d7f1148.webp",
+      "sourceHash": "bba12b4641d89ad3e6cdfb0251f1cc3fcd2bb4208bde78c8a9260cead4695aae",
+      "sha256": "a614685d7d7f1148b4c8e79cf8c9f85b80b390b288e8ced897e67855887c8c8c",
+      "inputBytes": 22670,
+      "bytes": 16218,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.688Z"
+    },
+    "/articles/covers/identity/trend-ai-logo-steps.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-ai-logo-steps.129f81c828637646.webp",
+      "sourceHash": "5a144808be103d8dfce0ee4e5e174c1e507b3400020c609dd77508806314b7d6",
+      "sha256": "129f81c8286376469be130e32cd09e7abc4d124748d765d5dedfdd4249cbcdd3",
+      "inputBytes": 20976,
+      "bytes": 15580,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.690Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-audit.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-audit.dca9d16de11ebcd6.webp",
+      "sourceHash": "5ee270d4948007f169c6c4400a239afbc2c0c399b224df02409a0a71a6b2a3e1",
+      "sha256": "dca9d16de11ebcd67971ba0c2d736b17c91b99ff07da227214b3cbfcb56a8174",
+      "inputBytes": 24538,
+      "bytes": 17234,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:58.920Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-brief.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-brief.afca4cfc814ad990.webp",
+      "sourceHash": "0222baf3bb4aaf78203374bda83a38fd9507c47aff0bd5ae4c40abc88b0fbbe6",
+      "sha256": "afca4cfc814ad990e1192f90dc5741b95e92e8d741046d042eb0c81c6bd1a574",
+      "inputBytes": 21866,
+      "bytes": 15564,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:59.503Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-cost.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-cost.760aa80778a61cec.webp",
+      "sourceHash": "9b02c9ea2ce43a1576b19f124a2dec2d947109750ac713581a85246bba0200f8",
+      "sha256": "760aa80778a61cecc956e24544d89ee8ebfeaac7df9dabf920cef9ef02b654da",
+      "inputBytes": 23690,
+      "bytes": 17180,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:59.781Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-comparison.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-comparison.d0188bed188b1a4a.webp",
+      "sourceHash": "e3a88a7ea18b481a112c04d848add506df72413c28f9504fe31ae629b73131ef",
+      "sha256": "d0188bed188b1a4af9fdda3029e42469933904988a9ad53bf4f365d5e879b7e1",
+      "inputBytes": 19734,
+      "bytes": 14176,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:59.875Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-checklist.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-checklist.34f29857b8e89c00.webp",
+      "sourceHash": "8f80c941924d38039a27b150e3dd4b4752ef434fbf9f8691decc8309f909af0a",
+      "sha256": "34f29857b8e89c003f994bd11a303f5a08ac0e6fd8e5396b7f9ca27de3db445b",
+      "inputBytes": 21666,
+      "bytes": 15876,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:12:59.933Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-guide.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-guide.66cd16da4e7b18e2.webp",
+      "sourceHash": "7ccb3de5ba66ed11f20792b71e85bac2f6b3c74dd4173c8d7902f3390b8cfd8a",
+      "sha256": "66cd16da4e7b18e2ef8fdd752048f10f1638ab18e9638ca58bcec1f26f0b5541",
+      "inputBytes": 21542,
+      "bytes": 15294,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.188Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-how-to-choose.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-how-to-choose.fe09721863a557b5.webp",
+      "sourceHash": "67b1086df5d915e77e955a083404056c4f6e5a3215dfa10cb7ff371d16d9531c",
+      "sha256": "fe09721863a557b5c98812f40d6694d1371eed5daf07d528da77c6a264bc1986",
+      "inputBytes": 24080,
+      "bytes": 17784,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.289Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-trends-2026.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-trends-2026.581cefcaae02dd0c.webp",
+      "sourceHash": "69ab994765179ed9066754728165c4827a499f3e7c4fd861d32bd3f809b3d1ba",
+      "sha256": "581cefcaae02dd0c473f82b0d905b70c99db98ba14c3307ca61bf39f3d9d07e5",
+      "inputBytes": 22908,
+      "bytes": 16448,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.542Z"
+    },
+    "https://static.tildacdn.pro/tild6633-6566-4363-b165-646431623062/IMG_6408-min.jpg": {
+      "url": "https://media.yapil.art/archive/shanding/originals/IMG_6408-min.240499c8d47d34aa.webp",
+      "sourceHash": "cbeb39cd9bbd196aeb4589b0b4b4709216dfadef833ba513019dc6877a0649b6",
+      "sha256": "240499c8d47d34aab4d89b77e380795526365173ad7edb44679d84fabc59eb0f",
+      "inputBytes": 783261,
+      "bytes": 319172,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.587Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-steps.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-steps.83fa03df13f544b5.webp",
+      "sourceHash": "3df2ffa649801a127004358956838867a553b41c4eab1a31bb049322ca91ff28",
+      "sha256": "83fa03df13f544b5599b4d67dff8f135971096e2406af221d8d03f5641bb574b",
+      "inputBytes": 24180,
+      "bytes": 16992,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.591Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-audit.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-audit.3371c92cd09a956d.webp",
+      "sourceHash": "e6c601a2f0334416ad8e21dc7e60f8961e8046daed06b6dcab3ea623d6055faa",
+      "sha256": "3371c92cd09a956d86ad8500d98da38df6198bcacbaeea32067c701275dc8538",
+      "inputBytes": 20860,
+      "bytes": 14960,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.665Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-brief.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-brief.399606d8277a122b.webp",
+      "sourceHash": "bec74b4e507de669d22d1dce85555b36a8216fda6bb98e53cc45f8b1fbcb864c",
+      "sha256": "399606d8277a122b53108ba84cc18108a0f1a675bd8b1a13948977b03814f445",
+      "inputBytes": 22752,
+      "bytes": 15898,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.695Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-comparison.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-comparison.91aa1765bbad80a9.webp",
+      "sourceHash": "66772c24a584d5d1aaed8b20bbb670090b8dcc42da08676ef6e6b5df5f692579",
+      "sha256": "91aa1765bbad80a94b875e3c2889c11540084e8cd0e6b816f6e446a1aab7df2d",
+      "inputBytes": 23548,
+      "bytes": 17134,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.858Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-checklist.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-checklist.058ceefba6ad1dea.webp",
+      "sourceHash": "3248c56dce06c8b7dc1a5574260bd9a0239b797d3b82d14bd34bf7e2d16194e1",
+      "sha256": "058ceefba6ad1dea8e822569359edefa2889e20278c87810a70176e30b544857",
+      "inputBytes": 23866,
+      "bytes": 17232,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.902Z"
+    },
+    "/articles/covers/identity/trend-brand-identity-mistakes.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-identity-mistakes.630989524b58e366.webp",
+      "sourceHash": "28e86f89e47ce148cd175ea27487ce5e748dc9619677d1e4ac57218ffbcefdf0",
+      "sha256": "630989524b58e366c6b1459f34c8c9bf912f8ea1c1d15eaf8c17656f4a612540",
+      "inputBytes": 22552,
+      "bytes": 16216,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.917Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-cost.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-cost.a694dc5f4c0f480e.webp",
+      "sourceHash": "41570f0bdedd14476a4aba53b0910b1a149f6595e750b7bfbb5d90cc91ecdc59",
+      "sha256": "a694dc5f4c0f480e1f0a312c2e3aa634c89df8de6e426f6b592d8dbec70d489f",
+      "inputBytes": 22940,
+      "bytes": 16812,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:00.993Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-guide.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-guide.f5e97cf572091360.webp",
+      "sourceHash": "da387460f503367f821b4b09028da4561ddcc3c643d53b5c21f28c7a2c026390",
+      "sha256": "f5e97cf57209136077c97766024f6676e92ea8ed222d7be2368eaf4057716a4b",
+      "inputBytes": 24278,
+      "bytes": 17474,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:01.334Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-how-to-choose.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-how-to-choose.35a9cebb463fe189.webp",
+      "sourceHash": "447ef0e1b6b9e5e23dd45327ad2255458f9db10bf4046f79b57f7e0a45a0b5f2",
+      "sha256": "35a9cebb463fe1899737454c42426eca1ee7b376ff11d5de1335e7647ddc2fad",
+      "inputBytes": 19206,
+      "bytes": 13738,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:01.711Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-mistakes.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-mistakes.e069183c08938104.webp",
+      "sourceHash": "3652dae16717f09504496f199aa859d7b7f996ed42dd15b48e48b965ee5eb6ae",
+      "sha256": "e069183c08938104931985b8876c5ef842d32dfcff304af670d4233a1f598715",
+      "inputBytes": 24694,
+      "bytes": 17360,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:02.006Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-trends-2026.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-trends-2026.5e3736d4d1678454.webp",
+      "sourceHash": "5ec3f576026187646cb4744747605676177e3ecd8152b16c03144b99f2558fac",
+      "sha256": "5e3736d4d1678454c2a369145ce2405dddf00560fd0d594a6f63c772a2cb3725",
+      "inputBytes": 21710,
+      "bytes": 15354,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:02.250Z"
+    },
+    "/articles/covers/identity/trend-brand-strategy-steps.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brand-strategy-steps.ccaa729bb9dc45d8.webp",
+      "sourceHash": "3750d33a7d48ee08eefdf0778f5618d2d092d51b163e9762ed950c89e6970d6d",
+      "sha256": "ccaa729bb9dc45d8858d82ba95fb41be129fe089ac9c88fec0920a371b840281",
+      "inputBytes": 21024,
+      "bytes": 14998,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:02.449Z"
+    },
+    "/articles/covers/identity/trend-brandbook-brief.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-brief.8a258ef94d8c2e81.webp",
+      "sourceHash": "074d141a76d0c6161eab8662b34e09ffd49bb3bdcf55a65aff11c36abf973d6d",
+      "sha256": "8a258ef94d8c2e8126d7c8cc0d44e0d3297611782546b10024141ce75c50905d",
+      "inputBytes": 23322,
+      "bytes": 16548,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:02.539Z"
+    },
+    "/articles/covers/identity/trend-brandbook-audit.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-audit.e2be5b75f1f5adea.webp",
+      "sourceHash": "4000c3fa618a018d0b946f14a51818dd08e72a40a5fc899b41abbaa93e50752f",
+      "sha256": "e2be5b75f1f5adea8e086e388269a8fd6eebeb98f96983fc0847a13f274ce90a",
+      "inputBytes": 21044,
+      "bytes": 14966,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:02.618Z"
+    },
+    "/articles/covers/identity/trend-brandbook-guide.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-guide.6b024ddf402ae199.webp",
+      "sourceHash": "3e8f7b48244138fb5af3513ad5439c1feb73b31267eaccb4f67f5cca27a2b9df",
+      "sha256": "6b024ddf402ae19921c1451eafaedecc3442e1912bcc713425600c084c55de59",
+      "inputBytes": 20760,
+      "bytes": 14760,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:02.818Z"
+    },
+    "/articles/covers/identity/trend-brandbook-cost.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-cost.742c99aa6bd9a8c4.webp",
+      "sourceHash": "d72f28bad66f357b7778c38df90f6f0381f56bbbb29836ea3fc75739eb750333",
+      "sha256": "742c99aa6bd9a8c4bceecf807126feb163b511fdafc4e9a3d1b4a16d26d2cd2a",
+      "inputBytes": 21672,
+      "bytes": 15722,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:02.877Z"
+    },
+    "/articles/covers/identity/trend-brandbook-comparison.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-comparison.4fbc70910cb4a7cd.webp",
+      "sourceHash": "c4d5d8d58553acca6d84578a1c31bf8ca316dd10a2382923c4493a81dd15c471",
+      "sha256": "4fbc70910cb4a7cdfb77abb48b04b671054fa8766af47120a143d475cf5361a2",
+      "inputBytes": 24088,
+      "bytes": 17394,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.000Z"
+    },
+    "/articles/covers/identity/trend-brandbook-mistakes.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-mistakes.3117ed86b4117e47.webp",
+      "sourceHash": "d539111e96dea491ecd16bbe372c03cb3be4a917f3236a9ef1603a36f48c5c63",
+      "sha256": "3117ed86b4117e479f5d81e8469a20b560c77f0b740be9944fa6f38625be8620",
+      "inputBytes": 23324,
+      "bytes": 16340,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.070Z"
+    },
+    "/articles/covers/identity/trend-brandbook-how-to-choose.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-how-to-choose.cc6abed41d38ec64.webp",
+      "sourceHash": "d00f522184fc3d7ca2b0836acec18d5abd81ae0d9cdb814aa12e6e27d7a9a3a2",
+      "sha256": "cc6abed41d38ec64e40b794916c54e65f6c7c54457844bb3378c7c7814bd8d4f",
+      "inputBytes": 22790,
+      "bytes": 16300,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.140Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-audit.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-audit.ce3137c31ed13e23.webp",
+      "sourceHash": "c2dd94f72dc74f5eee9f02bfa6f598ad41f361e2980f0632fbfc0f16f11f64f0",
+      "sha256": "ce3137c31ed13e2378fbb9702f171f1becf247e0c36bbfe0481a75835c713781",
+      "inputBytes": 20638,
+      "bytes": 15120,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.237Z"
+    },
+    "/articles/covers/identity/trend-brandbook-checklist.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-checklist.81890ac528c43960.webp",
+      "sourceHash": "eeecac9032815eb59581c2914a3d46a22948c1d30a79a67b97529f2b7cc4d2c9",
+      "sha256": "81890ac528c43960a7e8e97b399b8ff32c3e48fe39a40d8a581713efca93c231",
+      "inputBytes": 21234,
+      "bytes": 15762,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.245Z"
+    },
+    "/articles/covers/identity/trend-brandbook-trends-2026.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-trends-2026.3cfccf55d7a30a61.webp",
+      "sourceHash": "7ec3f1e66d92db99d55d4a81a498f52a0747376274e586184b1cd16448183be6",
+      "sha256": "3cfccf55d7a30a610328080201ac5b03d35f8e0b89e56ca5e4361cf7ee91b8ee",
+      "inputBytes": 24230,
+      "bytes": 17658,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.419Z"
+    },
+    "/articles/covers/identity/trend-brandbook-steps.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-brandbook-steps.53e8e92120843793.webp",
+      "sourceHash": "48cdff1e6e6d4688c4f7b21532a26abefd2d87e0ec847b9f80a5cb692048b516",
+      "sha256": "53e8e9212084379333689213943c6a171cfa412139c5e00476ac943182249fc5",
+      "inputBytes": 21820,
+      "bytes": 15746,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.423Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-brief.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-brief.7e755658969f585d.webp",
+      "sourceHash": "e11422177adf33003664daa8b8f26e4f7b425e39e46bda950ff56c1e0de6a35d",
+      "sha256": "7e755658969f585d6be10096d19c895927850c3d3a4659a4a5e3b5cc7cf99219",
+      "inputBytes": 20590,
+      "bytes": 14760,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:03.665Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-checklist.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-checklist.01d1734c76a16948.webp",
+      "sourceHash": "bf50d3ece49713adf879b5c0e2e6f77ad2f29258c4bfdddd4780ac5ad5c4dff7",
+      "sha256": "01d1734c76a169488c6d106edbd1a23f65660232a42d303b16b82ed9eb3c52ec",
+      "inputBytes": 23560,
+      "bytes": 16990,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:04.262Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-comparison.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-comparison.c4250c7e7e2423b8.webp",
+      "sourceHash": "9ecd1b2aa7869fab7f9278234ff9d2f2eff3b62007e1ff43da347e6c1ec1ff70",
+      "sha256": "c4250c7e7e2423b85117379237a86adb7901b258aaac457f739e1b699f5cea00",
+      "inputBytes": 22414,
+      "bytes": 15912,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:04.378Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-cost.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-cost.d604475bd19af1d1.webp",
+      "sourceHash": "e28d05e704505c5ea7dff6acdca49f5fdf23b03ffb82b00d1cc83b13e3d5e506",
+      "sha256": "d604475bd19af1d11667e901e59a6a070a500c92d8079c3e2e9f69e39c8e79e3",
+      "inputBytes": 22086,
+      "bytes": 15544,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:04.576Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-guide.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-guide.e2ad4222d93dcfce.webp",
+      "sourceHash": "d23e673a29690325762835b16423e91819a57adaaf20be7f17aabe2b4645d53b",
+      "sha256": "e2ad4222d93dcfce162e70fdc24d0a98ee6dc1e097bfc8319f29578fb3b69780",
+      "inputBytes": 20960,
+      "bytes": 14978,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:04.756Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-how-to-choose.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-how-to-choose.ba2ee1439c512a16.webp",
+      "sourceHash": "bfb1703a6165c68b86267fbba13e95c7d60b61682808a66d48fc988dc29bac8b",
+      "sha256": "ba2ee1439c512a166880e8952575bec7f0dbf21edb289d69e15904a6a152631b",
+      "inputBytes": 19970,
+      "bytes": 14148,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:04.888Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-trends-2026.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-trends-2026.b68c9994aee3c637.webp",
+      "sourceHash": "d2be99558559db8f985382ecef8a966c338d5578f30309772ad176946b591d06",
+      "sha256": "b68c9994aee3c637d036d4159f3f7739cc2582a28d5eec49522138a149d8fa60",
+      "inputBytes": 19878,
+      "bytes": 14252,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.060Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-mistakes.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-mistakes.fc0ff8596e7931b4.webp",
+      "sourceHash": "153ada3de8fcd7c14116a380ec19b92a2f2967aa0636ab02211eaf578edcac30",
+      "sha256": "fc0ff8596e7931b469ff2ccb0577ee95a1e2b2d1e7496570af312688820dd96e",
+      "inputBytes": 21334,
+      "bytes": 15022,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.154Z"
+    },
+    "/articles/covers/identity/trend-corporate-style-steps.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-corporate-style-steps.7410ee8a934e4b4c.webp",
+      "sourceHash": "dbabd1b77bcacf9c007dbb2dcb1840e066c5a8826ed44db31171b64d72e358f7",
+      "sha256": "7410ee8a934e4b4cd2555fd307ff17bac0ee3b2cd06805e80893c8903be53a06",
+      "inputBytes": 24210,
+      "bytes": 17048,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.213Z"
+    },
+    "/articles/covers/identity/trend-logo-design-audit.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-audit.d980b5bfe221defd.webp",
+      "sourceHash": "5a2c4b467546e16f10e311c14d3368503291b2fe28ac63b55c09511f8dea436a",
+      "sha256": "d980b5bfe221defd19cbdc975ef1f346d75f88245dc64f5d92a0ce47279bb64a",
+      "inputBytes": 21108,
+      "bytes": 15012,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.431Z"
+    },
+    "/articles/covers/identity/trend-logo-design-checklist.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-checklist.08a32ab49c7e19cd.webp",
+      "sourceHash": "e1d74be7c2aa8034214e2a2eac9219b449d5943f60fb5d60f4c7fbc6cadf2be3",
+      "sha256": "08a32ab49c7e19cdb78b7df830007cea5510c4f6a464e6684f0614db779c3ccd",
+      "inputBytes": 22594,
+      "bytes": 16218,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.578Z"
+    },
+    "/articles/covers/identity/trend-logo-design-how-to-choose.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-how-to-choose.19f2e0a650eec23d.webp",
+      "sourceHash": "2cdb0b6f74ef1092f5d2f3bbe02062f2f1ed44f70e5901f33219dd72411f98e6",
+      "sha256": "19f2e0a650eec23dcd59dd0e69d8ee551b5894670215f802ae07df2666e24763",
+      "inputBytes": 20454,
+      "bytes": 14702,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.698Z"
+    },
+    "/articles/covers/identity/trend-logo-design-cost.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-cost.362e152253e64ae1.webp",
+      "sourceHash": "6fa6a44994b96d4dc2ba241c56ad61ccedcb7c7c0c2c053f477b890227f63a90",
+      "sha256": "362e152253e64ae1014a6a8875c48a4424b931d86e7e2b1f58a426755fd0d54f",
+      "inputBytes": 21436,
+      "bytes": 15348,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.764Z"
+    },
+    "/articles/covers/identity/trend-logo-design-comparison.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-comparison.d2fff323b8c616fc.webp",
+      "sourceHash": "fd94d5732480100ad9dc316bd7b6a3dedecd3aa292e8b4933085ce60397ba4fa",
+      "sha256": "d2fff323b8c616fc1dd167ee82694c97e44b133cf014e45b0d79a3d33d893e7c",
+      "inputBytes": 24630,
+      "bytes": 17686,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:05.802Z"
+    },
+    "/articles/covers/identity/trend-logo-design-brief.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-brief.11a1aa6bf6364602.webp",
+      "sourceHash": "64a5e74ebe6a0027549465e4f2235624b81790e45db56fdb584bf7b79d697cb2",
+      "sha256": "11a1aa6bf636460254720424fe9b7d271f420440c1916395f9579f87acf63e4e",
+      "inputBytes": 21784,
+      "bytes": 15248,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:06.147Z"
+    },
+    "/articles/covers/identity/trend-logo-design-mistakes.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-mistakes.e39ca8d75e31e4d6.webp",
+      "sourceHash": "9ab609da537eb436a4135748a9a8e3dfa5c443bfd93c66b24d87e75877c503d7",
+      "sha256": "e39ca8d75e31e4d63250d6cf13ceb1e2ff1c65bee8ceb3811c1efc201a5e9527",
+      "inputBytes": 23900,
+      "bytes": 17720,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:06.171Z"
+    },
+    "/articles/covers/identity/trend-logo-design-steps.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-steps.af72c08c3174ef1c.webp",
+      "sourceHash": "8f44d2ec9e2b4236db7ad2d0b053fa0c00e12217775806bee5c84290c47657c6",
+      "sha256": "af72c08c3174ef1c5550c95366248d9b29e0d66ba8248d8c26ab1b73ed6fe5aa",
+      "inputBytes": 21904,
+      "bytes": 15460,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:06.450Z"
+    },
+    "/articles/covers/identity/trend-logo-design-guide.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-guide.452501ed122a5687.webp",
+      "sourceHash": "af4358c22ca40681f0bc35e77b6d0a78ea0801537428bb072d18891ffdc9b20c",
+      "sha256": "452501ed122a5687a8ac2b93a7ec61fc2f1a5c2fc4ba18c75e0fa905d51ef8a3",
+      "inputBytes": 22770,
+      "bytes": 16260,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:06.526Z"
+    },
+    "/articles/covers/identity/trend-logo-design-trends-2026.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-logo-design-trends-2026.450d7685efd2c426.webp",
+      "sourceHash": "410a0eb72d969ee5d469515fe31cde577e3c738ce21872b32a391bed28db671e",
+      "sha256": "450d7685efd2c426562cb118f0e600b5b85805be4baefc5c1675d7ea7a0451e6",
+      "inputBytes": 22450,
+      "bytes": 15912,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:06.760Z"
+    },
+    "/articles/covers/identity/trend-packaging-identity-audit.webp": {
+      "url": "https://media.yapil.art/articles/covers/identity/trend-packaging-identity-audit.44c317d119098017.webp",
+      "sourceHash": "033ac268b04ab3709cbfc30c1a9fa9d39e56df23741ae6b3d099efbbabffb4fb",
+      "sha256": "44c317d119098017d1075985c9672f896689a7de96bfdc280dce6b3a0bea68b9",
+      "inputBytes": 20558,
+      "bytes": 14938,
+      "contentType": "image/webp",
+      "processing": "tinify-webp",
+      "verifiedAt": "2026-09-06T08:13:06.839Z"
     }
   }
 }

@@ -9,12 +9,22 @@ import { buildPermanentRedirects, isIndexableGeoPath, isPrivatePath } from './sr
 
 const articlesRoot = new URL('./content-drafts/seo/', import.meta.url);
 const articleEntries = /** @type {string[]} */ (readdirSync(articlesRoot, { recursive: true, encoding: 'utf8' }));
-const publishedArticlePaths = new Set(
-  articleEntries
-    .filter((entry) => entry.endsWith('.md') && entry !== 'ARTICLE_TEMPLATE.md')
-    .filter((entry) => /^status:\s*["']?published["']?\s*$/m.test(readFileSync(new URL(entry, articlesRoot), 'utf8')))
-    .map((entry) => `/articles/${entry.slice(entry.lastIndexOf('/') + 1).replace(/\.md$/, '')}`),
-);
+const publishedArticles = articleEntries
+  .filter((entry) => entry.endsWith('.md') && entry !== 'ARTICLE_TEMPLATE.md')
+  .map((entry) => ({ entry, source: readFileSync(new URL(entry, articlesRoot), 'utf8') }))
+  .filter(({ source }) => /^status:\s*["']?published["']?\s*$/m.test(source))
+  .map(({ entry, source }) => {
+    const pathname = `/articles/${entry.slice(entry.lastIndexOf('/') + 1).replace(/\.md$/, '')}`;
+    const updatedAt = source.match(/^updatedAt:\s*["']?([^"'\n]+)["']?\s*$/m)?.[1];
+    const publishedAt = source.match(/^publishedAt:\s*["']?([^"'\n]+)["']?\s*$/m)?.[1];
+    const articleDate = updatedAt ?? publishedAt;
+
+    if (!articleDate) throw new Error(`Published article is missing publishedAt: ${entry}`);
+
+    return /** @type {[string, string]} */ ([pathname, articleDate]);
+  });
+const publishedArticleDates = new Map(publishedArticles);
+const publishedArticlePaths = new Set(publishedArticleDates.keys());
 
 // https://astro.build/config
 export default defineConfig({
@@ -36,6 +46,20 @@ export default defineConfig({
         if (normalizedPath.startsWith('/articles/')) return publishedArticlePaths.has(normalizedPath);
 
         return !isPrivatePath(normalizedPath) && isIndexableGeoPath(normalizedPath);
+      },
+      serialize: (item) => {
+        const pathname = new URL(item.url).pathname.replace(/\/$/, '') || '/';
+        const articleDate = publishedArticleDates.get(pathname);
+
+        if (articleDate) item.lastmod = new Date(articleDate).toISOString();
+
+        return item;
+      },
+      namespaces: {
+        news: false,
+        xhtml: false,
+        image: false,
+        video: false,
       },
     }),
     react(),

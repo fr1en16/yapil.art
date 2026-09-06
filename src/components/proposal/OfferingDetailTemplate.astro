@@ -394,14 +394,11 @@ const linksNumber = section === 'services' ? '06' : '05';
     grid-column: 1 / 6;
   }
   :global(body.website-service-page main .website-faq__heading h2) {
-    max-width: 7ch;
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(3.75rem, 6.8vw, 7rem) !important;
     font-weight: 400;
-    line-height: .88;
-    letter-spacing: -.045em;
-    text-wrap: balance;
+    line-height: 1;
+    letter-spacing: -.02em;
   }
   .website-faq__list {
     grid-column: 7 / 13;
@@ -502,11 +499,7 @@ const linksNumber = section === 'services' ? '06' : '05';
     .website-fact + .website-fact { padding-left: 0; border-left: 0; }
     .website-fact + .website-fact::before { content: none; }
     .website-faq { display: block; }
-    .website-faq__heading { margin-bottom: 3.5rem; }
-    :global(body.website-service-page main .website-faq__heading h2) {
-      max-width: 9ch;
-      font-size: clamp(3.25rem, 14vw, 5rem) !important;
-    }
+    .website-faq__heading { margin-bottom: clamp(2rem, 4vw, 3rem); }
     .website-faq__item summary {
       grid-template-columns: 2.75rem minmax(0, 1fr) 2.25rem;
       min-height: 5rem;

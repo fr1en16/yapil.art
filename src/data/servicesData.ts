@@ -143,7 +143,7 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     casesTitle: 'Сайты в действии',
     caseSlugs: ['compass', 'compass-management', 'bebble', 'business-cars', 'boya', 'uaz'],
-    faqTitle: 'Вопросы о разработке сайтов',
+    faqTitle: 'FAQ',
     faq: [
       {
         question: 'На чем вы делаете сайты — на конструкторах или кодом?',

@@ -163,6 +163,7 @@ const contentRoot = path.join(projectRoot, 'content-drafts/seo');
 const serviceDirectories = (await readdir(contentRoot, { withFileTypes: true })).filter((entry) => entry.isDirectory());
 let publishedArticles = 0;
 let generatedDrafts = 0;
+let excludedDraftRoutes = 0;
 
 for (const directory of serviceDirectories) {
   const directoryPath = path.join(contentRoot, directory.name);
@@ -173,6 +174,9 @@ for (const directory of serviceDirectories) {
     if (file.startsWith('trend-')) {
       generatedDrafts += 1;
       if (status !== 'draft') errors.push(`Generated article is not draft: ${directory.name}/${file}`);
+      const draftPath = `/articles/${file.replace(/\.md$/, '')}`;
+      if (htmlByPath.has(draftPath)) errors.push(`Draft article was built as a public route: ${draftPath}`);
+      else excludedDraftRoutes += 1;
     } else if (status === 'published') {
       publishedArticles += 1;
     }
@@ -193,6 +197,7 @@ console.log(JSON.stringify({
   sitemapUrls: sitemapUrls.length,
   publishedArticles,
   generatedDrafts,
+  excludedDraftRoutes,
   uniqueTitles: seenTitles.size,
   uniqueCanonicals: seenCanonicals.size,
   checkedSchemaPages,
