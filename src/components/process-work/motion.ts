@@ -170,17 +170,17 @@ export function initProcessWork() {
       ]);
       const roadY = Math.min(height * .43, height - 250);
       const axleY = roadY - radius;
-      const cardWidth = stage.clientWidth;
-
       ctx.clearRect(0, 0, width, height);
       ctx.strokeStyle = '#f5f5f5';
       ctx.fillStyle = '#f5f5f5';
       ctx.lineWidth = 1.5;
+      const circular = smooth(clamp((progress - .28) / .72));
+      const side = 2 * radius * ((1 - fraction) * Math.sin(Math.PI / lower) + fraction * Math.sin(Math.PI / upper));
+      const apothem = radius * ((1 - fraction) * Math.cos(Math.PI / lower) + fraction * Math.cos(Math.PI / upper));
       ctx.beginPath();
       for (let px = 0; px <= width; px += 2) {
-        const localCardX = ((px % cardWidth) + cardWidth) % cardWidth;
-        const wave = Math.abs(((localCardX / 64) % 1) - .5) * 2;
-        const y = roadY + Math.pow(1 - wave, 2) * 14;
+        const local = ((px + side / 2) % side) - side / 2;
+        const y = roadY + apothem * (Math.cosh(local / apothem) - 1) * (1 - circular);
         if (px === 0) ctx.moveTo(px, y); else ctx.lineTo(px, y);
       }
       ctx.stroke();

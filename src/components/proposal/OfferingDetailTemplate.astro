@@ -494,10 +494,16 @@ const linksNumber = section === 'services' ? '06' : '05';
   }
 
   @media (max-width: 48rem) {
-    .website-facts { grid-template-columns: 1fr; }
-    .website-fact { grid-column: auto; min-height: 0; padding: 1.5rem 0; border-bottom: 0; }
+    :global(body.website-service-page main #scope .homepage-service-description),
+    :global(body.website-service-page main .mobile-work-intro),
+    :global(body.website-service-page main .step-copy p),
+    .website-fact p,
+    .website-faq__answer p { font-size: 1rem; line-height: 1.35; }
+    .website-facts { grid-template-columns: 1fr; row-gap: .5rem; padding-block: clamp(4rem, 13vw, 6rem); }
+    .website-fact { grid-column: auto; display: grid; grid-template-columns: 2rem minmax(0, 1fr); column-gap: 1rem; align-items: start; min-height: 0; padding: 1.1rem 0; border-bottom: 0; }
     .website-fact + .website-fact { padding-left: 0; border-left: 0; }
     .website-fact + .website-fact::before { content: none; }
+    .website-fact p { max-width: none; margin: 0; }
     .website-faq { display: block; }
     .website-faq__heading { margin-bottom: clamp(2rem, 4vw, 3rem); }
     .website-faq__item summary {
