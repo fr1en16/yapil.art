@@ -224,6 +224,7 @@ export default function ServicesAnimatedModal({
   intro,
   sectionId = 'services',
   typographyOff = false,
+  homepageModal = false,
 }: {
   theme?: 'dark' | 'light';
   personal?: boolean;
@@ -236,6 +237,7 @@ export default function ServicesAnimatedModal({
   intro?: string;
   sectionId?: string;
   typographyOff?: boolean;
+  homepageModal?: boolean;
 }) {
   const isLight = theme === 'light';
   const isEn = lang === 'en';
@@ -364,7 +366,7 @@ export default function ServicesAnimatedModal({
           >
             {displayedServices.map((item, index) => (
               <div key={item.id} role="listitem" className="w-full">
-                {homepage ? <HomepageServiceRow item={item} isLight={isLight} /> : <ServiceRow
+                {homepage ? <HomepageServiceRow item={item} isLight={isLight} onOpenModal={homepageModal ? handleOpenModal : undefined} /> : <ServiceRow
                   item={item}
                   index={index}
                   isLight={isLight}
@@ -406,12 +408,15 @@ export default function ServicesAnimatedModal({
 function HomepageServiceRow({
   item,
   isLight,
+  onOpenModal,
 }: {
   item: ServiceItem;
   isLight: boolean;
+  onOpenModal?: (service: ServiceItem) => void;
 }) {
-  const rowRef = useRef<HTMLAnchorElement>(null);
+  const rowRef = useRef<HTMLElement | null>(null);
   const [isInView, setIsInView] = useState(false);
+  const setRowRef = (node: HTMLElement | null) => { rowRef.current = node; };
 
   useEffect(() => {
     const mobileMotion = window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)');
@@ -437,12 +442,7 @@ function HomepageServiceRow({
     };
   }, []);
 
-  return (
-    <a
-      ref={rowRef}
-      href={`/services/${item.id}`}
-      className={`homepage-service-row${isLight ? ' homepage-service-row--light' : ''}${isInView ? ' homepage-service-row--in-view' : ''}`}
-    >
+  const content = <>
       <span className="homepage-service-media" aria-hidden="true">
         <img src={item.image} alt="" loading="lazy" decoding="async" width={1000} height={576} />
       </span>
@@ -453,6 +453,16 @@ function HomepageServiceRow({
         </span>
         <span className="homepage-service-description">{item.description}</span>
       </span>
+    </>;
+  const className = `homepage-service-row${isLight ? ' homepage-service-row--light' : ''}${isInView ? ' homepage-service-row--in-view' : ''}`;
+
+  return onOpenModal ? (
+    <button ref={setRowRef} type="button" onClick={() => onOpenModal(item)} className={className} aria-haspopup="dialog">
+      {content}
+    </button>
+  ) : (
+    <a ref={setRowRef} href={`/services/${item.id}`} className={className}>
+      {content}
     </a>
   );
 }

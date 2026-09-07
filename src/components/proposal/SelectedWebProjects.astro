@@ -1,11 +1,13 @@
 ---
+interface Props { autoplay?: boolean; }
+const { autoplay = false } = Astro.props;
 const projects = [
   {name:'Kirpi', tags:'Интернет-магазин', image:'https://media.yapil.art/case/kirpi-cover.182cc9120e9bbe71.webp', slug:'kirpi', alt:'Интернет-магазин модного бренда Kirpi'},
   {name:'Shanding', tags:'Дизайн, сайт, полиграфия', image:'https://media.yapil.art/case/shanding.d6eb5d5dc754711d.webp', slug:'shanding', alt:'Сайт и визуальный стиль логистической компании Shanding'},
   {name:'Compass', tags:'Брендинг, дизайн, сайт', image:'https://media.yapil.art/case/compass.43224367a0a82ebc.webp', slug:'compass', alt:'Айдентика и сайт консалтинговой компании Compass'},
 ];
 ---
-<section class="selected-web-projects" id="work" aria-labelledby="work-title" data-selected-work>
+<section class:list={['selected-web-projects', { 'is-autoplay': autoplay }]} id="work" aria-labelledby="work-title" data-selected-work data-autoplay={autoplay ? 'true' : undefined}>
   <div class="work-pin">
     <div class="work-left">
       <h2 id="work-title">Избранные<br />проекты</h2>
@@ -30,6 +32,11 @@ const projects = [
           </div>
         </div>
       </div>
+      <div class="desktop-project-nav" aria-label="Навигация по проектам">
+        <button type="button" data-desktop-prev aria-label="Предыдущий проект">←</button>
+        <span data-desktop-count aria-live="polite">01 / {String(projects.length).padStart(2,'0')}</span>
+        <button type="button" data-desktop-next aria-label="Следующий проект">→</button>
+      </div>
     </div>
   </div>
 </section>
@@ -41,6 +48,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 function initSelectedWork(){
   document.querySelectorAll<HTMLElement>('[data-selected-work]').forEach((root)=>{
     if(root.dataset.ready)return;root.dataset.ready='true';
+    const autoplayMode=root.dataset.autoplay==='true';
     gsap.registerPlugin(ScrollTrigger);
     const media=gsap.matchMedia();
     media.add('(max-width: 991px)',()=>{
@@ -159,6 +167,52 @@ function initSelectedWork(){
       const dim=.28;
       const hidden='polygon(100% 100%,100% 100%,100% 100%,100% 100%)';
       const full='polygon(0% 0%,100% 0%,100% 101%,0% 101%)';
+      if(autoplayMode){
+        const hiddenBack='polygon(0% 100%,0% 100%,0% 100%,0% 100%)';
+        const previous=root.querySelector<HTMLButtonElement>('[data-desktop-prev]');
+        const next=root.querySelector<HTMLButtonElement>('[data-desktop-next]');
+        const count=root.querySelector<HTMLElement>('[data-desktop-count]');
+        if(!previous||!next||!count)return;
+        let active=0;
+        let timer=0;
+        let inViewport=false;
+        let transitionTimeline:gsap.core.Timeline|null=null;
+        const updateState=()=>{
+          items.forEach((item,i)=>{item.setAttribute('aria-pressed',String(i===active));gsap.set(item,{opacity:i===active?1:dim})});
+          slides.forEach((slide,i)=>{slide.inert=i!==active});
+          count.textContent=`${String(active+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`;
+        };
+        const show=(index:number,direction=1)=>{
+          const target=(index+slides.length)%slides.length;
+          if(target===active)return;
+          const outgoing=slides[active];
+          const incoming=slides[target];
+          transitionTimeline?.kill();
+          gsap.killTweensOf([outgoing,incoming,outgoing.querySelector('img'),incoming.querySelector('img')]);
+          slides.forEach((slide,i)=>{if(i!==active&&i!==target)gsap.set(slide,{clipPath:hidden,zIndex:0})});
+          gsap.set(outgoing,{clipPath:full,zIndex:1});
+          gsap.set(incoming,{clipPath:direction>0?hidden:hiddenBack,zIndex:2});
+          gsap.set(incoming.querySelector('img'),{scale:1.1});
+          active=target;
+          updateState();
+          transitionTimeline=gsap.timeline({defaults:{duration:transition,ease:'power2.inOut'}})
+            .to(incoming,{clipPath:full},0)
+            .to(incoming.querySelector('img'),{scale:1,ease:'power2.out'},0)
+            .to(outgoing.querySelector('img'),{scale:1.2,ease:'power2.inOut'},0)
+            .set(outgoing,{clipPath:hidden,zIndex:0})
+            .eventCallback('onComplete',()=>{transitionTimeline=null});
+        };
+        const stop=()=>{window.clearInterval(timer);timer=0};
+        const start=()=>{stop();if(!inViewport||document.hidden)return;timer=window.setInterval(()=>show(active+1,1),3000)};
+        const goPrevious=()=>{show(active-1,-1);start()};
+        const goNext=()=>{show(active+1,1);start()};
+        const itemHandlers=items.map((item,i)=>{const listener=()=>{show(i,i>active?1:-1);start()};item.addEventListener('click',listener);return listener});
+        const onVisibility=()=>document.hidden?stop():start();
+        const observer=new IntersectionObserver(([entry])=>{inViewport=entry.isIntersecting&&entry.intersectionRatio>=.2;if(inViewport)start();else stop()},{threshold:[0,.2]});
+        previous.addEventListener('click',goPrevious);next.addEventListener('click',goNext);document.addEventListener('visibilitychange',onVisibility);observer.observe(root);
+        gsap.set(slides,{clipPath:hidden,zIndex:0,willChange:'clip-path'});gsap.set(images,{scale:1.1,transformOrigin:'50% 50%',force3D:true,willChange:'transform'});gsap.set(slides[0],{clipPath:full,zIndex:2});gsap.set(images[0],{scale:1});updateState();
+        return()=>{stop();observer.disconnect();transitionTimeline?.kill();previous.removeEventListener('click',goPrevious);next.removeEventListener('click',goNext);document.removeEventListener('visibilitychange',onVisibility);items.forEach((item,i)=>item.removeEventListener('click',itemHandlers[i]));slides.forEach(slide=>slide.inert=false)};
+      }
       gsap.set(items,{opacity:dim,willChange:'opacity'});
       gsap.set(slides,{clipPath:hidden,willChange:'clip-path'});
       gsap.set(images,{scale:1.1,transformOrigin:'50% 50%',force3D:true,willChange:'transform'});
@@ -181,7 +235,7 @@ function initSelectedWork(){
       timeline.to({}, {duration:.01},end-.01);
       const duration=timeline.duration();
       const snapPoints=Object.values(timeline.labels).map(time=>time/duration).sort((a,b)=>a-b);
-      let active=-1;const update=()=>{const next=Math.max(0,Math.min(slides.length-1,Math.ceil(timeline.time())-1));if(next===active)return;active=next;slides.forEach((slide,i)=>{slide.inert=i!==active;items[i].setAttribute('aria-pressed',String(i===active))})};timeline.eventCallback('onUpdate',update);update();
+      let active=-1;const update=()=>{let next=0;for(let i=1;i<slides.length;i++){if(timeline.time()>=timeline.labels[`s${i}`]-.8)next=i}if(next===active)return;active=next;slides.forEach((slide,i)=>{slide.inert=i!==active;items[i].setAttribute('aria-pressed',String(i===active))})};timeline.eventCallback('onUpdate',update);update();
       const trigger=ScrollTrigger.create({trigger:root,pin:true,pinSpacing:true,anticipatePin:1,animation:timeline,start:'top top',end:()=>`+=${Math.round(innerHeight*end)}`,scrub:.8,invalidateOnRefresh:true,snap:{snapTo:(_value,self)=>{if(!self)return _value;const progress=gsap.utils.clamp(0,1,(self.scroll()-self.start)/(self.end-self.start));let lower=snapPoints[0],upper=snapPoints.at(-1)!;for(let i=0;i<snapPoints.length-1;i++){if(progress>=snapPoints[i]&&progress<=snapPoints[i+1]){lower=snapPoints[i];upper=snapPoints[i+1];break}}if(lower===upper)return lower;const local=(progress-lower)/(upper-lower);return self.direction>0?(local>=.2?upper:lower):(local<=.8?lower:upper)},duration:{min:.35,max:.55},delay:.08,ease:'power1.inOut',inertia:false}});
       const handlers=items.map((item,i)=>{const listener=()=>{const time=timeline.labels[`s${i}`];const top=trigger.start+(trigger.end-trigger.start)*time/duration;window.scrollTo({top,behavior:'smooth'})};item.addEventListener('click',listener);return listener});
       return()=>{items.forEach((item,i)=>item.removeEventListener('click',handlers[i]));slides.forEach(slide=>slide.inert=false)};
@@ -196,8 +250,11 @@ document.addEventListener('astro:page-load',initSelectedWork);
 <style>
 .selected-web-projects{height:100svh;margin-top:clamp(72px,8vw,120px);color:#fd4b32;font-family:'Inter Tight Variable',Arial,sans-serif}.work-pin{position:relative;height:100svh;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gap);overflow:hidden}.work-left{grid-column:span 5;padding:50px 0 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}.work-left h2{margin:0;font:400 clamp(64px,7.4vw,124px)/.98 Oranienbaum,Georgia,serif;letter-spacing:-.035em}.work-list{margin-top:50px}.work-item{display:flex;align-items:center;gap:16px;width:100%;padding:22px 0;border:0;border-bottom:1px solid currentColor;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}.work-item:last-child{border-bottom:0}.project-number{font:14px ui-monospace,monospace}.project-name{font:400 clamp(28px,2.5vw,48px)/1 Oranienbaum,serif}.project-tags{margin-left:auto;font:11px ui-monospace,monospace;text-transform:uppercase;text-align:right;max-width:45%}.work-images{grid-column:span 7;position:relative;min-width:0;height:100%;background:#f5f5f5}.work-slide{position:absolute;inset:0;overflow:hidden;text-decoration:none;will-change:clip-path;clip-path:polygon(100% 100%,100% 100%,100% 100%,100% 100%)}.work-slide:not(:first-child){clip-path:polygon(100% 100%,100% 100%,100% 100%,100% 100%)}.work-slide img{width:100%;height:100%;object-fit:cover;display:block;will-change:transform}.project-cta{position:absolute;left:50%;top:60%;width:76px;height:76px;display:grid;place-items:center;border-radius:50%;transform:translate(-50%,-50%);opacity:0;background:#fd4b32;color:#f5f5f5;font-size:32px;transition:opacity .25s}.work-slide:hover .project-cta,.work-slide:focus-visible .project-cta{opacity:1}.mobile-caption{display:none}
 .work-intro,.mobile-work-intro,.mobile-project-meta{display:none}.mobile-slides{display:contents}
+.desktop-project-nav{display:none}
 @media(min-width:992px){.work-images{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--grid-gap)}.work-intro{display:block;grid-column:3/span 2;margin:50px 0 0;font-size:clamp(16px,1.15vw,20px);line-height:1.16;letter-spacing:-.015em;max-width:22ch}}
 @media(max-width:991px){.selected-web-projects{height:auto;margin-top:clamp(112px,18vw,152px)}.work-pin{position:relative;height:auto;display:block;overflow:visible}.work-left{padding:0}.work-left h2{font-size:clamp(58px,15vw,92px);line-height:.9}.work-list{display:none}.mobile-work-intro{display:block;width:72%;margin:28px 0 0 auto;font-size:16px;line-height:1.3}.work-images{display:block;height:auto;margin-top:40px;background:transparent}.work-intro{display:none}.mobile-slides{display:grid;position:relative;aspect-ratio:1/.96;overflow:hidden;background:#f5f5f5;touch-action:pan-y;user-select:none}.work-slide,.work-slide:not(:first-child){grid-area:1/1;position:relative;height:100%;min-height:0;visibility:hidden;pointer-events:none;clip-path:polygon(100% 100%,100% 100%,100% 100%,100% 100%);will-change:clip-path}.work-slide:first-child,.work-slide.is-active{visibility:visible;pointer-events:auto;clip-path:polygon(0% 0%,100% 0%,100% 101%,0% 101%)}.work-slide img{height:100%;object-fit:cover;transform:none}.mobile-project-meta{display:block;padding-top:16px}.mobile-project-tags{margin:0 0 8px;font:11px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em}.mobile-project-row{display:flex;align-items:center;justify-content:space-between;gap:16px}.mobile-project-link{font:400 34px/1 Oranienbaum,Georgia,serif;text-decoration:none}.mobile-project-nav{display:flex;align-items:center;gap:12px;padding:5px 0;border:0;border-radius:0}.mobile-project-nav button{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;background:transparent;color:inherit;font-size:20px;line-height:1;cursor:pointer}.mobile-project-count{min-width:20px;text-align:center;font:13px ui-monospace,monospace}.project-cta,.mobile-caption{display:none}}
 @media(max-width:520px){.mobile-slides{aspect-ratio:1/.98}}
 @media(prefers-reduced-motion:reduce){.selected-web-projects{height:auto}.work-pin{position:relative;height:auto}.work-list{display:none}.work-images{display:grid;height:auto;gap:16px}.work-slide,.work-slide:not(:first-child){position:relative;height:75svh;clip-path:none!important}.mobile-caption{display:block;position:absolute;bottom:0;padding:20px;color:#f5f5f5;background:linear-gradient(transparent,#0009)}}
+.selected-web-projects.is-autoplay .work-images{background:transparent}
+@media(min-width:992px){.selected-web-projects.is-autoplay .desktop-project-nav{position:absolute;right:24px;bottom:24px;z-index:4;display:flex;align-items:center;gap:12px;padding:5px 0;color:#fd4b32}.selected-web-projects.is-autoplay .desktop-project-nav button{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;background:transparent;color:inherit;font:20px/1 inherit;cursor:pointer}.selected-web-projects.is-autoplay .desktop-project-nav span{min-width:62px;text-align:center;font:13px ui-monospace,monospace}}
 </style>

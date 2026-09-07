@@ -8,9 +8,10 @@ interface ProcessStep {
 interface Props {
   embedded?: boolean;
   steps?: ProcessStep[];
+  autoplay?: boolean;
 }
 
-const { embedded = false, steps: suppliedSteps } = Astro.props;
+const { embedded = false, steps: suppliedSteps, autoplay = false } = Astro.props;
 const ProcessHeading = embedded ? 'h2' : 'h1';
 const StepHeading = embedded ? 'h3' : 'h2';
 const defaultSteps = [
@@ -34,7 +35,7 @@ const projects = [
   {name:'Kirpi', tags:'Интернет-магазин', image:'https://media.yapil.art/case/kirpi-cover.182cc9120e9bbe71.webp', slug:'kirpi', alt:'Интернет-магазин модного бренда Kirpi'},
 ];
 ---
-<div class="process-work">
+<div class:list={['process-work', { 'is-autoplay': autoplay }]} data-autoplay={autoplay ? 'true' : undefined}>
 <section class="process-section" id="process" aria-labelledby="pw-process-title" style={`--process-screens: ${steps.length + 1}; --process-columns: ${steps.length};`}>
   <div class="process-pin">
     <div class="process-heading"><div class="route" aria-hidden="true"><span>А</span><span>→</span><span>Б</span></div><p data-reveal>Путь бывает непростым.<br />Мы помогаем двигаться вперёд.</p><ProcessHeading class="process-title" id="pw-process-title" data-reveal>Наш <span class="process-title-break">процесс</span></ProcessHeading></div>
@@ -75,4 +76,10 @@ const projects = [
 
 <style>
 @media(min-width:992px) and (prefers-reduced-motion:no-preference){.work-section{height:calc(100svh * var(--work-screens,3))}.work-pin{position:sticky;top:0}.work-slide:not(:first-child){clip-path:inset(100% 0 0 100%)}.work-item:not(:first-child){opacity:.28}}
+</style>
+
+<style>
+.process-work.is-autoplay .process-section{height:100svh;min-height:44rem}
+.process-work.is-autoplay .process-pin{position:relative;top:auto}
+@media(max-width:991px){.process-work.is-autoplay .process-section{height:100svh;min-height:40rem}}
 </style>

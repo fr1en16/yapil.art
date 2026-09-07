@@ -1,0 +1,44 @@
+---
+import ProcessWork from '../../components/process-work/ProcessWork.astro';
+import OfferingDetailTemplate from '../../components/proposal/OfferingDetailTemplate.astro';
+import { servicesData } from '../../data/servicesData';
+
+const service = servicesData.websites;
+const url = new URL('/services/websites-static', Astro.site).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.name,
+  description: service.seo.description,
+  url,
+};
+---
+
+<OfferingDetailTemplate
+  title={service.seo.title}
+  description={service.seo.description}
+  {jsonLd}
+  section="services"
+  slug={service.slug}
+  name={service.name}
+  heroH1={service.heroH1}
+  heroLead={service.heroLead}
+  metrics={service.metrics}
+  firstTitle={service.formatsTitle}
+  firstCards={service.formats.map((item) => ({ title: item.title, text: item.description }))}
+  secondTitle={service.deliverablesTitle}
+  secondCards={service.deliverables}
+  rowsTitle={service.processTitle}
+  rows={service.steps}
+  casesTitle={service.casesTitle}
+  caseSlugs={service.caseSlugs}
+  faqTitle={service.faqTitle}
+  faq={service.faq}
+  linksTitle={service.crossLinksTitle}
+  links={service.crossLinks}
+  ctaTitle={service.ctaTitle}
+  ctaLead={service.ctaLead}
+  autoplay
+>
+  <ProcessWork slot="process-work" embedded autoplay />
+</OfferingDetailTemplate>

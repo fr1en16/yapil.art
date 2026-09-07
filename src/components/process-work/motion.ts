@@ -1,18 +1,31 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+function playWhileVisible(element: Element, animation: gsap.core.Animation) {
+  animation.pause();
+  const observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) animation.play();
+    else animation.pause();
+  }, { threshold: .2 });
+  observer.observe(element);
+  return () => observer.disconnect();
+}
+
 // A single scroll coordinate drives the road, rolling polygon, and card reveals.
 export function initProcessWork() {
   const root = document.querySelector<HTMLElement>('.process-work');
   if (!root || root.dataset.motionReady === 'true') return;
   root.dataset.motionReady = 'true';
+  const autoplay = root.dataset.autoplay === 'true';
   gsap.registerPlugin(ScrollTrigger);
   const media = gsap.matchMedia();
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (!reduce.matches) {
     root.querySelectorAll<HTMLElement>('[data-reveal]').forEach((element) => {
-      gsap.from(element, { opacity: 0, filter: 'blur(10px)', y: 15, duration: .65,
-        scrollTrigger: { trigger: element, start: 'top 90%', once: true } });
+      gsap.from(element, autoplay
+        ? { opacity: 0, filter: 'blur(10px)', y: 15, duration: .65, delay: .15 }
+        : { opacity: 0, filter: 'blur(10px)', y: 15, duration: .65,
+          scrollTrigger: { trigger: element, start: 'top 90%', once: true } });
     });
   }
   media.add('(min-width: 992px) and (prefers-reduced-motion: no-preference)', () => {
@@ -82,11 +95,14 @@ export function initProcessWork() {
       ctx!.setTransform(dpr,0,0,dpr,0,0);draw();
     }
     const observer=new ResizeObserver(resize);observer.observe(stage);resize();
-    gsap.fromTo(state,{progress:.1},{progress:1,ease:'none',onUpdate:draw,scrollTrigger:{trigger:section,start:'top top',end:'bottom bottom',scrub:.25}});
+    const processTween = gsap.fromTo(state, { progress: .1 }, autoplay
+      ? { progress: 1, duration: 5.2, ease: 'power2.inOut', repeat: -1, repeatDelay: .6, paused: true, onUpdate: draw }
+      : { progress: 1, ease: 'none', onUpdate: draw, scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: .25 } });
+    const stopWatchingProcess = autoplay ? playWhileVisible(section, processTween) : undefined;
 
     const work=root.querySelector<HTMLElement>('.work-section')!;
     if (!work) {
-      return ()=>{observer.disconnect();cards.forEach(card=>card.style.removeProperty('clip-path'));};
+      return ()=>{stopWatchingProcess?.();processTween.kill();observer.disconnect();cards.forEach(card=>card.style.removeProperty('clip-path'));};
     }
     const items=gsap.utils.toArray<HTMLButtonElement>('.work-item', root);
     const slides=gsap.utils.toArray<HTMLAnchorElement>('.work-slide', root);
@@ -131,7 +147,7 @@ export function initProcessWork() {
       const listener=(event:PointerEvent)=>{const rect=slide.getBoundingClientRect();cta.style.left=`${event.clientX-rect.left}px`;cta.style.top=`${event.clientY-rect.top}px`;};
       slide.addEventListener('pointermove',listener);return listener;
     });
-    return ()=>{observer.disconnect();cards.forEach(card=>card.style.removeProperty('clip-path'));items.forEach((item,i)=>{item.removeEventListener('click',clickHandlers[i]);item.removeAttribute('aria-pressed');});slides.forEach((slide,i)=>{slide.inert=false;slide.removeEventListener('pointermove',pointerHandlers[i]);});};
+    return ()=>{stopWatchingProcess?.();processTween.kill();observer.disconnect();cards.forEach(card=>card.style.removeProperty('clip-path'));items.forEach((item,i)=>{item.removeEventListener('click',clickHandlers[i]);item.removeAttribute('aria-pressed');});slides.forEach((slide,i)=>{slide.inert=false;slide.removeEventListener('pointermove',pointerHandlers[i]);});};
   });
   media.add('(max-width: 991px) and (prefers-reduced-motion: no-preference)', () => {
     const section = root.querySelector<HTMLElement>('.process-section');
@@ -218,21 +234,20 @@ export function initProcessWork() {
     observer.observe(stage);
     resize();
     const travel = () => Math.max(0, track.scrollWidth - stage.clientWidth);
-    const timeline = gsap.timeline()
-      .to([track, canvas], { x: () => -travel(), duration: 1, ease: 'none' }, 0)
-      .to(state, { progress: 1, duration: 1, ease: 'none', onUpdate: draw }, 0);
-    const trigger = ScrollTrigger.create({
-      trigger: section,
-      animation: timeline,
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: .35,
+    const timeline = gsap.timeline(autoplay ? { paused: true, repeat: -1, repeatDelay: .6 } : { paused: true })
+      .to([track, canvas], { x: () => -travel(), duration: 1, ease: autoplay ? 'power2.inOut' : 'none' }, 0)
+      .to(state, { progress: 1, duration: 1, ease: autoplay ? 'power2.inOut' : 'none', onUpdate: draw }, 0);
+    if (autoplay) timeline.duration(5.2);
+    const trigger = autoplay ? undefined : ScrollTrigger.create({
+      trigger: section, animation: timeline, start: 'top top', end: 'bottom bottom', scrub: .35,
       invalidateOnRefresh: true,
       snap: { snapTo: 1 / (cards.length - 1), duration: { min: .25, max: .45 }, delay: .06, inertia: false },
     });
+    const stopWatching = autoplay ? playWhileVisible(section, timeline) : undefined;
     return () => {
       observer.disconnect();
-      trigger.kill();
+      stopWatching?.();
+      trigger?.kill();
       timeline.kill();
       gsap.set([track, canvas], { clearProps: 'transform' });
     };
