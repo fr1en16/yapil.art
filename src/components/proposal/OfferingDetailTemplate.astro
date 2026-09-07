@@ -87,10 +87,13 @@ const linksNumber = section === 'services' ? '06' : '05';
 
     {isEnhancedService && <AboutCompact theme="light" websites />}
 
+    {hasProcessWork && <div class="service-block-gap" aria-hidden="true"></div>}
     {hasProcessWork && <slot name="process-work" />}
 
+    {hasFormatShowcase && <div class="service-block-gap" aria-hidden="true"></div>}
     {hasFormatShowcase && <ServicesAnimatedModal client:visible homepage theme="light" sectionId="scope" heading="Подбираем формат под задачу бизнеса" intro="Выберите тип сайта, чтобы обсудить проект." items={websiteFormats} />}
 
+    {isEnhancedService && <div class="service-block-gap" aria-hidden="true"></div>}
     <div class="editorial-body">
       {isEnhancedService && (
         <section class="website-facts" aria-label="Условия разработки сайта">
@@ -164,6 +167,7 @@ const linksNumber = section === 'services' ? '06' : '05';
 
     </div>
     {!hasProcessWork && <ProduxPortfolio theme="light" title={casesTitle} projectSlugs={caseSlugs} seamless />}
+    {isEnhancedService && <div class="service-block-gap" aria-hidden="true"></div>}
     <div class="editorial-body">
       {isEnhancedService ? (
         <section class="editorial-section website-faq" aria-labelledby="faq-title">
@@ -266,6 +270,7 @@ const linksNumber = section === 'services' ? '06' : '05';
 
     </div>
 
+    {isEnhancedService && <div class="service-block-gap" aria-hidden="true"></div>}
     <Contacts
       theme="light"
       title={ctaTitle}
@@ -332,12 +337,22 @@ const linksNumber = section === 'services' ? '06' : '05';
 </script>
 
 <style>
-  :global(body.website-service-page) { --page-neutral-surface: #f5f5f5; --bg-primary: #f5f5f5; --bg-card: #f5f5f5; --bg-section-light: #f5f5f5; }
+  :global(body.website-service-page) {
+    --page-neutral-surface: #f5f5f5;
+    --bg-primary: #f5f5f5;
+    --bg-card: #f5f5f5;
+    --bg-section-light: #f5f5f5;
+    --service-block-gap: clamp(4.5rem, 8vw, 8rem);
+  }
   :global(body.website-service-page [class~="bg-white"]),
   :global(body.website-service-page [class~="bg-white/80"]) { background-color: #f5f5f5 !important; }
   :global(body.website-service-page .editorial-page) { --paper: #f5f5f5; }
   :global(body.website-service-page #scope) { padding-bottom: 0; }
   :global(body.website-service-page .editorial-body) { display: flow-root; }
+  .service-block-gap { width: 100%; height: var(--service-block-gap); background: var(--page-neutral-surface); }
+  :global(body.website-service-page .editorial-body > * + *) {
+    margin-top: var(--service-block-gap) !important;
+  }
   :global(body.website-service-page .editorial-page) { --editorial-muted: #1d1d1d; }
   :global(body.website-service-page .editorial-cover__bottom),
   :global(body.website-service-page .editorial-meta > div) { border-block-color: transparent; }

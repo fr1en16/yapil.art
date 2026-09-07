@@ -49,5 +49,9 @@ const jsonLd = {
   ctaTitle={service.ctaTitle}
   ctaLead={service.ctaLead}
 >
-  <ProcessWork slot="process-work" embedded steps={service.steps} />
+  <ProcessWork
+    slot="process-work"
+    embedded
+    steps={service.slug === 'websites' ? undefined : service.steps}
+  />
 </OfferingDetailTemplate>
