@@ -6,6 +6,7 @@ import GridOverlay from '../components/GridOverlay.astro';
 import SmoothScroll from '../components/SmoothScroll.astro';
 import Analytics from '@vercel/analytics/astro';
 import { ClientRouter } from 'astro:transitions';
+import { getSiteSettings } from '../lib/sanity';
 import '../styles/inter-tight.css';
 import '../styles/global.css';
 
@@ -23,7 +24,11 @@ interface Props {
   lang?: string;
 }
 
-const defaultImage = new URL('https://media.yapil.art/social-cover.9512ed9be1051235.webp', Astro.site).href;
+const settings = await getSiteSettings();
+const defaultImage = new URL(
+  settings?.defaultOgImage ?? 'https://media.yapil.art/social-cover.9512ed9be1051235.webp',
+  Astro.site,
+).href;
 
 const {
   title,
@@ -77,9 +82,9 @@ if (!hasSchemaType('Organization') && !hasSchemaType('ProfessionalService')) {
     '@id': 'https://yapil.art/#organization',
     name: 'Yapil',
     url: 'https://yapil.art',
-    logo: 'https://media.yapil.art/apple-touch-icon.f863e8a7cc523f9f.webp',
-    email: 'hi@yapil.art',
-    telephone: '+77067436197',
+    logo: settings?.logoUrl ?? 'https://media.yapil.art/apple-touch-icon.f863e8a7cc523f9f.webp',
+    email: settings?.contactEmail ?? 'hi@yapil.art',
+    telephone: settings?.contactPhone ?? '+77067436197',
     areaServed: ['KZ', 'UZ', 'RU', 'Worldwide'],
   });
 }

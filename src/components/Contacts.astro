@@ -1,7 +1,10 @@
 ---
 import type { LeadSource } from '../lib/crmTypes';
-import { getWhatsAppUrl } from '../utils/messengerLinks';
+import { getWhatsAppUrl, getTelegramUrl } from '../utils/messengerLinks';
+import { getSiteSettings } from '../lib/sanity';
 import ContactFormCard from './ContactFormCard.astro';
+
+const settings = await getSiteSettings();
 
 interface Props {
   theme?: 'dark' | 'light';
@@ -45,7 +48,10 @@ const currentUrl = new URL(currentPath, Astro.site).href;
 const whatsappHref = getWhatsAppUrl({
   pageUrl: currentUrl,
   sourceContext: source,
+  phone: settings?.whatsappPhone,
 });
+const telegramHref = getTelegramUrl({ username: settings?.telegramUsername });
+const contactEmail = settings?.contactEmail ?? 'hi@yapil.art';
 ---
 
 <section
@@ -74,7 +80,7 @@ const whatsappHref = getWhatsAppUrl({
             {displayLead}
           </p>
           <div class="contacts-cover-links">
-            <a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
+            <a href={telegramHref} target="_blank" rel="noopener noreferrer" class="contact-link-pill">
               <span class="contact-link-label">Telegram</span>
               <span class="contact-link-arrow" aria-hidden="true">↗</span>
             </a>
@@ -82,8 +88,8 @@ const whatsappHref = getWhatsAppUrl({
               <span class="contact-link-label">WhatsApp</span>
               <span class="contact-link-arrow" aria-hidden="true">↗</span>
             </a>
-            <a href="mailto:hi@yapil.art" class="contact-link-pill">
-              <span class="contact-link-label">hi@yapil.art</span>
+            <a href={`mailto:${contactEmail}`} class="contact-link-pill">
+              <span class="contact-link-label">{contactEmail}</span>
               <span class="contact-link-arrow" aria-hidden="true">↗</span>
             </a>
           </div>

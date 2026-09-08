@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
+import sanity from '@sanity/astro';
 import { readdirSync, readFileSync } from 'node:fs';
 import { buildPermanentRedirects, isIndexableGeoPath, isPrivatePath } from './src/data/seoPolicy.mjs';
 
@@ -63,6 +64,12 @@ export default defineConfig({
       },
     }),
     react(),
+    sanity({
+      projectId: 'j2cx2dtx',
+      dataset: 'production',
+      useCdn: false,
+      studioBasePath: '/admin',
+    }),
   ],
   vite: {
     plugins: [tailwindcss()],

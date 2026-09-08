@@ -1,6 +1,7 @@
 ---
 import { RuixenGradientFooter } from './ui/ruixen-gradient-footer';
-import { getWhatsAppUrl } from '../utils/messengerLinks';
+import { getWhatsAppUrl, getTelegramUrl } from '../utils/messengerLinks';
+import { getSiteSettings } from '../lib/sanity';
 
 interface Props {
   theme?: 'dark' | 'light';
@@ -13,12 +14,16 @@ const isLight = theme === 'light';
 const isEn = lang === 'en';
 const homePath = isEn ? '/en' : '/';
 
+const settings = await getSiteSettings();
 const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
 const whatsappHref = getWhatsAppUrl({
   pageUrl: currentUrl,
   sourceContext: 'footer_link',
+  phone: settings?.whatsappPhone,
 });
+const telegramHref = getTelegramUrl({ username: settings?.telegramUsername });
+const contactEmail = settings?.contactEmail ?? 'hi@yapil.art';
 
 const lightStops = [
   { offset: 0, color: '#FD4B32' },
@@ -65,9 +70,9 @@ const lightStops = [
 
         <nav aria-label={isEn ? "Contacts" : "Контакты"}>
           <h2>{isEn ? 'Get in touch' : 'На связи'}</h2>
-          <a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+          <a href={telegramHref} target="_blank" rel="noopener noreferrer">Telegram ↗</a>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
-          <a href="mailto:hi@yapil.art">Email ↗</a>
+          <a href={`mailto:${contactEmail}`}>Email ↗</a>
         </nav>
       </div>
     </div>

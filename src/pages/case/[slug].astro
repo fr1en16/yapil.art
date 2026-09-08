@@ -1,6 +1,7 @@
 ---
 import { mediaUrl, videoPoster } from '../../lib/media';
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getCases, type SanityCase } from '../../lib/sanity';
+import { renderCaseBody } from '../../lib/markdown';
 import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
@@ -9,29 +10,29 @@ import InstagramCarousels from '../../components/InstagramCarousels.astro';
 import '../../styles/taxi-analytics.css';
 
 export async function getStaticPaths() {
-  const cases = await getCollection('cases');
-  return cases.map((c) => ({ params: { slug: c.id }, props: { c } }));
+  const cases = await getCases();
+  return cases.map((c) => ({ params: { slug: c.slug }, props: { c } }));
 }
 
 interface Props {
-  c: CollectionEntry<'cases'>;
+  c: SanityCase;
 }
 
 const { c } = Astro.props;
-const { Content } = await render(c);
-const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.data.cover);
+const bodyHtml = renderCaseBody(c.body);
+const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.cover);
 const poster = isVideo
-  ? videoPoster(c.data.cover)
-  : c.data.cover;
-const ogImage = mediaUrl(`/open-graph/${c.id}.png`);
-const caseCoverUrl = c.data.cover.startsWith('http')
-  ? c.data.cover
-  : new URL(c.data.cover, Astro.site).href;
+  ? videoPoster(c.cover)
+  : c.cover;
+const ogImage = mediaUrl(`/open-graph/${c.slug}.png`);
+const caseCoverUrl = c.cover.startsWith('http')
+  ? c.cover
+  : new URL(c.cover, Astro.site).href;
 const metaDescriptionParts = [
-  `Кейс ${c.data.title}: ${c.data.summary.replace(/[.!?]+$/, '')}.`,
-  c.data.task?.replace(/[.!?]+$/, ''),
-  `Услуги: ${c.data.services.join(', ')}.`,
-  `Проект ${c.data.year} года из портфолио дизайн-студии Yapil.`,
+  `Кейс ${c.title}: ${c.summary.replace(/[.!?]+$/, '')}.`,
+  c.task?.replace(/[.!?]+$/, ''),
+  `Услуги: ${c.services.join(', ')}.`,
+  `Проект ${c.year} года из портфолио дизайн-студии Yapil.`,
   'Смотрите задачу, визуальное решение и материалы проекта.',
 ].filter(Boolean).join(' ');
 const metaDescription = metaDescriptionParts.length <= 160
@@ -42,13 +43,13 @@ const creativeWorkJsonLd = {
   '@graph': [
     {
       '@type': 'CreativeWork',
-      headline: `${c.data.title} — ${c.data.summary}`,
-      name: c.data.title,
-      description: c.data.summary,
-      dateCreated: c.data.year,
+      headline: `${c.title} — ${c.summary}`,
+      name: c.title,
+      description: c.summary,
+      dateCreated: c.year,
       image: caseCoverUrl,
       inLanguage: 'ru',
-      keywords: c.data.services.join(', '),
+      keywords: c.services.join(', '),
       creator: {
         '@type': 'Organization',
         name: 'Yapil',
@@ -59,7 +60,7 @@ const creativeWorkJsonLd = {
         name: 'Yapil',
         url: 'https://yapil.art',
       },
-      url: new URL(`/case/${c.id}`, Astro.site).href,
+      url: new URL(`/case/${c.slug}`, Astro.site).href,
     },
     {
       '@type': 'BreadcrumbList',
@@ -79,8 +80,8 @@ const creativeWorkJsonLd = {
         {
           '@type': 'ListItem',
           position: 3,
-          name: c.data.title,
-          item: new URL(`/case/${c.id}`, Astro.site).href,
+          name: c.title,
+          item: new URL(`/case/${c.slug}`, Astro.site).href,
         },
       ],
     },
@@ -89,7 +90,7 @@ const creativeWorkJsonLd = {
 ---
 
 <Base
-  title={`${c.data.title} · ${c.data.services.join(' / ')}`}
+  title={`${c.title} · ${c.services.join(' / ')}`}
   description={metaDescription}
   image={ogImage}
   type="article"
@@ -105,9 +106,9 @@ const creativeWorkJsonLd = {
       </a>
       <div class="case-heading">
         <div>
-          <h1>{c.data.title}</h1>
+          <h1>{c.title}</h1>
         </div>
-        <p class="case-summary">{c.data.summary}</p>
+        <p class="case-summary">{c.summary}</p>
       </div>
     </header>
 
@@ -117,7 +118,7 @@ const creativeWorkJsonLd = {
           <>
             <img
               src={poster}
-              alt={`${c.data.title} — ${c.data.summary}`}
+              alt={`${c.title} — ${c.summary}`}
               loading="eager"
               fetchpriority="high"
               decoding="async"
@@ -125,28 +126,28 @@ const creativeWorkJsonLd = {
             />
             <video
               data-lazy-video
-              data-src={c.data.cover}
+              data-src={c.cover}
               poster={poster}
               muted
               loop
               playsinline
               preload="none"
-              aria-label={`${c.data.title}: видео обложки проекта`}
+              aria-label={`${c.title}: видео обложки проекта`}
               class="case-cover-video"
             ></video>
           </>
-        ) : c.data.cover.startsWith('/') ? (
+        ) : c.cover.startsWith('/') ? (
           <img
-            src={c.data.cover}
-            alt={`${c.data.title} — ${c.data.summary}`}
+            src={c.cover}
+            alt={`${c.title} — ${c.summary}`}
             loading="eager"
             fetchpriority="high"
             decoding="async"
           />
         ) : (
           <img
-            src={c.data.cover}
-            alt={`${c.data.title} — ${c.data.summary}`}
+            src={c.cover}
+            alt={`${c.title} — ${c.summary}`}
             width="1600"
             height="1000"
             loading="eager"
@@ -157,28 +158,28 @@ const creativeWorkJsonLd = {
       </div>
     </div>
 
-    {(c.data.task || c.data.goal) && (
+    {(c.task || c.goal) && (
       <div class="case-brief container">
-        {c.data.task && (
+        {c.task && (
           <section aria-labelledby="task-title">
             <span>01</span>
             <h2 id="task-title">Задача</h2>
-            <p>{c.data.task}</p>
+            <p>{c.task}</p>
           </section>
         )}
-        {c.data.goal && (
+        {c.goal && (
           <section aria-labelledby="goal-title">
             <span>02</span>
             <h2 id="goal-title">Цель</h2>
-            <p>{c.data.goal}</p>
+            <p>{c.goal}</p>
           </section>
         )}
       </div>
     )}
 
     <div class="case-body container">
-      <Content />
-      {c.id === 'yatut' && <InstagramCarousels />}
+      <Fragment set:html={bodyHtml} />
+      {c.slug === 'yatut' && <InstagramCarousels />}
       <PdfSlider />
     </div>
 
@@ -186,7 +187,7 @@ const creativeWorkJsonLd = {
       theme="light"
       title="Понравился проект?"
       source="case_inquiry"
-      sourceDetails={`Кейс: ${c.data.title}`}
+      sourceDetails={`Кейс: ${c.title}`}
       gradientToDark
     />
   </article>

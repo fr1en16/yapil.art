@@ -1,9 +1,10 @@
 ---
 import ProcessWork from '../../components/process-work/ProcessWork.astro';
 import OfferingDetailTemplate from '../../components/proposal/OfferingDetailTemplate.astro';
-import { servicesData } from '../../data/servicesData';
+import { getServiceBySlug } from '../../lib/sanity';
 
-const service = servicesData.websites;
+const service = await getServiceBySlug('websites');
+if (!service) throw new Error('Sanity: service "websites" not found');
 const url = new URL('/services/websites-static', Astro.site).href;
 const jsonLd = {
   '@context': 'https://schema.org',

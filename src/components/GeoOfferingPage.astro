@@ -1,12 +1,12 @@
 ---
 import OfferingDetailTemplate from './proposal/OfferingDetailTemplate.astro';
 import ProcessWork from './process-work/ProcessWork.astro';
-import type { ServiceData } from '../data/servicesData';
+import type { SanityService } from '../lib/sanity';
 import type { CityData, DistrictData } from '../data/citiesData';
 import { geoServicesData } from '../data/geoServicesData';
 
 interface Props {
-  service: ServiceData;
+  service: SanityService;
   city: CityData;
   district?: DistrictData;
 }

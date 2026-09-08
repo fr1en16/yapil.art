@@ -1,6 +1,8 @@
 ---
 import OfferingIndexTemplate from '../../components/proposal/OfferingIndexTemplate.astro';
-import { servicesList } from '../../data/servicesData';
+import { getServices } from '../../lib/sanity';
+
+const servicesList = await getServices();
 
 const title = 'Услуги Yapil: сайты, айдентика, полиграфия и SMM';
 const description = 'Комплексные услуги дизайн-студии Yapil: разработка сайтов под ключ, айдентика и фирменный стиль, полиграфия и упаковка, инвест-презентации, SMM и сопровождение.';

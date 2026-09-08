@@ -1,13 +1,20 @@
 ---
+interface AboutCard {
+  title: string;
+  text: string;
+  icon: string;
+}
+
 interface Props {
   theme?: 'dark' | 'light';
   personal?: boolean;
   lang?: 'ru' | 'en';
   websites?: boolean;
   catalog?: boolean;
+  cards?: AboutCard[];
 }
 
-const { theme = 'dark', personal = false, lang = 'ru', websites = false, catalog = false } = Astro.props;
+const { theme = 'dark', personal = false, lang = 'ru', websites = false, catalog = false, cards: cardsOverride } = Astro.props;
 const isLight = theme === 'light';
 const isFeaturePage = websites || catalog;
 
@@ -119,13 +126,13 @@ const cardsWebsitesRu = [
   },
 ];
 
-const cards = websites
+const cards: AboutCard[] = cardsOverride ?? (websites
   ? cardsWebsitesRu
   : lang === 'en'
   ? cardsPersonalEn
   : personal
     ? cardsPersonalRu
-    : cardsStudioRu;
+    : cardsStudioRu);
 const CardHeading = isFeaturePage ? 'h3' : 'h2';
 ---
 

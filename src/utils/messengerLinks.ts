@@ -5,10 +5,12 @@
 export interface MessengerLinkOptions {
   pageUrl?: string;
   sourceContext?: string;
+  phone?: string;
+  username?: string;
 }
 
 export function getWhatsAppUrl(options: MessengerLinkOptions = {}): string {
-  const phone = '77067436197';
+  const phone = options.phone ?? '77067436197';
   let page = '/';
 
   if (options.pageUrl) {
@@ -32,6 +34,6 @@ export function getWhatsAppUrl(options: MessengerLinkOptions = {}): string {
 }
 
 export function getTelegramUrl(options: MessengerLinkOptions = {}): string {
-  const username = 'yakov_pil';
+  const username = options.username ?? 'yakov_pil';
   return `https://t.me/${username}`;
 }

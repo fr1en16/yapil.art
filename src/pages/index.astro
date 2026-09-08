@@ -10,11 +10,14 @@ import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
 import { getWhatsAppUrl } from '../utils/messengerLinks';
+import { getHomepage } from '../lib/sanity';
 
 const heroWhatsAppHref = getWhatsAppUrl({
   pageUrl: Astro.url.href,
   sourceContext: 'hero_cta',
 });
+
+const homepage = await getHomepage();
 
 const homePageJsonLd = {
   '@context': 'https://schema.org',
@@ -147,19 +150,19 @@ const homePageJsonLd = {
   jsonLd={homePageJsonLd}
 >
   <Hero
-    title="Дизайн, который<br />работает на бизнес"
-    description="Мы — дизайн-агентство Yapil. Создаём сайты и айдентику, которые выделяют компанию среди конкурентов и приносят заявки."
+    title={homepage?.hero.title ?? 'Дизайн, который<br />работает на бизнес'}
+    description={homepage?.hero.description ?? 'Мы — дизайн-агентство Yapil. Создаём сайты и айдентику, которые выделяют компанию среди конкурентов и приносят заявки.'}
     casesHref={heroWhatsAppHref}
-    ctaText="Связаться"
+    ctaText={homepage?.hero.ctaText ?? 'Связаться'}
     ctaExternal
     ripple
   />
-  <AboutCompact />
+  <AboutCompact cards={homepage?.aboutCards} />
   <Services homepage />
   <ProduxPortfolio />
   <VsyachinaInfinite />
   <ReviewsSlider />
-  <Founder description="Яков Пилипюк — дизайнер с восьмилетним опытом, который лежит в основе подхода Yapil. Мы уделяем внимание деталям и смыслу, объединяем сайты, айдентику и печатные материалы в единый визуальный язык и доводим проекты от первой идеи до запуска." />
+  <Founder description={homepage?.founderBio ?? 'Яков Пилипюк — дизайнер с восьмилетним опытом, который лежит в основе подхода Yapil. Мы уделяем внимание деталям и смыслу, объединяем сайты, айдентику и печатные материалы в единый визуальный язык и доводим проекты от первой идеи до запуска.'} />
   <Contacts
     title="Нашли задачу,<br />похожую на вашу?"
     lead="Расскажите о задаче или заполните форму — ответим в течение 2 часов и подготовим предложение."

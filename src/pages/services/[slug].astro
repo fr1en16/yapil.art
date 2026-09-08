@@ -1,13 +1,14 @@
 ---
 import ProcessWork from '../../components/process-work/ProcessWork.astro';
 import OfferingDetailTemplate from '../../components/proposal/OfferingDetailTemplate.astro';
-import { servicesData, type ServiceData } from '../../data/servicesData';
+import { getServices, type SanityService } from '../../lib/sanity';
 
-export function getStaticPaths() {
-  return Object.values(servicesData).map((service) => ({ params: { slug: service.slug }, props: { service } }));
+export async function getStaticPaths() {
+  const services = await getServices();
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
 }
 
-interface Props { service: ServiceData; }
+interface Props { service: SanityService; }
 const { service } = Astro.props;
 const url = new URL(`/services/${service.slug}`, Astro.site).href;
 const jsonLd = {

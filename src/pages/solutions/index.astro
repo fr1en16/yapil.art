@@ -1,6 +1,8 @@
 ---
 import OfferingIndexTemplate from '../../components/proposal/OfferingIndexTemplate.astro';
-import { solutionsList } from '../../data/solutionsData';
+import { getSolutions } from '../../lib/sanity';
+
+const solutionsList = await getSolutions();
 
 const title = 'Отраслевые решения Yapil: сайты и брендинг для бизнеса';
 const description = 'Сайты, айдентика и презентации с учётом специфики отрасли: рестораны, fashion, автобизнес, B2B, девелопмент, бьюти и онлайн-курсы.';

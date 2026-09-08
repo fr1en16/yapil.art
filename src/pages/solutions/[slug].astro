@@ -1,12 +1,13 @@
 ---
 import OfferingDetailTemplate from '../../components/proposal/OfferingDetailTemplate.astro';
-import { solutionsData, type SolutionData } from '../../data/solutionsData';
+import { getSolutions, type SanitySolution } from '../../lib/sanity';
 
-export function getStaticPaths() {
-  return Object.values(solutionsData).map((solution) => ({ params: { slug: solution.slug }, props: { solution } }));
+export async function getStaticPaths() {
+  const solutions = await getSolutions();
+  return solutions.map((solution) => ({ params: { slug: solution.slug }, props: { solution } }));
 }
 
-interface Props { solution: SolutionData; }
+interface Props { solution: SanitySolution; }
 const { solution } = Astro.props;
 const url = new URL(`/solutions/${solution.slug}`, Astro.site).href;
 const jsonLd = {

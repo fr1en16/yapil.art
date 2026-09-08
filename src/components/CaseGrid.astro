@@ -1,8 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCases } from '../lib/sanity';
 import CaseCard from './CaseCard.astro';
 
-const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+const cases = await getCases();
 const { pageHeading = false } = Astro.props;
 ---
 
@@ -18,12 +18,12 @@ const { pageHeading = false } = Astro.props;
     <div class="case-grid">
       {cases.map((item, index) => (
         <CaseCard
-          slug={item.id}
-          title={item.data.title}
-          year={item.data.year}
-          summary={item.data.summary}
-          services={item.data.services}
-          cover={item.data.cover}
+          slug={item.slug}
+          title={item.title}
+          year={item.year}
+          summary={item.summary}
+          services={item.services}
+          cover={item.cover}
           index={index}
         />
       ))}

@@ -1,11 +1,12 @@
 ---
-import galleryItems from '../data/vsyachina-gallery.json';
+import { getVsyachinaItems } from '../lib/sanity';
 
 interface Props {
   theme?: 'dark' | 'light';
 }
 
 const { theme = 'dark' } = Astro.props;
+const galleryItems = await getVsyachinaItems();
 const isLight = theme === 'light';
 
 interface GalleryItem {

@@ -1,9 +1,10 @@
 ---
 import GeoOfferingPage from '../../../components/GeoOfferingPage.astro';
-import { servicesList, type ServiceData } from '../../../data/servicesData';
+import { getServices, type SanityService } from '../../../lib/sanity';
 import { indexableCitiesList, type CityData } from '../../../data/citiesData';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const servicesList = await getServices();
   return servicesList.flatMap((service) =>
     indexableCitiesList.map((city) => ({
       params: { service: service.slug, city: city.slug },
@@ -13,7 +14,7 @@ export function getStaticPaths() {
 }
 
 interface Props {
-  service: ServiceData;
+  service: SanityService;
   city: CityData;
 }
 
