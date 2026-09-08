@@ -511,6 +511,7 @@ export async function submitLead(payload: CreateLeadPayload): Promise<Lead> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newLead),
+      keepalive: true,
     }).catch((err) => console.warn('[submitLead] /api/lead request failed:', err));
   }
 

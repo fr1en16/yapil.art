@@ -204,9 +204,7 @@ const groups = [
           services: [form.dataset.service ?? 'Консультация'], budget: String(data.get('budget') ?? ''),
           message: lines.join('\n\n'), source: 'service_modal', sourceDetails: `Подробный бриф: ${form.dataset.service ?? ''}`,
         });
-        form.querySelectorAll<HTMLElement>('[data-brief-step]').forEach((element) => { element.hidden = true; });
-        const success = form.querySelector<HTMLElement>('[data-brief-success]');
-        if (success) success.hidden = false;
+        window.location.assign('/thanks');
       } catch {
         if (submit) { submit.disabled = false; submit.textContent = 'Повторить отправку'; }
         window.alert('Не удалось отправить бриф. Попробуйте ещё раз или напишите на hi@yapil.art.');

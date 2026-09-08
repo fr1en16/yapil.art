@@ -791,8 +791,7 @@ function ServiceApplicationModal({
     }
 
     setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
+      window.location.assign('/thanks');
     }, 450);
   };
 

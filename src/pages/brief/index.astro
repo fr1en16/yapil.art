@@ -166,11 +166,7 @@ const contactQuestions: BriefQuestion[] = [
           name: String(data.get('name') ?? ''), phone: String(data.get('phone') ?? ''), email: String(data.get('email') ?? ''),
           services: [service], budget: String(data.get('budget') ?? ''), message: lines.join('\n\n'), source: 'service_modal', sourceDetails: `Подробный бриф: ${service}`,
         });
-        form.querySelector<HTMLElement>('.form-heading')?.setAttribute('hidden', '');
-        form.querySelector<HTMLElement>('.service-picker')?.setAttribute('hidden', '');
-        if (forms) forms.hidden = true;
-        const success = form.querySelector<HTMLElement>('[data-brief-success]');
-        if (success) success.hidden = false;
+        window.location.assign('/thanks');
       } catch {
         if (submit) { submit.disabled = false; submit.textContent = 'Повторить отправку'; }
         window.alert('Не удалось отправить бриф. Попробуйте ещё раз или напишите на hi@yapil.art.');

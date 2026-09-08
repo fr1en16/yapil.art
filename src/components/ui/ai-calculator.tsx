@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { submitLead } from '../../lib/crmStore';
-import { getWhatsAppUrl } from '../../utils/messengerLinks';
 
 type BranchKey = 'A' | 'B' | 'C' | 'D';
 
@@ -248,15 +247,8 @@ export default function AiCalculator() {
       sourceDetails: `Калькулятор: ${result.projectName}`,
     }).catch((err) => console.error('CRM submit error:', err));
 
-    const waUrl = getWhatsAppUrl({
-      pageUrl: window.location.href,
-      sourceContext: 'calculator',
-    });
-
     setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      window.location.assign('/thanks');
     }, 400);
   };
 

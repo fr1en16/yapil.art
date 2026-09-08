@@ -319,16 +319,7 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
         }
 
         setTimeout(() => {
-          if (submitBtn) {
-            submitBtn.removeAttribute('disabled');
-            const btnText = submitBtn.querySelector('.btn-text');
-            if (btnText) btnText.textContent = isEn ? 'Send request' : 'Отправить заявку';
-          }
-          form.style.display = 'none';
-          if (successState) {
-            successState.classList.add('is-visible');
-            successState.setAttribute('aria-hidden', 'false');
-          }
+          window.location.assign('/thanks');
         }, 400);
       });
 
