@@ -66,6 +66,7 @@ export const PRIVATE_PATH_PREFIXES = Object.freeze([
   '/review',
   '/shanding-3d',
   '/site-map',
+  '/thanks',
   '/threads',
 ]);
 
