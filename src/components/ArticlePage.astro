@@ -40,12 +40,6 @@ const caseSlug = service?.caseSlugs[0];
         <span aria-current="page">{article.data.service}</span>
       </nav>
 
-      <div class="article-kicker">
-        <span>{article.data.service}</span>
-        <span>{readingMinutes} мин чтения</span>
-        {article.data.status === 'draft' && <span class="article-status">Черновик</span>}
-      </div>
-
       <h1>{article.data.h1}</h1>
       <p class="article-deck">{article.data.description}</p>
 
@@ -57,6 +51,10 @@ const caseSlug = service?.caseSlugs[0];
         <div>
           <span class="article-byline__label">Опубликовано</span>
           <strong>{publishedLabel}</strong>
+        </div>
+        <div>
+          <span class="article-byline__label">Чтение</span>
+          <strong>{readingMinutes} мин</strong>
         </div>
       </div>
     </div>
@@ -195,7 +193,6 @@ const caseSlug = service?.caseSlugs[0];
   }
 
   .article-breadcrumbs,
-  .article-kicker,
   .article-byline {
     grid-column: 1 / -1;
   }
@@ -218,28 +215,6 @@ const caseSlug = service?.caseSlugs[0];
   .article-breadcrumbs a:hover,
   .article-breadcrumbs a:focus-visible {
     color: #fd4b32;
-  }
-
-  .article-kicker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-bottom: 1.25rem;
-    color: #fd4b32;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-  }
-
-  .article-kicker span:not(:last-child)::after {
-    content: '·';
-    margin-left: 0.55rem;
-    color: var(--article-muted);
-  }
-
-  .article-status {
-    color: var(--article-muted);
   }
 
   h1 {

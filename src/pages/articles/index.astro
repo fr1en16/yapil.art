@@ -69,11 +69,6 @@ const collectionJsonLd = {
         <span aria-current="page">Статьи</span>
       </nav>
 
-      <div class="articles-hero__meta">
-        <span>База знаний</span>
-        <span>{visibleArticles.length} материала</span>
-        {isEditorialPreview && <span>Редакционный просмотр</span>}
-      </div>
       <h1>Статьи о дизайне и развитии бизнеса</h1>
       <p>Практические разборы без общих обещаний: как выбрать формат, подготовить материалы и получить результат, который можно использовать в работе.</p>
     </header>
@@ -147,7 +142,6 @@ const collectionJsonLd = {
   }
 
   .articles-breadcrumbs,
-  .articles-hero__meta,
   .articles-hero h1 {
     grid-column: 1 / -1;
   }
@@ -169,24 +163,6 @@ const collectionJsonLd = {
   .articles-breadcrumbs a:hover,
   .articles-breadcrumbs a:focus-visible {
     color: #fd4b32;
-  }
-
-  .articles-hero__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-bottom: 1.25rem;
-    color: #fd4b32;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-  }
-
-  .articles-hero__meta span:not(:last-child)::after {
-    content: '·';
-    margin-left: 0.55rem;
-    color: var(--index-muted);
   }
 
   .articles-hero h1 {
