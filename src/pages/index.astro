@@ -1,5 +1,6 @@
 ---
 import Hero from '../components/Hero.astro';
+import HomepageWebsitePromo from '../components/HomepageWebsitePromo.astro';
 import Services from '../components/Services.astro';
 import ProduxPortfolio from '../components/ProduxPortfolio.astro';
 import VsyachinaInfinite from '../components/VsyachinaInfinite.astro';
@@ -15,6 +16,14 @@ import { getHomepage } from '../lib/sanity';
 const heroWhatsAppHref = getWhatsAppUrl({
   pageUrl: Astro.url.href,
   sourceContext: 'hero_cta',
+});
+
+const compactPromoWhatsAppHref = getWhatsAppUrl({
+  message: 'Здравствуйте! Хочу заказать сайт со скидкой 15%',
+});
+
+const fullPromoWhatsAppHref = getWhatsAppUrl({
+  message: 'Здравствуйте! Хочу заказать сайт со скидкой 15%',
 });
 
 const homepage = await getHomepage();
@@ -156,8 +165,11 @@ const homePageJsonLd = {
     ctaText={homepage?.hero.ctaText ?? 'Связаться'}
     ctaExternal
     ripple
-  />
+  >
+    <HomepageWebsitePromo variant="compact" href={compactPromoWhatsAppHref} />
+  </Hero>
   <AboutCompact cards={homepage?.aboutCards} />
+  <HomepageWebsitePromo variant="full" href={fullPromoWhatsAppHref} />
   <Services homepage />
   <ProduxPortfolio />
   <VsyachinaInfinite />

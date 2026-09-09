@@ -1,0 +1,357 @@
+---
+interface Props {
+  variant: 'compact' | 'full';
+  href: string;
+}
+
+const { variant, href } = Astro.props;
+---
+
+{variant === 'compact' ? (
+  <aside class="promo-compact" aria-label="Скидка на разработку сайта" data-daily-promo>
+    <a class="promo-compact-link" href={href} target="_blank" rel="noopener noreferrer">
+      До <span data-promo-date>10 сентября</span> 15% скидка на разработку сайта
+    </a>
+  </aside>
+) : (
+  <section class="promo-full" aria-labelledby="website-promo-title">
+    <div class="container promo-full-grid">
+      <div class="promo-full-copy">
+        <h2 id="website-promo-title">Сайт дешевле<br />на 15%</h2>
+        <div class="promo-full-details">
+          <p>
+            Обсудим задачу сегодня — закрепим скидку на дизайн и разработку сайта под ключ.
+          </p>
+          <span class="promo-full-timer" aria-label="Осталось до конца акции" data-promo-timer>00:00:00</span>
+        </div>
+      </div>
+
+      <a class="promo-button" href={href} target="_blank" rel="noopener noreferrer" data-promo-ripple>
+        <span class="promo-button-ripple" aria-hidden="true"></span>
+        <span class="promo-button-inner">
+          <span class="promo-button-text">Обсудить сайт</span>
+          <span class="promo-button-arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+    </div>
+  </section>
+)}
+
+<script>
+  const PROMO_TIME_ZONE = 'Asia/Almaty';
+
+  const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+    timeZone: PROMO_TIME_ZONE,
+    day: 'numeric',
+    month: 'long',
+  });
+
+  const timeFormatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: PROMO_TIME_ZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  });
+
+  const updateDailyPromo = () => {
+    const now = new Date();
+    const dateText = dateFormatter.format(now);
+    const timeParts = Object.fromEntries(
+      timeFormatter.formatToParts(now).map(({ type, value }) => [type, value]),
+    );
+    const elapsedSeconds =
+      Number(timeParts.hour ?? 0) * 3600 +
+      Number(timeParts.minute ?? 0) * 60 +
+      Number(timeParts.second ?? 0);
+    const remainingSeconds = Math.max(0, 86_399 - elapsedSeconds);
+    const hours = Math.floor(remainingSeconds / 3600);
+    const minutes = Math.floor((remainingSeconds % 3600) / 60);
+    const seconds = remainingSeconds % 60;
+    const timeText = [hours, minutes, seconds]
+      .map((part) => String(part).padStart(2, '0'))
+      .join(':');
+
+    document.querySelectorAll<HTMLElement>('[data-promo-date]').forEach((element) => {
+      element.textContent = dateText;
+    });
+    document.querySelectorAll<HTMLElement>('[data-promo-timer]').forEach((element) => {
+      element.textContent = timeText;
+      element.setAttribute('aria-label', `До конца акции ${hours} часов ${minutes} минут ${seconds} секунд`);
+    });
+  };
+
+  if (!window.__yapilPromoTimer) {
+    updateDailyPromo();
+    window.__yapilPromoTimer = window.setInterval(updateDailyPromo, 1000);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-promo-ripple]').forEach((button) => {
+    if (button.dataset.rippleReady === 'true') return;
+    button.dataset.rippleReady = 'true';
+
+    const playRipple = (clientX?: number, clientY?: number) => {
+      const bounds = button.getBoundingClientRect();
+      const x = clientX === undefined ? bounds.width / 2 : clientX - bounds.left;
+      const y = clientY === undefined ? bounds.height / 2 : clientY - bounds.top;
+      button.style.setProperty('--ripple-x', `${x}px`);
+      button.style.setProperty('--ripple-y', `${y}px`);
+      button.classList.remove('is-rippling');
+      void button.offsetWidth;
+      button.classList.add('is-rippling');
+    };
+
+    button.addEventListener('pointerdown', (event) => playRipple(event.clientX, event.clientY));
+    button.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') playRipple();
+    });
+    button.addEventListener('animationend', () => button.classList.remove('is-rippling'));
+  });
+</script>
+
+<style>
+  .promo-compact {
+    position: relative;
+    z-index: 2;
+    width: fit-content;
+    max-width: min(100%, 46rem);
+    margin: 1.15rem auto 0;
+    font-family: 'Hero DM Sans', var(--font-body);
+    transform: translateZ(28px);
+  }
+
+  .promo-compact-link {
+    display: inline;
+    color: rgb(255 255 255 / 0.86);
+    font-size: 0.78rem;
+    line-height: 1.2;
+    text-decoration: none;
+    transition:
+      color 350ms ease,
+      opacity 350ms ease;
+  }
+
+  .promo-compact-link:hover,
+  .promo-compact-link:focus-visible {
+    color: #fff;
+    opacity: 0.72;
+  }
+
+  .promo-full-timer {
+    display: inline-block;
+    width: fit-content;
+    margin-top: 1.5rem;
+    color: #1d1d1d;
+    font: 400 clamp(2.4rem, 4vw, 4.75rem) / 0.9 var(--font-body);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
+  }
+
+  .promo-full-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .promo-full {
+    position: relative;
+    z-index: 10;
+    padding: 0 0 clamp(4.5rem, 8vw, 8rem);
+    color: #1d1d1d;
+    background: #f7f5f2;
+  }
+
+  .promo-full-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: clamp(2rem, 6vw, 7rem);
+    padding-block: clamp(3rem, 6vw, 6rem);
+    border-top: 1px solid rgb(29 29 29 / 0.12);
+    border-bottom: 1px solid rgb(29 29 29 / 0.12);
+  }
+
+  .promo-full-copy {
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.9fr) minmax(16rem, 0.6fr);
+    align-items: end;
+    gap: clamp(2rem, 5vw, 6rem);
+  }
+
+  .promo-full h2 {
+    margin: 0;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: clamp(3.4rem, 7vw, 7rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .promo-full p {
+    max-width: 28rem;
+    margin: 0;
+    color: rgb(29 29 29 / 0.7);
+    font-size: clamp(1rem, 1.25vw, 1.15rem);
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+
+  .promo-button {
+    --button-bg: #fd4b32;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.2rem;
+    padding: 0.95rem 1.65rem;
+    color: #fff;
+    background: var(--button-bg);
+    font: 400 0.88rem/1 var(--font-body);
+    text-decoration: none;
+    transform-origin: center;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      transform var(--duration-btn) var(--ease-spring),
+      background-color var(--duration-btn-color) ease,
+      box-shadow var(--duration-btn) var(--ease-spring);
+  }
+
+  .promo-button:hover,
+  .promo-button:focus-visible {
+    background: var(--accent-hover);
+    box-shadow: 0 14px 34px -6px rgb(253 75 50 / 0.48);
+    transform: scale(1.07);
+  }
+
+  .promo-button:active {
+    transform: scale(1.02);
+    transition-duration: 90ms;
+  }
+
+  .promo-button-inner {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    pointer-events: none;
+  }
+
+  .promo-button-text,
+  .promo-button-arrow {
+    display: inline-block;
+    transition:
+      transform var(--duration-btn-text) var(--ease-text-stagger),
+      letter-spacing var(--duration-btn-text) var(--ease-spring);
+  }
+
+  .promo-button:hover .promo-button-text,
+  .promo-button:focus-visible .promo-button-text {
+    letter-spacing: 0.04em;
+    transform: scale(1.04) scaleX(1.03);
+  }
+
+  .promo-button:hover .promo-button-arrow,
+  .promo-button:focus-visible .promo-button-arrow {
+    transform: translateX(4px) scale(1.12);
+  }
+
+  .promo-button-ripple {
+    position: absolute;
+    z-index: 0;
+    left: var(--ripple-x, 50%);
+    top: var(--ripple-y, 50%);
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    pointer-events: none;
+    background: rgb(255 255 255 / 0.34);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  .promo-button.is-rippling .promo-button-ripple {
+    animation: promo-ripple 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes promo-ripple {
+    0% {
+      opacity: 0.55;
+      transform: translate(-50%, -50%) scale(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @media (max-width: 63.99rem) {
+    .promo-full-grid,
+    .promo-full-copy {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .promo-full-grid {
+      gap: 2.5rem;
+    }
+
+    .promo-full-copy {
+      gap: 1.5rem;
+    }
+
+    .promo-button {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .promo-compact {
+      width: min(100% - 1.5rem, 28rem);
+      margin-top: 1rem;
+      transform: none;
+    }
+
+    .promo-compact-link {
+      display: block;
+      padding-inline: 0.75rem;
+      text-align: center;
+    }
+
+    .promo-full {
+      padding-bottom: 4.5rem;
+    }
+
+    .promo-full-grid {
+      padding-block: 3.25rem;
+    }
+
+    .promo-full h2 {
+      font-size: clamp(3.35rem, 15vw, 5rem);
+    }
+
+    .promo-full p {
+      max-width: 31rem;
+    }
+  }
+
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    .promo-compact-link,
+    .promo-button,
+    .promo-button-text,
+    .promo-button-arrow {
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .promo-button-ripple {
+      display: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  window.__yapilPromoTimer ??= 0;
+</script>

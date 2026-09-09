@@ -5,12 +5,18 @@
 export interface MessengerLinkOptions {
   pageUrl?: string;
   sourceContext?: string;
+  message?: string;
   phone?: string;
   username?: string;
 }
 
 export function getWhatsAppUrl(options: MessengerLinkOptions = {}): string {
   const phone = options.phone ?? '77067436197';
+
+  if (options.message) {
+    return `https://wa.me/${phone}?text=${encodeURIComponent(options.message)}`;
+  }
+
   let page = '/';
 
   if (options.pageUrl) {
