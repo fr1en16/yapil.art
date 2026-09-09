@@ -52,6 +52,7 @@ const articles = defineCollection({
       coverAlt: z.string().optional(),
       trendCluster: z.string().optional(),
       trendBasis: z.string().optional(),
+      howToBatch: z.string().optional(),
     })
     .refine((data) => data.status !== 'published' || Boolean(data.publishedAt), {
       message: 'Для опубликованной статьи укажите publishedAt',
