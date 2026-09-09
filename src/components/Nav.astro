@@ -35,7 +35,7 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
         <span class="brand-text">Yapil.art</span>
       </a>
     )}
-    <PrimaryMenu contactsHref={contactsHref} lang={isEn ? 'en' : 'ru'} client:load />
+    <PrimaryMenu contactsHref={contactsHref} lang={isEn ? 'en' : 'ru'} client:idle />
   </div>
 </header>
 

@@ -32,6 +32,9 @@ export default defineConfig({
   site: 'https://yapil.art',
   trailingSlash: 'never',
   output: 'static',
+  build: {
+    inlineStylesheets: 'always',
+  },
   adapter: vercel(),
   redirects: buildPermanentRedirects(),
   server: {

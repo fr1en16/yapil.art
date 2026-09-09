@@ -89,248 +89,281 @@
   };
 
   if (canvas) {
-    const gl = canvas.getContext('webgl', { antialias: false, alpha: false });
+    const initMainShader = () => {
+      const gl = canvas.getContext('webgl', { antialias: false, alpha: false });
 
-    if (gl) {
-      const createShader = (type: number, source: string) => {
-        const shader = gl.createShader(type);
-        if (!shader) return null;
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-        return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
-      };
-
-      const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderGLSL);
-      const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderGLSL);
-      const program = gl.createProgram();
-
-      if (vertexShader && fragmentShader && program) {
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-        gl.useProgram(program);
-
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-
-        const position = gl.getAttribLocation(program, 'position');
-        gl.enableVertexAttribArray(position);
-        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-        const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-        const timeLocation = gl.getUniformLocation(program, 'u_time');
-        const grainLocation = gl.getUniformLocation(program, 'u_grain');
-        const vignetteFloorLocation = gl.getUniformLocation(program, 'u_vignette_floor');
-        const colorsLocation = gl.getUniformLocation(program, 'u_colors[0]');
-        const backgroundLocation = gl.getUniformLocation(program, 'u_bg');
-        const brandBackground = hexToRgb('#FD4B32');
-        const darkBrandColors = new Float32Array(['#FF6044', '#FD4B32', '#A32A17', '#310B06'].flatMap(hexToRgb));
-        const lightServiceColors = new Float32Array(['#FF6044', '#FD4B32', '#FF9A87', '#FFE3DD'].flatMap(hexToRgb));
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let shaderFrame = 0;
-        let lastFrameTime = 0;
-        let cachedWidth = 1;
-        let cachedHeight = 1;
-        let isMobileDevice = false;
-
-        const resize = () => {
-          isMobileDevice = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
-          const dpr = isMobileDevice ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
-          cachedWidth = Math.max(1, Math.round(window.innerWidth * dpr));
-          cachedHeight = Math.max(1, Math.round(window.innerHeight * dpr));
-          canvas.width = cachedWidth;
-          canvas.height = cachedHeight;
-          gl.viewport(0, 0, cachedWidth, cachedHeight);
+      if (gl) {
+        const createShader = (type: number, source: string) => {
+          const shader = gl.createShader(type);
+          if (!shader) return null;
+          gl.shaderSource(shader, source);
+          gl.compileShader(shader);
+          return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
         };
 
-        const draw = (time: number) => {
-          const minFrameDelta = isMobileDevice ? 40 : 16; // ~25fps on mobile, 60fps on desktop
+        const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderGLSL);
+        const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderGLSL);
+        const program = gl.createProgram();
 
-          if (time - lastFrameTime < minFrameDelta) {
+        if (vertexShader && fragmentShader && program) {
+          gl.attachShader(program, vertexShader);
+          gl.attachShader(program, fragmentShader);
+          gl.linkProgram(program);
+          gl.useProgram(program);
+
+          const buffer = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+          const position = gl.getAttribLocation(program, 'position');
+          gl.enableVertexAttribArray(position);
+          gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+          const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+          const timeLocation = gl.getUniformLocation(program, 'u_time');
+          const grainLocation = gl.getUniformLocation(program, 'u_grain');
+          const vignetteFloorLocation = gl.getUniformLocation(program, 'u_vignette_floor');
+          const colorsLocation = gl.getUniformLocation(program, 'u_colors[0]');
+          const backgroundLocation = gl.getUniformLocation(program, 'u_bg');
+          const brandBackground = hexToRgb('#FD4B32');
+          const darkBrandColors = new Float32Array(['#FF6044', '#FD4B32', '#A32A17', '#310B06'].flatMap(hexToRgb));
+          const lightServiceColors = new Float32Array(['#FF6044', '#FD4B32', '#FF9A87', '#FFE3DD'].flatMap(hexToRgb));
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          let shaderFrame = 0;
+          let lastFrameTime = 0;
+          let cachedWidth = 1;
+          let cachedHeight = 1;
+          let isMobileDevice = false;
+
+          const resize = () => {
+            isMobileDevice = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+            const dpr = isMobileDevice ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+            cachedWidth = Math.max(1, Math.round(window.innerWidth * dpr));
+            cachedHeight = Math.max(1, Math.round(window.innerHeight * dpr));
+            canvas.width = cachedWidth;
+            canvas.height = cachedHeight;
+            gl.viewport(0, 0, cachedWidth, cachedHeight);
+          };
+
+          const draw = (time: number) => {
+            const minFrameDelta = isMobileDevice ? 40 : 16; // ~25fps on mobile, 60fps on desktop
+
+            if (time - lastFrameTime < minFrameDelta) {
+              if (!document.hidden && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
+              return;
+            }
+            lastFrameTime = time;
+
+            gl.uniform2f(resolutionLocation, cachedWidth, cachedHeight);
+            gl.uniform1f(timeLocation, time * 0.002);
+            gl.uniform1f(grainLocation, 0.3);
+            const isServicePage = document.body.classList.contains('website-service-page');
+            gl.uniform1f(vignetteFloorLocation, isServicePage ? 0.78 : 0.35);
+            gl.uniform3f(backgroundLocation, ...brandBackground);
+            gl.uniform3fv(colorsLocation, isServicePage ? lightServiceColors : darkBrandColors);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
             if (!document.hidden && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
-            return;
+          };
+
+          const startShader = () => {
+            if (!shaderFrame && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
+          };
+
+          const stopShader = () => {
+            cancelAnimationFrame(shaderFrame);
+            shaderFrame = 0;
+          };
+
+          window.addEventListener('resize', () => {
+            resize();
+            draw(0);
+          }, { passive: true });
+
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopShader();
+            else startShader();
+          });
+
+          // Pause shader when not in view of transparent background sections to save GPU/CPU
+          const visibleSections = document.querySelectorAll('.hero-cover, #reviews, #contacts');
+          if (visibleSections.length > 0 && 'IntersectionObserver' in window) {
+            const activeMap = new Map();
+            const bgObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  activeMap.set(entry.target, entry.isIntersecting);
+                });
+                const anyVisible = Array.from(activeMap.values()).some(Boolean);
+                if (anyVisible) {
+                  startShader();
+                } else {
+                  stopShader();
+                }
+              },
+              { threshold: 0.01 }
+            );
+            visibleSections.forEach((el) => bgObserver.observe(el));
           }
-          lastFrameTime = time;
 
-          gl.uniform2f(resolutionLocation, cachedWidth, cachedHeight);
-          gl.uniform1f(timeLocation, time * 0.002);
-          gl.uniform1f(grainLocation, 0.3);
-          const isServicePage = document.body.classList.contains('website-service-page');
-          gl.uniform1f(vignetteFloorLocation, isServicePage ? 0.78 : 0.35);
-          gl.uniform3f(backgroundLocation, ...brandBackground);
-          gl.uniform3fv(colorsLocation, isServicePage ? lightServiceColors : darkBrandColors);
-          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-          if (!document.hidden && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
-        };
-
-        const startShader = () => {
-          if (!shaderFrame && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
-        };
-
-        const stopShader = () => {
-          cancelAnimationFrame(shaderFrame);
-          shaderFrame = 0;
-        };
-
-        window.addEventListener('resize', () => {
           resize();
           draw(0);
-        }, { passive: true });
 
-        document.addEventListener('visibilitychange', () => {
-          if (document.hidden) stopShader();
-          else startShader();
-        });
-
-        // Pause shader when not in view of transparent background sections to save GPU/CPU
-        const visibleSections = document.querySelectorAll('.hero-cover, #reviews, #contacts');
-        if (visibleSections.length > 0 && 'IntersectionObserver' in window) {
-          const activeMap = new Map();
-          const bgObserver = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                activeMap.set(entry.target, entry.isIntersecting);
-              });
-              const anyVisible = Array.from(activeMap.values()).some(Boolean);
-              if (anyVisible) {
-                startShader();
-              } else {
-                stopShader();
-              }
-            },
-            { threshold: 0.01 }
-          );
-          visibleSections.forEach((el) => bgObserver.observe(el));
-        }
-
-        resize();
-        draw(0);
-
-        if (!reduceMotion) {
-          if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => startShader(), { timeout: 2000 });
-          } else {
-            setTimeout(startShader, 500);
+          if (!reduceMotion) {
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(() => startShader(), { timeout: 2000 });
+            } else {
+              setTimeout(startShader, 500);
+            }
           }
         }
       }
+    };
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', () => requestAnimationFrame(initMainShader), { once: true });
+    } else {
+      requestAnimationFrame(initMainShader);
     }
   }
 
   const serviceCanvas = document.querySelector<HTMLCanvasElement>('[data-service-shader]');
 
   if (serviceCanvas) {
-    const gl = serviceCanvas.getContext('webgl', { antialias: false, alpha: false });
+    let serviceInitialized = false;
+    let syncServiceShader = () => {};
 
-    if (gl) {
-      const createShader = (type: number, source: string) => {
-        const shader = gl.createShader(type);
-        if (!shader) return null;
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-        return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
-      };
+    const initServiceShader = () => {
+      if (serviceInitialized) return;
+      if (!document.body.classList.contains('website-service-page')) return;
+      serviceInitialized = true;
 
-      const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderGLSL);
-      const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderGLSL);
-      const program = gl.createProgram();
+      const gl = serviceCanvas.getContext('webgl', { antialias: false, alpha: false });
 
-      if (vertexShader && fragmentShader && program) {
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-        gl.useProgram(program);
-
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-
-        const position = gl.getAttribLocation(program, 'position');
-        gl.enableVertexAttribArray(position);
-        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-        const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-        const timeLocation = gl.getUniformLocation(program, 'u_time');
-        const grainLocation = gl.getUniformLocation(program, 'u_grain');
-        const vignetteFloorLocation = gl.getUniformLocation(program, 'u_vignette_floor');
-        const colorsLocation = gl.getUniformLocation(program, 'u_colors[0]');
-        const backgroundLocation = gl.getUniformLocation(program, 'u_bg');
-        const neutralBackground = hexToRgb('#F7F8FA');
-        const neutralColors = new Float32Array(['#FFFFFF', '#F1F4F7', '#E2E8EE', '#D4DCE5'].flatMap(hexToRgb));
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let frame = 0;
-        let width = 1;
-        let height = 1;
-        let lastFrameTime = 0;
-
-        const updateClip = () => {
-          const isServicePage = document.body.classList.contains('website-service-page');
-          const cover = document.querySelector<HTMLElement>('.hero-cover');
-          const coverBottom = cover ? Math.max(0, Math.min(innerHeight, cover.getBoundingClientRect().bottom)) : innerHeight;
-          serviceCanvas.style.visibility = isServicePage ? 'visible' : 'hidden';
-          const feather = Math.min(320, innerHeight * 0.32);
-          const maskStart = Math.max(0, coverBottom - feather);
-          const maskEnd = Math.min(innerHeight, coverBottom + feather);
-          const maskRange = maskEnd - maskStart;
-          const mask = coverBottom <= 0
-            ? 'none'
-            : `linear-gradient(to bottom,
-                transparent 0,
-                transparent ${maskStart}px,
-                rgb(0 0 0 / 12%) ${maskStart + maskRange * 0.22}px,
-                rgb(0 0 0 / 50%) ${maskStart + maskRange * 0.5}px,
-                rgb(0 0 0 / 88%) ${maskStart + maskRange * 0.78}px,
-                black ${maskEnd}px,
-                black 100%)`;
-          serviceCanvas.style.maskImage = mask;
-          serviceCanvas.style.webkitMaskImage = mask;
+      if (gl) {
+        const createShader = (type: number, source: string) => {
+          const shader = gl.createShader(type);
+          if (!shader) return null;
+          gl.shaderSource(shader, source);
+          gl.compileShader(shader);
+          return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
         };
 
-        const resize = () => {
-          const dpr = window.innerWidth < 768 ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
-          width = Math.max(1, Math.round(window.innerWidth * dpr));
-          height = Math.max(1, Math.round(window.innerHeight * dpr));
-          serviceCanvas.width = width;
-          serviceCanvas.height = height;
-          gl.viewport(0, 0, width, height);
-          updateClip();
-        };
+        const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderGLSL);
+        const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderGLSL);
+        const program = gl.createProgram();
 
-        const draw = (time: number) => {
-          if (time - lastFrameTime < 24) {
+        if (vertexShader && fragmentShader && program) {
+          gl.attachShader(program, vertexShader);
+          gl.attachShader(program, fragmentShader);
+          gl.linkProgram(program);
+          gl.useProgram(program);
+
+          const buffer = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+          const position = gl.getAttribLocation(program, 'position');
+          gl.enableVertexAttribArray(position);
+          gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+          const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+          const timeLocation = gl.getUniformLocation(program, 'u_time');
+          const grainLocation = gl.getUniformLocation(program, 'u_grain');
+          const vignetteFloorLocation = gl.getUniformLocation(program, 'u_vignette_floor');
+          const colorsLocation = gl.getUniformLocation(program, 'u_colors[0]');
+          const backgroundLocation = gl.getUniformLocation(program, 'u_bg');
+          const neutralBackground = hexToRgb('#F7F8FA');
+          const neutralColors = new Float32Array(['#FFFFFF', '#F1F4F7', '#E2E8EE', '#D4DCE5'].flatMap(hexToRgb));
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          let frame = 0;
+          let width = 1;
+          let height = 1;
+          let lastFrameTime = 0;
+
+          const updateClip = () => {
+            const isServicePage = document.body.classList.contains('website-service-page');
+            const cover = document.querySelector<HTMLElement>('.hero-cover');
+            const coverBottom = cover ? Math.max(0, Math.min(innerHeight, cover.getBoundingClientRect().bottom)) : innerHeight;
+            serviceCanvas.style.visibility = isServicePage ? 'visible' : 'hidden';
+            const feather = Math.min(320, innerHeight * 0.32);
+            const maskStart = Math.max(0, coverBottom - feather);
+            const maskEnd = Math.min(innerHeight, coverBottom + feather);
+            const maskRange = maskEnd - maskStart;
+            const mask = coverBottom <= 0
+              ? 'none'
+              : `linear-gradient(to bottom,
+                  transparent 0,
+                  transparent ${maskStart}px,
+                  rgb(0 0 0 / 12%) ${maskStart + maskRange * 0.22}px,
+                  rgb(0 0 0 / 50%) ${maskStart + maskRange * 0.5}px,
+                  rgb(0 0 0 / 88%) ${maskStart + maskRange * 0.78}px,
+                  black ${maskEnd}px,
+                  black 100%)`;
+            serviceCanvas.style.maskImage = mask;
+            serviceCanvas.style.webkitMaskImage = mask;
+          };
+
+          const resize = () => {
+            const dpr = window.innerWidth < 768 ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+            width = Math.max(1, Math.round(window.innerWidth * dpr));
+            height = Math.max(1, Math.round(window.innerHeight * dpr));
+            serviceCanvas.width = width;
+            serviceCanvas.height = height;
+            gl.viewport(0, 0, width, height);
+            updateClip();
+          };
+
+          const draw = (time: number) => {
+            if (time - lastFrameTime < 24) {
+              if (!reduceMotion) frame = requestAnimationFrame(draw);
+              return;
+            }
+            lastFrameTime = time;
+            gl.uniform2f(resolutionLocation, width, height);
+            gl.uniform1f(timeLocation, time * 0.0014);
+            gl.uniform1f(grainLocation, 0.08);
+            gl.uniform1f(vignetteFloorLocation, 0.93);
+            gl.uniform3f(backgroundLocation, ...neutralBackground);
+            gl.uniform3fv(colorsLocation, neutralColors);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             if (!reduceMotion) frame = requestAnimationFrame(draw);
-            return;
-          }
-          lastFrameTime = time;
-          gl.uniform2f(resolutionLocation, width, height);
-          gl.uniform1f(timeLocation, time * 0.0014);
-          gl.uniform1f(grainLocation, 0.08);
-          gl.uniform1f(vignetteFloorLocation, 0.93);
-          gl.uniform3f(backgroundLocation, ...neutralBackground);
-          gl.uniform3fv(colorsLocation, neutralColors);
-          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-          if (!reduceMotion) frame = requestAnimationFrame(draw);
-        };
+          };
 
-        const syncServiceShader = () => {
-          updateClip();
-          if (document.body.classList.contains('website-service-page')) {
-            if (!frame && !reduceMotion) frame = requestAnimationFrame(draw);
-            if (reduceMotion) draw(0);
-          } else if (frame) {
-            cancelAnimationFrame(frame);
-            frame = 0;
-          }
-        };
+          syncServiceShader = () => {
+            updateClip();
+            if (document.body.classList.contains('website-service-page')) {
+              if (!frame && !reduceMotion) frame = requestAnimationFrame(draw);
+              if (reduceMotion) draw(0);
+            } else if (frame) {
+              cancelAnimationFrame(frame);
+              frame = 0;
+            }
+          };
 
-        window.addEventListener('scroll', updateClip, { passive: true });
-        window.addEventListener('resize', resize, { passive: true });
-        document.addEventListener('astro:page-load', syncServiceShader);
-        resize();
+          window.addEventListener('scroll', updateClip, { passive: true });
+          window.addEventListener('resize', resize, { passive: true });
+          resize();
+          syncServiceShader();
+        }
+      }
+    };
+
+    const handlePageLoad = () => {
+      if (document.body.classList.contains('website-service-page')) {
+        if (!serviceInitialized) {
+          initServiceShader();
+        } else {
+          syncServiceShader();
+        }
+      } else if (serviceInitialized) {
         syncServiceShader();
       }
+    };
+
+    document.addEventListener('astro:page-load', handlePageLoad);
+    if (document.body.classList.contains('website-service-page')) {
+      initServiceShader();
     }
   }
 </script>
