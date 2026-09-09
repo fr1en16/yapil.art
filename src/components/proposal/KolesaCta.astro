@@ -1,33 +1,51 @@
 ---
 import ContactFormCard from '../ContactFormCard.astro';
+
+interface Props {
+  title?: string;
+  lead?: string;
+  showCase?: boolean;
+  selectedService?: string;
+  sourceDetails?: string;
+}
+
+const {
+  title = 'Превращаем<br />посетителей в заявки',
+  lead = 'Проектируем лендинги и сайты, которые ведут посетителя к заявке. Улучшаем структуру, оффер и путь, считаем результат в конверсии.',
+  showCase = true,
+  selectedService = 'Сайты',
+  sourceDetails = 'CTA Taxi Kolesa на странице услуги «Сайты»',
+} = Astro.props;
 ---
 
-<section class="kolesa-cta" aria-labelledby="kolesa-cta-title">
+<section class:list={['kolesa-cta', { 'kolesa-cta--no-case': !showCase }]} aria-labelledby="kolesa-cta-title">
   <div class="container kolesa-grid">
     <div class="kolesa-story">
       <header class="kolesa-header">
-        <h2 id="kolesa-cta-title">Превращаем<br />посетителей в заявки</h2>
-        <p>Проектируем лендинги и сайты, которые ведут посетителя к заявке. Улучшаем структуру, оффер и путь, считаем результат в конверсии.</p>
+        <h2 id="kolesa-cta-title" set:html={title} />
+        <p>{lead}</p>
       </header>
 
-      <div class="kolesa-proof">
-        <a class="kolesa-preview" href="/case/taxikolesa" aria-label="Смотреть кейс Taxi Kolesa">
-          <img src="https://media.yapil.art/case/taxikolesa/couriers.aee165f780266ddc.webp" alt="Лендинг Taxi Kolesa для курьеров" width="1200" height="659" loading="lazy" decoding="async" />
-        </a>
-        <div class="kolesa-stat">
-          <p class="kolesa-metric">27,9<span>%</span></p>
-          <p class="kolesa-metric-label">Средняя конверсия лендинга</p>
-          <p class="kolesa-caption">Для Taxi Kolesa сделали лендинг для курьеров. Заявку оставил почти каждый третий посетитель.</p>
+      {showCase && (
+        <div class="kolesa-proof">
+          <a class="kolesa-preview" href="/case/taxikolesa" aria-label="Смотреть кейс Taxi Kolesa">
+            <img src="https://media.yapil.art/case/taxikolesa/couriers.aee165f780266ddc.webp" alt="Лендинг Taxi Kolesa для курьеров" width="1200" height="659" loading="lazy" decoding="async" />
+          </a>
+          <div class="kolesa-stat">
+            <p class="kolesa-metric">27,9<span>%</span></p>
+            <p class="kolesa-metric-label">Средняя конверсия лендинга</p>
+            <p class="kolesa-caption">Для Taxi Kolesa сделали лендинг для курьеров. Заявку оставил почти каждый третий посетитель.</p>
+          </div>
+          <a class="kolesa-link" href="/case/taxikolesa">Смотреть кейс <span aria-hidden="true">↗</span></a>
         </div>
-        <a class="kolesa-link" href="/case/taxikolesa">Смотреть кейс <span aria-hidden="true">↗</span></a>
-      </div>
+      )}
     </div>
 
     <div class="kolesa-form-slot">
       <ContactFormCard
         source="case_inquiry"
-        sourceDetails="CTA Taxi Kolesa на странице услуги «Сайты»"
-        selectedService="Сайты"
+        sourceDetails={sourceDetails}
+        selectedService={selectedService}
         successText="Спасибо. Изучим задачу и ответим в течение дня."
         bordered={false}
       />
@@ -49,9 +67,13 @@ import ContactFormCard from '../ContactFormCard.astro';
     display: grid;
     grid-template-columns: minmax(0, 1.55fr) minmax(20rem, .95fr);
     gap: clamp(1.5rem, 3vw, 4.5rem);
+    align-items: center;
   }
 
   .kolesa-story { display: flex; min-width: 0; flex-direction: column; }
+
+  .kolesa-cta--no-case { min-height: 0; padding-block: clamp(4rem, 7vw, 6.5rem); }
+  .kolesa-cta--no-case .kolesa-header > p { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
 
   .kolesa-header h2 {
     max-width: 12ch;

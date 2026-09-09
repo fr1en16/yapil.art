@@ -31,6 +31,7 @@ const description = `${geoCopy.action} для бизнеса ${locationGenitive}
 const heroH1 = `${geoCopy.searchName} в ${locationPrepositional}`;
 const heroLead = `${localContext} ${geoCopy.localValue}`;
 const ctaTitle = `${service.ctaTitle} Работаем с компаниями ${locationGenitive}.`;
+const whatsappContext = `для бизнеса ${locationGenitive}`;
 
 const localFaq = [
   {
@@ -122,6 +123,7 @@ const jsonLd = {
   links={service.crossLinks}
   {ctaTitle}
   ctaLead={service.ctaLead}
+  {whatsappContext}
 >
-  <ProcessWork slot="process-work" embedded steps={service.steps} />
+  <ProcessWork slot="process-work" embedded autoplay steps={service.steps} />
 </OfferingDetailTemplate>

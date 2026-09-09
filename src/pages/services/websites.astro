@@ -5,14 +5,20 @@ import { getServiceBySlug } from '../../lib/sanity';
 
 const service = await getServiceBySlug('websites');
 if (!service) throw new Error('Sanity: service "websites" not found');
-const url = new URL('/services/websites-static', Astro.site).href;
+const url = new URL('/services/websites', Astro.site).href;
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: service.name,
-  description: service.seo.description,
-  url,
+  '@graph': [
+    { '@type': 'Service', name: service.name, serviceType: service.seo.h1, description: service.seo.description, provider: { '@type': 'ProfessionalService', name: 'Yapil', url: 'https://yapil.art', telephone: '+77067436197', email: 'hi@yapil.art' }, areaServed: ['KZ', 'UZ', 'RU', 'Worldwide'], url },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://yapil.art' },
+      { '@type': 'ListItem', position: 2, name: 'Услуги', item: 'https://yapil.art/services' },
+      { '@type': 'ListItem', position: 3, name: service.name, item: url },
+    ] },
+    { '@type': 'FAQPage', mainEntity: service.faq.map((item) => ({ '@type': 'Question', name: item.question, acceptedAnswer: { '@type': 'Answer', text: item.answer } })) },
+  ],
 };
+const heroH1 = 'Сайты,<br />которые работают<br />на продажи<br />с запуска';
 ---
 
 <OfferingDetailTemplate
@@ -22,7 +28,7 @@ const jsonLd = {
   section="services"
   slug={service.slug}
   name={service.name}
-  heroH1={service.heroH1}
+  heroH1={heroH1}
   heroLead={service.heroLead}
   metrics={service.metrics}
   firstTitle={service.formatsTitle}

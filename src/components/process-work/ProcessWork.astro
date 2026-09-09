@@ -81,5 +81,14 @@ const projects = [
 <style>
 .process-work.is-autoplay .process-section{height:100svh;min-height:44rem}
 .process-work.is-autoplay .process-pin{position:relative;top:auto}
-@media(max-width:991px){.process-work.is-autoplay .process-section{height:100svh;min-height:40rem}}
+@media(max-width:991px){.process-work.is-autoplay .process-section{height:63svh;min-height:22rem}.process-work.is-autoplay .process-pin{height:63svh}}
+</style>
+<style>
+/* Autoplay pages: mobile process cards are a plain native swipe strip, no JS/canvas animation. */
+@media(max-width:991px){
+.process-work.is-autoplay .process-stage{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;overscroll-behavior-x:contain}
+.process-work.is-autoplay .process-grid{width:max-content}
+.process-work.is-autoplay .process-card{flex:0 0 80vw;width:80vw;scroll-snap-align:center}
+.process-work.is-autoplay .road-canvas{display:none}
+}
 </style>

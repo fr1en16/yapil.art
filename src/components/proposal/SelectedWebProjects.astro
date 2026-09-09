@@ -1,23 +1,24 @@
 ---
-interface Props { autoplay?: boolean; }
-const { autoplay = false } = Astro.props;
-const projects = [
+interface Project { name: string; tags: string; image: string; slug: string; alt: string; }
+interface Props { autoplay?: boolean; projects?: Project[]; title?: string; intro?: string; }
+const defaultProjects: Project[] = [
   {name:'Kirpi', tags:'Интернет-магазин', image:'https://media.yapil.art/case/kirpi-cover.182cc9120e9bbe71.webp', slug:'kirpi', alt:'Интернет-магазин модного бренда Kirpi'},
   {name:'Dodo Pizza // Hightower', tags:'Лендинг для найма', image:'https://media.yapil.art/case/dodo-hightower/cover.817a6fb1ca706482.webp', slug:'dodo-hightower', alt:'Лендинг Hightower для поиска сотрудников Dodo Pizza'},
   {name:'Compass', tags:'Брендинг, дизайн, сайт', image:'https://media.yapil.art/case/compass.43224367a0a82ebc.webp', slug:'compass', alt:'Айдентика и сайт консалтинговой компании Compass'},
 ];
+const { autoplay = false, projects = defaultProjects, title = 'Избранные<br />проекты', intro = 'От идеи до запуска — проекты, в которых дизайн решает задачу бизнеса.' } = Astro.props;
 ---
 <section class:list={['selected-web-projects', { 'is-autoplay': autoplay }]} id="work" aria-labelledby="work-title" data-selected-work data-autoplay={autoplay ? 'true' : undefined}>
   <div class="work-pin">
     <div class="work-left">
-      <h2 id="work-title">Избранные<br />проекты</h2>
-      <p class="mobile-work-intro">От идеи до запуска — проекты, в которых дизайн решает задачу бизнеса.</p>
+      <h2 id="work-title" set:html={title} />
+      <p class="mobile-work-intro">{intro}</p>
       <div class="work-list" aria-label="Выбор проекта">
         {projects.map((project,i)=><button class="work-item" type="button" data-project={i} aria-controls={`project-${i}`} aria-label={`Показать проект ${project.name}`}><span class="project-number">0{i+1}.</span><span class="project-name">{project.name}</span><span class="project-tags">{project.tags}</span></button>)}
       </div>
     </div>
     <div class="work-images">
-      <p class="work-intro">От идеи до запуска — проекты, в которых дизайн решает задачу бизнеса.</p>
+      <p class="work-intro">{intro}</p>
       <div class="mobile-slides">
         {projects.map((project,i)=><a class="work-slide" id={`project-${i}`} href={`/case/${project.slug}`} aria-label={`Смотреть кейс ${project.name}`} data-mobile-slide={i} data-name={project.name} data-tags={project.tags} data-slug={project.slug}><img src={project.image} alt={project.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" /></a>)}
       </div>

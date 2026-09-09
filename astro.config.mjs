@@ -36,7 +36,10 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
   adapter: vercel(),
-  redirects: buildPermanentRedirects(),
+  redirects: {
+    ...buildPermanentRedirects(),
+    '/services/websites-static': { destination: '/services/websites', status: 301 },
+  },
   server: {
     port: 4321,
   },

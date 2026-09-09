@@ -5,7 +5,9 @@ import { getServices, type SanityService } from '../../lib/sanity';
 
 export async function getStaticPaths() {
   const services = await getServices();
-  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+  return services
+    .filter((service) => service.slug !== 'websites')
+    .map((service) => ({ params: { slug: service.slug }, props: { service } }));
 }
 
 interface Props { service: SanityService; }
@@ -53,6 +55,7 @@ const jsonLd = {
   <ProcessWork
     slot="process-work"
     embedded
+    autoplay
     steps={service.slug === 'websites' ? undefined : service.steps}
   />
 </OfferingDetailTemplate>

@@ -22,6 +22,7 @@ interface Props {
   navMinimal?: boolean;
   bodyClass?: string;
   lang?: string;
+  whatsappMessage?: string;
 }
 
 const settings = await getSiteSettings();
@@ -42,6 +43,7 @@ const {
   navMinimal = false,
   bodyClass,
   lang = 'ru',
+  whatsappMessage,
 } = Astro.props;
 const documentTitle = title.includes('Yapil')
   ? title
@@ -190,7 +192,7 @@ const schemaJsonLd = {
       <slot />
     </main>
     <slot name="footer" />
-    <FloatingWhatsApp lang={lang} pageUrl={Astro.url.href} />
+    <FloatingWhatsApp lang={lang} pageUrl={Astro.url.href} message={whatsappMessage} />
     {import.meta.env.DEV && <GridOverlay />}
     <SmoothScroll />
     <script>

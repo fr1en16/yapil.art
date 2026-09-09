@@ -9,6 +9,9 @@ import ServicesAnimatedModal from '../ui/services-animated-modal';
 import Contacts from '../Contacts.astro';
 import Footer from '../Footer.astro';
 import ProduxPortfolio from '../ProduxPortfolio.astro';
+import { getSiteSettings } from '../../lib/sanity';
+import { getWhatsAppUrl } from '../../utils/messengerLinks';
+import { geoServicesData } from '../../data/geoServicesData';
 import '../../styles/proposal-pages.css';
 
 interface Metric { number: string; label: string; text: string; }
@@ -42,15 +45,46 @@ interface Props {
   ctaTitle: string;
   ctaLead: string;
   autoplay?: boolean;
+  whatsappContext?: string;
 }
 
 const props = Astro.props;
-const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead, autoplay = false } = props;
+const { section, slug, name, heroH1, heroLead, metrics, firstTitle, firstCards, secondTitle, secondCards, rowsTitle, rows = [], casesTitle, caseSlugs, faqTitle, faq, linksTitle, links = [], ctaTitle, ctaLead, whatsappContext } = props;
 const source = 'contacts_form';
 const isEnhancedService = section === 'services';
 const hasFormatShowcase = section === 'services';
 const showKolesaCase = true;
 const showSecondaryNavigation = false;
+
+const siteSettings = await getSiteSettings();
+const waTopic = geoServicesData[slug]?.shortName ?? name;
+const waMessage = `Здравствуйте! Хочу обсудить услугу «${waTopic}»${whatsappContext ? ` ${whatsappContext}` : ''}. Подскажите, пожалуйста, об условиях и сроках.`;
+const waHref = getWhatsAppUrl({ message: waMessage, phone: siteSettings?.whatsappPhone });
+
+interface SelectedProject { name: string; tags: string; image: string; slug: string; alt: string; }
+const selectedProjectsBySlug: Record<string, SelectedProject[] | undefined> = {
+  identity: [
+    { name: 'Compass Management', tags: 'Брендинг и сайт', image: 'https://media.yapil.art/case/compass%20management.a7c9830274b8ca1a.webp?v=2', slug: 'compass-management', alt: 'Айдентика консалтинговой компании Compass Management' },
+    { name: 'Kenfasad', tags: 'Брендинг и полиграфия', image: 'https://media.yapil.art/case/Kenfasad.f8c2d9b5215b1779.webp?v=2', slug: 'kenfasad', alt: 'Айдентика бренда фасадов Kenfasad' },
+    { name: 'Boya', tags: 'Брендинг и сайт', image: 'https://media.yapil.art/case/boya.162ad8cb7b7af238.webp', slug: 'boya', alt: 'Айдентика бренда лакокрасочных материалов Boya' },
+  ],
+  print: [
+    { name: 'ONmacabim', tags: 'Полиграфия и сопровождение', image: 'https://media.yapil.art/case/onmacabim.6dccb49b7d3c45da.webp', slug: 'onmacabim', alt: 'Полиграфия косметического бренда ONmacabim' },
+    { name: 'Takara Sushi Bar', tags: 'Полиграфия для ресторана', image: 'https://media.yapil.art/case/Takara%20Sushi%20Bar.ef0d21f3721710c3.webp?v=2', slug: 'takara', alt: 'Полиграфия суши-бара Takara' },
+    { name: 'Gippo', tags: 'Полиграфия для стрит-фуда', image: 'https://media.yapil.art/case/Gippo.7a7a3e1aaaed7ae3.webp?v=2', slug: 'gippo', alt: 'Полиграфия стрит-фуда Gippo' },
+  ],
+};
+const selectedProjects = selectedProjectsBySlug[slug];
+
+interface KolesaCopy { title: string; lead: string; }
+const kolesaCopyBySlug: Record<string, KolesaCopy> = {
+  identity: { title: 'Превращаем бренд<br />в узнаваемую систему', lead: 'Разрабатываем логотип, фирменный стиль и гайдлайн, которые работают одинаково точно на сайте, в соцсетях и на печатных носителях.' },
+  print: { title: 'Превращаем макет<br />в готовый тираж', lead: 'Проектируем упаковку, этикетки, каталоги и POS-материалы с учётом технологии печати — от концепции до файлов для типографии.' },
+  presentations: { title: 'Превращаем цифры<br />в убедительную историю', lead: 'Собираем структуру, редактируем текст и оформляем инфографику, чтобы презентация ясно доносила идею инвесторам, клиентам и партнёрам.' },
+  smm: { title: 'Превращаем ленту<br />в узнаваемый бренд', lead: 'Разрабатываем визуальную концепцию, шаблоны публикаций и рекламные креативы, чтобы коммуникация в соцсетях оставалась стабильной и управляемой.' },
+  support: { title: 'Превращаем задачи<br />в системный процесс', lead: 'Берём на сопровождение сайт, рекламу, презентации и полиграфию — работаем как внешний арт-отдел с понятными сроками и приоритетами.' },
+};
+const kolesaCopy = kolesaCopyBySlug[slug];
 const formatImages = ['https://media.yapil.art/services/landing-pages.06f68f54ad8a6e08.webp', 'https://media.yapil.art/services/corporate-websites.13154da07ccc903e.webp', 'https://media.yapil.art/services/catalogs.1339a4386de88793.webp'];
 const serviceImages: Record<string, string> = {
   identity: 'https://media.yapil.art/services/identity.7f63efde96bd547f.webp',
@@ -73,10 +107,10 @@ const faqNumber = section === 'services' ? (rows.length ? '05' : '04') : (rows.l
 const linksNumber = section === 'services' ? '06' : '05';
 ---
 
-<Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" noindex={autoplay} navOverlay={true} bodyClass={isEnhancedService ? 'website-service-page' : undefined}>
+<Base title={props.title} description={props.description} jsonLd={props.jsonLd} theme="light" navOverlay={true} bodyClass={isEnhancedService ? `website-service-page${slug === 'websites' ? ' website-service-page--websites' : ''}` : undefined} whatsappMessage={waMessage}>
   <article class="editorial-page">
     {isEnhancedService ? (
-      <Hero title={heroH1} description={heroLead} casesHref="#contacts" ctaText="Обсудить проект" ripple />
+      <Hero title={heroH1} description={heroLead} casesHref={waHref} ctaText="Обсудить проект" ctaExternal ripple />
     ) : (
     <header class="editorial-cover">
       <div class="container editorial-cover__inner">
@@ -94,6 +128,23 @@ const linksNumber = section === 'services' ? '06' : '05';
     )}
 
     {isEnhancedService && <AboutCompact theme="light" websites />}
+
+    {hasProcessWork && <div class="service-block-gap" aria-hidden="true"></div>}
+    {hasProcessWork && (
+      <div class="editorial-body">
+        {slug === 'websites' && showKolesaCase && <KolesaCta />}
+        {slug !== 'websites' && showKolesaCase && kolesaCopy && (
+          <KolesaCta
+            title={kolesaCopy.title}
+            lead={kolesaCopy.lead}
+            showCase={false}
+            selectedService={name}
+            sourceDetails={`CTA на странице услуги «${name}»${whatsappContext ? ` ${whatsappContext}` : ''}`}
+          />
+        )}
+        {(slug === 'websites' || selectedProjects) && <SelectedWebProjects autoplay projects={selectedProjects} />}
+      </div>
+    )}
 
     {hasProcessWork && <div class="service-block-gap" aria-hidden="true"></div>}
     {hasProcessWork && <slot name="process-work" />}
@@ -136,10 +187,6 @@ const linksNumber = section === 'services' ? '06' : '05';
           ))}
         </div>
       </section>}
-
-      {isEnhancedService && <SelectedWebProjects {autoplay} />}
-
-      {isEnhancedService && showKolesaCase && <KolesaCta />}
 
       {isEnhancedService ? <WebsiteResult title={secondTitle} cards={secondCards} /> : (
       <section class="editorial-section" aria-labelledby="result-title">
@@ -285,6 +332,7 @@ const linksNumber = section === 'services' ? '06' : '05';
       lead={ctaLead}
       source={source}
       sourceDetails={`${sectionName}: ${name}`}
+      whatsappMessage={waMessage}
       gradientToDark
     />
   </article>
@@ -359,8 +407,13 @@ const linksNumber = section === 'services' ? '06' : '05';
   }
   :global(body.website-service-page .editorial-page) { --paper: transparent; }
   :global(body.website-service-page #about-compact),
-  :global(body.website-service-page .website-result),
-  :global(body.website-service-page .contacts.gradient-to-dark) { background: transparent !important; }
+  :global(body.website-service-page .website-result) { background: transparent !important; }
+  :global(body.website-service-page .contacts.gradient-to-dark) {
+    background: linear-gradient(to bottom, rgb(11 11 12 / 0%) 0%, #0B0B0C 100%) !important;
+  }
+  :global(body.website-service-page .contacts.gradient-to-dark .contacts-cover) {
+    background: #FFFFFF !important;
+  }
   :global(body.website-service-page #scope) { padding-bottom: 0; }
   :global(body.website-service-page .editorial-body) { display: flow-root; }
   .service-block-gap { width: 100%; height: var(--service-block-gap); background: transparent; }

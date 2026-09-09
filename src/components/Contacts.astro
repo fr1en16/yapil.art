@@ -17,6 +17,7 @@ interface Props {
   blendFromAccent?: boolean;
   gradientToDark?: boolean;
   lang?: 'ru' | 'en';
+  whatsappMessage?: string;
 }
 
 const {
@@ -30,6 +31,7 @@ const {
   blendFromAccent = false,
   gradientToDark = false,
   lang = 'ru',
+  whatsappMessage,
 } = Astro.props;
 const isLight = theme === 'light';
 const isEn = lang === 'en';
@@ -45,11 +47,11 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
 
 const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
-const whatsappHref = getWhatsAppUrl({
-  pageUrl: currentUrl,
-  sourceContext: source,
-  phone: settings?.whatsappPhone,
-});
+const whatsappHref = getWhatsAppUrl(
+  whatsappMessage
+    ? { message: whatsappMessage, phone: settings?.whatsappPhone }
+    : { pageUrl: currentUrl, sourceContext: source, phone: settings?.whatsappPhone },
+);
 const telegramHref = getTelegramUrl({ username: settings?.telegramUsername });
 const contactEmail = settings?.contactEmail ?? 'hi@yapil.art';
 ---

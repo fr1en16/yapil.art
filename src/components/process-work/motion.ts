@@ -96,7 +96,7 @@ export function initProcessWork() {
     }
     const observer=new ResizeObserver(resize);observer.observe(stage);resize();
     const processTween = gsap.fromTo(state, { progress: .1 }, autoplay
-      ? { progress: 1, duration: 5.2, ease: 'power2.inOut', repeat: -1, repeatDelay: .6, paused: true, onUpdate: draw }
+      ? { progress: 1, duration: 2.6, ease: 'power2.inOut', repeat: -1, repeatDelay: .6, paused: true, onUpdate: draw }
       : { progress: 1, ease: 'none', onUpdate: draw, scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: .25 } });
     const stopWatchingProcess = autoplay ? playWhileVisible(section, processTween) : undefined;
 
@@ -150,6 +150,8 @@ export function initProcessWork() {
     return ()=>{stopWatchingProcess?.();processTween.kill();observer.disconnect();cards.forEach(card=>card.style.removeProperty('clip-path'));items.forEach((item,i)=>{item.removeEventListener('click',clickHandlers[i]);item.removeAttribute('aria-pressed');});slides.forEach((slide,i)=>{slide.inert=false;slide.removeEventListener('pointermove',pointerHandlers[i]);});};
   });
   media.add('(max-width: 991px) and (prefers-reduced-motion: no-preference)', () => {
+    // Autoplay pages skip the scroll-driven road animation on mobile: cards are a plain swipeable strip (see CSS .is-autoplay .process-stage).
+    if (autoplay) return;
     const section = root.querySelector<HTMLElement>('.process-section');
     const stage = root.querySelector<HTMLElement>('.process-stage');
     const track = root.querySelector<HTMLElement>('.process-grid');
@@ -234,20 +236,17 @@ export function initProcessWork() {
     observer.observe(stage);
     resize();
     const travel = () => Math.max(0, track.scrollWidth - stage.clientWidth);
-    const timeline = gsap.timeline(autoplay ? { paused: true, repeat: -1, repeatDelay: .6 } : { paused: true })
-      .to([track, canvas], { x: () => -travel(), duration: 1, ease: autoplay ? 'power2.inOut' : 'none' }, 0)
-      .to(state, { progress: 1, duration: 1, ease: autoplay ? 'power2.inOut' : 'none', onUpdate: draw }, 0);
-    if (autoplay) timeline.duration(5.2);
-    const trigger = autoplay ? undefined : ScrollTrigger.create({
+    const timeline = gsap.timeline({ paused: true })
+      .to([track, canvas], { x: () => -travel(), duration: 1, ease: 'none' }, 0)
+      .to(state, { progress: 1, duration: 1, ease: 'none', onUpdate: draw }, 0);
+    const trigger = ScrollTrigger.create({
       trigger: section, animation: timeline, start: 'top top', end: 'bottom bottom', scrub: .35,
       invalidateOnRefresh: true,
       snap: { snapTo: 1 / (cards.length - 1), duration: { min: .25, max: .45 }, delay: .06, inertia: false },
     });
-    const stopWatching = autoplay ? playWhileVisible(section, timeline) : undefined;
     return () => {
       observer.disconnect();
-      stopWatching?.();
-      trigger?.kill();
+      trigger.kill();
       timeline.kill();
       gsap.set([track, canvas], { clearProps: 'transform' });
     };

@@ -4,14 +4,19 @@ import { getWhatsAppUrl } from '../utils/messengerLinks';
 interface Props {
   lang?: string;
   pageUrl?: string;
+  message?: string;
 }
 
-const { lang = 'ru', pageUrl = Astro.url.href } = Astro.props;
+const { lang = 'ru', pageUrl = Astro.url.href, message } = Astro.props;
 const label = lang === 'en' ? 'Contact via WhatsApp' : 'Связаться в WhatsApp';
-const whatsappHref = getWhatsAppUrl({
-  pageUrl,
-  sourceContext: 'floating_whatsapp',
-});
+const whatsappHref = getWhatsAppUrl(
+  message
+    ? { message }
+    : {
+        pageUrl,
+        sourceContext: 'floating_whatsapp',
+      },
+);
 ---
 
 <a
