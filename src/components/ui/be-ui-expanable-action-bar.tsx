@@ -30,6 +30,7 @@ export type ExpandableActionBarItem = {
   id: string;
   label: ReactNode;
   icon: ReactNode;
+  href?: string;
   onClick?: () => void;
   disabled?: boolean;
   active?: boolean;
@@ -54,7 +55,7 @@ export interface ExpandableActionBarProps {
   defaultExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
   activeId?: string;
-  onAction?: (item: ExpandableActionBarItem) => void;
+  onAction?: (item: ExpandableActionBarItem, event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   size?: ExpandableActionBarSize;
   expandOnHover?: boolean;
   expandOnFocus?: boolean;
@@ -198,13 +199,16 @@ export function ExpandableActionBar({
           {items.map((item) => {
             const isActive = item.active || activeId === item.id;
             const isHighlighted = highlightId === item.id;
+            const Item = item.href ? motion.a : motion.button;
 
             return (
-              <motion.button
+              <Item
                 key={item.id}
                 layout="position"
-                type="button"
-                disabled={item.disabled}
+                type={item.href ? undefined : "button"}
+                href={item.disabled ? undefined : item.href}
+                disabled={item.href ? undefined : item.disabled}
+                aria-disabled={item.disabled || undefined}
                 aria-label={typeof item.label === "string" ? item.label : undefined}
                 title={typeof item.label === "string" ? item.label : undefined}
                 data-nav-link={item.id}
@@ -213,10 +217,14 @@ export function ExpandableActionBar({
                   clearCollapseTimer();
                   setHoveredId(item.id);
                 }}
-                onClick={(event: MouseEvent<HTMLButtonElement>) => {
-                  event.currentTarget.blur();
+                onClick={(event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+                  if (item.disabled) {
+                    event.preventDefault();
+                    return;
+                  }
+                  if (item.href && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
                   item.onClick?.();
-                  onAction?.(item);
+                  onAction?.(item, event);
                 }}
                 whileTap={reduce || item.disabled ? undefined : { scale: 0.96 }}
                 transition={ITEM_TRANSITION}
@@ -269,7 +277,7 @@ export function ExpandableActionBar({
                     </motion.span>
                   </>
                 )}
-              </motion.button>
+              </Item>
             );
           })}
         </motion.div>

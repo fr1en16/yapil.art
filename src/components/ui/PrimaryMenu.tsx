@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import type Lenis from "lenis";
 import { BriefcaseBusiness, Mail, MessageCircleMore } from "lucide-react";
 import {
@@ -53,12 +53,12 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
   }, []);
 
   const items = useMemo<ExpandableActionBarItem[]>(() => [
-    { id: "cases", label: isEn ? "Cases" : "Кейсы", icon: <BriefcaseBusiness /> },
-    { id: "reviews", label: isEn ? "Reviews" : "Отзывы", icon: <MessageCircleMore /> },
-    { id: "contacts", label: isEn ? "Contacts" : "Контакты", icon: <Mail /> },
-  ], [isEn]);
+    { id: "cases", href: destinations.cases, label: isEn ? "Cases" : "Кейсы", icon: <BriefcaseBusiness /> },
+    { id: "reviews", href: destinations.reviews, label: isEn ? "Reviews" : "Отзывы", icon: <MessageCircleMore /> },
+    { id: "contacts", href: destinations.contacts, label: isEn ? "Contacts" : "Контакты", icon: <Mail /> },
+  ], [isEn, destinations]);
 
-  const navigate = (item: ExpandableActionBarItem) => {
+  const navigate = (item: ExpandableActionBarItem, event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
     setActiveId(item.id);
     const href = item.id === "contacts" ? contactsHref : destinations[item.id as keyof typeof destinations];
     const target = new URL(href, window.location.href);
@@ -68,12 +68,16 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
       const section = document.querySelector<HTMLElement>(target.hash);
       if (!section) return;
 
+      event.preventDefault();
       window.history.pushState(null, "", target.hash);
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       const alignSection = (duration: number) => {
         const lenis = (window as typeof window & { __lenisInstance?: Lenis | null }).__lenisInstance;
 
-        if (lenis) {
+        if (reduceMotion) {
+          section.scrollIntoView({ behavior: "instant", block: "start" });
+        } else if (lenis) {
           lenis.scrollTo(section, { offset: -20, duration });
         } else {
           const top = window.scrollY + section.getBoundingClientRect().top - 20;
@@ -98,8 +102,6 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
           alignSection(0.25);
         }, 3000);
       }
-    } else {
-      window.location.assign(href);
     }
   };
 

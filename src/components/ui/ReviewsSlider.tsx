@@ -290,7 +290,7 @@ export default function ReviewsSlider({
                 <div className="hidden md:flex md:col-span-2 flex-col gap-2">
                   <a
                     href={currentItem.projectUrl}
-                    className="group block overflow-hidden relative border transition-all duration-300"
+                    className="group block overflow-hidden relative border transition-[border-color,background-color] duration-300"
                     style={{
                       borderColor: isLight
                         ? 'rgba(0,0,0,0.1)'
@@ -310,6 +310,8 @@ export default function ReviewsSlider({
                     >
                       <img
                         src={currentItem.projectImage}
+                        width={currentItem.projectImageWidth ?? 1440}
+                        height={currentItem.projectImageHeight ?? reviewsData.find((item) => item.projectImage === currentItem.projectImage)?.projectImageHeight ?? 1152}
                         alt={`Кейс — ${currentItem.projectTitle}`}
                         loading="lazy"
                         decoding="async"

@@ -20,7 +20,7 @@ const { autoplay = false, projects = defaultProjects, title = 'Избранны�
     <div class="work-images">
       <p class="work-intro">{intro}</p>
       <div class="mobile-slides">
-        {projects.map((project,i)=><a class="work-slide" id={`project-${i}`} href={`/case/${project.slug}`} aria-label={`Смотреть кейс ${project.name}`} data-mobile-slide={i} data-name={project.name} data-tags={project.tags} data-slug={project.slug}><img src={project.image} alt={project.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" /></a>)}
+        {projects.map((project,i)=><a class="work-slide" id={`project-${i}`} href={`/case/${project.slug}`} aria-label={`Смотреть кейс ${project.name}`} data-mobile-slide={i} data-name={project.name} data-tags={project.tags} data-slug={project.slug}><img src={project.image} width="1440" height="1152" alt={project.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" /></a>)}
       </div>
       <div class="mobile-project-meta" aria-live="polite">
         <p class="mobile-project-tags">{projects[0].tags}</p>

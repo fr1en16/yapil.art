@@ -57,7 +57,7 @@ const {
         {ripple && <span class="hero-link-ripple" aria-hidden="true"></span>}
         <span class="hero-link-inner">
           <span class="hero-link-text">{ctaText}</span>
-          <span class="hero-link-arrow" aria-hidden="true">↓</span>
+          <span class="hero-link-arrow" aria-hidden="true">{ctaExternal ? '↗' : '↓'}</span>
         </span>
       </a>
       {secondaryHref && secondaryText && (

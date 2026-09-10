@@ -43,12 +43,13 @@ const idBase = `${offer.slug}-${instance}`;
     </div>
 
     <label class="ad-consent">
-      <input type="checkbox" name="privacy" />
+      <input type="checkbox" name="privacy" required aria-describedby={`ad-privacy-error-${idBase}`} />
       <span class="ad-consent__box" aria-hidden="true">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg>
       </span>
       <span>Соглашаюсь с <a href="/privacy" target="_blank" rel="noopener noreferrer">условиями конфиденциальности</a>.</span>
     </label>
+    <span class="ad-field-error" id={`ad-privacy-error-${idBase}`} data-privacy-error aria-live="polite"></span>
 
     <button class="ad-submit" type="submit">
       <span data-submit-label>Получить расчёт стоимости</span>
@@ -68,6 +69,7 @@ const idBase = `${offer.slug}-${instance}`;
       const phone = form.querySelector<HTMLInputElement>('input[name="phone"]');
       const platform = form.querySelector<HTMLSelectElement>('[data-platform-select]');
       const privacy = form.querySelector<HTMLInputElement>('input[name="privacy"]');
+      const privacyError = form.querySelector<HTMLElement>('[data-privacy-error]');
       const phoneError = form.querySelector<HTMLElement>('[data-phone-error]');
       const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
       const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
@@ -95,14 +97,16 @@ const idBase = `${offer.slug}-${instance}`;
         phone.value = value;
       };
 
-      phone.addEventListener('input', formatPhone);
+      phone.addEventListener('input', () => {
+        formatPhone();
+        phone.removeAttribute('aria-invalid');
+        if (phoneError) phoneError.textContent = '';
+      });
+      privacy.addEventListener('change', () => {
+        privacy.removeAttribute('aria-invalid');
+        if (privacyError) privacyError.textContent = '';
+      });
       platform.addEventListener('change', () => {
-        document.querySelectorAll<HTMLSelectElement>('[data-platform-select]').forEach((select) => {
-          if (select !== platform) select.value = platform.value;
-        });
-        document.querySelectorAll<HTMLInputElement>('[data-platform-choice]').forEach((choice) => {
-          choice.checked = choice.value === platform.value;
-        });
         track('platform_select');
       });
 
@@ -115,14 +119,24 @@ const idBase = `${offer.slug}-${instance}`;
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         if (phoneError) phoneError.textContent = '';
+        if (privacyError) privacyError.textContent = '';
+        phone.removeAttribute('aria-invalid');
+        privacy.removeAttribute('aria-invalid');
         result.hidden = true;
 
         const digits = phone.value.replace(/\D/g, '');
         let firstInvalid: HTMLElement | null = null;
         if (digits.length !== 11) {
           if (phoneError) phoneError.textContent = 'Укажите полный номер телефона.';
+          phone.setAttribute('aria-invalid', 'true');
           firstInvalid = phone;
           track('form_validation_error', { field: 'phone' });
+        }
+        if (!privacy.checked) {
+          if (privacyError) privacyError.textContent = 'Подтвердите согласие с условиями конфиденциальности.';
+          privacy.setAttribute('aria-invalid', 'true');
+          firstInvalid ??= privacy;
+          track('form_validation_error', { field: 'privacy' });
         }
         if (firstInvalid) {
           firstInvalid.focus();

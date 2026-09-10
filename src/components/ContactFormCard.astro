@@ -19,6 +19,8 @@ const {
   bordered = true,
 } = Astro.props;
 const isEn = lang === 'en';
+const idPrefix = `contact-${crypto.randomUUID()}`;
+const fieldId = (name: string) => `${idPrefix}-${name}`;
 
 const displaySuccessText = successText ?? (isEn
   ? 'Thank you for reaching out. I will review your project and reply within 2 hours.'
@@ -30,42 +32,44 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
   <form class="feedback-form" data-source={source} data-source-details={displaySourceDetails} data-lang={lang} novalidate>
     <!-- 1. Name -->
     <div class="form-group">
-      <label class="form-label" for="client-name">
+      <label class="form-label" for={fieldId('client-name')}>
         {isEn ? 'Name' : 'Имя'}
       </label>
       <input
         type="text"
-        id="client-name"
+        id={fieldId('client-name')}
         name="name"
+        aria-describedby={fieldId('name-error')}
         class="form-control"
         placeholder={isEn ? 'How to address you' : 'Как к вам обращаться'}
         autocomplete="name"
       />
-      <span class="field-error field-error-name" id="name-error" aria-live="polite"></span>
+      <span class="field-error field-error-name" id={fieldId('name-error')} aria-live="polite"></span>
     </div>
 
     <!-- 2. Phone with automatic mask -->
     <div class="form-group">
-      <label class="form-label" for="client-phone">
+      <label class="form-label" for={fieldId('client-phone')}>
         {isEn ? 'Phone number' : 'Номер телефона'} <span class="required-star" aria-hidden="true">*</span>
       </label>
       <input
         type="tel"
-        id="client-phone"
+        id={fieldId('client-phone')}
         name="phone"
+        aria-describedby={fieldId('phone-error')}
         class="form-control"
         placeholder={isEn ? '+1 (___) ___ ____' : '+7 (___) ___-__-__'}
         required
         autocomplete="tel"
         inputmode="tel"
       />
-      <span class="field-error field-error-phone" id="phone-error" aria-live="polite"></span>
+      <span class="field-error field-error-phone" id={fieldId('phone-error')} aria-live="polite"></span>
     </div>
 
     <!-- 3. What interests you (Service Chips) -->
     <div class="form-group" hidden style="display: none;">
-      <label class="form-label" id="services-label">{isEn ? 'What interests you?' : 'Что вас интересует?'}</label>
-      <div class="service-chips" role="group" aria-labelledby="services-label">
+      <label class="form-label" id={fieldId('services-label')}>{isEn ? 'What interests you?' : 'Что вас интересует?'}</label>
+      <div class="service-chips" role="group" aria-labelledby={fieldId('services-label')}>
         <label class="chip">
           <input type="checkbox" name="services" value={isEn ? 'Websites' : 'Сайты'} checked={selectedService === 'Сайты' || selectedService === 'Websites'} />
           <span class="chip-label">{isEn ? 'Websites' : 'Сайты'}</span>
@@ -95,9 +99,9 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
 
     <!-- 4. Message (About task) -->
     <div class="form-group">
-      <label class="form-label" for="client-message">{isEn ? 'About the task' : 'О задаче'}</label>
+      <label class="form-label" for={fieldId('client-message')}>{isEn ? 'About the task' : 'О задаче'}</label>
       <textarea
-        id="client-message"
+        id={fieldId('client-message')}
         name="message"
         class="form-control form-textarea"
         rows="3"
@@ -109,11 +113,12 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
 
     <!-- 5. Consent Checkbox -->
     <div class="consent-group">
-      <label class="form-consent" for="privacy-consent">
+      <label class="form-consent" for={fieldId('privacy-consent')}>
         <input
           type="checkbox"
           name="privacy"
-          id="privacy-consent"
+          aria-describedby={fieldId('privacy-error')}
+          id={fieldId('privacy-consent')}
           class="consent-checkbox"
           checked
         />
@@ -130,7 +135,7 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
           )}
         </span>
       </label>
-      <span class="field-error field-error-privacy" id="privacy-error" aria-live="polite"></span>
+      <span class="field-error field-error-privacy" id={fieldId('privacy-error')} aria-live="polite"></span>
     </div>
 
     <!-- 6. Submit Button -->
@@ -235,9 +240,9 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
       const nameInput = form.querySelector('input[name="name"]') as HTMLInputElement | null;
       const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement | null;
       const privacyCheckbox = form.querySelector('input[name="privacy"]') as HTMLInputElement | null;
-      const nameError = form.querySelector('.field-error-name, #name-error') as HTMLElement | null;
-      const phoneError = form.querySelector('.field-error-phone, #phone-error') as HTMLElement | null;
-      const privacyError = form.querySelector('.field-error-privacy, #privacy-error') as HTMLElement | null;
+      const nameError = form.querySelector('.field-error-name') as HTMLElement | null;
+      const phoneError = form.querySelector('.field-error-phone') as HTMLElement | null;
+      const privacyError = form.querySelector('.field-error-privacy') as HTMLElement | null;
       const submitBtn = form.querySelector('.submit-button') as HTMLButtonElement | null;
 
       const isEn = form.dataset.lang === 'en';
@@ -364,6 +369,7 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
 
 <style>
   .feedback-card {
+    color-scheme: light;
     --ink-primary: #1D1D1D;
     --ink-muted: #66635F;
     position: relative;
@@ -479,7 +485,7 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
     background: var(--page-neutral-surface, #F6F4F2);
     border: 1px solid #E2DED9;
     border-radius: 100px;
-    transition: all 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
     text-align: center;
     white-space: nowrap;
   }
@@ -505,7 +511,7 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
     width: 100%;
     padding: 0.85rem 1rem;
     font-family: var(--font-body);
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #1D1D1D;
     background: var(--page-neutral-surface, #FFFFFF);
     border: 1px solid #D5D2CE;

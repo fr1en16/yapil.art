@@ -56,8 +56,9 @@
 
     // Smooth anchor navigation handling for #hash and /#hash
     document.addEventListener('click', (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const target = (e.target as HTMLElement)?.closest('a');
-      if (!target) return;
+      if (!target || target.hasAttribute('data-nav-link') || target.target === '_blank') return;
 
       const href = target.getAttribute('href');
       if (!href) return;
