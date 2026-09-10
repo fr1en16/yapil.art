@@ -19,6 +19,8 @@ export interface ReviewItem {
   projectTitle: string;
   projectUrl: string;
   projectImage: string;
+  projectImageWidth?: number;
+  projectImageHeight?: number;
   quote: string;
   fullReview?: FullReviewData;
 }
@@ -42,6 +44,8 @@ export const reviewsData: ReviewItem[] = [
     projectTitle: 'Рыкунов и Кудряшов',
     projectUrl: '/case/rv',
     projectImage: 'https://media.yapil.art/case/rv.564e517acee7b483.webp',
+    projectImageWidth: 1440,
+    projectImageHeight: 1080,
     quote:
       'Сотрудничаем с Яшей с 2020 года. За это время реализовали огромный объем работы и запустили множество сайтов. Это специалист, который работает быстро, качественно и всегда готов выручить в сжатые сроки. Яша не только крутой профессионал, но и отличный человек. Он всегда делает свою работу качественно, а его визуальные решения одни из лучших. Однозначно рекомендую к сотрудничеству!',
     fullReview: {
@@ -119,6 +123,8 @@ export const reviewsDataEn: ReviewItem[] = [
     projectTitle: 'Rykunov & Kudryashov',
     projectUrl: '/case/rv',
     projectImage: 'https://media.yapil.art/case/rv.564e517acee7b483.webp',
+    projectImageWidth: 1440,
+    projectImageHeight: 1080,
     quote:
       'I have been collaborating with Yakov since 2020. Over this time, we have delivered a massive volume of work and launched numerous websites. He works fast, delivers top quality, and is always ready to step in under tight deadlines. Yakov is not only a great professional but also a pleasure to work with. His visual solutions are truly top-tier. Highly recommended!',
     fullReview: {
