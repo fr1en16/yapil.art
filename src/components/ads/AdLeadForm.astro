@@ -1,0 +1,189 @@
+---
+import type { WebsiteAdOffer } from '../../data/websiteAdOffers';
+
+interface Props {
+  offer: WebsiteAdOffer;
+  instance?: string;
+}
+
+const { offer, instance = 'default' } = Astro.props;
+const idBase = `${offer.slug}-${instance}`;
+---
+
+<div class="ad-lead-card">
+  <form class="ad-lead-form" data-ad-lead-form data-offer={offer.slug} data-offer-name={offer.name} novalidate>
+    <div class="ad-field">
+      <label for={`ad-name-${idBase}`}>Имя</label>
+      <input id={`ad-name-${idBase}`} name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" />
+    </div>
+
+    <div class="ad-field">
+      <label for={`ad-phone-${idBase}`}>Номер телефона <span aria-hidden="true">*</span></label>
+      <input
+        id={`ad-phone-${idBase}`}
+        name="phone"
+        type="tel"
+        autocomplete="tel"
+        inputmode="tel"
+        placeholder="+7 (___) ___-__-__"
+        aria-describedby={`ad-phone-error-${idBase}`}
+        required
+      />
+      <span class="ad-field-error" id={`ad-phone-error-${idBase}`} data-phone-error aria-live="polite"></span>
+    </div>
+
+    <div class="ad-field">
+      <label for={`ad-platform-${idBase}`}>Платформа</label>
+      <select id={`ad-platform-${idBase}`} name="platform" data-platform-select>
+        <option value="">Выберите вариант</option>
+        <option value="tilda">Tilda — от {new Intl.NumberFormat('ru-RU').format(offer.tildaPrice)} ₸</option>
+        <option value="code">Чистый код + CMS — от {new Intl.NumberFormat('ru-RU').format(offer.codePrice)} ₸</option>
+        <option value="recommendation">Нужна рекомендация</option>
+      </select>
+    </div>
+
+    <label class="ad-consent">
+      <input type="checkbox" name="privacy" />
+      <span class="ad-consent__box" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg>
+      </span>
+      <span>Соглашаюсь с <a href="/privacy" target="_blank" rel="noopener noreferrer">условиями конфиденциальности</a>.</span>
+    </label>
+
+    <button class="ad-submit" type="submit">
+      <span data-submit-label>Получить расчёт стоимости</span>
+      <span aria-hidden="true">→</span>
+    </button>
+  </form>
+
+  <div class="ad-lead-result" data-lead-result hidden tabindex="-1" aria-live="polite"></div>
+</div>
+
+<script>
+  const initAdLeadForms = () => {
+    document.querySelectorAll<HTMLFormElement>('[data-ad-lead-form]').forEach((form) => {
+      if (form.dataset.ready === 'true') return;
+      form.dataset.ready = 'true';
+
+      const phone = form.querySelector<HTMLInputElement>('input[name="phone"]');
+      const platform = form.querySelector<HTMLSelectElement>('[data-platform-select]');
+      const privacy = form.querySelector<HTMLInputElement>('input[name="privacy"]');
+      const phoneError = form.querySelector<HTMLElement>('[data-phone-error]');
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+      const result = form.parentElement?.querySelector<HTMLElement>('[data-lead-result]');
+      if (!phone || !platform || !privacy || !submit || !submitLabel || !result) return;
+
+      const track = (name: string, params: Record<string, unknown> = {}) => {
+        const eventParams = { offer: form.dataset.offer, platform: platform.value || 'unset', ...params };
+        const analyticsWindow = window as typeof window & {
+          gtag?: (...args: unknown[]) => void;
+        };
+        analyticsWindow.gtag?.('event', name, eventParams);
+      };
+
+      const formatPhone = () => {
+        const digits = phone.value.replace(/\D/g, '');
+        if (!digits) return;
+        let raw = digits.startsWith('8') || digits.startsWith('7') ? `7${digits.slice(1)}` : `7${digits}`;
+        raw = raw.slice(0, 11);
+        let value = '+7';
+        if (raw.length > 1) value += ` (${raw.slice(1, 4)}`;
+        if (raw.length > 4) value += `) ${raw.slice(4, 7)}`;
+        if (raw.length > 7) value += `-${raw.slice(7, 9)}`;
+        if (raw.length > 9) value += `-${raw.slice(9, 11)}`;
+        phone.value = value;
+      };
+
+      phone.addEventListener('input', formatPhone);
+      platform.addEventListener('change', () => {
+        document.querySelectorAll<HTMLSelectElement>('[data-platform-select]').forEach((select) => {
+          if (select !== platform) select.value = platform.value;
+        });
+        document.querySelectorAll<HTMLInputElement>('[data-platform-choice]').forEach((choice) => {
+          choice.checked = choice.value === platform.value;
+        });
+        track('platform_select');
+      });
+
+      form.addEventListener('focusin', () => {
+        if (form.dataset.started === 'true') return;
+        form.dataset.started = 'true';
+        track('form_start');
+      });
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (phoneError) phoneError.textContent = '';
+        result.hidden = true;
+
+        const digits = phone.value.replace(/\D/g, '');
+        let firstInvalid: HTMLElement | null = null;
+        if (digits.length !== 11) {
+          if (phoneError) phoneError.textContent = 'Укажите полный номер телефона.';
+          firstInvalid = phone;
+          track('form_validation_error', { field: 'phone' });
+        }
+        if (firstInvalid) {
+          firstInvalid.focus();
+          return;
+        }
+
+        submit.disabled = true;
+        submitLabel.textContent = 'Отправляем…';
+        track('lead_submit_attempt');
+
+        const params = new URLSearchParams(window.location.search);
+        const attribution = Object.fromEntries(
+          ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid']
+            .map((key) => [key, params.get(key)])
+            .filter(([, value]) => Boolean(value)),
+        );
+        const leadId = `YP-AD-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const platformLabel = platform.value
+          ? platform.options[platform.selectedIndex]?.textContent?.replace(/\s+—\s+от.+$/, '') || platform.value
+          : 'Не выбрана';
+
+        try {
+          const response = await fetch('/api/lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: leadId,
+              name: String(new FormData(form).get('name') || '').trim() || 'Не указано',
+              phone: phone.value,
+              services: [form.dataset.offerName, `Платформа: ${platformLabel}`],
+              source: 'ad_landing_form',
+              sourceDetails: `Рекламная страница: ${form.dataset.offer}; платформа: ${platformLabel}`,
+              pageUrl: window.location.href,
+              referrer: document.referrer,
+              utm: attribution,
+            }),
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || !payload.success) throw new Error(payload.error || 'lead_delivery_failed');
+
+          track('lead_submit_success', { lead_id: leadId, delivery_channel: payload.deliveryChannel || 'server' });
+          form.hidden = true;
+          result.hidden = false;
+          result.className = 'ad-lead-result is-success';
+          result.innerHTML = '<strong>Заявка принята.</strong><span>Яков свяжется с вами в течение 10 минут в рабочее время с 12:00 до 20:00.</span>';
+          result.focus();
+        } catch (error) {
+          track('lead_submit_error', { error_type: error instanceof Error ? error.message : 'unknown' });
+          result.hidden = false;
+          result.className = 'ad-lead-result is-error';
+          result.innerHTML = '<strong>Не удалось отправить заявку.</strong><span>Попробуйте ещё раз или напишите Якову в WhatsApp.</span>';
+          result.focus();
+        } finally {
+          submit.disabled = false;
+          submitLabel.textContent = 'Получить расчёт стоимости';
+        }
+      });
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', initAdLeadForms);
+  document.addEventListener('astro:page-load', initAdLeadForms);
+  initAdLeadForms();
+</script>

@@ -3,9 +3,13 @@ interface Props {
   theme?: 'dark' | 'light';
   title?: string;
   description?: string;
+  descriptionItems?: Array<{ icon: 'price' | 'time'; text: string }>;
   casesHref?: string;
   ctaText?: string;
   ctaExternal?: boolean;
+  secondaryHref?: string;
+  secondaryText?: string;
+  secondaryExternal?: boolean;
   ripple?: boolean;
 }
 
@@ -13,9 +17,13 @@ const {
   theme = 'dark',
   title = 'Дизайн, который<br />работает на бизнес',
   description = 'Создаём айдентику и сайты, которые выделяют компанию среди конкурентов и приносят заявки.',
+  descriptionItems,
   casesHref = '#cases',
   ctaText = 'Смотреть кейсы',
   ctaExternal = false,
+  secondaryHref,
+  secondaryText,
+  secondaryExternal = false,
   ripple = false,
 } = Astro.props;
 ---
@@ -23,22 +31,52 @@ const {
 <section class="hero-cover" aria-labelledby="hero-title" data-hero-cover>
   <div class="hero-copy">
     <h1 id="hero-title" class="hero-layer hero-layer--title" set:html={title} />
-    <p class="hero-description hero-layer hero-layer--description">
-      {description}
+    <p class:list={['hero-description hero-layer hero-layer--description', { 'hero-description--items': descriptionItems?.length }] }>
+      {descriptionItems?.length ? descriptionItems.map((item) => (
+        <span class="hero-description-item">
+          <span class="hero-description-icon" aria-hidden="true">
+            {item.icon === 'price' ? (
+              <svg viewBox="0 0 24 24"><path d="M20 13 13 20l-9-9V4h7l9 9Z" /><circle cx="8.5" cy="8.5" r="1.25" /></svg>
+            ) : (
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
+            )}
+          </span>
+          <span>{item.text}</span>
+        </span>
+      )) : description}
     </p>
-    <a
-      class="hero-link hero-layer hero-layer--cta"
-      href={casesHref}
-      target={ctaExternal ? '_blank' : undefined}
-      rel={ctaExternal ? 'noopener noreferrer' : undefined}
-      data-hero-ripple={ripple ? '' : undefined}
-    >
-      {ripple && <span class="hero-link-ripple" aria-hidden="true"></span>}
-      <span class="hero-link-inner">
-        <span class="hero-link-text">{ctaText}</span>
-        <span class="hero-link-arrow" aria-hidden="true">↓</span>
-      </span>
-    </a>
+    <div class="hero-actions hero-layer hero-layer--cta">
+      <a
+        class="hero-link"
+        href={casesHref}
+        target={ctaExternal ? '_blank' : undefined}
+        rel={ctaExternal ? 'noopener noreferrer' : undefined}
+        data-hero-primary-cta
+        data-hero-ripple={ripple ? '' : undefined}
+      >
+        {ripple && <span class="hero-link-ripple" aria-hidden="true"></span>}
+        <span class="hero-link-inner">
+          <span class="hero-link-text">{ctaText}</span>
+          <span class="hero-link-arrow" aria-hidden="true">↓</span>
+        </span>
+      </a>
+      {secondaryHref && secondaryText && (
+        <a
+          class="hero-link hero-link--secondary"
+          href={secondaryHref}
+          target={secondaryExternal ? '_blank' : undefined}
+          rel={secondaryExternal ? 'noopener noreferrer' : undefined}
+          data-hero-secondary-cta
+          data-hero-ripple={ripple ? '' : undefined}
+        >
+          {ripple && <span class="hero-link-ripple" aria-hidden="true"></span>}
+          <span class="hero-link-inner">
+            <span class="hero-link-text">{secondaryText}</span>
+            <span class="hero-link-arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+      )}
+    </div>
     <slot />
   </div>
 </section>
@@ -224,6 +262,49 @@ const {
     font: 400 clamp(1rem, 0.9vw, 1.15rem) / 1.3 'Hero DM Sans', sans-serif;
   }
 
+  .hero-description--items {
+    display: flex;
+    max-width: 66rem;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .hero-description-item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .65rem;
+    text-align: center;
+  }
+
+  .hero-description-icon {
+    display: grid;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex: 0 0 1.75rem;
+    place-items: center;
+    color: #fff;
+  }
+
+  .hero-description-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: .65rem;
+  }
+
   /* 2. Button Container Scaling & Elastic Spring Easing */
   .hero-link {
     position: relative;
@@ -244,6 +325,17 @@ const {
       box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
     overflow: hidden;
     isolation: isolate;
+  }
+
+  .hero-link--secondary {
+    color: #1d1d1d;
+    background: #fff;
+  }
+
+  .hero-link--secondary:hover,
+  .hero-link--secondary:focus-visible {
+    color: #fff;
+    background: #000;
   }
 
   .hero-link-ripple {
@@ -275,8 +367,6 @@ const {
     }
   }
 
-  .hero-copy:has(.hero-link:hover) .hero-layer--cta,
-  .hero-copy:has(.hero-link:focus-visible) .hero-layer--cta,
   .hero-link:hover,
   .hero-link:focus-visible {
     transform: translateZ(82px) scale(1.07);
@@ -355,6 +445,28 @@ const {
       line-height: 1.3;
     }
 
+    .hero-description--items {
+      align-items: center;
+      flex-direction: column;
+      gap: .8rem;
+    }
+
+    .hero-description-item {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .hero-actions {
+      align-items: stretch;
+      flex-direction: column;
+      width: min(100%, 23rem);
+      margin-inline: auto;
+    }
+
+    .hero-actions .hero-link {
+      width: 100%;
+    }
+
     .desktop-break {
       display: none;
     }
@@ -367,8 +479,6 @@ const {
       opacity: 0.9;
     }
 
-    .hero-copy:has(.hero-link:hover) .hero-layer--cta,
-    .hero-copy:has(.hero-link:focus-visible) .hero-layer--cta,
     .hero-link:hover,
     .hero-link:focus-visible {
       transform: scale(1.04);

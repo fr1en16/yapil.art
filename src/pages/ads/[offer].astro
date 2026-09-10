@@ -1,0 +1,19 @@
+---
+import WebsiteAdLanding from '../../components/ads/WebsiteAdLanding.astro';
+import { websiteAdOfferList, type WebsiteAdOffer } from '../../data/websiteAdOffers';
+
+export function getStaticPaths() {
+  return websiteAdOfferList.map((offer) => ({
+    params: { offer: offer.slug },
+    props: { offer },
+  }));
+}
+
+interface Props {
+  offer: WebsiteAdOffer;
+}
+
+const { offer } = Astro.props;
+---
+
+<WebsiteAdLanding {offer} />

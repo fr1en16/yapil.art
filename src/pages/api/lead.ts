@@ -48,7 +48,7 @@ export const POST: APIRoute = async ({ request }) => {
     const webhookUrl = getWebhookUrl();
 
     let telegramSent = false;
-    let telegramError: any = null;
+    let webhookSent = false;
 
     if (token && chatId) {
       const servicesText =
@@ -60,17 +60,17 @@ export const POST: APIRoute = async ({ request }) => {
           .filter(([_, v]) => Boolean(v))
           .map(([k, v]) => `${k}: ${v}`);
         if (utmParts.length > 0) {
-          utmText = `\n📊 *UTM:* ${utmParts.join(' | ')}`;
+          utmText = `\n📊 UTM: ${utmParts.join(' | ')}`;
         }
       }
 
-      const text = `🔥 *Новая заявка на сайте Yapil!* (${id})
-👤 *Клиент:* ${name}
-📞 *Телефон:* ${phone}
-${email ? `✉️ *Email:* ${email}\n` : ''}💼 *Услуги:* ${servicesText}
-${budget ? `💰 *Бюджет:* ${budget}\n` : ''}${message ? `💬 *Сообщение:* ${message}\n` : ''}📍 *Источник:* ${sourceDetails || source}
-🔗 *Страница:* ${pageUrl}${utmText}
-🕒 *Время:* ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Almaty' })}`;
+      const text = `🔥 Новая заявка на сайте Yapil! (${id})
+👤 Клиент: ${name}
+📞 Телефон: ${phone}
+${email ? `✉️ Email: ${email}\n` : ''}💼 Услуги: ${servicesText}
+${budget ? `💰 Бюджет: ${budget}\n` : ''}${message ? `💬 Сообщение: ${message}\n` : ''}📍 Источник: ${sourceDetails || source}
+🔗 Страница: ${pageUrl}${utmText}
+🕒 Время: ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Almaty' })}`;
 
       try {
         const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -79,7 +79,6 @@ ${budget ? `💰 *Бюджет:* ${budget}\n` : ''}${message ? `💬 *Сообщ
           body: JSON.stringify({
             chat_id: chatId,
             text,
-            parse_mode: 'Markdown',
           }),
         });
 
@@ -87,11 +86,9 @@ ${budget ? `💰 *Бюджет:* ${budget}\n` : ''}${message ? `💬 *Сообщ
         if (tgRes.ok && tgData.ok) {
           telegramSent = true;
         } else {
-          telegramError = tgData;
           console.error('[API /api/lead] Telegram error:', tgData);
         }
       } catch (err: any) {
-        telegramError = err?.message || String(err);
         console.error('[API /api/lead] Telegram fetch failed:', err);
       }
     } else {
@@ -100,7 +97,7 @@ ${budget ? `💰 *Бюджет:* ${budget}\n` : ''}${message ? `💬 *Сообщ
 
     if (webhookUrl) {
       try {
-        await fetch(webhookUrl, {
+        const webhookResponse = await fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -109,20 +106,28 @@ ${budget ? `💰 *Бюджет:* ${budget}\n` : ''}${message ? `💬 *Сообщ
             lead: payload,
           }),
         });
+        webhookSent = webhookResponse.ok;
+        if (!webhookResponse.ok) {
+          console.error('[API /api/lead] Webhook returned:', webhookResponse.status);
+        }
       } catch (err) {
         console.error('[API /api/lead] Webhook dispatch error:', err);
       }
     }
 
+    const delivered = telegramSent || webhookSent;
+
     return new Response(
       JSON.stringify({
-        success: true,
+        success: delivered,
         telegramConfigured: Boolean(token && chatId),
         telegramSent,
-        ...(telegramError ? { telegramError } : {}),
+        webhookSent,
+        deliveryChannel: telegramSent ? 'telegram' : webhookSent ? 'webhook' : null,
+        ...(!delivered ? { error: 'Не удалось доставить заявку. Попробуйте ещё раз или напишите в WhatsApp.' } : {}),
       }),
       {
-        status: 200,
+        status: delivered ? 200 : 502,
         headers: { 'Content-Type': 'application/json' },
       }
     );

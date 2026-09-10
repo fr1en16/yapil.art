@@ -20,6 +20,7 @@ interface Props {
   noindex?: boolean;
   navOverlay?: boolean;
   navMinimal?: boolean;
+  hideNav?: boolean;
   bodyClass?: string;
   lang?: string;
   whatsappMessage?: string;
@@ -41,6 +42,7 @@ const {
   noindex = false,
   navOverlay,
   navMinimal = false,
+  hideNav = false,
   bodyClass,
   lang = 'ru',
   whatsappMessage,
@@ -187,7 +189,7 @@ const schemaJsonLd = {
   <body class:list={[bodyClass, { 'is-home': isHome, 'theme-light': theme === 'light' }]} data-theme={theme}>
     <a class="skip-link" href="#main-content">{lang === 'en' ? 'Skip to main content' : 'К основному содержанию'}</a>
     <SiteBackground />
-    <Nav overlay={isNavOverlay} theme={theme} minimal={navMinimal} lang={lang} />
+    {!hideNav && <Nav overlay={isNavOverlay} theme={theme} minimal={navMinimal} lang={lang} />}
     <main id="main-content">
       <slot />
     </main>
