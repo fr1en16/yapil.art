@@ -164,6 +164,7 @@ const idBase = `${offer.slug}-${instance}`;
           if (!response.ok || !payload.success) throw new Error(payload.error || 'lead_delivery_failed');
 
           track('lead_submit_success', { lead_id: leadId, delivery_channel: payload.deliveryChannel || 'server' });
+          track('generate_lead', { lead_id: leadId, delivery_channel: payload.deliveryChannel || 'server' });
           form.hidden = true;
           result.hidden = false;
           result.className = 'ad-lead-result is-success';
