@@ -38,6 +38,7 @@ export default defineConfig({
   adapter: vercel(),
   redirects: {
     ...buildPermanentRedirects(),
+    '/ads': { destination: '/', status: 301 },
     '/services/websites-static': { destination: '/services/websites', status: 301 },
   },
   server: {
