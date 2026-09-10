@@ -309,7 +309,7 @@ const jsonLd = {
         <header class="ad-heading"><h2 id="estimate-title">Получите расчёт стоимости</h2></header>
         <div class="ad-estimate__grid">
           <div class="ad-estimate__copy">
-            <p>Свяжемся в течение 10 минут, уточним задачу и подготовим стоимость и сроки.</p>
+            <p>Свяжемся в течение 10 минут в рабочее время с 12:00 до 20:00, уточним задачу и подготовим стоимость и сроки.</p>
             <dl>
               <div><dt>Услуга</dt><dd>{offer.name}</dd></div>
               <div><dt>Стоимость</dt><dd data-current-price>Tilda — от {formatKzt(offer.tildaPrice)} · Код + CMS — от {formatKzt(offer.codePrice)}</dd></div>
@@ -327,7 +327,7 @@ const jsonLd = {
       <div class="container ad-lead-dialog__inner">
         <div class="ad-lead-dialog__copy">
           <h2 id="ad-lead-dialog-title">{presentation.dialogTitle}</h2>
-          <p>Оставьте номер телефона. Свяжемся в течение 10 минут, уточним задачу и подготовим стоимость и сроки.</p>
+          <p>Оставьте номер телефона. Свяжемся в течение 10 минут в рабочее время с 12:00 до 20:00, уточним задачу и подготовим стоимость и сроки.</p>
           <dl>
             <div><dt>Стоимость</dt><dd data-current-price>Tilda — от {formatKzt(offer.tildaPrice)} · Код + CMS — от {formatKzt(offer.codePrice)}</dd></div>
             <div><dt>Срок</dt><dd>{presentation.dialogTerm}</dd></div>
@@ -374,17 +374,34 @@ const jsonLd = {
       });
     };
 
+    const syncPlatform = (platform: string) => {
+      formPlatforms.forEach((select) => { select.value = platform; });
+      let label = defaultPrice;
+      page.querySelectorAll<HTMLInputElement>('[data-platform-choice]').forEach((choice) => {
+        choice.checked = choice.value === platform;
+        if (!choice.checked) return;
+        label = platform === 'recommendation'
+          ? 'Подберём платформу после короткого разговора'
+          : `${platform === 'tilda' ? 'Tilda' : 'Чистый код + CMS'} — от ${new Intl.NumberFormat('ru-RU').format(Number(choice.dataset.price))} ₸`;
+      });
+      priceOutputs.forEach((output) => { output.textContent = label; });
+      syncWhatsappContext(platform);
+    };
     formPlatforms.forEach((select) => {
-      select.addEventListener('change', () => syncWhatsappContext(select.value));
+      select.addEventListener('change', () => syncPlatform(select.value));
     });
-    syncWhatsappContext(formPlatform?.value || '');
+    syncPlatform(formPlatform?.value || '');
 
     const openLeadDialog = (source: string) => {
       if (!leadDialog) return;
       if (!leadDialog.open) leadDialog.showModal();
       document.body.classList.add('ad-dialog-open');
       track('lead_dialog_open', { source, platform: formPlatform?.value || 'unset' });
-      window.setTimeout(() => leadDialog.querySelector<HTMLElement>('input[name="phone"]')?.focus(), 50);
+      if (window.matchMedia('(min-width: 768px) and (pointer: fine)').matches) {
+        leadDialog.querySelector<HTMLElement>('input[name="phone"]')?.focus();
+      } else {
+        leadDialog.querySelector<HTMLElement>('[data-close-lead-dialog]')?.focus({ preventScroll: true });
+      }
     };
 
     const closeLeadDialog = () => {
@@ -396,16 +413,8 @@ const jsonLd = {
     document.querySelectorAll<HTMLInputElement>('[data-platform-choice]').forEach((choice) => {
       choice.addEventListener('change', () => {
         if (!choice.checked) return;
-        formPlatforms.forEach((select) => { select.value = choice.value; });
-        syncWhatsappContext(choice.value);
-        const label = choice.value === 'tilda'
-          ? `Tilda — от ${choice.dataset.price ? new Intl.NumberFormat('ru-RU').format(Number(choice.dataset.price)) : ''} ₸`
-          : choice.value === 'code'
-            ? `Чистый код + CMS — от ${choice.dataset.price ? new Intl.NumberFormat('ru-RU').format(Number(choice.dataset.price)) : ''} ₸`
-            : 'Подберём платформу после короткого разговора';
-        priceOutputs.forEach((output) => { output.textContent = label || defaultPrice; });
+        syncPlatform(choice.value);
         track('platform_select', { platform: choice.value, displayed_price: choice.dataset.price || null });
-        openLeadDialog('platform_choice');
       });
     });
 
@@ -420,14 +429,9 @@ const jsonLd = {
           openLeadDialog('platform_card');
           return;
         }
-        if (choice.checked) {
-          formPlatforms.forEach((select) => { select.value = choice.value; });
-          syncWhatsappContext(choice.value);
-          openLeadDialog('platform_card');
-          return;
-        }
-        choice.checked = true;
-        choice.dispatchEvent(new Event('change', { bubbles: true }));
+        syncPlatform(choice.value);
+        track('platform_select', { platform: choice.value, displayed_price: choice.dataset.price || null });
+        openLeadDialog('platform_card');
       });
     });
 
