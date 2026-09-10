@@ -929,6 +929,10 @@
   --bg-section-light: transparent;
 }
 
+.ad-website-page--reference [data-hero-cover] h1 {
+  font-size: clamp(52px, 16vw, 72px);
+}
+
 .ad-website-page--reference .ad-reference-whatsapp {
   display: inline-flex;
   min-height: 3rem;

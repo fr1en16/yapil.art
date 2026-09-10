@@ -1,16 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { briefsData } from '../data/briefsData';
 import { servicesList } from '../data/servicesData';
 import { solutionsList } from '../data/solutionsData';
 import { indexableCitiesList } from '../data/citiesData';
+import { websiteAdOfferList } from '../data/websiteAdOffers';
 
-const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+const [caseEntries, articleEntries] = await Promise.all([
+  getCollection('cases'),
+  getCollection('articles'),
+]);
+const cases = caseEntries.sort((a, b) => a.data.order - b.data.order);
+const publishedArticles = articleEntries
+  .filter((article) => article.data.status === 'published')
+  .sort((a, b) => a.data.title.localeCompare(b.data.title, 'ru'));
+const getArticleSlug = (id: string) => id.split('/').at(-1) ?? id;
 
 const pageGroups = [
   {
     id: 'main',
-    eyebrow: '01 / Основа',
+    number: '01',
     title: 'Главные страницы',
     description: 'Основной маршрут посетителя по сайту.',
     pages: [
@@ -19,12 +29,13 @@ const pageGroups = [
       { title: 'Все кейсы', path: '/cases', note: `${cases.length} проектов в портфолио` },
       { title: 'AI-разработка сайтов', path: '/ai-web-development', note: 'Отдельная посадочная страница' },
       { title: 'Партнёрская программа', path: '/partners', note: '10% за рекомендацию клиента' },
+      { title: 'Резюме', path: '/cv', note: 'Опыт и компетенции' },
       { title: 'Политика конфиденциальности', path: '/privacy', note: 'Юридическая информация' },
     ],
   },
   {
     id: 'services',
-    eyebrow: '02 / Предложение',
+    number: '02',
     title: 'Услуги',
     description: 'Общая страница и детальные направления работы.',
     pages: [
@@ -34,11 +45,16 @@ const pageGroups = [
         path: `/services/${service.slug}`,
         note: service.tag,
       })),
+      ...servicesList.flatMap((service) => indexableCitiesList.map((city) => ({
+        title: `${service.name} — ${city.name}`,
+        path: `/services/${service.slug}/${city.slug}`,
+        note: 'Городская страница услуги',
+      }))),
     ],
   },
   {
     id: 'solutions',
-    eyebrow: '03 / Отрасли',
+    number: '03',
     title: 'Решения',
     description: 'Посадочные страницы по типам бизнеса.',
     pages: [
@@ -52,7 +68,7 @@ const pageGroups = [
   },
   {
     id: 'cases',
-    eyebrow: '04 / Портфолио',
+    number: '04',
     title: 'Кейсы',
     description: 'Все опубликованные страницы проектов.',
     pages: cases.map((item) => ({
@@ -63,7 +79,7 @@ const pageGroups = [
   },
   {
     id: 'cities',
-    eyebrow: '05 / География',
+    number: '05',
     title: 'Города',
     description: 'Посадочные страницы услуг для крупных городов Казахстана.',
     pages: [
@@ -76,20 +92,62 @@ const pageGroups = [
     ],
   },
   {
+    id: 'ads',
+    number: '06',
+    title: 'Рекламные страницы',
+    description: 'Отдельные посадочные страницы для рекламных кампаний.',
+    pages: websiteAdOfferList.map((offer) => ({
+      title: offer.name,
+      path: `/ads/${offer.slug}`,
+      note: 'Рекламная посадочная · закрыта от индексации',
+      status: 'private',
+    })),
+  },
+  {
+    id: 'articles',
+    number: '07',
+    title: 'Статьи',
+    description: 'Каталог и все опубликованные материалы.',
+    pages: [
+      { title: 'Все статьи', path: '/articles', note: `${publishedArticles.length} опубликованных материалов` },
+      ...publishedArticles.map((article) => ({
+        title: article.data.h1,
+        path: `/articles/${getArticleSlug(article.id)}`,
+        note: article.data.service,
+      })),
+    ],
+  },
+  {
     id: 'utility',
-    eyebrow: '06 / Внутреннее',
+    number: '08',
     title: 'Служебные страницы',
     description: 'Не входят в основной пользовательский маршрут.',
     pages: [
       { title: 'Аналитика', path: '/anal', note: 'Закрыта от индексации', status: 'private' },
       { title: 'CRM', path: '/crm', note: 'Закрыта от индексации', status: 'private' },
-      { title: 'Форма отзыва', path: '/review', note: 'Страница для клиентов' },
-      { title: 'Светлая версия главной', path: '/light', note: 'Альтернативная обложка' },
+      { title: 'Форма отзыва', path: '/review', note: 'Страница для клиентов', status: 'private' },
+      { title: 'Светлая версия главной', path: '/light', note: 'Альтернативная обложка', status: 'private' },
+      { title: 'Английская версия', path: '/en', note: 'Скрытая языковая версия', status: 'private' },
+      { title: 'Процесс работы', path: '/process-work', note: 'Внутренняя страница', status: 'private' },
+      { title: 'Threads', path: '/threads', note: 'Внутренняя страница', status: 'private' },
+      { title: 'Shanding 3D', path: '/shanding-3d', note: 'Внутренняя презентация', status: 'private' },
+      { title: 'Спасибо', path: '/thanks', note: 'Страница после отправки формы', status: 'private' },
       { title: 'Карта сайта', path: '/site-map', note: 'Эта страница · закрыта от индексации', status: 'private' },
+      { title: 'Брифы', path: '/brief', note: 'Стартовая страница брифов', status: 'private' },
+      ...Object.values(briefsData).map((brief) => ({
+        title: brief.title,
+        path: `/brief/${brief.slug}`,
+        note: 'Бриф для клиента',
+        status: 'private',
+      })),
+      { title: 'Sanity Studio', path: '/admin', note: 'Панель управления контентом', status: 'private' },
+      { title: 'КП · Asphodel Instagram', path: '/kp/asphodel-instagram', note: 'Коммерческое предложение', status: 'private' },
       { title: 'КП · Система этикеток', path: '/kp/sistema-etiketok', note: 'Коммерческое предложение', status: 'private' },
       { title: 'КП · Сайт для интернет-магазина семян', path: '/kp/sait-semena', note: 'Коммерческое предложение', status: 'private' },
+      { title: 'КП · Shanding', path: '/kp/shanding', note: 'Коммерческое предложение', status: 'private' },
       { title: 'Архив · Shanding', path: '/archive/shanding', note: 'Архивная версия', status: 'archive' },
       { title: 'Страница 404', path: '/404', note: 'Системная страница', status: 'private' },
+      { title: 'Страница 500', path: '/500', note: 'Системная страница', status: 'private' },
     ],
   },
 ];
@@ -106,10 +164,6 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
 >
   <div class="map-page">
     <header class="map-hero container">
-      <div class="map-kicker">
-        <span class="map-kicker-mark" aria-hidden="true">+</span>
-        <span>Личная рабочая область</span>
-      </div>
       <div class="map-heading">
         <h1>Карта<br />сайта</h1>
         <div class="map-intro">
@@ -151,7 +205,7 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
           <section class:list={['map-branch', `map-branch-${group.id}`]} data-map-group>
             <header class="branch-header">
               <div>
-                <span class="branch-eyebrow">{group.eyebrow}</span>
+                <span class="branch-number">{group.number}</span>
                 <h2>{group.title}</h2>
               </div>
               <span class="branch-count" data-group-count>{group.pages.length}</span>
@@ -241,25 +295,10 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
     margin-bottom: clamp(3rem, 7vw, 6rem);
   }
 
-  .map-kicker,
   .map-summary,
   .map-legend {
     display: flex;
     align-items: center;
-  }
-
-  .map-kicker {
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.7rem;
-    font-weight: 650;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .map-kicker-mark {
-    color: #fd4b32;
-    font-size: 1rem;
   }
 
   .map-heading {
@@ -436,7 +475,9 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
     border-top: 1px solid #171716;
   }
 
-  .map-branch-cases { grid-column: span 8; }
+  .map-branch-services,
+  .map-branch-cases,
+  .map-branch-articles { grid-column: span 8; }
   .map-branch-utility { grid-column: span 4; }
 
   .map-branch::before {
@@ -456,7 +497,7 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
     align-items: start;
   }
 
-  .branch-eyebrow {
+  .branch-number {
     display: block;
     margin-bottom: 0.55rem;
     color: #fd4b32;
@@ -468,7 +509,7 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
 
   .branch-header h2 {
     margin: 0;
-    font-family: var(--font-body);
+    font-family: var(--font-display);
     font-size: clamp(1.35rem, 2vw, 2rem);
     font-weight: 550;
     letter-spacing: -0.04em;
@@ -498,7 +539,9 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
     gap: 0.45rem;
   }
 
-  .map-branch-cases .branch-pages {
+  .map-branch-services .branch-pages,
+  .map-branch-cases .branch-pages,
+  .map-branch-articles .branch-pages {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -586,7 +629,9 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
 
   @media (max-width: 70rem) {
     .map-branch { grid-column: span 6; }
-    .map-branch-cases { grid-column: span 12; }
+    .map-branch-services,
+    .map-branch-cases,
+    .map-branch-articles { grid-column: span 12; }
     .map-branch-utility { grid-column: span 6; }
   }
 
@@ -599,7 +644,9 @@ const totalPages = pageGroups.reduce((total, group) => total + group.pages.lengt
     .map-legend { flex-wrap: wrap; }
     .map-tree { display: block; }
     .map-branch { margin-bottom: 2.5rem; }
-    .map-branch-cases .branch-pages { grid-template-columns: 1fr; }
+    .map-branch-services .branch-pages,
+    .map-branch-cases .branch-pages,
+    .map-branch-articles .branch-pages { grid-template-columns: 1fr; }
     .page-node code { display: none; }
     .branch-description { min-height: 0; }
   }
