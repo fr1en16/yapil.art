@@ -11,7 +11,7 @@ const { lang = 'ru', pageUrl = Astro.url.href, message } = Astro.props;
 const label = lang === 'en' ? 'Contact via WhatsApp' : 'Связаться в WhatsApp';
 const whatsappHref = getWhatsAppUrl(
   message
-    ? { message }
+    ? { message, pageUrl, sourceContext: 'floating_whatsapp' }
     : {
         pageUrl,
         sourceContext: 'floating_whatsapp',

@@ -20,10 +20,14 @@ const heroWhatsAppHref = getWhatsAppUrl({
 
 const compactPromoWhatsAppHref = getWhatsAppUrl({
   message: 'Здравствуйте! Хочу заказать сайт со скидкой 15%',
+  pageUrl: Astro.url.href,
+  sourceContext: 'homepage_promo_compact',
 });
 
 const fullPromoWhatsAppHref = getWhatsAppUrl({
   message: 'Здравствуйте! Хочу заказать сайт со скидкой 15%',
+  pageUrl: Astro.url.href,
+  sourceContext: 'homepage_promo_full',
 });
 
 const homepage = await getHomepage();

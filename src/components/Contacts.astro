@@ -49,7 +49,7 @@ const currentPath = Astro.url.pathname;
 const currentUrl = new URL(currentPath, Astro.site).href;
 const whatsappHref = getWhatsAppUrl(
   whatsappMessage
-    ? { message: whatsappMessage, phone: settings?.whatsappPhone }
+    ? { message: whatsappMessage, pageUrl: currentUrl, sourceContext: source, phone: settings?.whatsappPhone }
     : { pageUrl: currentUrl, sourceContext: source, phone: settings?.whatsappPhone },
 );
 const telegramHref = getTelegramUrl({ username: settings?.telegramUsername });

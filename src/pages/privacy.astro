@@ -1,6 +1,12 @@
 ---
 import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
+import { getWhatsAppUrl } from '../utils/messengerLinks';
+
+const whatsappHref = getWhatsAppUrl({
+  pageUrl: Astro.url.href,
+  sourceContext: 'privacy_contact_link',
+});
 
 const privacyJsonLd = {
   '@context': 'https://schema.org',
@@ -63,7 +69,7 @@ const privacyJsonLd = {
         <h2>Связь</h2>
         <p>
           Для связи используются внешние сервисы: <a href="https://t.me/yakov_pil">Telegram</a>,
-          <a href="https://wa.me/77067436197">WhatsApp</a> и
+          <a href={whatsappHref}>WhatsApp</a> и
           <a href="mailto:hi@yapil.art">электронная почта</a>. Обработка сообщений происходит по
           правилам выбранного вами сервиса.
         </p>

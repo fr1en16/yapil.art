@@ -59,7 +59,12 @@ const showSecondaryNavigation = false;
 const siteSettings = await getSiteSettings();
 const waTopic = geoServicesData[slug]?.shortName ?? name;
 const waMessage = `Здравствуйте! Хочу обсудить услугу «${waTopic}»${whatsappContext ? ` ${whatsappContext}` : ''}. Подскажите, пожалуйста, об условиях и сроках.`;
-const waHref = getWhatsAppUrl({ message: waMessage, phone: siteSettings?.whatsappPhone });
+const waHref = getWhatsAppUrl({
+  message: waMessage,
+  pageUrl: Astro.url.href,
+  sourceContext: 'service_hero',
+  phone: siteSettings?.whatsappPhone,
+});
 
 interface SelectedProject { name: string; tags: string; image: string; slug: string; alt: string; }
 const selectedProjectsBySlug: Record<string, SelectedProject[] | undefined> = {

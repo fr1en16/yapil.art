@@ -13,10 +13,6 @@ export interface MessengerLinkOptions {
 export function getWhatsAppUrl(options: MessengerLinkOptions = {}): string {
   const phone = options.phone ?? '77067436197';
 
-  if (options.message) {
-    return `https://wa.me/${phone}?text=${encodeURIComponent(options.message)}`;
-  }
-
   let page = '/';
 
   if (options.pageUrl) {
@@ -28,12 +24,14 @@ export function getWhatsAppUrl(options: MessengerLinkOptions = {}): string {
     }
   }
 
-  const lines = [
-    'Здравствуйте! Хочу обсудить проект',
-    '',
-    `Страница: ${page}`,
-    `Форма: ${options.sourceContext || 'site_contact'}`,
-  ];
+  const lines = [options.message?.trim() || 'Здравствуйте! Хочу обсудить проект', ''];
+
+  // Custom pre-filled messages used to skip attribution entirely.
+  if (!/^\s*Страница:/imu.test(lines[0])) {
+    lines.push(`Страница: ${page}`);
+  }
+
+  lines.push(`Кнопка: ${options.sourceContext || 'site_contact'}`);
 
   const message = lines.join('\n');
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;

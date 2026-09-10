@@ -3,6 +3,12 @@ import Base from '../layouts/Base.astro';
 import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
 import AiCalculator from '../components/ui/ai-calculator.tsx';
+import { getWhatsAppUrl } from '../utils/messengerLinks';
+
+const heroWhatsAppHref = getWhatsAppUrl({
+  pageUrl: Astro.url.href,
+  sourceContext: 'ai_web_development_hero',
+});
 
 const pageJsonLd = {
   '@context': 'https://schema.org',
@@ -205,7 +211,7 @@ const faq = [
             <span class="btn-icon" aria-hidden="true">↓</span>
           </span>
         </a>
-        <a href="https://wa.me/77067436197" target="_blank" rel="noopener noreferrer" class="ai-secondary-link">
+        <a href={heroWhatsAppHref} target="_blank" rel="noopener noreferrer" class="ai-secondary-link">
           Обсудить проект в WhatsApp
         </a>
       </div>
