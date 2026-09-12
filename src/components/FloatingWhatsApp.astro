@@ -21,6 +21,7 @@ const whatsappHref = getWhatsAppUrl(
 
 <a
   class="floating-whatsapp"
+  data-floating-whatsapp
   href={whatsappHref}
   target="_blank"
   rel="noopener noreferrer"
@@ -32,7 +33,37 @@ const whatsappHref = getWhatsAppUrl(
   </svg>
 </a>
 
+<script>
+  let cleanup = () => {};
+
+  function initFloatingWhatsApp() {
+    cleanup();
+    const link = document.querySelector<HTMLAnchorElement>('[data-floating-whatsapp]');
+    if (!link) return;
+
+    // These blocks already contain contacts or dense controls and information.
+    const visibleBlocks = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visibleBlocks.add(entry.target);
+        else visibleBlocks.delete(entry.target);
+      }
+      link.hidden = visibleBlocks.size > 0;
+    });
+    document.querySelectorAll('main form, main dl, #contacts, footer').forEach((block) => observer.observe(block));
+    cleanup = () => observer.disconnect();
+  }
+
+  initFloatingWhatsApp();
+  document.addEventListener('astro:page-load', initFloatingWhatsApp);
+  document.addEventListener('astro:before-swap', () => cleanup());
+</script>
+
 <style>
+  .floating-whatsapp[hidden] {
+    display: none;
+  }
+
   .floating-whatsapp {
     position: fixed;
     right: max(1.5rem, env(safe-area-inset-right));
@@ -79,10 +110,8 @@ const whatsappHref = getWhatsAppUrl(
 
   @media (max-width: 40rem) {
     .floating-whatsapp {
-      right: max(1rem, env(safe-area-inset-right));
-      bottom: max(1rem, env(safe-area-inset-bottom));
-      width: 3.5rem;
-      height: 3.5rem;
+      /* Inline messenger links remain available without covering mobile content. */
+      display: none;
     }
   }
 

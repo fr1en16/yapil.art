@@ -1,5 +1,6 @@
 ---
-import { mediaUrl, videoPoster } from '../../lib/media';
+import { videoPoster } from '../../lib/media';
+import mediaUrls from '../../data/media-urls.json';
 import { getCases, type SanityCase } from '../../lib/sanity';
 import { renderCaseBody } from '../../lib/markdown';
 import Contacts from '../../components/Contacts.astro';
@@ -24,10 +25,11 @@ const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.cover);
 const poster = isVideo
   ? videoPoster(c.cover)
   : c.cover;
-const ogImage = mediaUrl(`/open-graph/${c.slug}.png`);
-const caseCoverUrl = c.cover.startsWith('http')
-  ? c.cover
-  : new URL(c.cover, Astro.site).href;
+// Newly added CMS cases may not have a dedicated preview yet; Base supplies the site preview.
+const ogImage = (mediaUrls as Record<string, string>)[`/open-graph/${c.slug}.png`];
+const caseCoverUrl = c.cover
+  ? new URL(c.cover, Astro.site).href
+  : undefined;
 const metaDescriptionParts = [
   `Кейс ${c.title}: ${c.summary.replace(/[.!?]+$/, '')}.`,
   c.task?.replace(/[.!?]+$/, ''),
@@ -112,7 +114,7 @@ const creativeWorkJsonLd = {
       </div>
     </header>
 
-    <div class="case-cover" data-parallax-media>
+    {c.cover && <div class="case-cover" data-parallax-media>
       <div class="case-cover-parallax" data-parallax-target>
         {isVideo ? (
           <>
@@ -156,7 +158,7 @@ const creativeWorkJsonLd = {
           />
         )}
       </div>
-    </div>
+    </div>}
 
     {(c.task || c.goal) && (
       <div class="case-brief container">
@@ -201,6 +203,7 @@ const creativeWorkJsonLd = {
 <style>
   .case-hero {
     padding-block: clamp(2rem, 7vw, 6rem);
+    padding-top: max(6.5rem, 7vw);
   }
 
   .back-link {

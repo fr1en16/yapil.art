@@ -114,10 +114,10 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
         collapseDelay={120}
         classNames={{
           track: "!rounded-full border-white/20 bg-black/35 text-white shadow-xl backdrop-blur-xl",
-          item: "!rounded-full text-white/70 hover:text-white",
+          item: "!rounded-full text-white/70 hover:text-white max-sm:h-11 max-sm:min-w-11",
           activeItem: "text-white",
           icon: "[&>svg]:h-full [&>svg]:w-full",
-          label: "text-[0.82rem] tracking-[-0.014em]",
+          label: "hidden sm:inline-block text-[0.82rem] tracking-[-0.014em]",
         }}
       />
     </nav>

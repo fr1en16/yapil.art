@@ -933,6 +933,10 @@
   font-size: clamp(52px, 16vw, 72px);
 }
 
+.ad-website-page--reference [data-offer="corporate-site"] [data-hero-cover] h1 {
+  font-size: clamp(44px, 14vw, 72px);
+}
+
 .ad-website-page--reference .ad-reference-whatsapp {
   display: inline-flex;
   min-height: 3rem;

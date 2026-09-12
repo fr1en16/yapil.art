@@ -1,0 +1,196 @@
+diff --git a/package-lock.json b/package-lock.json
+index 59c6694..deee688 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -3093,6 +3093,27 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/@emnapi/core": {
++      "version": "1.11.3",
++      "resolved": "https://registry.npmjs.org/@emnapi/core/-/core-1.11.3.tgz",
++      "integrity": "sha512-zLpS5asjEb7lq8jYLq37N6XKaE41DIexlY1rF/z4/tIl3wo13Sqm28fRyfIsKZD+NZ8mM5RoKkpW/rBcuoSZSg==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "@emnapi/wasi-threads": "1.2.3",
++        "tslib": "^2.4.0"
++      }
++    },
++    "node_modules/@emnapi/runtime": {
++      "version": "1.11.3",
++      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.3.tgz",
++      "integrity": "sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "tslib": "^2.4.0"
++      }
++    },
+     "node_modules/@emnapi/wasi-threads": {
+       "version": "1.2.3",
+       "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.3.tgz",
+diff --git a/src/components/FloatingWhatsApp.astro b/src/components/FloatingWhatsApp.astro
+index c7f525f..dafebd7 100644
+--- a/src/components/FloatingWhatsApp.astro
++++ b/src/components/FloatingWhatsApp.astro
+@@ -21,6 +21,7 @@ const whatsappHref = getWhatsAppUrl(
+ 
+ <a
+   class="floating-whatsapp"
++  data-floating-whatsapp
+   href={whatsappHref}
+   target="_blank"
+   rel="noopener noreferrer"
+@@ -32,7 +33,37 @@ const whatsappHref = getWhatsAppUrl(
+   </svg>
+ </a>
+ 
++<script>
++  let cleanup = () => {};
++
++  function initFloatingWhatsApp() {
++    cleanup();
++    const link = document.querySelector<HTMLAnchorElement>('[data-floating-whatsapp]');
++    if (!link) return;
++
++    // These blocks already contain contacts or dense controls and information.
++    const visibleBlocks = new Set<Element>();
++    const observer = new IntersectionObserver((entries) => {
++      for (const entry of entries) {
++        if (entry.isIntersecting) visibleBlocks.add(entry.target);
++        else visibleBlocks.delete(entry.target);
++      }
++      link.hidden = visibleBlocks.size > 0;
++    });
++    document.querySelectorAll('main form, main dl, #contacts, footer').forEach((block) => observer.observe(block));
++    cleanup = () => observer.disconnect();
++  }
++
++  initFloatingWhatsApp();
++  document.addEventListener('astro:page-load', initFloatingWhatsApp);
++  document.addEventListener('astro:before-swap', () => cleanup());
++</script>
++
+ <style>
++  .floating-whatsapp[hidden] {
++    display: none;
++  }
++
+   .floating-whatsapp {
+     position: fixed;
+     right: max(1.5rem, env(safe-area-inset-right));
+@@ -79,10 +110,8 @@ const whatsappHref = getWhatsAppUrl(
+ 
+   @media (max-width: 40rem) {
+     .floating-whatsapp {
+-      right: max(1rem, env(safe-area-inset-right));
+-      bottom: max(1rem, env(safe-area-inset-bottom));
+-      width: 3.5rem;
+-      height: 3.5rem;
++      /* Inline messenger links remain available without covering mobile content. */
++      display: none;
+     }
+   }
+ 
+diff --git a/src/components/Nav.astro b/src/components/Nav.astro
+index e9637cb..db94d67 100644
+--- a/src/components/Nav.astro
++++ b/src/components/Nav.astro
+@@ -163,8 +163,8 @@ const contactsHref = hasNoLocalContacts ? `${homePath}#contacts` : '#contacts';
+     color: #1D1D1D;
+   }
+ 
+-  .site-header.theme-light.is-scrolled .brand,
+-  .site-header.theme-light.is-scrolled .brand-text {
++  .site-header.theme-light .brand,
++  .site-header.theme-light .brand-text {
+     color: #1D1D1D;
+   }
+ 
+diff --git a/src/components/ui/PrimaryMenu.tsx b/src/components/ui/PrimaryMenu.tsx
+index 7bbd4f6..1192e69 100644
+--- a/src/components/ui/PrimaryMenu.tsx
++++ b/src/components/ui/PrimaryMenu.tsx
+@@ -114,10 +114,10 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
+         collapseDelay={120}
+         classNames={{
+           track: "!rounded-full border-white/20 bg-black/35 text-white shadow-xl backdrop-blur-xl",
+-          item: "!rounded-full text-white/70 hover:text-white",
++          item: "!rounded-full text-white/70 hover:text-white max-sm:h-11 max-sm:min-w-11",
+           activeItem: "text-white",
+           icon: "[&>svg]:h-full [&>svg]:w-full",
+-          label: "text-[0.82rem] tracking-[-0.014em]",
++          label: "hidden sm:inline-block text-[0.82rem] tracking-[-0.014em]",
+         }}
+       />
+     </nav>
+diff --git a/src/pages/case/[slug].astro b/src/pages/case/[slug].astro
+index df92ce1..c483548 100644
+--- a/src/pages/case/[slug].astro
++++ b/src/pages/case/[slug].astro
+@@ -1,5 +1,6 @@
+ ---
+-import { mediaUrl, videoPoster } from '../../lib/media';
++import { videoPoster } from '../../lib/media';
++import mediaUrls from '../../data/media-urls.json';
+ import { getCases, type SanityCase } from '../../lib/sanity';
+ import { renderCaseBody } from '../../lib/markdown';
+ import Contacts from '../../components/Contacts.astro';
+@@ -24,10 +25,11 @@ const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.cover);
+ const poster = isVideo
+   ? videoPoster(c.cover)
+   : c.cover;
+-const ogImage = mediaUrl(`/open-graph/${c.slug}.png`);
+-const caseCoverUrl = c.cover.startsWith('http')
+-  ? c.cover
+-  : new URL(c.cover, Astro.site).href;
++// Newly added CMS cases may not have a dedicated preview yet; Base supplies the site preview.
++const ogImage = (mediaUrls as Record<string, string>)[`/open-graph/${c.slug}.png`];
++const caseCoverUrl = c.cover
++  ? new URL(c.cover, Astro.site).href
++  : undefined;
+ const metaDescriptionParts = [
+   `Кейс ${c.title}: ${c.summary.replace(/[.!?]+$/, '')}.`,
+   c.task?.replace(/[.!?]+$/, ''),
+@@ -112,7 +114,7 @@ const creativeWorkJsonLd = {
+       </div>
+     </header>
+ 
+-    <div class="case-cover" data-parallax-media>
++    {c.cover && <div class="case-cover" data-parallax-media>
+       <div class="case-cover-parallax" data-parallax-target>
+         {isVideo ? (
+           <>
+@@ -156,7 +158,7 @@ const creativeWorkJsonLd = {
+           />
+         )}
+       </div>
+-    </div>
++    </div>}
+ 
+     {(c.task || c.goal) && (
+       <div class="case-brief container">
+@@ -201,6 +203,7 @@ const creativeWorkJsonLd = {
+ <style>
+   .case-hero {
+     padding-block: clamp(2rem, 7vw, 6rem);
++    padding-top: max(6.5rem, 7vw);
+   }
+ 
+   .back-link {
+diff --git a/src/styles/ad-website-pages.css b/src/styles/ad-website-pages.css
+index 1a4eec7..59fad2d 100644
+--- a/src/styles/ad-website-pages.css
++++ b/src/styles/ad-website-pages.css
+@@ -933,6 +933,10 @@
+   font-size: clamp(52px, 16vw, 72px);
+ }
+ 
++.ad-website-page--reference [data-offer="corporate-site"] [data-hero-cover] h1 {
++  font-size: clamp(44px, 14vw, 72px);
++}
++
+ .ad-website-page--reference .ad-reference-whatsapp {
+   display: inline-flex;
+   min-height: 3rem;
