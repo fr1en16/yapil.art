@@ -1,0 +1,43 @@
+{
+  "status": "prepared_not_applied",
+  "projectId": "j2cx2dtx",
+  "dataset": "production",
+  "note": "Only exact text replacements; recheck revision and before value before applying. No CMS writes performed.",
+  "edits": [
+    {
+      "documentId": "service-websites",
+      "revision": "7ROVCEO16GacwiuJkhsPcD",
+      "field": "ctaLead",
+      "before": "Напишите нам в мессенджер или оставьте заявку. Разберём проект и посчитаем сроки со сметой",
+      "after": "Напишите нам в мессенджер или оставьте заявку. Разберём проект и оценим сроки и составим смету."
+    },
+    {
+      "documentId": "service-websites",
+      "revision": "7ROVCEO16GacwiuJkhsPcD",
+      "field": "deliverables[_key==\"k2\"].text",
+      "before": "Формы с отправкой заявок в Telegram, почту или CRM, счетчики аналитики.",
+      "after": "Формы с отправкой заявок в Telegram, на почту или в CRM, счётчики аналитики."
+    },
+    {
+      "documentId": "service-websites",
+      "revision": "7ROVCEO16GacwiuJkhsPcD",
+      "field": "deliverables[_key==\"k3\"].text",
+      "before": "Настроенные мета-теги, OpenGraph для соцсетей, микроразметка Schema.org, sitemap.xml и файл robots.txt.",
+      "after": "Настроенные метатеги, Open Graph для соцсетей, микроразметка Schema.org, sitemap.xml и файл robots.txt."
+    },
+    {
+      "documentId": "case-boya",
+      "revision": "3vYEUMP89Fio0oTd48dxRw",
+      "field": "body",
+      "before": "Мы с Софьей Коломеец запускали лакокрасочный бренд Boya с нуля. Софья вела аналитику, маркетинг и концепцию «Цвета Великой Степи». Я отвечал за визуальную часть: логотип, упаковку, каталоги, сайт.\n\nСтроительная ниша обычно консервативна. В логотипе Boya буква «О» переходит в каплю краски. Палитра: пурпурно-синий, сапфировый и шафрановый, взятые из степных ландшафтов. Объёмные радужные ленты стали сквозным элементом на упаковке, в каталогах и на сайте, отсылкой к разнообразию красок в линейке.\n\nНа сайте тот же язык: классический шрифт Inter, модульная сетка для составов красок и товарных каталогов. Бренд получился одновременно B2B и B2C\n\n---\n\n## Брендбук проекта\n\nРуководство по фирменному стилю, палитре, верстке каталогов и упаковке продукции.\n\n<div class=\"pdf-slider\" data-url=\"https://media.yapil.art/case/boya/brandbook.0e5990b40db04e76.pdf\" data-title=\"Брендбук Boya\"></div>",
+      "after": "Мы с Софьей Коломеец запускали лакокрасочный бренд Boya с нуля. Софья вела аналитику, маркетинг и концепцию «Цвета Великой Степи». Я отвечал за визуальную часть: логотип, упаковку, каталоги, сайт.\n\nСтроительная ниша обычно консервативна. В логотипе Boya буква «О» переходит в каплю краски. Палитра: пурпурно-синий, сапфировый и шафрановый, взятые из степных ландшафтов. Объёмные радужные ленты стали сквозным элементом на упаковке, в каталогах и на сайте, отсылкой к разнообразию красок в линейке.\n\nНа сайте тот же язык: классический шрифт Inter, модульная сетка для составов красок и товарных каталогов. Бренд получился одновременно B2B и B2C.\n\n---\n\n## Брендбук проекта\n\nРуководство по фирменному стилю, палитре, верстке каталогов и упаковке продукции.\n\n<div class=\"pdf-slider\" data-url=\"https://media.yapil.art/case/boya/brandbook.0e5990b40db04e76.pdf\" data-title=\"Брендбук Boya\"></div>"
+    },
+    {
+      "documentId": "case-rv",
+      "revision": "3vYEUMP89Fio0oTd48dxRw",
+      "field": "body",
+      "before": "Лендинг для программы менторства Романа Рыкунова и Влада Кудряшова держится на чёрном фоне и матовом золоте: свет выхватывает лица авторов и 3D-графику, собранную из сияющих пикселей. Двенадцать модулей обучения, разбор ошибок и тарифы разложены по контейнерной сетке с плотной микро-типографикой, программа читается за пару кликов. Кейсы и результаты учеников встроены прямо в блоки программы, а не вынесены в отдельный раздел с отзывами.\n\n---\n\n## Видео-презентация\n\nАнимированная презентация лендинга и 3D-графики.\n\n<div class=\"video-container\">\n  <video src=\"https://media.yapil.art/case/rv/RV.af4d287ac4417ad7.mp4\" autoplay muted loop playsinline controls aria-label=\"Видео лендинга Рыкунов и Кудряшов\"></video>\n</div>\n\n---\n\n## Макеты сайта\n\nИнтерфейсные решения, сетка модулей программы менторства и экраны тарифов.\n\n<div class=\"media-grid media-grid-2\">\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/1.243d3a80bbcccb70.webp\" alt=\"Рыкунов и Кудряшов — макет 1\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Главный экран и позиционирование</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/2.d14001ca0071f8b1.webp\" alt=\"Рыкунов и Кудряшов — макет 2\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Модули программы менторства</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/3.68c407904144e25f.webp\" alt=\"Рыкунов и Кудряшов — макет 3\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Структура обучения и разбор ошибок</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/4.8e51156ec8f99057.webp\" alt=\"Рыкунов и Кудряшов — макет 4\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Интегрированные кейсы и результаты учеников</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/5.10b97ec9b4096d97.webp\" alt=\"Рыкунов и Кудряшов — макет 5\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Формат работы и кураторство</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/6.48e2bc297a8e0252.webp\" alt=\"Рыкунов и Кудряшов — макет 6\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Сетка тарифов и условий участия</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/7.3e1ce0e791e2e931.webp\" alt=\"Рыкунов и Кудряшов — макет 7\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Финальный блок и форма регистрации</figcaption>\n  </figure>\n</div>",
+      "after": "Лендинг для программы менторства Романа Рыкунова и Влада Кудряшова держится на чёрном фоне и матовом золоте: свет выхватывает лица авторов и 3D-графику, собранную из сияющих пикселей. Двенадцать модулей обучения, разбор ошибок и тарифы разложены по контейнерной сетке с плотной микротипографикой, программа читается за пару кликов. Кейсы и результаты учеников встроены прямо в блоки программы, а не вынесены в отдельный раздел с отзывами.\n\n---\n\n## Видео-презентация\n\nАнимированная презентация лендинга и 3D-графики.\n\n<div class=\"video-container\">\n  <video src=\"https://media.yapil.art/case/rv/RV.af4d287ac4417ad7.mp4\" autoplay muted loop playsinline controls aria-label=\"Видео лендинга Рыкунов и Кудряшов\"></video>\n</div>\n\n---\n\n## Макеты сайта\n\nИнтерфейсные решения, сетка модулей программы менторства и экраны тарифов.\n\n<div class=\"media-grid media-grid-2\">\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/1.243d3a80bbcccb70.webp\" alt=\"Рыкунов и Кудряшов — макет 1\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Главный экран и позиционирование</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/2.d14001ca0071f8b1.webp\" alt=\"Рыкунов и Кудряшов — макет 2\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Модули программы менторства</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/3.68c407904144e25f.webp\" alt=\"Рыкунов и Кудряшов — макет 3\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Структура обучения и разбор ошибок</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/4.8e51156ec8f99057.webp\" alt=\"Рыкунов и Кудряшов — макет 4\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Интегрированные кейсы и результаты учеников</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/5.10b97ec9b4096d97.webp\" alt=\"Рыкунов и Кудряшов — макет 5\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Формат работы и кураторство</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/6.48e2bc297a8e0252.webp\" alt=\"Рыкунов и Кудряшов — макет 6\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Сетка тарифов и условий участия</figcaption>\n  </figure>\n  <figure>\n    <img src=\"https://media.yapil.art/case/rv/7.3e1ce0e791e2e931.webp\" alt=\"Рыкунов и Кудряшов — макет 7\" loading=\"lazy\" decoding=\"async\" />\n    <figcaption>Финальный блок и форма регистрации</figcaption>\n  </figure>\n</div>"
+    }
+  ]
+}
