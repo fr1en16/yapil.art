@@ -10,6 +10,7 @@ const cases = defineCollection({
     summary: z.string(),
     services: z.array(z.string()).min(1),
     cover: z.string(),
+    socialImage: z.string().optional(),
     order: z.number(),
     featured: z.boolean().default(false),
     task: z.string().optional(),

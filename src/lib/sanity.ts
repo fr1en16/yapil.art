@@ -17,6 +17,7 @@ export interface SanityCase {
   summary: string;
   services: string[];
   cover: string;
+  socialImage?: string;
   order: number;
   featured: boolean;
   task?: string;
@@ -44,6 +45,7 @@ const CASE_PROJECTION = `{
   summary,
   services,
   cover,
+  socialImage,
   order,
   featured,
   task,

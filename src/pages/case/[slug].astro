@@ -19,15 +19,14 @@ interface Props {
 }
 
 const { c } = Astro.props;
+const cover = c.cover || '';
 const bodyHtml = renderCaseBody(c.body);
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.cover);
 const poster = isVideo
   ? videoPoster(c.cover)
   : c.cover;
-const ogImage = mediaUrl(`/open-graph/${c.slug}.png`);
-const caseCoverUrl = c.cover.startsWith('http')
-  ? c.cover
-  : new URL(c.cover, Astro.site).href;
+const ogImage = c.socialImage || mediaUrl(`/open-graph/${c.slug}.png`);
+const caseCoverUrl = cover ? new URL(cover, Astro.site).href : c.socialImage;
 const metaDescriptionParts = [
   `Кейс ${c.title}: ${c.summary.replace(/[.!?]+$/, '')}.`,
   c.task?.replace(/[.!?]+$/, ''),
@@ -112,7 +111,7 @@ const creativeWorkJsonLd = {
       </div>
     </header>
 
-    <div class="case-cover" data-parallax-media>
+    {cover && <div class="case-cover" data-parallax-media>
       <div class="case-cover-parallax" data-parallax-target>
         {isVideo ? (
           <>
@@ -156,7 +155,7 @@ const creativeWorkJsonLd = {
           />
         )}
       </div>
-    </div>
+    </div>}
 
     {(c.task || c.goal) && (
       <div class="case-brief container">

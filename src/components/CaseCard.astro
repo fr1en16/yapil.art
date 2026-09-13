@@ -10,7 +10,7 @@ interface Props {
   index: number;
 }
 
-const { slug, title, year, summary, services, cover, index } = Astro.props;
+const { slug, title, year, summary, services, cover = '', index } = Astro.props;
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(cover);
 const poster = isVideo
   ? videoPoster(cover)
@@ -22,7 +22,9 @@ const poster = isVideo
     <div class="case-media" data-parallax-media>
       <div class="case-parallax" data-parallax-target>
         <div class="case-image">
-          {isVideo ? (
+          {!cover ? (
+            <div class="case-title-preview" aria-hidden="true">{title}</div>
+          ) : isVideo ? (
             <>
               <img
                 src={poster}
@@ -87,6 +89,18 @@ const poster = isVideo
 </article>
 
 <style>
+  .case-title-preview {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 2rem;
+    background: var(--accent-deep);
+    color: white;
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    text-align: center;
+  }
+
   .case-card {
     min-width: 0;
   }

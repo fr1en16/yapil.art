@@ -1,0 +1,46 @@
+import fs from 'node:fs/promises';
+import { createHash, createHmac } from 'node:crypto';
+
+process.loadEnvFile('.env');
+const required = ['TINIFY_API_KEY', 'R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_PUBLIC_BASE_URL'];
+for (const key of required) if (!process.env[key]) throw new Error(`Missing ${key}`);
+const base = process.env.R2_PUBLIC_BASE_URL.replace(/\/+$/, '');
+if (base !== 'https://media.yapil.art') throw new Error('Expected Yapil media host');
+const dir = '/private/tmp/thepeak-case';
+const hash = b => createHash('sha256').update(b).digest('hex');
+const hmac = (key, value) => createHmac('sha256', key).update(value).digest();
+const names = ['home-desktop', 'team-desktop', 'contacts-desktop', 'cases-desktop', 'home-mobile', 'cases-mobile'];
+const manifest = {};
+for (const name of names) {
+  const original = await fs.readFile(`${dir}/${name}.png`);
+  const authorization = `Basic ${Buffer.from(`api:${process.env.TINIFY_API_KEY}`).toString('base64')}`;
+  const shrink = await fetch('https://api.tinify.com/shrink', { method: 'POST', headers: { Authorization: authorization }, body: original });
+  if (!shrink.ok || !shrink.headers.get('location')) throw new Error(`Tinify shrink HTTP ${shrink.status}`);
+  const converted = await fetch(shrink.headers.get('location'), { method: 'POST', headers: { Authorization: authorization, 'Content-Type': 'application/json' }, body: JSON.stringify({ convert: { type: 'image/webp' } }) });
+  if (!converted.ok) throw new Error(`Tinify conversion HTTP ${converted.status}`);
+  const buffer = Buffer.from(await converted.arrayBuffer());
+  if (buffer.toString('ascii', 0, 4) !== 'RIFF' || buffer.toString('ascii', 8, 12) !== 'WEBP') throw new Error('Not a real WebP');
+  await fs.writeFile(`${dir}/${name}.webp`, buffer);
+  const digest = hash(buffer);
+  const key = `cases/thepeak/${name}.${digest.slice(0, 16)}.webp`;
+  const host = `${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
+  const uri = `/${process.env.R2_BUCKET}/${key}`;
+  const date = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
+  const headers = { host, 'x-amz-date': date, 'x-amz-content-sha256': digest, 'content-type': 'image/webp', 'cache-control': 'public, max-age=31536000, immutable' };
+  const sorted = Object.keys(headers).sort();
+  const signed = sorted.join(';');
+  const canonical = ['PUT', uri, '', sorted.map(k => `${k}:${headers[k]}\n`).join(''), signed, digest].join('\n');
+  const scope = `${date.slice(0, 8)}/auto/s3/aws4_request`;
+  let signing = hmac(`AWS4${process.env.R2_SECRET_ACCESS_KEY}`, date.slice(0, 8));
+  for (const part of ['auto', 's3', 'aws4_request']) signing = hmac(signing, part);
+  const signature = createHmac('sha256', signing).update(`AWS4-HMAC-SHA256\n${date}\n${scope}\n${hash(canonical)}`).digest('hex');
+  headers.Authorization = `AWS4-HMAC-SHA256 Credential=${process.env.R2_ACCESS_KEY_ID}/${scope}, SignedHeaders=${signed}, Signature=${signature}`;
+  const uploaded = await fetch(`https://${host}${uri}`, { method: 'PUT', headers, body: buffer });
+  if (!uploaded.ok) throw new Error(`R2 HTTP ${uploaded.status}`);
+  const url = `${base}/${key}`;
+  const check = await fetch(url);
+  if (!check.ok || check.headers.get('content-type')?.split(';')[0] !== 'image/webp' || hash(Buffer.from(await check.arrayBuffer())) !== digest) throw new Error(`Verification failed: ${name}`);
+  manifest[name] = { url, sha256: digest, bytes: buffer.length, originalBytes: original.length, processing: 'tinify-webp' };
+  console.log(`Verified ${name}: ${original.length} → ${buffer.length} bytes`);
+  await fs.writeFile(`${dir}/manifest.json`, JSON.stringify(manifest, null, 2) + '\n');
+}

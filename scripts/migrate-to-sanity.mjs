@@ -71,6 +71,7 @@ async function migrateCases() {
     if (data.task) doc.task = data.task;
     if (data.goal) doc.goal = data.goal;
     if (data.link) doc.link = data.link;
+    if (data.socialImage) doc.socialImage = data.socialImage;
 
     return doc;
   });

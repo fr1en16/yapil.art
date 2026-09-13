@@ -1,0 +1,44 @@
+{
+  "home-desktop": {
+    "url": "https://media.yapil.art/cases/thepeak/home-desktop.89e19904230aa9a0.webp",
+    "sha256": "89e19904230aa9a07d7b2420654bac32313bab30188fd652116db16f74e21c5f",
+    "bytes": 81010,
+    "originalBytes": 425305,
+    "processing": "tinify-webp"
+  },
+  "team-desktop": {
+    "url": "https://media.yapil.art/cases/thepeak/team-desktop.165b864956691700.webp",
+    "sha256": "165b864956691700c24d1e0afb0b07ba7657d26061af7688809590d73d0f0f35",
+    "bytes": 66054,
+    "originalBytes": 651442,
+    "processing": "tinify-webp"
+  },
+  "contacts-desktop": {
+    "url": "https://media.yapil.art/cases/thepeak/contacts-desktop.6ea38f48e29ce187.webp",
+    "sha256": "6ea38f48e29ce187bdd7f749350824e984710ea8834809513274cefc387749bb",
+    "bytes": 23060,
+    "originalBytes": 81731,
+    "processing": "tinify-webp"
+  },
+  "cases-desktop": {
+    "url": "https://media.yapil.art/cases/thepeak/cases-desktop.46bf77e3af1b0f19.webp",
+    "sha256": "46bf77e3af1b0f1951ac93e4442c911a8aebf9e889c9489d39a8eb3122ca9f86",
+    "bytes": 89674,
+    "originalBytes": 1054046,
+    "processing": "tinify-webp"
+  },
+  "home-mobile": {
+    "url": "https://media.yapil.art/cases/thepeak/home-mobile.c8f0b511fee57bf4.webp",
+    "sha256": "c8f0b511fee57bf4bcda0186dfe92b80da3874db80485d5bf9becfecdb3bfb45",
+    "bytes": 24070,
+    "originalBytes": 134811,
+    "processing": "tinify-webp"
+  },
+  "cases-mobile": {
+    "url": "https://media.yapil.art/cases/thepeak/cases-mobile.1549a6860229547a.webp",
+    "sha256": "1549a6860229547a12e0c569bb5b4a48b5c2c528bb7d56d01c1f3b29e6fef74c",
+    "bytes": 27152,
+    "originalBytes": 339262,
+    "processing": "tinify-webp"
+  }
+}

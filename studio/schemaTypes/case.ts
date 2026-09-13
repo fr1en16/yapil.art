@@ -43,7 +43,12 @@ export const caseType = defineType({
       type: 'url',
       description:
         'Готовая ссылка на media.yapil.art. Файл нужно заранее сжать через Tinify и загрузить в Cloudflare R2 — сюда вставляется только итоговый https://media.yapil.art/... URL (картинка или .mp4/.webm для видео-обложки).',
-      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'socialImage',
+      title: 'Изображение для ссылки на кейс',
+      type: 'url',
+      description: 'Необязательное изображение для предпросмотра ссылки. Используйте готовый HTTPS URL из R2 Yapil.',
     }),
     defineField({
       name: 'order',
