@@ -1,0 +1,8 @@
+---
+import WebsiteGrowthPage from '../../components/WebsiteGrowthPage.astro';
+import { newWebsitePages } from '../../data/websiteGrowth';
+export function getStaticPaths() {
+  return newWebsitePages.map(({topic,city,path})=>({params:{path:path.slice('/websites/'.length)},props:{topic,city}}));
+}
+---
+<WebsiteGrowthPage {...Astro.props} />

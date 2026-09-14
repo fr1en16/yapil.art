@@ -2,16 +2,17 @@
 import type { WebsiteAdOffer } from '../../data/websiteAdOffers';
 
 interface Props {
-  offer: WebsiteAdOffer;
+  offer: { slug: string; name: string } & Partial<Pick<WebsiteAdOffer, 'tildaPrice' | 'codePrice'>>;
+  websiteContext?: string;
   instance?: string;
 }
 
-const { offer, instance = 'default' } = Astro.props;
+const { offer, instance = 'default', websiteContext } = Astro.props;
 const idBase = `${offer.slug}-${instance}`;
 ---
 
 <div class="ad-lead-card">
-  <form class="ad-lead-form" data-ad-lead-form data-offer={offer.slug} data-offer-name={offer.name} novalidate>
+  <form class="ad-lead-form" data-ad-lead-form data-offer={offer.slug} data-offer-name={offer.name} data-website-context={websiteContext} novalidate>
     <div class="ad-field">
       <label for={`ad-name-${idBase}`}>Имя</label>
       <input id={`ad-name-${idBase}`} name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" />
@@ -36,11 +37,13 @@ const idBase = `${offer.slug}-${instance}`;
       <label for={`ad-platform-${idBase}`}>Платформа</label>
       <select id={`ad-platform-${idBase}`} name="platform" data-platform-select>
         <option value="">Выберите вариант</option>
-        <option value="tilda">Tilda — от {new Intl.NumberFormat('ru-RU').format(offer.tildaPrice)} ₸</option>
-        <option value="code">Чистый код + CMS — от {new Intl.NumberFormat('ru-RU').format(offer.codePrice)} ₸</option>
+        <option value="tilda">Tilda{offer.tildaPrice ? ` — от ${new Intl.NumberFormat('ru-RU').format(offer.tildaPrice)} ₸` : ''}</option>
+        <option value="code">Чистый код + CMS{offer.codePrice ? ` — от ${new Intl.NumberFormat('ru-RU').format(offer.codePrice)} ₸` : ''}</option>
         <option value="recommendation">Нужна рекомендация</option>
       </select>
     </div>
+
+    {websiteContext && <div class="ad-field"><label for={`ad-message-${idBase}`}>О задаче</label><textarea id={`ad-message-${idBase}`} name="message" rows="3" placeholder="Задача, материалы и пожелания по срокам"></textarea></div>}
 
     <label class="ad-consent">
       <input type="checkbox" name="privacy" />
@@ -124,6 +127,10 @@ const idBase = `${offer.slug}-${instance}`;
           firstInvalid = phone;
           track('form_validation_error', { field: 'phone' });
         }
+        if (form.dataset.websiteContext && !privacy.checked && !firstInvalid) {
+          if (phoneError) phoneError.textContent = 'Подтвердите согласие с условиями конфиденциальности.';
+          firstInvalid ||= privacy;
+        }
         if (firstInvalid) {
           firstInvalid.focus();
           return;
@@ -153,8 +160,9 @@ const idBase = `${offer.slug}-${instance}`;
               name: String(new FormData(form).get('name') || '').trim() || 'Не указано',
               phone: phone.value,
               services: [form.dataset.offerName, `Платформа: ${platformLabel}`],
-              source: 'ad_landing_form',
-              sourceDetails: `Рекламная страница: ${form.dataset.offer}; платформа: ${platformLabel}`,
+              message: String(new FormData(form).get('message') || '').trim(),
+              source: form.dataset.websiteContext ? 'contacts_form' : 'ad_landing_form',
+              sourceDetails: form.dataset.websiteContext || `Рекламная страница: ${form.dataset.offer}; платформа: ${platformLabel}`,
               pageUrl: window.location.href,
               referrer: document.referrer,
               utm: attribution,
@@ -168,7 +176,7 @@ const idBase = `${offer.slug}-${instance}`;
           form.hidden = true;
           result.hidden = false;
           result.className = 'ad-lead-result is-success';
-          result.innerHTML = '<strong>Заявка принята.</strong><span>Яков свяжется с вами в течение 10 минут в рабочее время с 12:00 до 20:00.</span>';
+          result.innerHTML = form.dataset.websiteContext ? '<strong>Заявка принята.</strong><span>Свяжемся с вами для обсуждения проекта.</span>' : '<strong>Заявка принята.</strong><span>Яков свяжется с вами в течение 10 минут в рабочее время с 12:00 до 20:00.</span>';
           result.focus();
         } catch (error) {
           track('lead_submit_error', { error_type: error instanceof Error ? error.message : 'unknown' });

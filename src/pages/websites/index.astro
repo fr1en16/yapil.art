@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+import {websiteTopics,websiteCities,websitePath} from '../../data/websiteGrowth';
+import '../../styles/website-growth.css';
+const groups=[...new Set(websiteTopics.map(t=>t.group))];
+---
+<Base title="Разработка сайтов: услуги, ниши и города Казахстана" description="Выберите формат сайта, направление бизнеса и город. Лендинги, магазины, корпоративные сайты, дизайн и интеграции: состав работ и обсуждение проекта с Yapil." theme="light" bodyClass="wg-page">
+<article class="wg">
+  <header class="wg-hero"><h1>Сайт под вашу<br/>задачу бизнеса</h1><div class="wg-intro"><p>Выберите формат, нишу или город. На странице направления — задачи, состав проекта и условия расчёта стоимости.</p><a class="wg-button" href="/services/websites">Обсудить разработку ↗</a></div></header>
+  {groups.map((group,i)=><section class="wg-section" id={`group-${i}`}><h2>{group}</h2><nav class="wg-catalog" aria-label={group}>{websiteTopics.filter(t=>t.group===group).map(t=><a href={websitePath(t)}><h3>{t.name}</h3><p>{t.goal}</p><span aria-hidden="true">↗</span></a>)}</nav></section>)}
+  <section class="wg-section"><h2>Разработка сайтов по городам</h2><p>Выберите город, затем нужную услугу или нишу.</p>{websiteCities.map(city=><details class="wg-related"><summary>{city.name}</summary><nav class="wg-links" aria-label={`Направления — ${city.name}`}>{websiteTopics.map(t=><a href={websitePath(t,city)}>{t.name} — {city.name}</a>)}</nav></details>)}</section>
+</article><Footer slot="footer" theme="dark" /></Base>
