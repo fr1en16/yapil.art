@@ -63,6 +63,7 @@ const lightStops = [
           <h2>{isEn ? (personal ? 'About' : 'Studio') : (personal ? 'Обо мне' : 'Студия')}</h2>
           {personal && <a href={`${homePath}#about`}>{isEn ? 'About me' : 'Обо мне'}</a>}
           <a href="/services">{isEn ? 'Services' : 'Услуги'}</a>
+          {!isEn && <a href="/websites">Разработка сайтов</a>}
           <a href="/articles">{isEn ? 'Articles' : 'Статьи'}</a>
           <a href={`${homePath}#cases`}>{isEn ? 'Cases' : 'Кейсы'}</a>
           <a href="/partners">{isEn ? 'Partners' : 'Партнёрам'}</a>
