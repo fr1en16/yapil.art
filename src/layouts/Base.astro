@@ -198,6 +198,9 @@ const schemaJsonLd = {
     {import.meta.env.DEV && <GridOverlay />}
     <SmoothScroll />
     <script>
+      import { getFirstTouch } from '../utils/leadAttribution';
+      getFirstTouch();
+      document.addEventListener('astro:page-load', getFirstTouch);
       import { installTypographyRules } from '../scripts/typography';
 
       installTypographyRules();

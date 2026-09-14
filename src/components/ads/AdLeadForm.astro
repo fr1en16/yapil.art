@@ -4,15 +4,16 @@ import type { WebsiteAdOffer } from '../../data/websiteAdOffers';
 interface Props {
   offer: { slug: string; name: string } & Partial<Pick<WebsiteAdOffer, 'tildaPrice' | 'codePrice'>>;
   websiteContext?: string;
+  city?: string;
   instance?: string;
 }
 
-const { offer, instance = 'default', websiteContext } = Astro.props;
+const { offer, instance = 'default', websiteContext, city } = Astro.props;
 const idBase = `${offer.slug}-${instance}`;
 ---
 
 <div class="ad-lead-card">
-  <form class="ad-lead-form" data-ad-lead-form data-offer={offer.slug} data-offer-name={offer.name} data-website-context={websiteContext} novalidate>
+  <form class="ad-lead-form" data-ad-lead-form data-offer={offer.slug} data-offer-name={offer.name} data-website-context={websiteContext} data-city={city} novalidate>
     <div class="ad-field">
       <label for={`ad-name-${idBase}`}>Имя</label>
       <input id={`ad-name-${idBase}`} name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" />
@@ -63,6 +64,7 @@ const idBase = `${offer.slug}-${instance}`;
 </div>
 
 <script>
+  import { getFirstTouch } from '../../utils/leadAttribution';
   const initAdLeadForms = () => {
     document.querySelectorAll<HTMLFormElement>('[data-ad-lead-form]').forEach((form) => {
       if (form.dataset.ready === 'true') return;
@@ -78,7 +80,7 @@ const idBase = `${offer.slug}-${instance}`;
       if (!phone || !platform || !privacy || !submit || !submitLabel || !result) return;
 
       const track = (name: string, params: Record<string, unknown> = {}) => {
-        const eventParams = { offer: form.dataset.offer, platform: platform.value || 'unset', ...params };
+        const eventParams = { first_landing_page: getFirstTouch().landingPage, city: form.dataset.city || 'unspecified', offer: form.dataset.offer, platform: platform.value || 'unset', ...params };
         const analyticsWindow = window as typeof window & {
           gtag?: (...args: unknown[]) => void;
         };
@@ -117,6 +119,7 @@ const idBase = `${offer.slug}-${instance}`;
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
+        if (submit.disabled || form.hidden) return;
         if (phoneError) phoneError.textContent = '';
         result.hidden = true;
 
@@ -140,12 +143,8 @@ const idBase = `${offer.slug}-${instance}`;
         submitLabel.textContent = 'Отправляем…';
         track('lead_submit_attempt');
 
-        const params = new URLSearchParams(window.location.search);
-        const attribution = Object.fromEntries(
-          ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid']
-            .map((key) => [key, params.get(key)])
-            .filter(([, value]) => Boolean(value)),
-        );
+        const firstTouch = getFirstTouch();
+        const attribution = firstTouch.campaign;
         const leadId = `YP-AD-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
         const platformLabel = platform.value
           ? platform.options[platform.selectedIndex]?.textContent?.replace(/\s+—\s+от.+$/, '') || platform.value
@@ -165,6 +164,8 @@ const idBase = `${offer.slug}-${instance}`;
               sourceDetails: form.dataset.websiteContext || `Рекламная страница: ${form.dataset.offer}; платформа: ${platformLabel}`,
               pageUrl: window.location.href,
               referrer: document.referrer,
+              firstLandingPage: firstTouch.landingPage,
+              firstReferrer: firstTouch.referrer,
               utm: attribution,
             }),
           });
