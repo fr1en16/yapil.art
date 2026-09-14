@@ -1,0 +1,15 @@
+import { build } from 'esbuild';
+import assert from 'node:assert/strict';
+const bundle=await build({entryPoints:['src/utils/leadAttribution.ts'],bundle:true,write:false,platform:'node',format:'esm'});
+const {captureFirstTouch}=await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`);
+const values=new Map();
+const storage={getItem:k=>values.get(k),setItem:(k,v)=>values.set(k,v)};
+const first=captureFirstTouch('https://yapil.art/websites?utm_source=google&utm_campaign=launch&gclid=abc&email=private#contacts','https://google.com/search?q=private',storage);
+assert.deepEqual(first,{landingPage:'https://yapil.art/websites',referrer:'https://google.com/search',campaign:{utm_source:'google',utm_campaign:'launch',gclid:'abc'}});
+assert.deepEqual(captureFirstTouch('https://yapil.art/websites/landing/almaty?utm_source=internal','https://yapil.art/websites',storage),first);
+assert.equal(captureFirstTouch('https://yapil.art/websites/landing','').campaign.utm_source,undefined);
+values.set('yapil:first-touch:v1','bad json');
+assert.equal(captureFirstTouch('https://yapil.art/websites/landing','',storage).landingPage,'https://yapil.art/websites/landing');
+const blocked={getItem(){throw Error('blocked')},setItem(){throw Error('blocked')}};
+assert.equal(captureFirstTouch('https://yapil.art/?utm_source=direct-test','',blocked).campaign.utm_source,'direct-test');
+console.log('PASS: first touch, internal navigation, clean session, malformed storage, blocked storage, URL privacy');

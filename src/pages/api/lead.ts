@@ -42,6 +42,8 @@ export const POST: APIRoute = async ({ request }) => {
       sourceDetails,
       pageUrl = 'https://yapil.art',
       utm,
+      firstLandingPage,
+      firstReferrer,
     } = payload || {};
 
     const { token, chatId } = getTelegramEnv();
@@ -69,7 +71,7 @@ export const POST: APIRoute = async ({ request }) => {
 📞 Телефон: ${phone}
 ${email ? `✉️ Email: ${email}\n` : ''}💼 Услуги: ${servicesText}
 ${budget ? `💰 Бюджет: ${budget}\n` : ''}${message ? `💬 Сообщение: ${message}\n` : ''}📍 Источник: ${sourceDetails || source}
-🔗 Страница: ${pageUrl}${utmText}
+🔗 Страница: ${pageUrl}${firstLandingPage ? `\nПервая страница: ${firstLandingPage}` : ''}${firstReferrer ? `\nПервый переход: ${firstReferrer}` : ''}${utmText}
 🕒 Время: ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Almaty' })}`;
 
       try {
