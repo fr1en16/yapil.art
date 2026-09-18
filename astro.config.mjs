@@ -37,6 +37,8 @@ export default defineConfig({
   },
   adapter: vercel(),
   redirects: {
+    '/brief/ready-food': { destination: '/brief/identity', status: 301 },
+    '/бриф/айдентика': { destination: '/brief/identity', status: 301 },
     ...buildPermanentRedirects(),
     '/ads': { destination: '/', status: 301 },
     '/services/websites-static': { destination: '/services/websites', status: 301 },

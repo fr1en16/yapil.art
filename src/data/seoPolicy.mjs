@@ -58,6 +58,8 @@ export const PRIVATE_PATH_PREFIXES = Object.freeze([
   '/anal',
   '/archive/shanding',
   '/brief',
+  '/бриф',
+  '/%D0%B1%D1%80%D0%B8%D1%84',
   '/crm',
   '/en',
   '/kp',

@@ -1,0 +1,184 @@
+---
+import Base from '../../layouts/Base.astro';
+const services = [
+  { name: 'Упаковка', description: 'Дизайн выбранных видов упаковки: композиция, графика, размещение текстов и маркировки. Адаптация под товары, размеры и линейки, макеты на развёртках, подготовка к печати.' },
+  { name: 'Логотип', description: 'Разработка знака и надписи, основная и компактная версии, цветное и монохромное исполнение. Правила отступов и минимального размера, файлы для печати и цифровых носителей.' },
+  { name: 'Айдентика', description: 'Визуальная система на основе логотипа: палитра, шрифты, графические элементы, паттерны, принципы композиции и работы с фото. Примеры применения и руководство по стилю.' },
+  { name: 'Полиграфия', description: 'Дизайн и вёрстка выбранных материалов: меню, листовки, буклеты, визитки, плакаты, вкладыши и наклейки. Адаптация форматов и версий, подготовка файлов по требованиям типографии.' },
+];
+const questions: { name: string; label: string; hint: string; service?: string }[] = [
+  { name: 'business', label: 'Чем занимается компания или проект?', hint: 'Название, сфера деятельности, продукты или услуги. Новый проект или обновление существующего бренда?' },
+  { name: 'goal', label: 'Какую задачу должен решить дизайн?', hint: 'Что хотите изменить: узнаваемость, восприятие, выход на новый рынок или запуск продукта. Как поймёте, что результат достигнут?' },
+  { name: 'buyers', label: 'Кто ваша аудитория?', hint: 'Частные клиенты или компании, их задачи и потребности. География, каналы продаж и ценовой сегмент.' },
+  { name: 'difference', label: 'Почему клиенты выбирают вас?', hint: 'Главное преимущество и 2–3 конкурента для сравнения.' },
+  { name: 'brand', label: 'Что уже есть у бренда?', hint: 'Название, логотип, материалы. Что сохраняем, а что создаём с нуля?' },
+  { name: 'style', label: 'Как должен выглядеть бренд?', hint: 'Примеры, которые нравятся и не нравятся. Ссылки и коротко — почему.' },
+  { name: 'materials_count', label: 'Какие материалы и сколько макетов нужны?', hint: 'Каждый материал с новой строки: название — количество уникальных макетов — размеры. Например: буклет — 2 версии — А4; наклейка — 6 вариантов — 80×50 мм.' },
+  { name: 'packaging', service: 'Упаковка', label: 'Какие виды упаковки нужны?', hint: 'Коробка, пакет, флакон, туба, этикетка, обечайка. Для каждого — материал, размеры или объём; нужна конструкция с нуля или только дизайн.' },
+  { name: 'packaging_count', service: 'Упаковка', label: 'Сколько видов и вариантов упаковки?', hint: 'Для каждого вида — число размеров, товарных позиций и отдельных макетов. Например: коробка — 2 размера, 3 товара, 6 макетов.' },
+  { name: 'packaging_run', service: 'Упаковка', label: 'Какой тираж каждого вида упаковки?', hint: 'Количество штук по каждому размеру и варианту. Например: коробка 100×100×50 мм — 1 000 шт. Если тираж неизвестен, так и укажите.' },
+  { name: 'packaging_use', service: 'Упаковка', label: 'Как будут использовать упаковку?', hint: 'Продажа в магазине или онлайн, хранение и перевозка. Нужны ли защита от влаги и повреждений, контроль вскрытия, окно или повторное использование?' },
+  { name: 'print_types', service: 'Полиграфия', label: 'Какая полиграфия нужна?', hint: 'Меню, листовки, буклеты, визитки, плакаты, вкладыши, наклейки. Перечислите каждый материал и его назначение.' },
+  { name: 'print_count', service: 'Полиграфия', label: 'Сколько макетов и какой тираж каждого?', hint: 'Каждый материал с новой строки: формат — число версий — страницы / стороны — тираж. Например: листовка А5 — 2 версии — 2 стороны — по 500 шт.' },
+  { name: 'print_finish', service: 'Полиграфия', label: 'Какие требования к бумаге и отделке?', hint: 'По каждому материалу: бумага и плотность, цветность, ламинация, вырубка или другие пожелания. Можно указать «нужна рекомендация».' },
+  { name: 'production', label: 'Что готово для печати?', hint: 'Поставщик, развёртки, материал, тираж. Тексты, переводы и обязательная маркировка — кто их предоставит?' },
+  { name: 'timing', label: 'Когда запуск и какой бюджет на дизайн?', hint: 'Дата готовности макетов, бюджет на выбранные услуги, кто согласует результат.' },
+];
+---
+<Base title="Бриф на айдентику" description="Бриф на разработку логотипа, айдентики, упаковки и полиграфии." theme="light" noindex hideNav bodyClass="identity-brief-page">
+  <main class="container">
+    <h1>Бриф на айдентику</h1>
+    <form data-identity-brief>
+      <fieldset aria-label="Состав работ">
+        <div class="services">
+          {services.map((service) => (
+            <label class="service">
+              <input type="checkbox" name="services" value={service.name} aria-describedby={`service-description-${service.name}`} />
+              <span class="service-content"><span class="service-title"><span class="check" aria-hidden="true"></span><strong>{service.name}</strong></span><span class="service-description" id={`service-description-${service.name}`}>{service.description}</span></span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div class="contacts">
+        <label><span>Ваше имя</span><input name="name" autocomplete="name" required /></label>
+        <label><span>Телефон</span><input type="tel" name="phone" autocomplete="tel" required /></label>
+      </div>
+      <div class="brief-questions">
+        {questions.map((question) => (
+          <label class="message" data-brief-question data-service={question.service}>
+            <span>{question.label}</span>
+            <textarea name={question.name} rows="2" placeholder={question.hint}></textarea>
+          </label>
+        ))}
+      </div>
+      <label class="message"><span>Материалы и дополнения</span><textarea name="message" rows="2" placeholder="Ссылки на сайт, фото, брендбук, документы и всё, что важно учесть."></textarea></label>
+      <label class="consent"><input type="checkbox" required checked /> <span>Согласен с <a href="/privacy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</span></label>
+      <div class="actions"><button type="submit"><span class="button-inner"><span class="button-text">Отправить бриф</span><span class="button-arrow" aria-hidden="true">↗</span></span></button><p data-status role="status" aria-live="polite"></p></div>
+    </form>
+  </main>
+</Base>
+
+<script>
+  function initIdentityBrief() {
+    const form = document.querySelector<HTMLFormElement>('[data-identity-brief]');
+    if (!form || form.dataset.initialized) return;
+    form.dataset.initialized = 'true';
+    const updateServiceQuestions = () => {
+      const selected = new Set(Array.from(form.querySelectorAll<HTMLInputElement>('[name="services"]:checked'), (input) => input.value));
+      form.querySelectorAll<HTMLLabelElement>('[data-brief-question][data-service]').forEach((label) => {
+        const active = selected.has(label.dataset.service!);
+        label.hidden = !active;
+        label.querySelector<HTMLTextAreaElement>('textarea')!.disabled = !active;
+      });
+    };
+    form.addEventListener('change', updateServiceQuestions);
+    updateServiceQuestions();
+    const phone = form.querySelector<HTMLInputElement>('[name="phone"]')!;
+    phone.addEventListener('input', () => {
+      const digits = phone.value.replace(/\D/g, '');
+      phone.setCustomValidity(digits.length >= 7 && digits.length <= 15 ? '' : 'Укажите полный номер телефона.');
+    });
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = form.querySelector<HTMLButtonElement>('button')!;
+      const status = form.querySelector<HTMLElement>('[data-status]')!;
+      if (button.disabled) return;
+      const data = new FormData(form);
+      const answers = Array.from(form.querySelectorAll<HTMLLabelElement>('[data-brief-question]')).map((label) => {
+        const field = label.querySelector('textarea')!;
+        const value = field.disabled ? '' : field.value.trim();
+        return value ? `${label.querySelector('span')!.textContent}: ${value}` : '';
+      }).filter(Boolean);
+      const extra = String(data.get('message') ?? '').trim();
+      if (extra) answers.push(`Материалы и дополнения: ${extra}`);
+      const message = ['Бриф на айдентику.', ...answers].join('\n\n');
+      const services = data.getAll('services').map(String);
+      if (!services.length) {
+        status.textContent = 'Выберите хотя бы одну услугу.';
+        form.querySelector<HTMLInputElement>('[name="services"]')?.focus();
+        return;
+      }
+      button.disabled = true;
+      status.textContent = 'Отправляем…';
+      try {
+        const response = await fetch('/api/lead', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: data.get('name'), phone: data.get('phone'), services, message, source: 'brief', sourceDetails: 'Бриф на айдентику', pageUrl: location.href }),
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error('Delivery failed');
+        status.textContent = 'Бриф отправлен. Спасибо!';
+        button.querySelector('.button-text')!.textContent = 'Отправлено';
+      } catch {
+        status.textContent = 'Не удалось отправить. Ответы сохранены в форме — попробуйте ещё раз.';
+        button.disabled = false;
+      }
+    });
+  }
+  initIdentityBrief();
+  document.addEventListener('astro:page-load', initIdentityBrief);
+</script>
+
+<style>
+  :global(body.identity-brief-page) { background: #f7f5f0 !important; }
+  :global(.identity-brief-page .site-background), :global(.identity-brief-page .floating-whatsapp) { display: none; }
+  main { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-content: start; min-height: 100svh; padding-block: clamp(100px, 10vw, 180px) 40px; color: #202222; }
+  main > h1, main > form { grid-column: 4 / 9; min-width: 0; width: 100%; }
+  h1 { margin: 0 0 40px; font-family: var(--font-display, 'Oranienbaum', serif); font-size: clamp(38px, 5vw, 72px); font-weight: 400; line-height: 1.08; letter-spacing: -.035em; }
+  form { margin: 0; }
+  fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+  legend { padding: 0; margin-bottom: 22px; color: #737572; font-size: clamp(16px, 1.4vw, 23px); }
+  .services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #d6d7d2; border-left: 1px solid #d6d7d2; }
+  .service { position: relative; cursor: pointer; min-width: 0; }
+  .service > input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .service-content { display: flex; flex-direction: column; align-items: stretch; height: 100%; gap: 22px; min-height: clamp(86px, 6vw, 116px); padding: 20px 16px; border-right: 1px solid #d6d7d2; border-bottom: 1px solid #d6d7d2; color: #737572; font-size: clamp(16px, 1.4vw, 23px); }
+  .service-title { display: flex; align-items: center; gap: 12px; }
+  .service-title strong { font-weight: 500; }
+  .service-description { display: block; font-size: 15px; line-height: 1.55; color: #62645f; }
+  .check { position: relative; width: 28px; height: 28px; flex-shrink: 0; border: 1px solid #c9cbc5; border-radius: 50%; }
+  .service input:checked + .service-content { position: relative; z-index: 1; outline: 1px solid #202222; outline-offset: -1px; color: #202222; }
+  .service input:checked + .service-content .check { border-color: #202222; }
+  .service input:checked + .service-content .check::after { content: ''; position: absolute; left: 8px; top: -5px; width: 12px; height: 26px; border-right: 2px solid #202222; border-bottom: 2px solid #202222; transform: rotate(38deg); }
+  .service input:focus-visible + .service-content, button:focus-visible { outline: 2px solid #fd4b32; outline-offset: 4px; z-index: 2; }
+  .contacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 4vw, 76px); margin-top: clamp(48px, 4.5vw, 80px); }
+  .contacts label, .message { display: flex; flex-direction: column; min-width: 0; color: #737572; font-size: clamp(16px, 1.4vw, 23px); }
+  .contacts input, textarea { width: 100%; min-width: 0; padding: 10px 0; border: 0; border-bottom: 1px solid #d6d7d2; border-radius: 0; color: #202222; background: transparent; font: inherit; }
+  .contacts input:focus, textarea:focus { outline: none; border-bottom-color: #202222; }
+  .message { margin-top: 54px; }
+  .message[hidden] { display: none; }
+  .brief-questions { display: grid; grid-template-columns: 1fr; }
+  textarea::placeholder { color: #858680; font-size: 15px; line-height: 1.5; opacity: 1; }
+  textarea { min-height: 52px; resize: vertical; }
+  .consent { display: flex; align-items: baseline; gap: 10px; margin-top: 24px; color: #737572; font-size: 13px; }
+  .consent input { accent-color: #202222; }
+  .consent a { color: inherit; text-underline-offset: 3px; }
+  .actions { margin-top: clamp(44px, 5vw, 88px); text-align: center; }
+  @font-face { font-family: 'Hero DM Sans'; src: url('https://media.yapil.art/hero-cover/dm-sans.468d56b6b25b05b7.woff2') format('woff2'); font-display: swap; }
+  button { position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: .85rem 1.65rem; border: 0; border-radius: 0; background: #000; color: #fff; font: 400 .88rem/1 'Hero DM Sans', sans-serif; cursor: pointer; overflow: hidden; transition: transform var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(.16, 1, .3, 1)), background-color var(--duration-btn-color, 770ms) ease, box-shadow var(--duration-btn, 1330ms) var(--ease-spring, cubic-bezier(.16, 1, .3, 1)); }
+  .button-inner { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; pointer-events: none; }
+  .button-text { display: inline-block; letter-spacing: .01em; transition: transform 910ms cubic-bezier(.16, 1, .3, 1.18), letter-spacing 910ms ease; }
+  .button-arrow { display: inline-block; font-size: .95rem; transition: transform 910ms cubic-bezier(.16, 1, .3, 1.18); }
+  button:hover:not(:disabled), button:focus-visible:not(:disabled) { transform: scale(1.07); background: #444; box-shadow: 0 14px 34px -4px rgb(35 133 157 / .45), 0 0 2.2rem rgb(43 153 180 / .3); }
+  button:hover:not(:disabled) .button-text { transform: scale(1.05) scaleX(1.03); letter-spacing: .045em; }
+  button:hover:not(:disabled) .button-arrow { transform: translate(2px, -2px) scale(1.12); }
+  button:active:not(:disabled) { transform: scale(1.02); transition-duration: 90ms; }
+  button:disabled { opacity: .6; cursor: default; }
+  @media (prefers-reduced-motion: reduce) { button, .button-text, .button-arrow { transition: none; } }
+  [data-status] { margin-top: 16px; font-size: 14px; }
+  @media (max-width: 1000px) {
+    main > h1, main > form { grid-column: 1 / -1; }
+  }
+  @media (max-width: 700px) {
+    main { padding-block: 64px 32px; }
+    .services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .service-content { min-height: 88px; padding: 18px 14px; gap: 12px; font-size: 15px; }
+    .service-title { gap: 12px; }
+    .service-description { font-size: 13px; }
+    .check { width: 23px; height: 23px; }
+    .service input:checked + .service-content .check::after { left: 6px; width: 10px; height: 22px; }
+    .contacts { grid-template-columns: 1fr; gap: 28px; margin-top: 40px; }
+    .brief-questions { grid-template-columns: 1fr; }
+    .message { margin-top: 32px; }
+    .actions { margin-top: 36px; }
+  }
+</style>

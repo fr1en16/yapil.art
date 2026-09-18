@@ -1,0 +1,560 @@
+{
+  "https://cdn.sanity.io/files/u6q95fqm/production/1872cb990c2b03e1c5e82e539c799c7edfd570cc.mp3": {
+    "url": "https://media.yapil.art/references/qude/04ad273a0b7584090c55.mp3",
+    "sha256": "04ad273a0b7584090c55ede4c96711d9b43d68efea0bfa7706e01f36669a1ec1",
+    "bytes": 807414,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/203378882bc1155f2a4668355ed2b825f77a05ac.mp3": {
+    "url": "https://media.yapil.art/references/qude/8c0c991a307dd1bccf5f.mp3",
+    "sha256": "8c0c991a307dd1bccf5fe69dbb9d271858373765b24593ad5c8f1d7a069793ca",
+    "bytes": 1115032,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/2290f6ca4c572ec9debd871694e3ae61b4ee2e96.mp3": {
+    "url": "https://media.yapil.art/references/qude/197246922f0bcbf7a536.mp3",
+    "sha256": "197246922f0bcbf7a5368eedbec85276973e9f014cb512e89492e517880288dc",
+    "bytes": 13861116,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/263d7972a66261197a00bb005959bc72d4068324.mp3": {
+    "url": "https://media.yapil.art/references/qude/ee2c14d617d3e6d6d643.mp3",
+    "sha256": "ee2c14d617d3e6d6d643d5f0880d04c04b68303f3d48e76e538e3782ebbb2b70",
+    "bytes": 34346968,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/2d74da4efc7aeefafbba76e9d8fc0a172cfa059c.mp3": {
+    "url": "https://media.yapil.art/references/qude/bfda137be3b36f1d73b2.mp3",
+    "sha256": "bfda137be3b36f1d73b22144754706ecdddba15bc61d406cfdc57f21cbd12548",
+    "bytes": 198029,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/32638e5516710304e480be43335d8dc60b8d7ad7.mp3": {
+    "url": "https://media.yapil.art/references/qude/d88987ddf39039844a36.mp3",
+    "sha256": "d88987ddf39039844a36f51fce8bbb135aafb3f9cb4643d87e42b27a15081234",
+    "bytes": 850046,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/43fda1bdcf4ed7a09863857ada51db553208a26c.mp3": {
+    "url": "https://media.yapil.art/references/qude/a382b660bd4dc3b0cfd8.mp3",
+    "sha256": "a382b660bd4dc3b0cfd8c10519b81e8fb5c9a3c1a7ad12f521992f571d138718",
+    "bytes": 4548149,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/4c5464c43503e581b629028ad23a80fb690f0d07.mp3": {
+    "url": "https://media.yapil.art/references/qude/663a3f2955691c846b60.mp3",
+    "sha256": "663a3f2955691c846b606c07c99d4597afa0f9413eff6b1ccdfa36ec0a4a8889",
+    "bytes": 78878218,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/5549e0591447024efefa61ced29814c576b85439.mp3": {
+    "url": "https://media.yapil.art/references/qude/2460f8d84c528fdea09e.mp3",
+    "sha256": "2460f8d84c528fdea09ebd51398470b0a061300775d84fb89385b3598e2613de",
+    "bytes": 27510827,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/5c1b431cd77363f8d14f93b4399c76cd4dfd4744.mp3": {
+    "url": "https://media.yapil.art/references/qude/43cc0b3c14892b4fcd11.mp3",
+    "sha256": "43cc0b3c14892b4fcd11590098be95c2063088c3e8373d336d66ddd784a1f4cc",
+    "bytes": 198029,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/731210303c331aab98bcc82a5292860970ea694c.mp3": {
+    "url": "https://media.yapil.art/references/qude/e88de2aed3bf84a6e150.mp3",
+    "sha256": "e88de2aed3bf84a6e15099836f387d87ddf60df20610609bce0d15ea59ec1ac0",
+    "bytes": 198029,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/9485486e9fe0a0d85db9634edbbf119c94c20c56.mp3": {
+    "url": "https://media.yapil.art/references/qude/ff7550c824d880765ffa.mp3",
+    "sha256": "ff7550c824d880765ffa53a25c33a2cec1043d0b8617483dac9848e2f9f586dc",
+    "bytes": 198029,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/959f82961b49a70917e18a473b4cfd6db9d4f880.mp3": {
+    "url": "https://media.yapil.art/references/qude/01ee72ccf85c656b2012.mp3",
+    "sha256": "01ee72ccf85c656b2012d11459aa3d0082b7229e15982e5a0198abf3c0370a47",
+    "bytes": 1013886,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/a8f388a845193a592c0a1e3011025d8d61a85b0d.mp3": {
+    "url": "https://media.yapil.art/references/qude/3ab966cc5abb701c9855.mp3",
+    "sha256": "3ab966cc5abb701c9855a5ec6afd30ad857e1422bbfff8f11c28eb3327194c5a",
+    "bytes": 47972227,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/bdc4a6601c357493ec5ef4db6544f5f301f1a343.mp3": {
+    "url": "https://media.yapil.art/references/qude/3c52c99554184cba1f1d.mp3",
+    "sha256": "3c52c99554184cba1f1d536777b84b2851bf2b1aad34d7d3e4d058db4cd90374",
+    "bytes": 1028096,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/c0594d11b2a34d37493ac112d3cb8d1d315a129e.mp4": {
+    "url": "https://media.yapil.art/references/qude/cfea64700803b5cb46fd.mp4",
+    "sha256": "cfea64700803b5cb46fde5e9f9be558a8b7d378f8e4d25306ffaa6199d4d7b25",
+    "bytes": 196330,
+    "type": "video/mp4"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/cd38d94c8ae268cee66807228199451f8964fc71.mp3": {
+    "url": "https://media.yapil.art/references/qude/4103f62383a1cec46982.mp3",
+    "sha256": "4103f62383a1cec469821378e08bdc6192ace8230dc04a33e27d0d6e92a66030",
+    "bytes": 35313288,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/db2bced0a14e9b65aa15357cae7799696903a8d4.mp4": {
+    "url": "https://media.yapil.art/references/qude/586fc9e832de4192de7e.mp4",
+    "sha256": "586fc9e832de4192de7e19de936e4d05d99c306eb97dc70f7dcd3c6e89cd8066",
+    "bytes": 288540,
+    "type": "video/mp4"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/ddc0309ef726f14f53bd7b023a5ba1dff8436446.mp3": {
+    "url": "https://media.yapil.art/references/qude/12ab426c5a672d668920.mp3",
+    "sha256": "12ab426c5a672d6689202bc4b0ff9bdf92394165fd4cb1b764648318a63deab8",
+    "bytes": 804906,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/ec9ffb2ac3c29966dcb1af8209813c8f860afb2c.mp3": {
+    "url": "https://media.yapil.art/references/qude/7fe3289089cb87a7dc93.mp3",
+    "sha256": "7fe3289089cb87a7dc93596f98925357eb1e7e470883714866dab367f6baf1cd",
+    "bytes": 7799035,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/ed579580d719e537e7ed75a879fa4cda2a5876ec.mp3": {
+    "url": "https://media.yapil.art/references/qude/3b7bbfe3bac65d282510.mp3",
+    "sha256": "3b7bbfe3bac65d28251091aa998dadeb6e2d2f0a49d05602d9907e8bdaa773ef",
+    "bytes": 1164351,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/files/u6q95fqm/production/f5607fe434a228c9a4cff944a1aa4dfd76b0e657.mp3": {
+    "url": "https://media.yapil.art/references/qude/97a61a123a2438cf0425.mp3",
+    "sha256": "97a61a123a2438cf04259785a2755ce4496eba8c7b8057af0eb4b308e0efa12f",
+    "bytes": 28631296,
+    "type": "audio/mpeg"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/0b3eae4438cb8af06ee52d0d562e84f5aa4e2278-471x585.jpg": {
+    "url": "https://media.yapil.art/references/qude/bd44943cfdcf1ff3116c.webp",
+    "sha256": "bd44943cfdcf1ff3116c7550b2b027d5513633b80d4f4dc3400a926b32256b58",
+    "bytes": 13708,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/0daf2f1b45ecf99aeab37aae95434a9d56106b0f-471x585.jpg": {
+    "url": "https://media.yapil.art/references/qude/6c27923edd320edf7880.webp",
+    "sha256": "6c27923edd320edf7880c833ba5969abd982307be10309b6b70fac7cac2f04ec",
+    "bytes": 14776,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/126ebcc1d9ddd8f96fdec2030ef8caf5c4b97194-630x630.svg": {
+    "url": "https://media.yapil.art/references/qude/e725f45f3ebe4a1993c3.svg",
+    "sha256": "e725f45f3ebe4a1993c3c200e10e9c609e2963d23e4fa2e83e47c0c91d57fcc9",
+    "bytes": 4088,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/126ebcc1d9ddd8f96fdec2030ef8caf5c4b97194-630x630.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/e725f45f3ebe4a1993c3.svg",
+    "sha256": "e725f45f3ebe4a1993c3c200e10e9c609e2963d23e4fa2e83e47c0c91d57fcc9",
+    "bytes": 4088,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/258d9af0245b70523e1304a181d7eee571220741-69x92.svg": {
+    "url": "https://media.yapil.art/references/qude/a0728769c7274722887b.svg",
+    "sha256": "a0728769c7274722887b32561efe2404314bcb8deb42ca02a8615fb8597ee873",
+    "bytes": 17032,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/258d9af0245b70523e1304a181d7eee571220741-69x92.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/a0728769c7274722887b.svg",
+    "sha256": "a0728769c7274722887b32561efe2404314bcb8deb42ca02a8615fb8597ee873",
+    "bytes": 17032,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/3effd0904f029833f6180fb31842f4e45311f8f2-471x584.jpg": {
+    "url": "https://media.yapil.art/references/qude/ba734230f8fe9e67b0d0.webp",
+    "sha256": "ba734230f8fe9e67b0d098a745b7db272ff67df28c638c51a2d6d957709a19d4",
+    "bytes": 11748,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/4884f585a6e9219f0edcfa0e8bb22c4d60796c7a-106x103.svg": {
+    "url": "https://media.yapil.art/references/qude/3eefb529917f848b040c.svg",
+    "sha256": "3eefb529917f848b040c39b8c09c43557b183cf8537fe77bac49a95e01a854ce",
+    "bytes": 20188,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/4884f585a6e9219f0edcfa0e8bb22c4d60796c7a-106x103.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/3eefb529917f848b040c.svg",
+    "sha256": "3eefb529917f848b040c39b8c09c43557b183cf8537fe77bac49a95e01a854ce",
+    "bytes": 20188,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/5c726b39588c6ecce6d1dfaeb40c46c69e62b68b-470x585.jpg": {
+    "url": "https://media.yapil.art/references/qude/bc7a7b97604d30d9ef45.webp",
+    "sha256": "bc7a7b97604d30d9ef459328999d5a63862f280ccb75d1ed55d660b4a4c0e5ea",
+    "bytes": 8106,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/740a067758c13ddb3832738c56342d5027adca71-101x79.svg": {
+    "url": "https://media.yapil.art/references/qude/8f4bd3ecce4c60c763eb.svg",
+    "sha256": "8f4bd3ecce4c60c763eb3565e462eb9d35abfbf7368a11c6281bebb9c7849259",
+    "bytes": 20993,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/740a067758c13ddb3832738c56342d5027adca71-101x79.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/8f4bd3ecce4c60c763eb.svg",
+    "sha256": "8f4bd3ecce4c60c763eb3565e462eb9d35abfbf7368a11c6281bebb9c7849259",
+    "bytes": 20993,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/89cc0ed16bbe2b332775d9702f7c52f329fada61-124x49.svg": {
+    "url": "https://media.yapil.art/references/qude/4e77a752e77d14d4ead1.svg",
+    "sha256": "4e77a752e77d14d4ead121008dc5c3866be3931abca5161b02a5175329e6cb51",
+    "bytes": 2868,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/89cc0ed16bbe2b332775d9702f7c52f329fada61-124x49.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/4e77a752e77d14d4ead1.svg",
+    "sha256": "4e77a752e77d14d4ead121008dc5c3866be3931abca5161b02a5175329e6cb51",
+    "bytes": 2868,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/8f6be4c10eefc1ff802258ed7b81d9317ca7c0e5-480x387.svg": {
+    "url": "https://media.yapil.art/references/qude/34857d3e72593370e94a.svg",
+    "sha256": "34857d3e72593370e94a706a1feb88ff88a0d36248467b679513637159137548",
+    "bytes": 3082,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/8f6be4c10eefc1ff802258ed7b81d9317ca7c0e5-480x387.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/34857d3e72593370e94a.svg",
+    "sha256": "34857d3e72593370e94a706a1feb88ff88a0d36248467b679513637159137548",
+    "bytes": 3082,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/98bb630019557cde9417d887f123136df4157c64-471x585.jpg": {
+    "url": "https://media.yapil.art/references/qude/0dcbb0d2f616c4c0c800.webp",
+    "sha256": "0dcbb0d2f616c4c0c800014095e1b03e7d13176f7d3c0710d7345ec56911379e",
+    "bytes": 11478,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/b2ac600d548916f1242247938b0e238096f39e2e-471x585.jpg": {
+    "url": "https://media.yapil.art/references/qude/9bc843053b0c5fa0e025.webp",
+    "sha256": "9bc843053b0c5fa0e0255bc338159e8821f83411049d969a3423c6e0ffe2285e",
+    "bytes": 14770,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/b5c4d796cf6cfa3d534d72c0647cad7353c81132-1603x1584.png": {
+    "url": "https://media.yapil.art/references/qude/6d4c3a7a6b29cc7637ae.webp",
+    "sha256": "6d4c3a7a6b29cc7637aead15cd003e90a5c7178839d2d925c4ea2566f6f35264",
+    "bytes": 13040,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/b5c4d796cf6cfa3d534d72c0647cad7353c81132-1603x1584.png?w=300": {
+    "url": "https://media.yapil.art/references/qude/8194679771fb933b72ef.webp",
+    "sha256": "8194679771fb933b72ef674522bb9e6576da9040f87136da97bd32f41faf3aff",
+    "bytes": 4984,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/ca3b9aecfe79fe09459b6b64b53ca6f18e8add08-86x102.svg": {
+    "url": "https://media.yapil.art/references/qude/f9c978970c118bc5d773.svg",
+    "sha256": "f9c978970c118bc5d773933d8642c70ebd241f152f176564e8294aee045f3b38",
+    "bytes": 18850,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/ca3b9aecfe79fe09459b6b64b53ca6f18e8add08-86x102.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/f9c978970c118bc5d773.svg",
+    "sha256": "f9c978970c118bc5d773933d8642c70ebd241f152f176564e8294aee045f3b38",
+    "bytes": 18850,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/d9ffb848773ec029899ff377d8510e3ee5d02441-471x585.jpg": {
+    "url": "https://media.yapil.art/references/qude/040f54da5eddaba3f7a1.webp",
+    "sha256": "040f54da5eddaba3f7a137a4b1a550ac61d774444a1519c7218e0ab97ec56574",
+    "bytes": 10750,
+    "type": "image/webp"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/fe842148775e110a36ef35b12767b73a031dbb9f-63x76.svg": {
+    "url": "https://media.yapil.art/references/qude/caeb977a8880fe5c450a.svg",
+    "sha256": "caeb977a8880fe5c450aa09799d0fc8cfd622d0acde26d0e9213f9203b37982f",
+    "bytes": 12853,
+    "type": "image/svg+xml"
+  },
+  "https://cdn.sanity.io/images/u6q95fqm/production/fe842148775e110a36ef35b12767b73a031dbb9f-63x76.svg?w=300": {
+    "url": "https://media.yapil.art/references/qude/caeb977a8880fe5c450a.svg",
+    "sha256": "caeb977a8880fe5c450aa09799d0fc8cfd622d0acde26d0e9213f9203b37982f",
+    "bytes": 12853,
+    "type": "image/svg+xml"
+  },
+  "https://qude.audio/_next/static/media/PPNeueMontreal-Medium.ed0edb52.woff": {
+    "url": "https://media.yapil.art/references/qude/19804e9efa3eef919d31.woff",
+    "sha256": "19804e9efa3eef919d318ffcbce837ebd2a97e8d6748f5d04bb42fece5aa0542",
+    "bytes": 39624,
+    "type": "font/woff"
+  },
+  "https://qude.audio/_next/static/media/PPNeueMontreal-Medium.f9b3b92f.woff2": {
+    "url": "https://media.yapil.art/references/qude/54b454c4498eaa5b4b4e.woff2",
+    "sha256": "54b454c4498eaa5b4b4e87abdf9279be749d93c839a21567698c65752ec713ef",
+    "bytes": 30958,
+    "type": "font/woff2"
+  },
+  "https://qude.audio/_next/static/media/PPNeueMontreal-Regular.0a955ce4.woff2": {
+    "url": "https://media.yapil.art/references/qude/34d3f9901ee27b047a43.woff2",
+    "sha256": "34d3f9901ee27b047a43a8b0c322dead62fa52bcb2d01ba2287acd5f851a9221",
+    "bytes": 29045,
+    "type": "font/woff2"
+  },
+  "https://qude.audio/_next/static/media/PPNeueMontreal-Regular.baa8a70d.woff": {
+    "url": "https://media.yapil.art/references/qude/770055ba4c7f9c967233.woff",
+    "sha256": "770055ba4c7f9c9672333815548300b22f6b6d47a35348f8a91437ff360a2ea6",
+    "bytes": 37439,
+    "type": "font/woff"
+  },
+  "svg-0.svg": {
+    "url": "https://media.yapil.art/references/qude/ac1fdc3bc5eb75fde65b.svg",
+    "sha256": "ac1fdc3bc5eb75fde65b9d248eb75a738334ba91d08d299e5964c4ceb6c13fe1",
+    "bytes": 2743,
+    "type": "image/svg+xml"
+  },
+  "svg-1.svg": {
+    "url": "https://media.yapil.art/references/qude/64f305850cf8059e6265.svg",
+    "sha256": "64f305850cf8059e62656c121815774905ef3e2986afd0b3e7623b918703e080",
+    "bytes": 2861,
+    "type": "image/svg+xml"
+  },
+  "svg-10.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-11.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-12.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-13.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-14.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-15.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-16.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-17.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-18.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-19.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-2.svg": {
+    "url": "https://media.yapil.art/references/qude/a73229aa8f76834c4608.svg",
+    "sha256": "a73229aa8f76834c4608ee74be7a1af70e08bf59bf6573542ba240ebb53bd022",
+    "bytes": 1945,
+    "type": "image/svg+xml"
+  },
+  "svg-20.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-21.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-22.svg": {
+    "url": "https://media.yapil.art/references/qude/875d6da9120f70bfcfe4.svg",
+    "sha256": "875d6da9120f70bfcfe452005be73a2396b6ba00de5bea21f750fb020652c740",
+    "bytes": 259,
+    "type": "image/svg+xml"
+  },
+  "svg-23.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-24.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-25.svg": {
+    "url": "https://media.yapil.art/references/qude/00119ad97c468dbb93ae.svg",
+    "sha256": "00119ad97c468dbb93aebde63086f67f984f58f7dec821385dc27b3602a1d049",
+    "bytes": 383,
+    "type": "image/svg+xml"
+  },
+  "svg-26.svg": {
+    "url": "https://media.yapil.art/references/qude/87f0c3eeed107acdbd13.svg",
+    "sha256": "87f0c3eeed107acdbd13dca8aab7c38c547735b6287dbb1635b8df310eed1984",
+    "bytes": 327,
+    "type": "image/svg+xml"
+  },
+  "svg-27.svg": {
+    "url": "https://media.yapil.art/references/qude/d233fb4c6eb74bdd9fbe.svg",
+    "sha256": "d233fb4c6eb74bdd9fbe0e176791e81e5b4c062bd2616ebd07743c148be667ad",
+    "bytes": 5190,
+    "type": "image/svg+xml"
+  },
+  "svg-28.svg": {
+    "url": "https://media.yapil.art/references/qude/2ad89a3f2a41658b2dc2.svg",
+    "sha256": "2ad89a3f2a41658b2dc24f4561afa9ab7333408785835369f0f1448e1e5730bd",
+    "bytes": 1189,
+    "type": "image/svg+xml"
+  },
+  "svg-29.svg": {
+    "url": "https://media.yapil.art/references/qude/327808c411149486bf69.svg",
+    "sha256": "327808c411149486bf699205fbb5b16e3a95a92fd3a266f66dfea39c919b2063",
+    "bytes": 1593,
+    "type": "image/svg+xml"
+  },
+  "svg-3.svg": {
+    "url": "https://media.yapil.art/references/qude/d233fb4c6eb74bdd9fbe.svg",
+    "sha256": "d233fb4c6eb74bdd9fbe0e176791e81e5b4c062bd2616ebd07743c148be667ad",
+    "bytes": 5190,
+    "type": "image/svg+xml"
+  },
+  "svg-30.svg": {
+    "url": "https://media.yapil.art/references/qude/e497dcc117b9d9cf0238.svg",
+    "sha256": "e497dcc117b9d9cf02380fc7f3db40d507276f7aa1583209528980b2e3cf5be9",
+    "bytes": 784,
+    "type": "image/svg+xml"
+  },
+  "svg-31.svg": {
+    "url": "https://media.yapil.art/references/qude/41c480aeec2b70ef0f4c.svg",
+    "sha256": "41c480aeec2b70ef0f4c07eafce00af76b06c848e6d47850a899e8cd147eda65",
+    "bytes": 4542,
+    "type": "image/svg+xml"
+  },
+  "svg-32.svg": {
+    "url": "https://media.yapil.art/references/qude/03d010afde7737d1f3ba.svg",
+    "sha256": "03d010afde7737d1f3baae2a9d48e1445af997bf1168d406c031a1f48030b131",
+    "bytes": 2293,
+    "type": "image/svg+xml"
+  },
+  "svg-33.svg": {
+    "url": "https://media.yapil.art/references/qude/dbcf0d57209ebfee6032.svg",
+    "sha256": "dbcf0d57209ebfee6032131b8a3412254751053efb4e02aadf4cb0f0d5a14cae",
+    "bytes": 5637,
+    "type": "image/svg+xml"
+  },
+  "svg-34.svg": {
+    "url": "https://media.yapil.art/references/qude/0217ca204023a88fa5c1.svg",
+    "sha256": "0217ca204023a88fa5c11f8afea0c103d8c76342cb81df694337aadc8c22c46a",
+    "bytes": 385,
+    "type": "image/svg+xml"
+  },
+  "svg-35.svg": {
+    "url": "https://media.yapil.art/references/qude/acd3259d039f6deda451.svg",
+    "sha256": "acd3259d039f6deda451550241395cc2ab072ec78ad2f451f57a37cd047ce8ca",
+    "bytes": 1027,
+    "type": "image/svg+xml"
+  },
+  "svg-36.svg": {
+    "url": "https://media.yapil.art/references/qude/4e5a9a6710b4583b54f6.svg",
+    "sha256": "4e5a9a6710b4583b54f62e3380f996726928173876d5b0e73cd3efa8474170ab",
+    "bytes": 1258,
+    "type": "image/svg+xml"
+  },
+  "svg-37.svg": {
+    "url": "https://media.yapil.art/references/qude/07223d4c0b4cb57b8ca9.svg",
+    "sha256": "07223d4c0b4cb57b8ca9cb9429dd39693b477881c5230e48487e7d4891e5e5e3",
+    "bytes": 597,
+    "type": "image/svg+xml"
+  },
+  "svg-38.svg": {
+    "url": "https://media.yapil.art/references/qude/d8e90b06835fa3571f99.svg",
+    "sha256": "d8e90b06835fa3571f99707f770dc666fcfee7afeb114f6b80d2a000b9d5a25f",
+    "bytes": 881,
+    "type": "image/svg+xml"
+  },
+  "svg-39.svg": {
+    "url": "https://media.yapil.art/references/qude/ed0f6e4e657d57942a0f.svg",
+    "sha256": "ed0f6e4e657d57942a0f8d8266d0ef4c0b190a08a5dea800203a0eb9d88857d9",
+    "bytes": 1203,
+    "type": "image/svg+xml"
+  },
+  "svg-4.svg": {
+    "url": "https://media.yapil.art/references/qude/2ad89a3f2a41658b2dc2.svg",
+    "sha256": "2ad89a3f2a41658b2dc24f4561afa9ab7333408785835369f0f1448e1e5730bd",
+    "bytes": 1189,
+    "type": "image/svg+xml"
+  },
+  "svg-40.svg": {
+    "url": "https://media.yapil.art/references/qude/9360eb51ebe4965430c3.svg",
+    "sha256": "9360eb51ebe4965430c3e368a1deb5752aba778741c704117709d2986962563b",
+    "bytes": 1955,
+    "type": "image/svg+xml"
+  },
+  "svg-5.svg": {
+    "url": "https://media.yapil.art/references/qude/327808c411149486bf69.svg",
+    "sha256": "327808c411149486bf699205fbb5b16e3a95a92fd3a266f66dfea39c919b2063",
+    "bytes": 1593,
+    "type": "image/svg+xml"
+  },
+  "svg-6.svg": {
+    "url": "https://media.yapil.art/references/qude/e497dcc117b9d9cf0238.svg",
+    "sha256": "e497dcc117b9d9cf02380fc7f3db40d507276f7aa1583209528980b2e3cf5be9",
+    "bytes": 784,
+    "type": "image/svg+xml"
+  },
+  "svg-7.svg": {
+    "url": "https://media.yapil.art/references/qude/41c480aeec2b70ef0f4c.svg",
+    "sha256": "41c480aeec2b70ef0f4c07eafce00af76b06c848e6d47850a899e8cd147eda65",
+    "bytes": 4542,
+    "type": "image/svg+xml"
+  },
+  "svg-8.svg": {
+    "url": "https://media.yapil.art/references/qude/03d010afde7737d1f3ba.svg",
+    "sha256": "03d010afde7737d1f3baae2a9d48e1445af997bf1168d406c031a1f48030b131",
+    "bytes": 2293,
+    "type": "image/svg+xml"
+  },
+  "svg-9.svg": {
+    "url": "https://media.yapil.art/references/qude/dbcf0d57209ebfee6032.svg",
+    "sha256": "dbcf0d57209ebfee6032131b8a3412254751053efb4e02aadf4cb0f0d5a14cae",
+    "bytes": 5637,
+    "type": "image/svg+xml"
+  },
+  "svg-41.svg": {
+    "url": "https://media.yapil.art/references/qude/fa80d52e24a71e437099.svg",
+    "sha256": "fa80d52e24a71e43709919c45f23bdccd97543d538a5205052bfb14313b33fa3",
+    "bytes": 731,
+    "type": "image/svg+xml"
+  }
+}

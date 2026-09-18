@@ -1,0 +1,2 @@
+const { chromium } = require('playwright');
+(async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});const page=await browser.newPage();await page.goto('file:///Users/yapil/0/yapil%20new/tmp/pdfs/proposal.html');await page.evaluate(()=>document.fonts.ready);console.log(await page.evaluate(()=>Array.from(document.querySelectorAll('.page')).map(el=>({height:el.clientHeight,scroll:el.scrollHeight}))));await page.pdf({path:'output/pdf/Yapil-KP-Branding-Aktau.pdf',printBackground:true,preferCSSPageSize:true});await browser.close()})();

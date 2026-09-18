@@ -1,0 +1,8 @@
+import fs from 'node:fs/promises';import {parse} from '@babel/parser';
+const dir='tmp/qude-source';const code=await fs.readFile(`${dir}/page.js`,'utf8');const ast=parse(code);let count=41;
+const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+function render(type,props){let attrs='',children='';for(const p of props.properties){const key=p.key.name||p.key.value,v=p.value;if(key==='children'){children=renderChildren(v);continue;}if(v.type!=='StringLiteral'&&v.type!=='NumericLiteral')throw Error('Non-static SVG attr '+key);const name=({className:'class',fillRule:'fill-rule',clipRule:'clip-rule',strokeWidth:'stroke-width',strokeLinecap:'stroke-linecap',strokeLinejoin:'stroke-linejoin'})[key]||key;attrs+=` ${name}="${escape(v.value)}"`;}return `<${type}${attrs}>${children}</${type}>`;}
+function renderChildren(n){if(n.type==='ArrayExpression')return n.elements.map(renderChildren).join('');if(n.type==='CallExpression'&&n.arguments[0]?.type==='StringLiteral')return render(n.arguments[0].value,n.arguments[1]);throw Error('Non-static SVG children');}
+const existing=[];for(let i=0;i<41;i++)existing.push(await fs.readFile(`${dir}/svg-${i}.svg`,'utf8'));
+function walk(n){if(!n||typeof n!=='object')return;if(n.type==='CallExpression'&&n.arguments[0]?.value==='svg'){const svg=render('svg',n.arguments[1]),vb=svg.match(/viewBox="([^"]+)"/)[1],d=svg.match(/\bd="([^"]+)"/)?.[1];if(!existing.some(x=>x.includes(`viewBox="${vb}"`)&&(!d||x.includes(`d="${d}"`)))){existing.push(svg);fs.writeFile(`${dir}/svg-${count++}.svg`,svg);}}for(const v of Object.values(n))if(Array.isArray(v))v.forEach(walk);else if(v&&typeof v==='object')walk(v);}
+walk(ast);console.log('Additional source SVGs:',count-41);

@@ -2,7 +2,7 @@
 import { briefsData, type ServiceBrief } from '../../data/briefsData';
 
 export function getStaticPaths() {
-  return Object.values(briefsData).map((brief) => ({ params: { slug: brief.slug }, props: { brief } }));
+  return Object.values(briefsData).filter((brief) => brief.slug !== 'identity').map((brief) => ({ params: { slug: brief.slug }, props: { brief } }));
 }
 
 interface Props { brief: ServiceBrief; }
