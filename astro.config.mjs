@@ -35,11 +35,7 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true,
-    },
-  }),
+  adapter: cloudflare(),
   redirects: {
     '/brief/ready-food': { destination: '/brief/identity', status: 301 },
     '/бриф/айдентика': { destination: '/brief/identity', status: 301 },

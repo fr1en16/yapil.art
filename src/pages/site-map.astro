@@ -17,7 +17,22 @@ const publishedArticles = articleEntries
   .sort((a, b) => a.data.title.localeCompare(b.data.title, 'ru'));
 const getArticleSlug = (id: string) => id.split('/').at(-1) ?? id;
 
-const pageGroups = [
+interface SiteMapPage {
+  title: string;
+  path: string;
+  note: string;
+  status?: 'private' | 'archive';
+}
+
+interface SiteMapGroup {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  pages: SiteMapPage[];
+}
+
+const pageGroups: SiteMapGroup[] = [
   {
     id: 'main',
     number: '01',

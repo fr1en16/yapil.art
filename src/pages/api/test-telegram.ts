@@ -1,25 +1,28 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { getCfEnv } from '../../lib/cloudflareEnv';
 
 function getTelegramEnv() {
   const token =
-    process.env.TELEGRAM_BOT_TOKEN ||
-    process.env.TELEGRAM_TOKEN ||
-    process.env.TG_BOT_TOKEN ||
-    process.env.BOT_TOKEN ||
-    import.meta.env.TELEGRAM_BOT_TOKEN;
+    getCfEnv('TELEGRAM_BOT_TOKEN') ||
+    getCfEnv('TELEGRAM_TOKEN') ||
+    getCfEnv('TG_BOT_TOKEN') ||
+    getCfEnv('BOT_TOKEN');
 
   const chatId =
-    process.env.TELEGRAM_CHAT_ID ||
-    process.env.TG_CHAT_ID ||
-    process.env.CHAT_ID ||
-    import.meta.env.TELEGRAM_CHAT_ID;
+    getCfEnv('TELEGRAM_CHAT_ID') ||
+    getCfEnv('TG_CHAT_ID') ||
+    getCfEnv('CHAT_ID');
 
   return { token, chatId };
 }
 
 export const ALL: APIRoute = async ({ request }) => {
+  if (!import.meta.env.DEV) {
+    return new Response('Not found', { status: 404 });
+  }
+
   try {
     let customToken: string | undefined;
     let customChatId: string | undefined;

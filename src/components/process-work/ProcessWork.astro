@@ -2,6 +2,7 @@
 interface ProcessStep {
   number?: string;
   title: string;
+  second?: string;
   text: string;
 }
 
@@ -14,7 +15,7 @@ interface Props {
 const { embedded = false, steps: suppliedSteps, autoplay = false } = Astro.props;
 const ProcessHeading = embedded ? 'h2' : 'h1';
 const StepHeading = embedded ? 'h3' : 'h2';
-const defaultSteps = [
+const defaultSteps: ProcessStep[] = [
   {title:'Исследование', second:'и стратегия', text:'Разбираемся в вашем бизнесе, аудитории и задачах. Находим точку старта и строим понятный путь к результату.'},
   {title:'Дизайн', second:'и итерации', text:'Собираем визуальную систему и дизайн сайта. Обсуждаем, уточняем и доводим каждую деталь до нужного решения.'},
   {title:'Разработка', second:'и запуск', text:'Превращаем дизайн в быстрый, адаптивный сайт. Настраиваем интеграции, проверяем и готовим всё к запуску.'},
@@ -26,7 +27,7 @@ const splitTitle = (title: string) => {
     ? { title: title.slice(0, separator), second: title.slice(separator + 1) }
     : { title, second: '' };
 };
-const steps = suppliedSteps?.length
+const steps: ProcessStep[] = suppliedSteps?.length
   ? suppliedSteps.map((step) => ({ ...step, ...splitTitle(step.title) }))
   : defaultSteps;
 const projects = [

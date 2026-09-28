@@ -1,15 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getAnalyticsReport, type AnalyticsReport, type AnalyticsRow } from '../lib/vercelAnalytics';
+import { getCfEnv } from '../lib/cloudflareEnv';
 
 export const prerender = false;
 
-const env = import.meta.env;
-const token = env.VERCEL_ANALYTICS_TOKEN || env.VERCEL_TOKEN;
-const projectId = env.VERCEL_ANALYTICS_PROJECT_ID || env.VERCEL_PROJECT_ID;
-const teamId = env.VERCEL_ANALYTICS_TEAM_ID || env.VERCEL_TEAM_ID;
-const username = env.ANALYTICS_USERNAME || 'yapil';
-const password = env.ANALYTICS_PASSWORD;
+const token = getCfEnv('VERCEL_ANALYTICS_TOKEN') || getCfEnv('VERCEL_TOKEN');
+const projectId = getCfEnv('VERCEL_ANALYTICS_PROJECT_ID') || getCfEnv('VERCEL_PROJECT_ID');
+const teamId = getCfEnv('VERCEL_ANALYTICS_TEAM_ID') || getCfEnv('VERCEL_TEAM_ID');
+const username = getCfEnv('ANALYTICS_USERNAME') || 'yapil';
+const password = getCfEnv('ANALYTICS_PASSWORD');
 
 const authorization = Astro.request.headers.get('authorization');
 let authorized = !password;
@@ -70,7 +70,7 @@ let errorMessage = '';
 if (configured) {
   try {
     report = await getAnalyticsReport(
-      { token, projectId, teamId },
+      { token: token!, projectId: projectId!, teamId },
       { since, until, requestPath: selectedPage || undefined },
     );
   } catch (error) {

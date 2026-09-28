@@ -3,12 +3,12 @@ import '../../styles/inter-tight.css';
 import '../../styles/global.css';
 import '../../styles/cms.css';
 import { businessSectors } from '../../data/business-sectors';
+import { getCfEnv } from '../../lib/cloudflareEnv';
 
 export const prerender = false;
 
-const env = import.meta.env;
-const username = env.ANALYTICS_USERNAME || 'yapil';
-const password = env.ANALYTICS_PASSWORD;
+const username = getCfEnv('ANALYTICS_USERNAME') || 'yapil';
+const password = getCfEnv('ANALYTICS_PASSWORD');
 const authorization = Astro.request.headers.get('authorization');
 let authorized = import.meta.env.DEV || !password;
 

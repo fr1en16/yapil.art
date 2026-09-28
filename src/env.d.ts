@@ -11,6 +11,12 @@ type ENV = {
   CUSTOM_WEBHOOK_URL?: string;
   ANALYTICS_USERNAME?: string;
   ANALYTICS_PASSWORD?: string;
+  VERCEL_ANALYTICS_TOKEN?: string;
+  VERCEL_TOKEN?: string;
+  VERCEL_ANALYTICS_PROJECT_ID?: string;
+  VERCEL_PROJECT_ID?: string;
+  VERCEL_ANALYTICS_TEAM_ID?: string;
+  VERCEL_TEAM_ID?: string;
 };
 
 declare namespace App {

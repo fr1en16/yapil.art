@@ -9,6 +9,13 @@ export const prerender = false;
 
 const casesDirectory = path.join(process.cwd(), 'src/content/cases');
 
+interface LocalCase {
+  slug: string;
+  body: string;
+  order?: number;
+  [key: string]: unknown;
+}
+
 function localOnly() {
   return new Response(JSON.stringify({ error: 'Редактирование доступно только локально.' }), {
     status: 403,
@@ -21,7 +28,7 @@ function safeSlug(value: unknown) {
   return /^[a-z0-9][a-z0-9-]*$/.test(slug) ? slug : null;
 }
 
-async function readCase(slug: string) {
+async function readCase(slug: string): Promise<LocalCase> {
   const source = await fs.readFile(path.join(casesDirectory, `${slug}.md`), 'utf8');
   const parsed = matter(source);
   return { slug, ...parsed.data, body: parsed.content.trim() };
@@ -45,7 +52,7 @@ export const PUT: APIRoute = async ({ request }) => {
     title: String(input.title || '').trim(),
     year: String(input.year || '').trim(),
     summary: String(input.summary || '').trim(),
-    tags: Array.isArray(input.tags) ? Array.from(new Set(input.tags.map((item: unknown) => String(item).trim()).filter(Boolean))) : [],
+    tags: Array.isArray(input.tags) ? Array.from(new Set<string>(input.tags.map((item: unknown) => String(item).trim()).filter(Boolean))) : [],
     ...(String(input.sector || '').trim() ? { sector: String(input.sector).trim() } : {}),
     cover: String(input.cover || '').trim(),
     ...(String(input.socialImage || '').trim() ? { socialImage: String(input.socialImage).trim() } : {}),

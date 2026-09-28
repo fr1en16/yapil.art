@@ -29,7 +29,7 @@ function response(data: unknown, status = 200): Response {
 }
 
 function requiredEnv(name: string): string {
-  const value = import.meta.env[name] || process.env[name];
+  const value = process.env[name];
   if (!value) throw new Error(`Не задана переменная ${name}.`);
   return value;
 }
@@ -63,7 +63,7 @@ async function uploadR2(key: string, body: Buffer, contentType: string): Promise
   for (const part of ['auto', 's3', 'aws4_request']) signingKey = hmac(signingKey, part);
   const signature = createHmac('sha256', signingKey).update(`AWS4-HMAC-SHA256\n${date}\n${scope}\n${sha256(canonical)}`).digest('hex');
   headers.Authorization = `AWS4-HMAC-SHA256 Credential=${accessKey}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
-  const upload = await fetch(`https://${host}${uri}`, { method: 'PUT', headers, body });
+  const upload = await fetch(`https://${host}${uri}`, { method: 'PUT', headers, body: new Uint8Array(body) });
   if (!upload.ok) throw new Error(`Cloudflare R2 вернул HTTP ${upload.status}.`);
 }
 
@@ -72,7 +72,7 @@ async function tinify(input: Buffer): Promise<Buffer> {
   const shrink = await fetch('https://api.tinify.com/shrink', {
     method: 'POST',
     headers: { Authorization: auth, 'Content-Type': 'application/octet-stream' },
-    body: input,
+    body: new Uint8Array(input),
   });
   if (!shrink.ok) throw new Error(`Tinify вернул HTTP ${shrink.status}.`);
   const shrinkData = await shrink.json();

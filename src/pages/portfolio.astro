@@ -137,6 +137,7 @@ const sectors = Array.from(new Set(cards.map((card) => card.sector).filter((sect
     const sentinel = document.querySelector<HTMLElement>('[data-portfolio-sentinel]');
     const dialog = document.querySelector<HTMLDialogElement>('[data-portfolio-lightbox]');
     if (!grid || !filters || !empty || !sentinel || !dialog || grid.dataset.ready === 'true') return;
+    const emptyState = empty;
     grid.dataset.ready = 'true';
     const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-card]'));
     const active = { tag: 'all', sector: 'all' };
@@ -154,7 +155,7 @@ const sectors = Array.from(new Set(cards.map((card) => card.sector).filter((sect
         card.classList.toggle('is-pending', !loaded);
         if (matches && loaded) visible += 1;
       });
-      empty.hidden = visible > 0;
+      emptyState.hidden = visible > 0;
     }
 
     filters.addEventListener('click', (event) => {

@@ -7,7 +7,6 @@ export function getDb() {
 export function getCfEnv(key: string): string | undefined {
   return (
     (env as any)?.[key] ||
-    (typeof process !== 'undefined' ? (process.env as any)?.[key] : undefined) ||
-    (typeof import.meta !== 'undefined' ? (import.meta.env as any)?.[key] : undefined)
+    (typeof process !== 'undefined' ? (process.env as any)?.[key] : undefined)
   );
 }
