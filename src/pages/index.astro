@@ -1,6 +1,5 @@
 ---
 import Hero from '../components/Hero.astro';
-import HomepageWebsitePromo from '../components/HomepageWebsitePromo.astro';
 import Services from '../components/Services.astro';
 import ProduxPortfolio from '../components/ProduxPortfolio.astro';
 import VsyachinaInfinite from '../components/VsyachinaInfinite.astro';
@@ -12,25 +11,16 @@ import Footer from '../components/Footer.astro';
 import Base from '../layouts/Base.astro';
 import { getWhatsAppUrl } from '../utils/messengerLinks';
 import { getHomepage } from '../lib/sanity';
-
 const heroWhatsAppHref = getWhatsAppUrl({
   pageUrl: Astro.url.href,
   sourceContext: 'hero_cta',
 });
 
-const compactPromoWhatsAppHref = getWhatsAppUrl({
-  message: 'Здравствуйте! Хочу заказать сайт со скидкой 15%',
-  pageUrl: Astro.url.href,
-  sourceContext: 'homepage_promo_compact',
-});
-
-const fullPromoWhatsAppHref = getWhatsAppUrl({
-  message: 'Здравствуйте! Хочу заказать сайт со скидкой 15%',
-  pageUrl: Astro.url.href,
-  sourceContext: 'homepage_promo_full',
-});
-
 const homepage = await getHomepage();
+const heroDescription = (
+  homepage?.hero.description ??
+  'Создаём сайты и айдентику, которые выделяют компанию среди конкурентов и приносят заявки.'
+).replace(/^Мы — дизайн-агентство Yapil\.\s*/, '');
 
 const homePageJsonLd = {
   '@context': 'https://schema.org',
@@ -164,16 +154,13 @@ const homePageJsonLd = {
 >
   <Hero
     title={homepage?.hero.title ?? 'Дизайн, который<br />работает на бизнес'}
-    description={homepage?.hero.description ?? 'Мы — дизайн-агентство Yapil. Создаём сайты и айдентику, которые выделяют компанию среди конкурентов и приносят заявки.'}
+    description={heroDescription}
     casesHref={heroWhatsAppHref}
     ctaText={homepage?.hero.ctaText ?? 'Связаться'}
     ctaExternal
     ripple
-  >
-    <HomepageWebsitePromo variant="compact" href={compactPromoWhatsAppHref} />
-  </Hero>
+  />
   <AboutCompact cards={homepage?.aboutCards} />
-  <HomepageWebsitePromo variant="full" href={fullPromoWhatsAppHref} />
   <Services homepage />
   <ProduxPortfolio />
   <VsyachinaInfinite />

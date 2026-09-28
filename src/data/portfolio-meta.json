@@ -1,0 +1,121 @@
+{
+  "BrewBox": {
+    "label": "BrewBox",
+    "tags": [
+      "SMM",
+      "Айдентика",
+      "Упаковка"
+    ],
+    "caseSlug": "brewbox",
+    "order": 20,
+    "published": true
+  },
+  "cadillac": {
+    "label": "Cadillac",
+    "tags": [
+      "SMM",
+      "Креативы"
+    ],
+    "order": 30,
+    "published": true
+  },
+  "chevrolet": {
+    "label": "Chevrolet",
+    "tags": [
+      "Креативы"
+    ],
+    "order": 40,
+    "published": true
+  },
+  "gippo": {
+    "label": "Gippo",
+    "tags": [
+      "Креативы",
+      "SMM",
+      "Анимашки"
+    ],
+    "sector": "HoReCa",
+    "caseSlug": "gippo",
+    "order": 10,
+    "published": true
+  },
+  "iroh": {
+    "label": "Iroh",
+    "tags": [
+      "Полиграфия"
+    ],
+    "order": 60,
+    "published": true,
+    "sector": "HoReCa"
+  },
+  "lukoil": {
+    "label": "LUKOIL",
+    "tags": [
+      "SMM",
+      "Креативы",
+      "Анимашки"
+    ],
+    "order": 70,
+    "published": true
+  },
+  "ONmacabim": {
+    "label": "ONmacabim",
+    "tags": [
+      "SMM",
+      "Креативы",
+      "Анимашки"
+    ],
+    "caseSlug": "onmacabim",
+    "order": 80,
+    "published": true
+  },
+  "puma": {
+    "label": "Puma",
+    "tags": [
+      "SMM",
+      "Анимашки"
+    ],
+    "caseSlug": "puma-kazakhstan",
+    "order": 90,
+    "published": true
+  },
+  "RV": {
+    "label": "Sold Out",
+    "tags": [
+      "SMM",
+      "Упаковка"
+    ],
+    "order": 100,
+    "published": true
+  },
+  "RVgold": {
+    "label": "Рыкунов и Кудряшов",
+    "tags": [
+      "Айдентика",
+      "Многостраничный сайт"
+    ],
+    "caseSlug": "rv",
+    "order": 110,
+    "published": true
+  },
+  "shanding": {
+    "label": "Shanding",
+    "tags": [
+      "Полиграфия"
+    ],
+    "caseSlug": "shanding",
+    "order": 120,
+    "published": true
+  },
+  "takara": {
+    "label": "Takara",
+    "tags": [
+      "Полиграфия",
+      "Упаковка"
+    ],
+    "caseSlug": "takara",
+    "order": 130,
+    "published": true,
+    "sector": "HoReCa"
+  }
+}

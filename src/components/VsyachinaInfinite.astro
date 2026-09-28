@@ -20,11 +20,10 @@ interface GalleryItem {
 }
 
 const labels: Record<string, string> = {
-  '2gippo': 'Gippo',
   BrewBox: 'BrewBox',
   cadillac: 'Cadillac',
   chevrolet: 'Chevrolet',
-  gippo: 'Gippo Family',
+  gippo: 'Gippo',
   iroh: 'Iroh',
   lukoil: 'Lukoil',
   ONmacabim: 'ONmacabim',
@@ -38,7 +37,8 @@ const labels: Record<string, string> = {
 const grouped = new Map<string, GalleryItem[]>();
 for (const item of galleryItems as GalleryItem[]) {
   const stem = item.name.replace(/\.[^.]+$/, '');
-  const prefix = stem.match(/^(.+?)-?\d+$/)?.[1] ?? stem;
+  const sourcePrefix = stem.match(/^(.+?)-?\d+$/)?.[1] ?? stem;
+  const prefix = sourcePrefix === '2gippo' ? 'gippo' : sourcePrefix;
   grouped.set(prefix, [...(grouped.get(prefix) ?? []), item]);
 }
 

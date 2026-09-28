@@ -31,8 +31,14 @@ const caseMap = new Map(allCases.map((c) => [c.id, c]));
 
 const SERVICE_TAG_MAP_EN: Record<string, string> = {
   'Поддержка': 'Support',
+  'Дизайн-Поддержка': 'Support',
+  'Айдентика': 'Identity',
+  'SMM': 'SMM',
+  'Креативы': 'Creatives',
+  'Анимашки': 'Animations',
   'Полиграфия': 'Print',
   'Сайт': 'Website',
+  'Многостраничный сайт': 'Website',
   'Сайты': 'Websites',
   'Брендинг': 'Branding',
   'Логотип': 'Logo',
@@ -176,14 +182,14 @@ const projects = targetSlugs
       const en = CASE_TRANSLATIONS_EN[slug];
       const title = en?.title || original.data.title;
       const summary = en?.summary || original.data.summary;
-      const services = en?.services || original.data.services.map((s) => SERVICE_TAG_MAP_EN[s] || s);
+      const services = en?.services || original.data.tags.map((s) => SERVICE_TAG_MAP_EN[s] || s);
       return {
         ...original,
         data: {
           ...original.data,
           title,
           summary,
-          services,
+          tags: services,
         },
       };
     }
@@ -265,7 +271,7 @@ const positions = [
               </div>
 
               <div class="project__tags" aria-hidden="true">
-                {project.data.services.map((service) => <span>{service}</span>)}
+                {project.data.tags.map((service) => <span>{service}</span>)}
               </div>
             </div>
 

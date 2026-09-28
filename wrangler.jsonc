@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "yapil-astro",
+  "compatibility_date": "2025-02-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "yapil-production",
+      "database_id": "1147fbb5-0e62-4d84-a09d-748caf0c0d80"
+    }
+  ],
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "yapil.art/*", "zone_name": "yapil.art" },
+    { "pattern": "www.yapil.art/*", "zone_name": "yapil.art" }
+  ]
+}

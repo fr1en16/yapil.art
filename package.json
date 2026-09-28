@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "deploy": "wrangler deploy dist/server/entry.mjs --config dist/server/wrangler.json",
     "seo:generate": "node scripts/generate-seo-library.mjs",
     "seo:generate-how-to": "node scripts/generate-how-to-pages.mjs",
     "seo:verify": "node scripts/verify-seo-library.mjs",
@@ -17,9 +18,9 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.3.2",
     "@astrojs/react": "^6.0.2",
     "@astrojs/sitemap": "^3.7.3",
-    "@astrojs/vercel": "^11.0.7",
     "@fontsource-variable/inter-tight": "^5.3.0",
     "@sanity/astro": "^3.5.1",
     "@sanity/client": "^8.6.1",
@@ -27,8 +28,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@types/react-is": "^18.3.1",
-    "@vercel/analytics": "^2.0.1",
-    "astro": "^7.2.2",
+    "astro": "^7.3.3",
     "astro-og-canvas": "^0.13.0",
     "clsx": "^2.1.1",
     "framer-motion": "^13.1.0",
@@ -54,6 +54,7 @@
     "linkinator": "^8.0.3",
     "playwright": "^1.62.1",
     "serve": "^14.2.6",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.135.0"
   }
 }

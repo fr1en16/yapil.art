@@ -10,10 +10,11 @@ const env = import.meta.env;
 const username = env.ANALYTICS_USERNAME || 'yapil';
 const password = env.ANALYTICS_PASSWORD;
 
+const cfAccessEmail = Astro.request.headers.get('cf-access-authenticated-user-email');
 const authorization = Astro.request.headers.get('authorization');
-let authorized = !password;
+let authorized = Boolean(cfAccessEmail) || !password;
 
-if (password && authorization?.startsWith('Basic ')) {
+if (!authorized && password && authorization?.startsWith('Basic ')) {
   try {
     const credentials = atob(authorization.slice(6));
     const separator = credentials.indexOf(':');

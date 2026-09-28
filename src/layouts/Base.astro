@@ -4,7 +4,7 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
 import SiteBackground from '../components/SiteBackground.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import SmoothScroll from '../components/SmoothScroll.astro';
-import Analytics from '@vercel/analytics/astro';
+import InlineEditor from '../components/cms/InlineEditor.astro';
 import { ClientRouter } from 'astro:transitions';
 import { getSiteSettings } from '../lib/sanity';
 import '../styles/inter-tight.css';
@@ -181,10 +181,6 @@ const schemaJsonLd = {
     <title>{documentTitle}</title>
     <ClientRouter fallback="animate" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaJsonLd)} />
-    <script is:inline>
-      window.webAnalyticsBeforeSend = (event) => event.url.includes('/anal') ? null : event;
-    </script>
-    <Analytics />
   </head>
   <body class:list={[bodyClass, { 'is-home': isHome, 'theme-light': theme === 'light' }]} data-theme={theme}>
     <a class="skip-link" href="#main-content">{lang === 'en' ? 'Skip to main content' : 'К основному содержанию'}</a>
@@ -197,6 +193,7 @@ const schemaJsonLd = {
     <FloatingWhatsApp lang={lang} pageUrl={Astro.url.href} message={whatsappMessage} />
     {import.meta.env.DEV && <GridOverlay />}
     <SmoothScroll />
+    {import.meta.env.DEV && <InlineEditor />}
     <script>
       import { getFirstTouch } from '../utils/leadAttribution';
       getFirstTouch();

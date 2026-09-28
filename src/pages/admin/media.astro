@@ -1,0 +1,109 @@
+---
+import '../../styles/inter-tight.css';
+import '../../styles/global.css';
+import '../../styles/cms.css';
+import librarySource from '../../data/cms-media.json';
+import { readPortfolioMeta } from '../../lib/portfolio-meta';
+
+export const prerender = false;
+const env = import.meta.env;
+const username = env.ANALYTICS_USERNAME || 'yapil';
+const password = env.ANALYTICS_PASSWORD;
+const authorization = Astro.request.headers.get('authorization');
+let authorized = import.meta.env.DEV || !password;
+if (!authorized && authorization?.startsWith('Basic ')) {
+  try { const value = atob(authorization.slice(6)); const split = value.indexOf(':'); authorized = value.slice(0, split) === username && value.slice(split + 1) === password; } catch { authorized = false; }
+}
+if (!authorized) return new Response('Требуется авторизация', { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="Yapil CMS", charset="UTF-8"' } });
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+const initialLibrary = librarySource as { assets: { id: string; name: string; url: string; contentType: string; bytes: number; processing: string; createdAt: string }[] };
+const portfolioGroups = Object.entries(await readPortfolioMeta()).sort(([, a], [, b]) => a.order - b.order);
+---
+
+<!doctype html>
+<html lang="ru" class="cms-root">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><meta name="robots" content="noindex, nofollow" /><title>Медиа — CMS Yapil</title></head>
+  <body class="cms-body">
+    <div class="shell">
+      <aside>
+        <a class="brand" href="/">Yapil</a>
+        <nav><a href="/admin">Страницы</a><a href="/admin/portfolio">Портфолио</a><a href="/admin/cases">Кейсы</a><a class="active" href="/admin/media">Медиа <b data-count>{initialLibrary.assets.length}</b></a></nav>
+        <p>Локальная CMS · v0.1</p>
+      </aside>
+      <main>
+        <header><div><h1>Медиа</h1><p>Растровые изображения автоматически проходят через Tinify и загружаются в Cloudflare R2.</p></div></header>
+        <form class="upload" data-upload-form>
+          <label class="drop"><input type="file" name="file" accept="image/png,image/jpeg,image/webp,image/avif,image/svg+xml,image/gif,video/mp4,video/webm,audio/mpeg,audio/ogg" required /><strong>Выберите файл</strong><span>PNG, JPEG, WebP, AVIF, SVG, GIF, MP4, WebM, MP3 или OGG · до 100 МБ</span></label>
+          <label>Папка в R2<input name="folder" value="portfolio" /></label>
+          <button type="submit">Обработать и загрузить</button>
+          <fieldset>
+            <label class="attach"><input type="checkbox" name="attachToPortfolio" /> Добавить в мозаику портфолио</label>
+            <label>Проект<select name="group"><option value="">Выберите проект</option>{portfolioGroups.map(([key, value]) => <option value={key}>{value.label}</option>)}</select></label>
+            <label>Название работы<input name="title" placeholder="Что изображено" /></label>
+            <label>Alt-текст<input name="alt" placeholder="Описание изображения для доступности" /></label>
+          </fieldset>
+          <p data-upload-state></p>
+        </form>
+        <section class="library"><h2>Загруженные файлы</h2><div class="assets" data-assets>
+          {initialLibrary.assets.map((asset) => <article><div class="thumb">{asset.contentType.startsWith('image/') ? <img src={asset.url} alt="" /> : <span>{asset.contentType}</span>}</div><strong>{asset.name}</strong><small>{asset.processing} · {(asset.bytes / 1024).toFixed(0)} КБ</small><button type="button" data-copy={asset.url}>Копировать URL</button></article>)}
+        </div><p class="empty" data-empty hidden={initialLibrary.assets.length > 0}>Загруженных через CMS файлов пока нет.</p></section>
+      </main>
+    </div>
+    <script>
+      import '../../lib/cms-no-reload';
+      const form = document.querySelector<HTMLFormElement>('[data-upload-form]');
+      const state = document.querySelector<HTMLElement>('[data-upload-state]');
+      const assets = document.querySelector<HTMLElement>('[data-assets]');
+      const empty = document.querySelector<HTMLElement>('[data-empty]');
+      async function mediaDimensions(file: File): Promise<{ width: number; height: number }> {
+        if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) return { width: 1200, height: 1200 };
+        return new Promise((resolve) => {
+          const element = document.createElement(file.type.startsWith('video/') ? 'video' : 'img');
+          const url = URL.createObjectURL(file);
+          const done = () => {
+            const video = element as HTMLVideoElement;
+            const image = element as HTMLImageElement;
+            resolve({ width: video.videoWidth || image.naturalWidth || 1200, height: video.videoHeight || image.naturalHeight || 1200 });
+            URL.revokeObjectURL(url);
+          };
+          element.addEventListener(file.type.startsWith('video/') ? 'loadedmetadata' : 'load', done, { once: true });
+          element.addEventListener('error', () => resolve({ width: 1200, height: 1200 }), { once: true });
+          element.src = url;
+        });
+      }
+      form?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const file = data.get('file');
+        if (!(file instanceof File)) return;
+        if (state) state.textContent = 'Обрабатываю через Tinify и загружаю в R2…';
+        const dimensions = await mediaDimensions(file);
+        const response = await fetch('/api/cms/media', { method: 'POST', body: data });
+        const result = await response.json();
+        if (!response.ok) { if (state) state.textContent = result.error || 'Ошибка загрузки'; return; }
+        if (data.get('attachToPortfolio') === 'on') {
+          if (state) state.textContent = 'Файл загружен. Добавляю в портфолио…';
+          const attached = await fetch('/api/cms/portfolio-media', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ group: data.get('group'), title: data.get('title'), alt: data.get('alt'), url: result.asset.url, width: dimensions.width, height: dimensions.height, isVideo: file.type.startsWith('video/') }),
+          });
+          const attachResult = await attached.json();
+          if (!attached.ok) { if (state) state.textContent = `Файл загружен, но не добавлен в портфолио: ${attachResult.error}`; return; }
+          if (state) state.textContent = 'Файл обработан, загружен и добавлен в портфолио.';
+        } else if (state) state.textContent = 'Файл обработан, загружен и проверен.';
+        location.reload();
+      });
+      document.addEventListener('click', async (event) => {
+        const button = (event.target as Element).closest<HTMLButtonElement>('[data-copy]');
+        if (!button) return;
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+        button.textContent = 'Скопировано';
+      });
+      if (empty && assets) empty.hidden = assets.children.length > 0;
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*){box-sizing:border-box}:global(body){margin:0;background:#f1f0ed;color:#171717;font-family:'Inter Tight Variable',Arial,sans-serif}.shell{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}aside{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:28px 18px 20px;background:#111;color:#fff}.brand{margin:0 12px 48px;color:#fd4b32;font:400 38px/1 Oranienbaum,Georgia,serif;text-decoration:none}aside nav{display:grid;gap:4px}aside nav>*{display:flex;justify-content:space-between;padding:13px 12px;border-radius:8px;color:#aaa;text-decoration:none}aside nav .active{background:#262626;color:#fff}aside p{margin:auto 12px 0;color:#777;font-size:12px}main{padding:42px clamp(24px,4vw,68px) 80px}h1{margin:0;font:400 clamp(56px,7vw,92px)/.9 Oranienbaum,Georgia,serif}header p{max-width:620px;margin:15px 0 0;color:#666}.upload{display:grid;grid-template-columns:minmax(0,1fr) 180px auto;align-items:end;gap:12px;margin-top:46px;padding:20px;border-radius:12px;background:#fff}.upload label{display:grid;gap:7px;color:#777;font-size:12px}.drop{position:relative;min-height:104px;place-content:center;padding:18px;border:1px dashed #aaa;border-radius:9px;text-align:center;cursor:pointer}.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}.drop strong{color:#171717;font-size:18px}.drop span{margin-top:5px}.upload input[name=folder],.upload fieldset input,.upload select{padding:12px;border:1px solid #d8d5d0;border-radius:8px;background:#fff;font:inherit}.upload button{padding:13px 16px;border:0;border-radius:8px;background:#fd4b32;color:#fff;font:inherit;cursor:pointer}.upload fieldset{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:18px;border:1px solid #e0ddd7;border-radius:9px}.upload fieldset .attach{grid-column:1/-1;display:flex;grid-auto-flow:column;justify-content:start;align-items:center;gap:8px;color:#222;font-size:15px}.attach input{width:auto;padding:0}.upload p{grid-column:1/-1;margin:0;color:#348465}.library{margin-top:44px}.library h2{font:400 36px/1 Oranienbaum,Georgia,serif}.assets{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.assets article{display:grid;gap:8px;padding:12px;border-radius:10px;background:#fff}.thumb{aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden;background:#dedbd5;color:#777}.thumb img{width:100%;height:100%;object-fit:cover}.assets small{color:#777}.assets button{justify-self:start;padding:7px 9px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer}.empty{padding:60px;border:1px dashed #aaa;text-align:center}@media(max-width:900px){.assets{grid-template-columns:repeat(2,1fr)}.upload,.upload fieldset{grid-template-columns:1fr}}@media(max-width:680px){.shell{display:block}aside{position:static;height:auto}.brand{margin-bottom:18px}aside nav{display:flex;overflow-x:auto}aside p{display:none}main{padding:28px 14px 60px}.assets{grid-template-columns:1fr 1fr}}
+</style>

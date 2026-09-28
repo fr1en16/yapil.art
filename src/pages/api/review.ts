@@ -1,20 +1,19 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { getDb, getCfEnv } from '../../lib/cloudflareEnv';
 
 function getTelegramEnv() {
   const token =
-    process.env.TELEGRAM_BOT_TOKEN ||
-    process.env.TELEGRAM_TOKEN ||
-    process.env.TG_BOT_TOKEN ||
-    process.env.BOT_TOKEN ||
-    import.meta.env.TELEGRAM_BOT_TOKEN;
+    getCfEnv('TELEGRAM_BOT_TOKEN') ||
+    getCfEnv('TELEGRAM_TOKEN') ||
+    getCfEnv('TG_BOT_TOKEN') ||
+    getCfEnv('BOT_TOKEN');
 
   const chatId =
-    process.env.TELEGRAM_CHAT_ID ||
-    process.env.TG_CHAT_ID ||
-    process.env.CHAT_ID ||
-    import.meta.env.TELEGRAM_CHAT_ID;
+    getCfEnv('TELEGRAM_CHAT_ID') ||
+    getCfEnv('TG_CHAT_ID') ||
+    getCfEnv('CHAT_ID');
 
   return { token, chatId };
 }
@@ -22,8 +21,53 @@ function getTelegramEnv() {
 export const POST: APIRoute = async ({ request }) => {
   try {
     const review = await request.json();
-    const { token, chatId } = getTelegramEnv();
+    const now = new Date().toISOString();
+    const id = review.id || `rev-${Date.now()}`;
 
+    // 1. Cloudflare D1 Persistence
+    const db = getDb();
+    let dbSaved = false;
+
+    if (db) {
+      try {
+        await db.prepare(`
+          INSERT INTO reviews (
+            id, author, role, company, website_url, contact, avatar, rating,
+            services, quote, format_mode, liked_most, liked_special, to_improve,
+            business_results, full_review_text, allow_publish, status,
+            created_at, updated_at, page_url
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          id,
+          String(review.author || '—'),
+          String(review.role || '—'),
+          String(review.company || ''),
+          review.websiteUrl ? String(review.websiteUrl) : null,
+          review.contact ? String(review.contact) : null,
+          review.avatar ? String(review.avatar) : null,
+          Number(review.rating || 5),
+          JSON.stringify(Array.isArray(review.services) ? review.services : []),
+          String(review.quote || '—'),
+          String(review.formatMode || 'freeform'),
+          review.likedMost ? String(review.likedMost) : null,
+          review.likedSpecial ? String(review.likedSpecial) : null,
+          review.toImprove ? String(review.toImprove) : null,
+          review.businessResults ? String(review.businessResults) : null,
+          review.fullReviewText ? String(review.fullReviewText) : null,
+          review.allowPublish ? 1 : 0,
+          String(review.status || 'pending'),
+          review.createdAt || now,
+          now,
+          review.pageUrl ? String(review.pageUrl) : 'https://yapil.art/review'
+        ).run();
+        dbSaved = true;
+      } catch (dbErr) {
+        console.error('[API /api/review] Cloudflare D1 insert error:', dbErr);
+      }
+    }
+
+    // 2. Telegram Notification
+    const { token, chatId } = getTelegramEnv();
     let telegramSent = false;
     let telegramError: any = null;
 
@@ -44,7 +88,7 @@ export const POST: APIRoute = async ({ request }) => {
         detailsBlock += `\n\n📝 *Полный текст отзыва:*\n${review.fullReviewText}`;
       }
 
-      const text = `⭐️ *НОВЫЙ ОТЗЫВ КЛИЕНТА!* (${review.id || 'Отзыв'})
+      const text = `⭐️ *НОВЫЙ ОТЗЫВ КЛИЕНТА!* (${id})
 👤 *Клиент:* ${review.author || '—'}
 💼 *Роль / Компания:* ${review.role || '—'}${review.company ? `, ${review.company}` : ''}
 ⭐️ *Оценка:* ${stars} (${review.rating || 5}/5)
@@ -81,6 +125,8 @@ ${review.contact ? `📞 *Контакт:* ${review.contact}\n` : ''}${review.we
     return new Response(
       JSON.stringify({
         success: true,
+        id,
+        dbSaved,
         telegramConfigured: Boolean(token && chatId),
         telegramSent,
         ...(telegramError ? { telegramError } : {}),

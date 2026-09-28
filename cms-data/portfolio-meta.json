@@ -1,0 +1,132 @@
+{
+  "BrewBox": {
+    "label": "BrewBox",
+    "tags": [
+      "SMM",
+      "Айдентика",
+      "Упаковка"
+    ],
+    "sector": "Ритейл и e-commerce",
+    "caseSlug": "brewbox",
+    "order": 20,
+    "published": true
+  },
+  "cadillac": {
+    "label": "Cadillac",
+    "tags": [
+      "SMM",
+      "Креативы",
+      "Анимашки"
+    ],
+    "sector": "Авто и транспорт",
+    "order": 30,
+    "published": true
+  },
+  "chevrolet": {
+    "label": "Chevrolet",
+    "tags": [
+      "Креативы"
+    ],
+    "sector": "Авто и транспорт",
+    "order": 40,
+    "published": true
+  },
+  "gippo": {
+    "label": "Gippo",
+    "tags": [
+      "Креативы",
+      "SMM",
+      "Анимашки"
+    ],
+    "sector": "HoReCa",
+    "caseSlug": "gippo",
+    "order": 10,
+    "published": true
+  },
+  "iroh": {
+    "label": "Iroh",
+    "tags": [
+      "Полиграфия"
+    ],
+    "sector": "HoReCa",
+    "order": 60,
+    "published": true
+  },
+  "lukoil": {
+    "label": "LUKOIL",
+    "tags": [
+      "SMM",
+      "Креативы",
+      "Анимашки"
+    ],
+    "sector": "Производство",
+    "order": 70,
+    "published": true
+  },
+  "ONmacabim": {
+    "label": "ONmacabim",
+    "tags": [
+      "SMM",
+      "Креативы",
+      "Анимашки"
+    ],
+    "sector": "Медицина и здоровье",
+    "caseSlug": "onmacabim",
+    "order": 80,
+    "published": true
+  },
+  "puma": {
+    "label": "Puma",
+    "tags": [
+      "SMM",
+      "Анимашки"
+    ],
+    "sector": "Ритейл и e-commerce",
+    "caseSlug": "puma-kazakhstan",
+    "order": 90,
+    "published": true
+  },
+  "RV": {
+    "label": "Sold Out",
+    "tags": [
+      "SMM",
+      "Упаковка"
+    ],
+    "sector": "B2B и консалтинг",
+    "order": 100,
+    "published": true
+  },
+  "RVgold": {
+    "label": "Рыкунов и Кудряшов",
+    "tags": [
+      "Лендинг",
+      "Полиграфия"
+    ],
+    "sector": "Образование и эксперты",
+    "caseSlug": "rv",
+    "order": 110,
+    "published": true
+  },
+  "shanding": {
+    "label": "Shanding",
+    "tags": [
+      "Лендинг",
+      "Полиграфия"
+    ],
+    "sector": "Логистика",
+    "caseSlug": "shanding",
+    "order": 120,
+    "published": true
+  },
+  "takara": {
+    "label": "Takara",
+    "tags": [
+      "Полиграфия",
+      "SMM"
+    ],
+    "sector": "HoReCa",
+    "caseSlug": "takara",
+    "order": 130,
+    "published": true
+  }
+}

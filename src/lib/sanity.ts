@@ -1,4 +1,5 @@
 import { createClient } from '@sanity/client';
+import { getCollection } from 'astro:content';
 
 const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'j2cx2dtx';
 const dataset = import.meta.env.PUBLIC_SANITY_DATASET || 'production';
@@ -15,7 +16,8 @@ export interface SanityCase {
   title: string;
   year: string;
   summary: string;
-  services: string[];
+  tags: string[];
+  sector?: string;
   cover: string;
   socialImage?: string;
   order: number;
@@ -43,7 +45,8 @@ const CASE_PROJECTION = `{
   title,
   year,
   summary,
-  services,
+  tags,
+  sector,
   cover,
   socialImage,
   order,
@@ -56,14 +59,19 @@ const CASE_PROJECTION = `{
 }`;
 
 export async function getCases(): Promise<SanityCase[]> {
-  return sanityClient.fetch(`*[_type == "case"] | order(order asc) ${CASE_PROJECTION}`);
+  const entries = await getCollection('cases');
+  return entries
+    .map((entry) => ({
+      slug: entry.id.replace(/\.md$/, ''),
+      ...entry.data,
+      body: entry.body || '',
+    }))
+    .sort((a, b) => a.order - b.order);
 }
 
 export async function getCaseBySlug(slug: string): Promise<SanityCase | null> {
-  return sanityClient.fetch(
-    `*[_type == "case" && slug.current == $slug][0] ${CASE_PROJECTION}`,
-    { slug },
-  );
+  const cases = await getCases();
+  return cases.find((item) => item.slug === slug) ?? null;
 }
 
 export interface SanityHomepage {

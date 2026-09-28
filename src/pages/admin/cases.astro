@@ -1,0 +1,231 @@
+---
+import '../../styles/inter-tight.css';
+import '../../styles/global.css';
+import '../../styles/cms.css';
+import { businessSectors } from '../../data/business-sectors';
+
+export const prerender = false;
+
+const env = import.meta.env;
+const username = env.ANALYTICS_USERNAME || 'yapil';
+const password = env.ANALYTICS_PASSWORD;
+const authorization = Astro.request.headers.get('authorization');
+let authorized = import.meta.env.DEV || !password;
+
+if (!authorized && authorization?.startsWith('Basic ')) {
+  try {
+    const credentials = atob(authorization.slice(6));
+    const separator = credentials.indexOf(':');
+    authorized = credentials.slice(0, separator) === username && credentials.slice(separator + 1) === password;
+  } catch { authorized = false; }
+}
+
+if (!authorized) {
+  return new Response('Требуется авторизация', {
+    status: 401,
+    headers: { 'WWW-Authenticate': 'Basic realm="Yapil CMS", charset="UTF-8"', 'Cache-Control': 'no-store' },
+  });
+}
+
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+---
+
+<!doctype html>
+<html lang="ru" class="cms-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Кейсы — CMS Yapil</title>
+  </head>
+  <body class="cms-body">
+    <div class="cms-shell">
+      <aside class="cms-sidebar">
+        <a class="cms-brand" href="/" aria-label="Yapil">Yapil</a>
+        <nav aria-label="Разделы CMS">
+          <a class="cms-nav-item" href="/admin">Страницы</a>
+          <a class="cms-nav-item" href="/admin/portfolio">Портфолио</a>
+          <a class="cms-nav-item is-active" href="/admin/cases">Кейсы <span data-count>0</span></a>
+          <a class="cms-nav-item" href="/admin/media">Медиа</a>
+        </nav>
+        <div class="cms-sidebar-footer"><a href="/sanity-legacy">Sanity · временно</a><span>Локальная CMS · v0.1</span></div>
+      </aside>
+
+      <main class="cms-main">
+        <header class="cms-header">
+          <div><h1>Кейсы</h1><p>Карточки, порядок и содержимое страниц проектов.</p></div>
+          <a class="cms-primary-link" href="/cases">Открыть кейсы</a>
+        </header>
+        <div class="cms-toolbar"><input type="search" placeholder="Найти кейс" data-search /><span data-status></span><button type="button" data-new-case>Новый кейс</button></div>
+        <section class="case-list" data-list aria-live="polite"></section>
+      </main>
+    </div>
+
+    <template data-template>
+      <article class="case-card">
+        <header class="case-head" data-toggle role="button" tabindex="0" aria-expanded="false">
+          <span><strong data-title></strong><small data-slug></small></span>
+          <span data-summary-meta></span>
+        </header>
+        <div class="case-quick">
+          <div class="field"><span>Теги</span><div data-picker="tags"></div><input type="hidden" name="tags" data-quick /></div>
+          <label>Сфера<select class="cms-select" name="sector" data-quick><option value="">Не выбрано</option>{businessSectors.map((sector) => <option value={sector}>{sector}</option>)}</select></label>
+          <span class="quick-state" data-quick-state></span>
+        </div>
+        <form hidden>
+          <input type="hidden" name="slug" />
+          <label>Название<input name="title" required /></label>
+          <div class="fields-2">
+            <label>Год<input name="year" required /></label>
+            <label>Порядок<input name="order" type="number" /></label>
+          </div>
+          <label>Краткое описание<textarea name="summary" rows="2" required></textarea></label>
+          <label>Обложка<input name="cover" type="url" /></label>
+          <label>Social image<input name="socialImage" type="url" /></label>
+          <div class="fields-2"><label>Задача<textarea name="task" rows="3"></textarea></label><label>Цель<textarea name="goal" rows="3"></textarea></label></div>
+          <label>Ссылка<input name="link" type="url" /></label>
+          <label>Содержимое страницы · Markdown<textarea class="body-field" name="body" rows="16" spellcheck="false"></textarea></label>
+          <div class="form-footer">
+            <label class="check"><input name="featured" type="checkbox" /> На главной</label>
+            <label class="check"><input name="reviewed" type="checkbox" /> Проверено</label>
+            <span data-form-status></span>
+            <a data-preview target="_blank">Предпросмотр</a>
+            <button type="submit">Сохранить</button>
+          </div>
+        </form>
+      </article>
+    </template>
+
+    <script>
+      import '../../lib/cms-no-reload';
+      import { mountPicker } from '../../lib/cms-picker';
+      import { serviceTags } from '../../data/service-tags';
+
+      interface CaseItem { slug:string; title:string; year:string; summary:string; tags:string[]; sector?:string; cover:string; socialImage?:string; order:number; featured:boolean; task?:string; goal?:string; link?:string; reviewed:boolean; body?:string }
+      const list = document.querySelector<HTMLElement>('[data-list]')!;
+      const template = document.querySelector<HTMLTemplateElement>('[data-template]')!;
+      const search = document.querySelector<HTMLInputElement>('[data-search]')!;
+      const status = document.querySelector<HTMLElement>('[data-status]')!;
+      const newCase = document.querySelector<HTMLButtonElement>('[data-new-case]')!;
+      let cases: CaseItem[] = [];
+
+      function fill(form: HTMLFormElement, item: CaseItem) {
+        const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement;
+        field('slug').value = item.slug; field('title').value = item.title; field('year').value = item.year;
+        field('order').value = String(item.order); field('sector').value = item.sector || ''; field('tags').value = item.tags.join(', ');
+        field('summary').value = item.summary; field('cover').value = item.cover;
+        field('socialImage').value = item.socialImage || ''; field('task').value = item.task || '';
+        field('goal').value = item.goal || ''; field('link').value = item.link || ''; field('body').value = item.body || '';
+        (field('featured') as HTMLInputElement).checked = item.featured;
+        (field('reviewed') as HTMLInputElement).checked = item.reviewed;
+      }
+
+      const unsaved = new Set<string>();
+
+      function render(query = '') {
+        list.replaceChildren();
+        const normalized = query.trim().toLowerCase();
+        cases.filter((item) => !normalized || `${item.title} ${item.slug} ${item.sector || ''} ${item.tags.join(' ')}`.toLowerCase().includes(normalized)).forEach((item) => {
+          const fragment = template.content.cloneNode(true) as DocumentFragment;
+          const card = fragment.querySelector<HTMLElement>('.case-card')!;
+          list.append(card); // form-owner lookup by id needs the card in the document
+          const form = card.querySelector<HTMLFormElement>('form')!;
+          const head = card.querySelector<HTMLElement>('[data-toggle]')!;
+          const quickState = card.querySelector<HTMLElement>('[data-quick-state]')!;
+          const formState = card.querySelector<HTMLElement>('[data-form-status]')!;
+          const meta = card.querySelector<HTMLElement>('[data-summary-meta]')!;
+          const title = card.querySelector<HTMLElement>('[data-title]')!;
+          form.id = `case-form-${item.slug}`;
+          card.querySelectorAll('[data-quick]').forEach((control) => control.setAttribute('form', form.id));
+          card.querySelector<HTMLAnchorElement>('[data-preview]')!.href = `/case/${item.slug}`;
+          fill(form, item);
+
+          const describe = (entry: CaseItem) => {
+            title.textContent = entry.title;
+            card.querySelector<HTMLElement>('[data-slug]')!.textContent = entry.slug;
+            meta.textContent = entry.year;
+          };
+          describe(item);
+
+          const toggle = () => { form.hidden = !form.hidden; head.setAttribute('aria-expanded', String(!form.hidden)); card.classList.toggle('is-open', !form.hidden); };
+          head.addEventListener('click', toggle);
+          head.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); } });
+
+          const picker = mountPicker(card.querySelector<HTMLElement>('[data-picker="tags"]')!, card.querySelector<HTMLInputElement>('input[name="tags"]')!, {
+            options: serviceTags,
+            placeholder: 'Выберите теги',
+            onChange: () => { quickState.textContent = 'Есть изменения…'; },
+            onClose: () => save(true),
+          });
+
+          const snapshot = () => JSON.stringify([...new FormData(form).entries()]);
+          let savedSnapshot = snapshot();
+          let revision = 0;
+
+          const save = async (auto: boolean) => {
+            const state = auto ? quickState : formState;
+            if (auto) {
+              if (unsaved.has(item.slug)) { state.textContent = 'Сначала заполните и сохраните кейс'; return; }
+              if (snapshot() === savedSnapshot) return;
+            } else if (!form.reportValidity()) return;
+            const values = new FormData(form);
+            const payload = Object.fromEntries(values.entries()) as Record<string, FormDataEntryValue>;
+            const tags = String(payload.tags || '').split(',').map((value) => value.trim()).filter(Boolean);
+            if (!tags.length) { state.textContent = 'Укажите хотя бы один тег'; return; }
+            const body = { ...payload, tags, featured: values.has('featured'), reviewed: values.has('reviewed'), order: Number(payload.order || 0) };
+            const currentRevision = ++revision;
+            state.textContent = 'Сохраняю…';
+            const response = await fetch('/api/cms/cases', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const result = await response.json();
+            if (currentRevision !== revision) return;
+            if (!response.ok) { state.textContent = result.error || 'Ошибка'; return; }
+            const index = cases.findIndex((entry) => entry.slug === item.slug);
+            cases[index] = result.case;
+            unsaved.delete(item.slug);
+            fill(form, result.case);
+            picker.refresh();
+            describe(result.case);
+            savedSnapshot = snapshot();
+            quickState.textContent = auto ? 'Сохранено' : '';
+            formState.textContent = auto ? '' : 'Сохранено';
+          };
+
+          form.addEventListener('submit', (event) => { event.preventDefault(); save(false); });
+          card.querySelector<HTMLSelectElement>('select[name="sector"]')!.addEventListener('change', () => save(true));
+        });
+      }
+
+      async function init() {
+        status.textContent = 'Загружаю…';
+        const response = await fetch('/api/cms/cases');
+        const result = await response.json();
+        cases = result.cases || [];
+        document.querySelector<HTMLElement>('[data-count]')!.textContent = String(cases.length);
+        status.textContent = `${cases.length} кейсов`;
+        render();
+      }
+      search.addEventListener('input', () => render(search.value));
+      newCase.addEventListener('click', () => {
+        const slug = prompt('Slug нового кейса: латиница, цифры и дефисы');
+        if (!slug) return;
+        const normalized = slug.trim().toLowerCase();
+        if (!/^[a-z0-9][a-z0-9-]*$/.test(normalized)) { status.textContent = 'Некорректный slug'; return; }
+        if (cases.some((item) => item.slug === normalized)) { status.textContent = 'Такой кейс уже существует'; return; }
+        cases.unshift({ slug: normalized, title: 'Новый кейс', year: String(new Date().getFullYear()), summary: '', tags: [], sector: '', cover: '', order: cases.length, featured: false, reviewed: false, body: '' });
+        search.value = '';
+        render();
+        unsaved.add(normalized);
+        list.querySelector<HTMLElement>('[data-toggle]')?.click();
+        list.querySelector<HTMLInputElement>('input[name="title"]')?.focus();
+        status.textContent = 'Заполните поля и сохраните';
+      });
+      init();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root{font-family:"Inter Tight",Arial,sans-serif;color:#181714;background:#f1f0ec}*{box-sizing:border-box}body{margin:0;background:#f1f0ec}.cms-shell{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.cms-sidebar{position:sticky;top:0;height:100vh;padding:30px 18px;background:#111;color:#fff;display:flex;flex-direction:column}.cms-brand{margin:0 12px 55px;color:#ee563f;font:42px/1 var(--font-display,"Times New Roman",serif);text-decoration:none}.cms-sidebar nav{display:grid;gap:8px}.cms-nav-item{display:flex;justify-content:space-between;padding:14px 12px;border-radius:8px;color:#aaa;text-decoration:none}.cms-nav-item:hover,.cms-nav-item.is-active{color:#fff;background:#292929}.cms-sidebar-footer{margin-top:auto;display:grid;gap:12px;padding:12px;color:#777;font-size:12px}.cms-sidebar-footer a{color:#999}.cms-main{padding:40px 5vw 80px;min-width:0;color:#181714}.cms-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px}.cms-header h1{margin:0;color:#181714;font:clamp(60px,8vw,118px)/.85 var(--font-display,"Times New Roman",serif);letter-spacing:-.05em}.cms-header p{margin:25px 0 0;color:#666}.cms-primary-link,button{border:0;border-radius:7px;background:#ed563e;color:#fff;padding:14px 20px;text-decoration:none;font:inherit;cursor:pointer}.cms-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:18px}.cms-toolbar input{width:min(480px,100%);padding:15px 18px;border:1px solid #d4d2cc;border-radius:7px;background:#fff;color:#181714;font:inherit}.cms-toolbar span{margin-left:auto;color:#777}.cms-toolbar button{white-space:nowrap}.case-list{display:grid;gap:10px}.case-card{border:1px solid #dedbd4;border-radius:10px;background:#fff;color:#181714}.case-head{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 22px 12px;color:#181714;cursor:pointer}.case-head>span:first-child{display:grid;gap:4px}.case-head strong{color:#181714;font-size:20px}.case-head small,.case-head>span:last-child{color:#888}.case-quick{display:grid;grid-template-columns:minmax(220px,1.4fr) minmax(180px,1fr) auto;align-items:end;gap:12px;padding:0 22px 20px}.quick-state{min-width:120px;color:#348465;font-size:13px}.case-card.is-open .case-quick{border-bottom:1px solid #eee}.case-card form{display:grid;gap:16px;padding:18px 22px 24px}.case-card form[hidden]{display:none}.case-card label,.case-quick .field{display:grid;gap:7px;color:#686761;font-size:13px}.case-card input,.case-card textarea{width:100%;border:1px solid #d9d6cf;border-radius:6px;background:#faf9f6;padding:12px;font:15px/1.4 inherit;color:#181714}.case-card textarea{resize:vertical}.body-field{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:13px!important}.fields-2,.fields-3{display:grid;gap:14px}.fields-2{grid-template-columns:repeat(2,minmax(0,1fr))}.fields-3{grid-template-columns:120px 120px 1fr}.form-footer{display:flex;align-items:center;justify-content:flex-end;gap:18px}.form-footer .check{display:flex;grid-auto-flow:column;align-items:center;gap:7px;margin-right:auto;color:#333}.check input{width:auto}.form-footer a{color:#333}.form-footer [data-form-status]{color:#777}.form-footer button{min-width:130px}@media(max-width:760px){.cms-shell{display:block}.cms-sidebar{position:static;height:auto}.cms-brand{margin-bottom:24px}.cms-sidebar-footer{display:none}.cms-main{padding:28px 18px}.cms-header{align-items:flex-start;flex-direction:column}.cms-header h1{font-size:64px}.cms-toolbar{flex-wrap:wrap}.cms-toolbar input{flex:1 1 100%}.cms-toolbar span{margin-left:0}.fields-2,.fields-3{grid-template-columns:1fr}.form-footer{flex-wrap:wrap;justify-content:flex-start}.form-footer .check{margin-right:0}.case-card summary{align-items:flex-start;flex-direction:column}}
+  .fields-4{display:grid;grid-template-columns:110px 110px minmax(190px,.8fr) minmax(240px,1.4fr);gap:14px}@media(max-width:760px){.case-quick{grid-template-columns:1fr}.case-head{align-items:flex-start;flex-direction:column}}
+.case-card input:not([type=checkbox]):not([type=hidden]){height:44px;padding:0 12px;border-radius:8px;font-family:system-ui,-apple-system,sans-serif;font-size:13.333px;line-height:1.2}.case-card textarea{border-radius:8px;font-family:system-ui,-apple-system,sans-serif;font-size:13.333px;line-height:1.4}.case-quick{align-items:end}
+</style>

@@ -1,0 +1,221 @@
+---
+interface FilterItem {
+  tags: string[];
+  sector?: string;
+}
+
+interface Props {
+  items: FilterItem[];
+  tags: string[];
+  sectors: string[];
+  class?: string;
+}
+
+const { items, tags, sectors, class: className } = Astro.props;
+---
+
+<div class:list={['project-filters', className]} data-project-filters>
+  <details class="project-filter-group" data-filter-group="tag" open>
+    <summary>
+      <span class="project-filter-label">Теги</span>
+      <span class="project-filter-current" data-filter-current>Все <span>{items.length}</span></span>
+    </summary>
+    <div class="project-filter-options">
+      <button class="is-active" type="button" data-filter-kind="tag" data-filter-value="all" aria-pressed="true">
+        Все <span>{items.length}</span>
+      </button>
+      {tags.map((tag) => (
+        <button type="button" data-filter-kind="tag" data-filter-value={tag} aria-pressed="false">
+          {tag} <span>{items.filter((item) => item.tags.includes(tag)).length}</span>
+        </button>
+      ))}
+    </div>
+  </details>
+
+  {sectors.length > 0 && (
+    <details class="project-filter-group" data-filter-group="sector" open>
+      <summary>
+        <span class="project-filter-label">Сфера</span>
+        <span class="project-filter-current" data-filter-current>Все <span>{items.length}</span></span>
+      </summary>
+      <div class="project-filter-options">
+        <button class="is-active" type="button" data-filter-kind="sector" data-filter-value="all" aria-pressed="true">
+          Все <span>{items.length}</span>
+        </button>
+        {sectors.map((sector) => (
+          <button type="button" data-filter-kind="sector" data-filter-value={sector} aria-pressed="false">
+            {sector} <span>{items.filter((item) => item.sector === sector).length}</span>
+          </button>
+        ))}
+      </div>
+    </details>
+  )}
+</div>
+
+<script>
+  function initProjectFilterDisclosures() {
+    document.querySelectorAll<HTMLElement>('[data-project-filters]').forEach((filters) => {
+      if (filters.dataset.disclosuresReady === 'true') return;
+      filters.dataset.disclosuresReady = 'true';
+      const groups = Array.from(filters.querySelectorAll<HTMLDetailsElement>('[data-filter-group]'));
+      const compact = matchMedia('(max-width: 760px)');
+
+      const syncDisclosureMode = () => {
+        if (compact.matches) groups.forEach((group) => group.removeAttribute('open'));
+        else groups.forEach((group) => group.setAttribute('open', ''));
+      };
+
+      filters.addEventListener('click', (event) => {
+        const button = (event.target as Element).closest<HTMLButtonElement>('[data-filter-kind]');
+        if (!button) return;
+        const group = button.closest<HTMLDetailsElement>('[data-filter-group]');
+        const current = group?.querySelector<HTMLElement>('[data-filter-current]');
+        if (current) current.innerHTML = button.innerHTML;
+        if (compact.matches) group?.removeAttribute('open');
+      });
+
+      syncDisclosureMode();
+      compact.addEventListener('change', syncDisclosureMode);
+    });
+  }
+
+  initProjectFilterDisclosures();
+  document.addEventListener('astro:page-load', initProjectFilterDisclosures);
+</script>
+
+<style>
+  .project-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(48px, 7vw, 120px);
+    color: var(--filters-ink, #191919);
+  }
+
+  .project-filter-group {
+    min-width: 0;
+  }
+
+  summary {
+    margin: 0 0 18px;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .project-filter-label {
+    display: block;
+    font: 400 clamp(28px, 2.4vw, 40px)/1 Oranienbaum, Georgia, serif;
+    letter-spacing: -.025em;
+  }
+
+  .project-filter-current {
+    display: none;
+  }
+
+  .project-filter-current span {
+    margin-left: 5px;
+    opacity: .45;
+  }
+
+  .project-filter-options {
+    columns: 2;
+    column-gap: clamp(22px, 3vw, 54px);
+  }
+
+  button {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    font: 400 clamp(15px, 1.12vw, 19px)/1.16 'Inter Tight Variable', Arial, sans-serif;
+    text-align: left;
+    cursor: pointer;
+    opacity: .88;
+    transition: color 160ms ease, opacity 160ms ease;
+    break-inside: avoid;
+  }
+
+  .project-filter-options button + button {
+    margin-top: 12px;
+  }
+
+  button span {
+    margin-left: 4px;
+    color: var(--filters-muted, currentColor);
+    font-size: .78em;
+    opacity: .62;
+  }
+
+  button:hover {
+    opacity: 1;
+  }
+
+  button.is-active {
+    color: var(--filters-active, #fd4b32);
+    font-weight: 600;
+    opacity: 1;
+  }
+
+  @media (min-width: 761px) {
+    summary {
+      cursor: default;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .project-filters {
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-top: 1px solid var(--filters-rule, rgba(25, 25, 25, .2));
+    }
+
+    .project-filter-group {
+      border-bottom: 1px solid var(--filters-rule, rgba(25, 25, 25, .2));
+    }
+
+    summary {
+      display: list-item;
+      margin: 0;
+      padding: 15px 2px;
+      font-size: 16px;
+    }
+
+    .project-filter-label {
+      display: inline;
+      font: inherit;
+      font-weight: 500;
+      letter-spacing: inherit;
+    }
+
+    .project-filter-current {
+      display: inline;
+      float: right;
+      color: var(--filters-muted, currentColor);
+      font-size: 14px;
+    }
+
+    .project-filter-options {
+      columns: 1;
+      padding: 0 24px 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px 0;
+      border-bottom-color: var(--filters-rule, rgba(25, 25, 25, .14));
+      font-size: 15px;
+    }
+
+    .project-filter-options button + button {
+      margin-top: 0;
+    }
+  }
+</style>

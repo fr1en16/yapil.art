@@ -26,7 +26,8 @@ const pageGroups = [
     pages: [
       { title: 'Главная', path: '/', note: 'Обложка, услуги, кейсы, отзывы и контакты' },
       { title: 'Студия', path: '/studio', note: 'О студии и подходе' },
-      { title: 'Все кейсы', path: '/cases', note: `${cases.length} проектов в портфолио` },
+      { title: 'Портфолио', path: '/portfolio', note: 'Все работы с фильтрами по услугам' },
+      { title: 'Кейсы', path: '/cases', note: `${cases.length} подробных разборов проектов` },
       { title: 'AI-разработка сайтов', path: '/ai-web-development', note: 'Отдельная посадочная страница' },
       { title: 'Партнёрская программа', path: '/partners', note: '10% за рекомендацию клиента' },
       { title: 'Резюме', path: '/cv', note: 'Опыт и компетенции' },
@@ -74,7 +75,7 @@ const pageGroups = [
     pages: cases.map((item) => ({
       title: item.data.title,
       path: `/case/${item.id}`,
-      note: `${item.data.year} · ${item.data.services.join(' / ')}`,
+      note: `${item.data.year} · ${item.data.tags.join(' / ')}`,
     })),
   },
   {
@@ -140,7 +141,8 @@ const pageGroups = [
         note: 'Бриф для клиента',
         status: 'private',
       })),
-      { title: 'Sanity Studio', path: '/admin', note: 'Панель управления контентом', status: 'private' },
+      { title: 'CMS', path: '/admin', note: 'Панель управления контентом', status: 'private' },
+      { title: 'Sanity Studio', path: '/sanity-legacy', note: 'Временно, до завершения миграции', status: 'private' },
       { title: 'КП · Asphodel Instagram', path: '/kp/asphodel-instagram', note: 'Коммерческое предложение', status: 'private' },
       { title: 'КП · Система этикеток', path: '/kp/sistema-etiketok', note: 'Коммерческое предложение', status: 'private' },
       { title: 'КП · Сайт для интернет-магазина семян', path: '/kp/sait-semena', note: 'Коммерческое предложение', status: 'private' },

@@ -1,6 +1,7 @@
 const serviceSlugByLabel: Record<string, string> = {
   'Сайты': 'websites',
   'Сайт': 'websites',
+  'Многостраничный сайт': 'websites',
   'Лендинг': 'websites',
   'Лендинги': 'websites',
   'Интернет-магазин': 'websites',
@@ -15,6 +16,10 @@ const serviceSlugByLabel: Record<string, string> = {
   'Соцсети': 'smm',
   'Сопровождение': 'support',
   'Поддержка': 'support',
+  'Дизайн-Поддержка': 'support',
+  'Креативы': 'smm',
+  'Анимашки': 'smm',
+  'Упаковка инсты': 'smm',
 };
 
 export const resolveServiceSlug = (labels: string | string[]) => {

@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import sanity from '@sanity/astro';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -35,7 +35,11 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
-  adapter: vercel(),
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
   redirects: {
     '/brief/ready-food': { destination: '/brief/identity', status: 301 },
     '/бриф/айдентика': { destination: '/brief/identity', status: 301 },
@@ -77,7 +81,7 @@ export default defineConfig({
       projectId: 'j2cx2dtx',
       dataset: 'production',
       useCdn: false,
-      studioBasePath: '/admin',
+      studioBasePath: '/sanity-legacy',
     }),
   ],
   vite: {
@@ -86,7 +90,8 @@ export default defineConfig({
       strictPort: true,
     },
     optimizeDeps: {
-      include: ['react', 'react-dom', 'framer-motion', 'lucide-react', 'gsap'],
+      include: ['react', 'react-dom', 'framer-motion', 'lucide-react'],
+      exclude: ['gsap'],
     },
   },
   image: {

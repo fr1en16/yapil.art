@@ -65,7 +65,8 @@ const lightStops = [
           <a href="/services">{isEn ? 'Services' : 'Услуги'}</a>
           {!isEn && <a href="/websites">Разработка сайтов</a>}
           <a href="/articles">{isEn ? 'Articles' : 'Статьи'}</a>
-          <a href={`${homePath}#cases`}>{isEn ? 'Cases' : 'Кейсы'}</a>
+          {!isEn && <a href="/portfolio">Портфолио</a>}
+          <a href={isEn ? `${homePath}#cases` : '/cases'}>{isEn ? 'Cases' : 'Кейсы'}</a>
           <a href="/partners">{isEn ? 'Partners' : 'Партнёрам'}</a>
         </nav>
 

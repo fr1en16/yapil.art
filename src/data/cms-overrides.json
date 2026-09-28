@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-20T13:51:04.035Z",
+  "entries": {
+    "/::#about-compact > div:nth-of-type(1) > ol:nth-of-type(1) > li:nth-of-type(3) > div:nth-of-type(1) > p:nth-of-type(1)::text(0)": {
+      "route": "/",
+      "selector": "#about-compact > div:nth-of-type(1) > ol:nth-of-type(1) > li:nth-of-type(3) > div:nth-of-type(1) > p:nth-of-type(1)",
+      "textIndex": 0,
+      "value": "Яков был ключевым дизайнером в thePeak, которое делало визуал для LUKOIL, Cadillac и PUMA, Gippo.",
+      "updatedAt": "2026-09-20T13:51:01.433Z"
+    }
+  }
+}

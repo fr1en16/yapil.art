@@ -1,16 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
-import CaseGrid from '../components/CaseGrid.astro';
+import WorksWheel from '../components/ui/works-wheel';
 import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
+import { getCases } from '../lib/sanity';
+import '../styles/works-wheel.css';
+
+const cases = await getCases();
+const wheelItems = cases.map((item) => ({
+  title: item.title,
+  image: item.cover || item.socialImage || '',
+  href: `/case/${item.slug}`,
+  year: item.year,
+  tags: item.tags,
+  summary: item.summary,
+  isVideo: /\.(mp4|webm)(?:\?|$)/i.test(item.cover || item.socialImage || ''),
+}));
 
 const casesJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'CollectionPage',
-      name: 'Кейсы и портфолио дизайн-студии Yapil',
-      description: 'Портфолио проектов дизайн-студии Yapil: разработка сайтов, фирменный стиль, айдентика, упаковка и полиграфия для Puma, Cadillac, Dodo Pizza, Lukoil, УАЗ и др.',
+      name: 'Кейсы дизайн-студии Yapil',
+      description: 'Подробные кейсы дизайн-студии Yapil: разработка сайтов, фирменный стиль, айдентика, упаковка и полиграфия для Puma, Cadillac, Dodo Pizza, Lukoil, УАЗ и др.',
       url: 'https://yapil.art/cases',
     },
     {
@@ -35,11 +48,22 @@ const casesJsonLd = {
 ---
 
 <Base
-  title="Кейсы и портфолио проектов"
-  description="Портфолио проектов дизайн-студии Yapil: разработка сайтов, брендинг, упаковка и полиграфия для бизнеса. 8+ лет опыта, более 24 реализованных проектов."
+  title="Кейсы"
+  description="Подробные кейсы дизайн-студии Yapil: разработка сайтов, брендинг, упаковка и полиграфия для бизнеса. 8+ лет опыта, более 24 реализованных проектов."
   jsonLd={casesJsonLd}
+  navOverlay
+  bodyClass="cases-wheel-page"
 >
-  <CaseGrid pageHeading />
-  <Contacts theme="light" title="Хотите обсудить проект?" sourceDetails="Страница Все кейсы" gradientToDark />
+  <section
+  class="cases-wheel-scroll"
+  data-wheel-scroll-track
+  style={`--wheel-distance: ${wheelItems.length * 10}rem`}
+  aria-label="Интерактивный список кейсов"
+>
+    <div class="cases-wheel-sticky">
+      <WorksWheel items={wheelItems} label="Кейсы" action="Смотреть" client:load />
+    </div>
+  </section>
+  <Contacts theme="light" title="Хотите обсудить проект?" sourceDetails="Страница Кейсы" gradientToDark />
   <Footer slot="footer" />
 </Base>

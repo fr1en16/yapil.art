@@ -1,0 +1,331 @@
+---
+import '../../styles/inter-tight.css';
+import '../../styles/global.css';
+import '../../styles/cms.css';
+import { businessSectors } from '../../data/business-sectors';
+import { readPortfolioMeta } from '../../lib/portfolio-meta';
+import { galleryItems, galleryGroup, getCaseTagsMap, type GalleryItem } from '../../lib/portfolio-gallery';
+
+export const prerender = false;
+
+const env = import.meta.env;
+const username = env.ANALYTICS_USERNAME || 'yapil';
+const password = env.ANALYTICS_PASSWORD;
+const authorization = Astro.request.headers.get('authorization');
+let authorized = import.meta.env.DEV || !password;
+
+if (!authorized && authorization?.startsWith('Basic ')) {
+  try {
+    const credentials = atob(authorization.slice(6));
+    const separator = credentials.indexOf(':');
+    authorized = credentials.slice(0, separator) === username && credentials.slice(separator + 1) === password;
+  } catch { authorized = false; }
+}
+if (!authorized) return new Response('Требуется авторизация', { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="Yapil CMS", charset="UTF-8"' } });
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+
+const meta = await readPortfolioMeta();
+const itemsByGroup = galleryItems.reduce<Record<string, GalleryItem[]>>((result, item) => {
+  (result[galleryGroup(item.name)] ??= []).push(item);
+  return result;
+}, {});
+const caseTags = await getCaseTagsMap();
+const groups = Object.entries(meta).sort(([, a], [, b]) => a.order - b.order);
+---
+
+<!doctype html>
+<html lang="ru" class="cms-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Портфолио — CMS Yapil</title>
+  </head>
+  <body class="cms-body">
+    <div class="shell">
+      <aside>
+        <a class="brand" href="/">Yapil</a>
+        <nav aria-label="Разделы CMS">
+          <a href="/admin">Страницы</a>
+          <a class="active" href="/admin/portfolio">Портфолио <span>{groups.length}</span></a>
+          <a href="/admin/cases">Кейсы</a>
+          <a href="/admin/media">Медиа</a>
+        </nav>
+        <p>Локальная CMS · v0.1</p>
+      </aside>
+
+      <main data-case-tags={JSON.stringify(caseTags)}>
+        <header>
+          <div>
+            <h1>Портфолио</h1>
+            <p>Названия, фильтры, порядок и связь с подробными кейсами.</p>
+          </div>
+          <a class="preview" href="/portfolio">Открыть портфолио</a>
+        </header>
+
+        <form class="new-group" data-new-group>
+          <h2>Новый проект</h2>
+          <label>Код проекта<input name="prefix" pattern="[A-Za-z0-9_-]+" placeholder="project-name" required /></label>
+          <label>Название<input name="label" placeholder="Название проекта" required /></label>
+          <div class="field"><span>Теги</span><div data-picker="tags"></div><input type="hidden" name="tags" /></div>
+          <label>Сфера<select class="cms-select" name="sector"><option value="">Не выбрано</option>{businessSectors.map((sector) => <option value={sector}>{sector}</option>)}</select></label>
+          <button type="submit">Добавить</button>
+          <span data-new-state></span>
+        </form>
+
+        <datalist id="case-slugs">{Object.keys(caseTags).map((slug) => <option value={slug} />)}</datalist>
+
+        <div class="groups">
+          {groups.map(([prefix, item]) => (
+            <form class="group" data-prefix={prefix}>
+              <div class="group-heading">
+                <div>
+                  <h2>{item.label}</h2>
+                  <code>{prefix}</code>
+                </div>
+                <span>{itemsByGroup[prefix]?.length ?? 0} медиа</span>
+              </div>
+              <div class="fields">
+                <label>Название<input name="label" value={item.label} required /></label>
+                <div class="field"><span>Теги</span><div data-picker="tags"></div><input type="hidden" name="tags" value={item.tags.join(', ')} /></div>
+                <label>Сфера<select class="cms-select" name="sector"><option value="">Не выбрано</option>{businessSectors.map((sector) => <option value={sector} selected={item.sector === sector}>{sector}</option>)}</select></label>
+                <label>Slug кейса<input name="caseSlug" list="case-slugs" value={item.caseSlug ?? ''} placeholder="необязательно" /></label>
+                <label><span class="nowrap">Позиция <small>меньше — выше</small></span><input name="order" type="number" value={item.order} required /></label>
+              </div>
+              {(itemsByGroup[prefix]?.length ?? 0) > 0 && (
+                <details class="works">
+                  <summary>Теги по фото · {itemsByGroup[prefix].length}</summary>
+                  <p class="inherit-note" data-inherit></p>
+                  <div class="works-grid">
+                    {itemsByGroup[prefix].map((work) => (
+                      <div class="work" data-work={work.name}>
+                        <div class="work-thumb">
+                          {work.isVideo
+                            ? <video src={work.url} muted preload="metadata"></video>
+                            : <img src={work.url} alt="" loading="lazy" width={work.width} height={work.height} />}
+                        </div>
+                        <strong>{work.title}</strong>
+                        <div data-work-picker></div>
+                        <input type="hidden" data-image-tags value={(work.tags ?? []).join(', ')} />
+                        <span class="work-state" data-work-state></span>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+              <footer>
+                <label class="switch"><input name="published" type="checkbox" checked={item.published} /> Показывать на сайте</label>
+                <span data-state></span>
+              </footer>
+            </form>
+          ))}
+        </div>
+      </main>
+    </div>
+
+    <script>
+      import '../../lib/cms-no-reload';
+      import { mountPicker } from '../../lib/cms-picker';
+      import { serviceTags } from '../../data/service-tags';
+
+      const caseTags = JSON.parse(document.querySelector<HTMLElement>('main')?.dataset.caseTags ?? '{}') as Record<string, string[]>;
+
+      document.querySelector<HTMLFormElement>('[data-new-group]')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget as HTMLFormElement;
+        const data = new FormData(form);
+        const state = form.querySelector<HTMLElement>('[data-new-state]');
+        if (!String(data.get('tags') || '').trim()) { if (state) state.textContent = 'Выберите хотя бы один тег'; return; }
+        if (state) state.textContent = 'Добавляю…';
+        const response = await fetch('/api/cms/portfolio', {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prefix: data.get('prefix'), meta: { label: data.get('label'), tags: String(data.get('tags') || '').split(','), sector: data.get('sector'), order: document.querySelectorAll('[data-prefix]').length + 1, published: true } }),
+        });
+        const result = await response.json();
+        if (!response.ok) { if (state) state.textContent = result.error || 'Ошибка'; return; }
+        location.reload();
+      });
+      const newGroup = document.querySelector<HTMLFormElement>('[data-new-group]');
+      const mountTags = (root: HTMLElement, hooks: { onChange?: () => void; onClose?: () => void } = {}) => {
+        mountPicker(root.querySelector<HTMLElement>('[data-picker="tags"]')!, root.querySelector<HTMLInputElement>('input[name="tags"]')!, { options: serviceTags, placeholder: 'Выберите теги', ...hooks });
+      };
+      if (newGroup) mountTags(newGroup);
+      document.querySelectorAll<HTMLFormElement>('[data-prefix]').forEach((form) => {
+        let revision = 0;
+        let dirty = false;
+
+        const snapshot = () => {
+          const data = new FormData(form);
+          return JSON.stringify({
+            label: data.get('label'),
+            tags: data.get('tags'),
+            sector: data.get('sector'),
+            caseSlug: data.get('caseSlug'),
+            order: data.get('order'),
+            published: data.get('published') === 'on',
+          });
+        };
+        let savedSnapshot = snapshot();
+        mountTags(form, {
+          onChange: () => {
+            dirty = true;
+            const state = form.querySelector<HTMLElement>('[data-state]');
+            if (state) state.textContent = 'Есть изменения…';
+          },
+          onClose: () => save(),
+        });
+
+        const save = async () => {
+          const nextSnapshot = snapshot();
+          if (!dirty || nextSnapshot === savedSnapshot) {
+            dirty = false;
+            return;
+          }
+          const currentRevision = ++revision;
+          const state = form.querySelector<HTMLElement>('[data-state]');
+          const data = new FormData(form);
+          if (!form.reportValidity()) return;
+          if (!String(data.get('tags') ?? '').trim()) { if (state) state.textContent = 'Выберите хотя бы один тег'; return; }
+          if (state) state.textContent = 'Сохраняю…';
+          const response = await fetch('/api/cms/portfolio', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prefix: form.dataset.prefix,
+              meta: {
+                label: data.get('label'),
+                tags: String(data.get('tags') ?? '').split(','),
+                sector: data.get('sector'),
+                caseSlug: data.get('caseSlug'),
+                order: Number(data.get('order')),
+                published: data.get('published') === 'on',
+              },
+            }),
+          });
+          const result = await response.json();
+          if (currentRevision !== revision) return;
+          if (response.ok) {
+            savedSnapshot = nextSnapshot;
+            dirty = snapshot() !== savedSnapshot;
+            if (state) state.textContent = dirty ? 'Есть изменения…' : 'Сохранено';
+          } else if (state) state.textContent = result.error || 'Ошибка';
+        };
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          save();
+        });
+        form.querySelectorAll<HTMLInputElement>('input:not([data-picker-option]):not([data-image-tags])').forEach((input) => {
+          if (input.type === 'checkbox') {
+            input.addEventListener('change', () => { dirty = true; save(); });
+          } else {
+            input.addEventListener('input', () => {
+              dirty = true;
+              const state = form.querySelector<HTMLElement>('[data-state]');
+              if (state) state.textContent = 'Есть изменения…';
+            });
+            input.addEventListener('blur', save);
+          }
+        });
+        form.querySelector<HTMLSelectElement>('select[name="sector"]')?.addEventListener('change', () => {
+          dirty = true;
+          save();
+        });
+
+        const inherit = form.querySelector<HTMLElement>('[data-inherit]');
+        const updateInherit = () => {
+          if (!inherit) return;
+          const slug = String(new FormData(form).get('caseSlug') ?? '').trim();
+          const fromCase = caseTags[slug];
+          const tags = fromCase ?? String(new FormData(form).get('tags') ?? '').split(',').map((tag) => tag.trim()).filter(Boolean);
+          inherit.textContent = `Фото без своих тегов получают ${fromCase ? `теги кейса «${slug}»` : 'теги проекта'}: ${tags.join(', ') || '—'}.`;
+        };
+        updateInherit();
+        form.addEventListener('input', updateInherit);
+        form.addEventListener('change', updateInherit);
+
+        form.querySelectorAll<HTMLElement>('[data-work]').forEach((work) => {
+          const input = work.querySelector<HTMLInputElement>('[data-image-tags]')!;
+          const state = work.querySelector<HTMLElement>('[data-work-state]')!;
+          let saved = input.value;
+          mountPicker(work.querySelector<HTMLElement>('[data-work-picker]')!, input, {
+            options: serviceTags,
+            placeholder: 'Как у кейса',
+            onChange: () => { state.textContent = input.value === saved ? '' : 'Есть изменения…'; },
+            onClose: async () => {
+              if (input.value === saved) return;
+              state.textContent = 'Сохраняю…';
+              const response = await fetch('/api/cms/portfolio-media', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: work.dataset.work, tags: input.value.split(',').map((tag) => tag.trim()).filter(Boolean) }),
+              });
+              const result = await response.json();
+              if (response.ok) { saved = input.value; state.textContent = 'Сохранено'; }
+              else state.textContent = result.error || 'Ошибка';
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(body) { margin: 0; background: #f1f0ed; color: #171717; font-family: 'Inter Tight Variable', Arial, sans-serif; }
+  .shell { min-height: 100vh; display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+  aside { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 28px 18px 20px; background: #111; color: #fff; }
+  .brand { margin: 0 12px 48px; color: #fd4b32; font: 400 38px/1 Oranienbaum, Georgia, serif; text-decoration: none; }
+  aside nav { display: grid; gap: 4px; }
+  aside nav > * { display: flex; justify-content: space-between; padding: 13px 12px; border-radius: 8px; color: #aaa; text-decoration: none; }
+  aside nav .active { background: #262626; color: #fff; }
+  aside nav small { color: #666; }
+  aside p { margin: auto 12px 0; color: #777; font-size: 12px; }
+  main { min-width: 0; padding: 42px clamp(24px, 4vw, 68px) 80px; }
+  main > header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 46px; }
+  h1 { margin: 0; font: 400 clamp(56px, 7vw, 92px)/.9 Oranienbaum, Georgia, serif; }
+  header p { margin: 15px 0 0; color: #666; }
+  .preview { padding: 13px 18px; border-radius: 9px; background: #fd4b32; color: #fff; text-decoration: none; }
+  .new-group { display: grid; grid-template-columns: .8fr 1fr 1.4fr 1fr auto; align-items: end; gap: 10px; margin-bottom: 20px; padding: 20px; border: 1px dashed #aaa; border-radius: 12px; }
+  .new-group h2 { grid-column: 1/-1; margin: 0 0 5px; font: 400 30px/1 Oranienbaum, Georgia, serif; }
+  .new-group button { height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: #171717; color: #fff; font: inherit; cursor: pointer; }
+  .new-group [data-new-state] { grid-column: 1/-1; color: #777; font-size: 13px; }
+  .groups { display: grid; gap: 12px; }
+  .group { padding: 20px; border-radius: 12px; background: #fff; }
+  .group-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+  .group-heading h2 { margin: 0 0 5px; font: 400 30px/1 Oranienbaum, Georgia, serif; }
+  .group-heading code, .group-heading > span { color: #888; font-size: 12px; }
+  .fields { display: grid; grid-template-columns: 1.1fr 1.4fr 1fr 1fr 150px; gap: 10px; margin-top: 20px; }
+  label, .field { display: grid; gap: 7px; color: #777; font-size: 12px; }
+  .nowrap { white-space: nowrap; }
+  label small { color: #999; font-size: 11px; font-weight: 400; }
+  input:not([type='hidden']) { width: 100%; height: 44px; padding: 0 12px; border: 1px solid #d8d5d0; border-radius: 8px; background: #faf9f7; color: #171717; font-family: system-ui, -apple-system, sans-serif; font-size: 13.333px; line-height: 1.2; }
+  input[type='checkbox'] { height: auto; }
+  input:focus, select:focus { outline: 2px solid #fd4b32; border-color: transparent; }
+  .works { margin-top: 16px; border-top: 1px solid #ece9e4; padding-top: 14px; }
+  .works summary { cursor: pointer; color: #444; font-size: 14px; }
+  .inherit-note { margin: 10px 0 14px; color: #777; font-size: 12px; }
+  .works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .work { display: grid; align-content: start; gap: 8px; }
+  .work-thumb { aspect-ratio: 4 / 5; overflow: hidden; border-radius: 8px; background: #e4e1dc; }
+  .work-thumb img, .work-thumb video { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .work strong { font-size: 12px; font-weight: 500; line-height: 1.25; color: #333; }
+  .work-state { min-height: 14px; color: #348465; font-size: 12px; }
+  .group footer { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .switch { display: flex; align-items: center; gap: 8px; color: #444; font-size: 14px; }
+  .switch input { width: 17px; height: 17px; accent-color: #fd4b32; }
+  footer [data-state] { margin-left: auto; color: #348465; font-size: 13px; }
+  @media (max-width: 900px) { .fields, .new-group { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 680px) {
+    .shell { display: block; }
+    aside { position: static; height: auto; }
+    aside p { display: none; }
+    .brand { margin-bottom: 18px; }
+    aside nav { display: flex; overflow-x: auto; }
+    main { padding: 28px 14px 60px; }
+    main > header { display: block; }
+    .preview { display: inline-block; margin-top: 22px; }
+    .fields, .new-group { grid-template-columns: 1fr; }
+  }
+</style>

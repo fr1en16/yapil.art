@@ -1,39 +1,39 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { getDb, getCfEnv } from '../../lib/cloudflareEnv';
 
 function getTelegramEnv() {
   const token =
-    process.env.TELEGRAM_BOT_TOKEN ||
-    process.env.TELEGRAM_TOKEN ||
-    process.env.TG_BOT_TOKEN ||
-    process.env.BOT_TOKEN ||
-    import.meta.env.TELEGRAM_BOT_TOKEN;
+    getCfEnv('TELEGRAM_BOT_TOKEN') ||
+    getCfEnv('TELEGRAM_TOKEN') ||
+    getCfEnv('TG_BOT_TOKEN') ||
+    getCfEnv('BOT_TOKEN');
 
   const chatId =
-    process.env.TELEGRAM_CHAT_ID ||
-    process.env.TG_CHAT_ID ||
-    process.env.CHAT_ID ||
-    import.meta.env.TELEGRAM_CHAT_ID;
+    getCfEnv('TELEGRAM_CHAT_ID') ||
+    getCfEnv('TG_CHAT_ID') ||
+    getCfEnv('CHAT_ID');
 
   return { token, chatId };
 }
 
 function getWebhookUrl() {
   return (
-    process.env.CUSTOM_WEBHOOK_URL ||
-    process.env.WEBHOOK_URL ||
-    import.meta.env.CUSTOM_WEBHOOK_URL
+    getCfEnv('CUSTOM_WEBHOOK_URL') ||
+    getCfEnv('WEBHOOK_URL')
   );
 }
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const payload = await request.json();
+    const now = new Date().toISOString();
     const {
-      id = 'YP-LEAD',
+      id = `YP-${Math.floor(1000 + Math.random() * 9000)}`,
       name = '—',
       phone = '—',
+      rawPhone,
       email,
       services = [],
       message,
@@ -41,11 +41,59 @@ export const POST: APIRoute = async ({ request }) => {
       source = 'Сайт',
       sourceDetails,
       pageUrl = 'https://yapil.art',
+      referrer,
       utm,
       firstLandingPage,
       firstReferrer,
     } = payload || {};
 
+    // 1. Cloudflare D1 Persistence
+    const db = getDb();
+    let dbSaved = false;
+
+    if (db) {
+      try {
+        await db.prepare(`
+          INSERT INTO leads (
+            id, name, phone, raw_phone, email, services, message, status,
+            priority, budget, source, source_details, page_url, referrer,
+            utm, notes, activities, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          id,
+          String(name),
+          String(phone),
+          rawPhone ? String(rawPhone) : String(phone),
+          email ? String(email) : null,
+          JSON.stringify(Array.isArray(services) ? services : []),
+          message ? String(message) : null,
+          'new',
+          'normal',
+          budget ? String(budget) : null,
+          String(source || 'Сайт'),
+          sourceDetails ? String(sourceDetails) : null,
+          String(pageUrl || 'https://yapil.art'),
+          referrer ? String(referrer) : null,
+          JSON.stringify(utm && typeof utm === 'object' ? utm : {}),
+          JSON.stringify([]),
+          JSON.stringify([
+            {
+              id: `act-${Date.now()}`,
+              type: 'created',
+              description: `Заявка создана через форму (${sourceDetails || source})`,
+              createdAt: now,
+            }
+          ]),
+          now,
+          now
+        ).run();
+        dbSaved = true;
+      } catch (dbErr) {
+        console.error('[API /api/lead] Cloudflare D1 insert error:', dbErr);
+      }
+    }
+
+    // 2. Telegram Notification
     const { token, chatId } = getTelegramEnv();
     const webhookUrl = getWebhookUrl();
 
@@ -97,6 +145,7 @@ ${budget ? `💰 Бюджет: ${budget}\n` : ''}${message ? `💬 Сообще�
       console.warn('[API /api/lead] Telegram environment variables are not set.');
     }
 
+    // 3. Webhook Notification
     if (webhookUrl) {
       try {
         const webhookResponse = await fetch(webhookUrl, {
@@ -104,8 +153,8 @@ ${budget ? `💰 Бюджет: ${budget}\n` : ''}${message ? `💬 Сообще�
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             event: 'new_lead',
-            timestamp: new Date().toISOString(),
-            lead: payload,
+            timestamp: now,
+            lead: { ...payload, id },
           }),
         });
         webhookSent = webhookResponse.ok;
@@ -117,15 +166,17 @@ ${budget ? `💰 Бюджет: ${budget}\n` : ''}${message ? `💬 Сообще�
       }
     }
 
-    const delivered = telegramSent || webhookSent;
+    const delivered = dbSaved || telegramSent || webhookSent;
 
     return new Response(
       JSON.stringify({
         success: delivered,
+        leadId: id,
+        dbSaved,
         telegramConfigured: Boolean(token && chatId),
         telegramSent,
         webhookSent,
-        deliveryChannel: telegramSent ? 'telegram' : webhookSent ? 'webhook' : null,
+        deliveryChannel: dbSaved ? 'd1_database' : telegramSent ? 'telegram' : webhookSent ? 'webhook' : null,
         ...(!delivered ? { error: 'Не удалось доставить заявку. Попробуйте ещё раз или напишите в WhatsApp.' } : {}),
       }),
       {

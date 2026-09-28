@@ -55,6 +55,7 @@ export const buildPermanentRedirects = () => Object.fromEntries([
 ]);
 
 export const PRIVATE_PATH_PREFIXES = Object.freeze([
+  '/admin',
   '/anal',
   '/archive/shanding',
   '/brief',
@@ -66,6 +67,7 @@ export const PRIVATE_PATH_PREFIXES = Object.freeze([
   '/light',
   '/process-work',
   '/review',
+  '/sanity-legacy',
   '/shanding-3d',
   '/site-map',
   '/thanks',

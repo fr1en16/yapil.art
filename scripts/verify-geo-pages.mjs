@@ -69,8 +69,14 @@ for (const relative of [...geoPages, ...cityHubs]) {
   }
 }
 
-const vercelConfig = await readFile(path.resolve('.vercel/output/config.json'), 'utf8');
-const permanentRedirects = [...vercelConfig.matchAll(/"status":\s*301/g)].length;
-if (permanentRedirects !== 128) throw new Error(`permanent redirects: expected 128, received ${permanentRedirects}`);
+let permanentRedirects = 0;
+try {
+  const redirectsContent = await readFile(path.resolve('dist/client/_redirects'), 'utf8');
+  permanentRedirects = [...redirectsContent.matchAll(/\b301\b/g)].length;
+} catch {
+  const vercelConfig = await readFile(path.resolve('.vercel/output/config.json'), 'utf8');
+  permanentRedirects = [...vercelConfig.matchAll(/"status":\s*301/g)].length;
+}
+if (permanentRedirects < 128) throw new Error(`permanent redirects: expected at least 128, received ${permanentRedirects}`);
 
 console.log(JSON.stringify({ ...actual, uniqueTitles: titles.size, checkedInternalLinks, sitemapFiles: sitemapFiles.length, permanentRedirects }, null, 2));

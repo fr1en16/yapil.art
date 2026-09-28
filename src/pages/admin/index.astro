@@ -1,0 +1,346 @@
+---
+import '../../styles/inter-tight.css';
+import '../../styles/global.css';
+import '../../styles/cms.css';
+
+export const prerender = false;
+
+const env = import.meta.env;
+const username = env.ANALYTICS_USERNAME || 'yapil';
+const password = env.ANALYTICS_PASSWORD;
+const authorization = Astro.request.headers.get('authorization');
+const cfAccessEmail = Astro.request.headers.get('cf-access-authenticated-user-email');
+let authorized = import.meta.env.DEV || Boolean(cfAccessEmail) || !password;
+
+if (!authorized && authorization?.startsWith('Basic ')) {
+  try {
+    const credentials = atob(authorization.slice(6));
+    const separator = credentials.indexOf(':');
+    authorized = credentials.slice(0, separator) === username && credentials.slice(separator + 1) === password;
+  } catch {
+    authorized = false;
+  }
+}
+
+if (!authorized) {
+  return new Response('Требуется авторизация', {
+    status: 401,
+    headers: {
+      'WWW-Authenticate': 'Basic realm="Yapil CMS", charset="UTF-8"',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+
+const sitePages = [
+  { title: 'Главная', route: '/', description: 'Первый экран, преимущества, кейсы и форма связи.' },
+  { title: 'Студия', route: '/studio', description: 'Информация о студии и команде.' },
+  { title: 'Услуги', route: '/services', description: 'Каталог направлений и страницы услуг.' },
+  { title: 'Решения', route: '/solutions', description: 'Готовые решения для задач бизнеса.' },
+  { title: 'Разработка сайтов', route: '/websites', description: 'Направление веб-разработки и форматы сайтов.' },
+  { title: 'Процесс работы', route: '/process-work', description: 'Этапы, условия и порядок работы.' },
+  { title: 'Партнёрам', route: '/partners', description: 'Условия сотрудничества с партнёрами.' },
+  { title: 'Отзывы', route: '/review', description: 'Отзывы клиентов и форма добавления.' },
+  { title: 'Статьи', route: '/articles', description: 'База материалов и SEO-статей.' },
+  { title: 'Английская версия', route: '/en', description: 'Основная страница сайта на английском.' },
+  { title: 'Контакты', route: '/#contacts', description: 'Форма заявки и контактные данные.' },
+];
+---
+
+<!doctype html>
+<html lang="ru" class="cms-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>CMS — Yapil</title>
+  </head>
+  <body class="cms-body">
+    <div class="cms-shell">
+      <aside class="cms-sidebar">
+        <a class="cms-brand" href="/" aria-label="Yapil">Yapil</a>
+        <nav aria-label="Разделы CMS">
+          <button class="cms-nav-item is-active" type="button">Страницы <span>{sitePages.length}</span></button>
+          <a class="cms-nav-item" href="/admin/portfolio">Портфолио</a>
+          <a class="cms-nav-item" href="/admin/cases">Кейсы</a>
+          <a class="cms-nav-item" href="/admin/media">Медиа</a>
+        </nav>
+        <div class="cms-sidebar-footer">
+          <a href="/sanity-legacy">Sanity · временно</a>
+          <span>Локальная CMS · v0.1</span>
+        </div>
+      </aside>
+
+      <main class="cms-main">
+        <header class="cms-header">
+          <div>
+            <h1>Контент сайта</h1>
+            <p>Изменения, сохранённые непосредственно на страницах.</p>
+          </div>
+          <a class="cms-primary-link" href="/">Открыть сайт</a>
+        </header>
+
+        <section class="cms-summary" aria-label="Состояние CMS">
+          <article><strong data-pages-count>0</strong><span>страниц изменено</span></article>
+          <article><strong data-fields-count>0</strong><span>полей изменено</span></article>
+          <article><strong data-last-update>—</strong><span>последнее сохранение</span></article>
+        </section>
+
+        <section class="cms-pages" aria-labelledby="cms-pages-title">
+          <div class="cms-pages-heading">
+            <div>
+              <h2 id="cms-pages-title">Страницы сайта</h2>
+              <p>Откройте страницу и включите «Редактировать» — текст меняется прямо на сайте.</p>
+            </div>
+          </div>
+          <div class="cms-page-grid">
+            {sitePages.map((page) => (
+              <article class="cms-page-card" data-page-route={page.route.split('#')[0]}>
+                <div>
+                  <h3>{page.title}</h3>
+                  <p>{page.description}</p>
+                </div>
+                <footer>
+                  <code>{page.route}</code>
+                  <span data-page-edits>0 изменений</span>
+                  <a href={page.route}>Открыть и редактировать</a>
+                </footer>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="cms-content">
+          <div class="cms-content-head">
+            <h2>Изменённые тексты</h2>
+            <input type="search" placeholder="Поиск по тексту или странице" data-search />
+          </div>
+          <div class="cms-empty" data-empty>
+            <h2>Изменений пока нет</h2>
+            <p>Откройте любую страницу, нажмите «Редактировать» и измените текст прямо на сайте.</p>
+            <a href="/">Перейти на главную</a>
+          </div>
+          <div class="cms-groups" data-groups></div>
+        </section>
+      </main>
+    </div>
+
+    <template data-entry-template>
+      <article class="cms-entry">
+        <div class="cms-entry-meta">
+          <code data-entry-selector></code>
+          <time data-entry-time></time>
+        </div>
+        <textarea rows="2" data-entry-value aria-label="Текст поля"></textarea>
+        <div class="cms-entry-actions">
+          <span data-entry-state></span>
+          <button type="button" data-entry-save>Сохранить</button>
+          <button class="is-danger" type="button" data-entry-delete>Удалить изменение</button>
+        </div>
+      </article>
+    </template>
+
+    <script>
+      import '../../lib/cms-no-reload';
+      interface CmsEntry {
+        route: string;
+        selector: string;
+        textIndex: number;
+        value: string;
+        updatedAt: string;
+      }
+      interface CmsStore { updatedAt: string | null; entries: Record<string, CmsEntry>; }
+
+      const api = '/api/cms/local-content';
+      const groupsRoot = document.querySelector<HTMLElement>('[data-groups]');
+      const empty = document.querySelector<HTMLElement>('[data-empty]');
+      const template = document.querySelector<HTMLTemplateElement>('[data-entry-template]');
+      const search = document.querySelector<HTMLInputElement>('[data-search]');
+      let store: CmsStore = { updatedAt: null, entries: {} };
+
+      const displayRoute = (route: string) => route === '/' ? 'Главная страница' : route;
+      const keyFor = (entry: CmsEntry) => `${entry.route}::${entry.selector}::text(${entry.textIndex})`;
+
+      function setStats() {
+        const entries = Object.values(store.entries);
+        const routes = new Set(entries.map((entry) => entry.route));
+        const pagesCount = document.querySelector<HTMLElement>('[data-pages-count]');
+        const fieldsCount = document.querySelector<HTMLElement>('[data-fields-count]');
+        const lastUpdate = document.querySelector<HTMLElement>('[data-last-update]');
+        if (pagesCount) pagesCount.textContent = String(routes.size);
+        if (fieldsCount) fieldsCount.textContent = String(entries.length);
+        if (lastUpdate) lastUpdate.textContent = store.updatedAt
+          ? new Intl.DateTimeFormat('ru', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(store.updatedAt))
+          : '—';
+        document.querySelectorAll<HTMLElement>('[data-page-route]').forEach((card) => {
+          const route = card.dataset.pageRoute || '/';
+          const count = entries.filter((entry) => entry.route === route).length;
+          const label = card.querySelector<HTMLElement>('[data-page-edits]');
+          if (label) label.textContent = count === 1 ? '1 изменение' : `${count} изменений`;
+        });
+      }
+
+      function render(filter = '') {
+        if (!groupsRoot || !empty || !template) return;
+        groupsRoot.replaceChildren();
+        const query = filter.trim().toLowerCase();
+        const entries = Object.values(store.entries).filter((entry) =>
+          !query || entry.route.toLowerCase().includes(query) || entry.value.toLowerCase().includes(query),
+        );
+        empty.hidden = entries.length > 0;
+        const grouped = new Map<string, CmsEntry[]>();
+        entries.forEach((entry) => grouped.set(entry.route, [...(grouped.get(entry.route) ?? []), entry]));
+
+        grouped.forEach((routeEntries, route) => {
+          const section = document.createElement('section');
+          section.className = 'cms-route-group';
+          const header = document.createElement('header');
+          const title = document.createElement('h3');
+          const link = document.createElement('a');
+          title.textContent = displayRoute(route);
+          link.href = route;
+          link.textContent = 'Редактировать на странице';
+          header.append(title, link);
+          section.append(header);
+
+          routeEntries.forEach((entry) => {
+            const fragment = template.content.cloneNode(true) as DocumentFragment;
+            const article = fragment.querySelector<HTMLElement>('.cms-entry')!;
+            const selector = fragment.querySelector<HTMLElement>('[data-entry-selector]')!;
+            const time = fragment.querySelector<HTMLTimeElement>('[data-entry-time]')!;
+            const textarea = fragment.querySelector<HTMLTextAreaElement>('[data-entry-value]')!;
+            const state = fragment.querySelector<HTMLElement>('[data-entry-state]')!;
+            const save = fragment.querySelector<HTMLButtonElement>('[data-entry-save]')!;
+            const remove = fragment.querySelector<HTMLButtonElement>('[data-entry-delete]')!;
+            const key = keyFor(entry);
+            selector.textContent = entry.selector;
+            time.dateTime = entry.updatedAt;
+            time.textContent = new Intl.DateTimeFormat('ru', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(entry.updatedAt));
+            textarea.value = entry.value;
+
+            save.addEventListener('click', async () => {
+              state.textContent = 'Сохраняю…';
+              const response = await fetch(api, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key, ...entry, value: textarea.value }),
+              });
+              const result = await response.json();
+              if (!response.ok) { state.textContent = result.error || 'Ошибка'; return; }
+              store.entries[key] = result.entry;
+              store.updatedAt = result.updatedAt;
+              state.textContent = 'Сохранено';
+              setStats();
+            });
+
+            remove.addEventListener('click', async () => {
+              if (!confirm('Удалить это изменение и вернуть исходный текст?')) return;
+              const response = await fetch(api, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key }),
+              });
+              if (!response.ok) { state.textContent = 'Не удалось удалить'; return; }
+              delete store.entries[key];
+              article.remove();
+              if (!section.querySelector('.cms-entry')) section.remove();
+              setStats();
+              empty.hidden = Object.keys(store.entries).length > 0;
+            });
+            section.append(fragment);
+          });
+          groupsRoot.append(section);
+        });
+      }
+
+      async function init() {
+        const response = await fetch(api, { headers: { Accept: 'application/json' } });
+        if (response.ok) store = await response.json();
+        setStats();
+        render();
+      }
+
+      search?.addEventListener('input', () => render(search.value));
+      init();
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(body) { margin: 0; background: #f1f0ed; color: #151515; font-family: 'Inter Tight Variable', Arial, sans-serif; }
+  .cms-shell { min-height: 100vh; display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+  .cms-sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 28px 18px 20px; background: #111; color: #fff; }
+  .cms-brand { margin: 0 12px 48px; color: #fd4b32; font: 400 38px/1 Oranienbaum, Georgia, serif; text-decoration: none; }
+  .cms-sidebar nav { display: grid; gap: 4px; }
+  .cms-nav-item { display: flex; justify-content: space-between; width: 100%; padding: 13px 12px; border: 0; border-radius: 8px; background: transparent; color: #aaa; font: inherit; text-align: left; text-decoration: none; }
+  .cms-nav-item.is-active { background: #262626; color: #fff; }
+  .cms-nav-item small { color: #666; }
+  .cms-sidebar-footer { display: grid; gap: 10px; margin-top: auto; padding: 12px; color: #777; font-size: 12px; }
+  .cms-sidebar-footer a { color: #aaa; }
+  .cms-main { min-width: 0; padding: 42px clamp(24px, 4vw, 68px) 80px; }
+  .cms-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .cms-header h1 { margin: 0; font: 400 clamp(46px, 6vw, 82px)/.95 Oranienbaum, Georgia, serif; }
+  .cms-header p { margin: 14px 0 0; color: #666; font-size: 16px; }
+  .cms-primary-link { padding: 13px 18px; border-radius: 9px; background: #fd4b32; color: #fff; text-decoration: none; }
+  .cms-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 46px; }
+  .cms-summary article { min-height: 142px; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; background: #fff; border-radius: 12px; }
+  .cms-summary strong { font: 400 46px/1 Oranienbaum, Georgia, serif; }
+  .cms-summary span { color: #777; }
+  .cms-content { margin-top: 44px; }
+  .cms-pages { margin-top: 44px; }
+  .cms-pages-heading { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+  .cms-pages-heading h2 { margin: 0; color: #181714; font: 400 34px/1 Oranienbaum, Georgia, serif; }
+  .cms-pages-heading p { margin: 10px 0 0; color: #666; }
+  .cms-page-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .cms-page-card { min-height: 184px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; padding: 20px; border: 1px solid #dedbd4; border-radius: 12px; background: #fff; }
+  .cms-page-card h3 { margin: 0; color: #181714; font: 400 29px/1 Oranienbaum, Georgia, serif; }
+  .cms-page-card p { max-width: 42ch; margin: 9px 0 0; color: #666; }
+  .cms-page-card footer { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; }
+  .cms-page-card code, .cms-page-card [data-page-edits] { color: #8a8884; font-size: 12px; }
+  .cms-page-card [data-page-edits] { text-align: right; }
+  .cms-page-card a { padding: 9px 11px; border: 1px solid #d5d2cb; border-radius: 7px; color: #181714; font-size: 13px; text-decoration: none; }
+  .cms-page-card a:hover { border-color: #fd4b32; color: #e6422b; }
+  .cms-content-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
+  .cms-content-head h2 { margin: 0; font: 400 34px/1 Oranienbaum, Georgia, serif; }
+  .cms-content-head input { width: min(360px, 45vw); padding: 12px 14px; border: 1px solid #d6d4d0; border-radius: 9px; background: #fff; font: inherit; }
+  .cms-empty { padding: 64px 24px; border: 1px dashed #bbb; border-radius: 12px; text-align: center; }
+  .cms-empty[hidden] { display: none; }
+  .cms-empty h2 { margin: 0; font: 400 36px/1 Oranienbaum, Georgia, serif; }
+  .cms-empty p { max-width: 520px; margin: 16px auto 24px; color: #666; }
+  .cms-empty a { color: #fd4b32; }
+  .cms-groups { display: grid; gap: 18px; }
+  .cms-route-group { overflow: hidden; border-radius: 12px; background: #fff; }
+  .cms-route-group > header { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid #eceae6; }
+  .cms-route-group h3 { margin: 0; font: 400 28px/1 Oranienbaum, Georgia, serif; }
+  .cms-route-group header a { color: #fd4b32; font-size: 14px; }
+  .cms-entry { padding: 20px; border-bottom: 1px solid #eceae6; }
+  .cms-entry:last-child { border-bottom: 0; }
+  .cms-entry-meta { display: flex; justify-content: space-between; gap: 16px; color: #8a8884; font-size: 12px; }
+  .cms-entry-meta code { max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cms-entry textarea { width: 100%; margin-top: 12px; padding: 13px; resize: vertical; border: 1px solid #d6d4d0; border-radius: 8px; background: #faf9f7; color: inherit; font: 16px/1.45 inherit; }
+  .cms-entry textarea:focus { outline: 2px solid #fd4b32; border-color: transparent; }
+  .cms-entry-actions { min-height: 34px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+  .cms-entry-actions span { margin-right: auto; color: #348465; font-size: 13px; }
+  .cms-entry-actions button { padding: 8px 11px; border: 1px solid #d6d4d0; border-radius: 7px; background: #fff; font: inherit; cursor: pointer; }
+  .cms-entry-actions button:hover { border-color: #888; }
+  .cms-entry-actions button.is-danger { color: #b13d2d; }
+  @media (max-width: 760px) {
+    .cms-shell { display: block; }
+    .cms-sidebar { position: static; width: 100%; height: auto; padding: 18px; }
+    .cms-brand { margin: 0 0 20px; }
+    .cms-sidebar nav { display: flex; overflow-x: auto; }
+    .cms-sidebar-footer { display: none; }
+    .cms-main { padding: 28px 16px 60px; }
+    .cms-header { display: block; }
+    .cms-primary-link { display: inline-block; margin-top: 22px; }
+    .cms-summary { grid-template-columns: 1fr; }
+    .cms-page-grid { grid-template-columns: 1fr; }
+    .cms-page-card footer { grid-template-columns: 1fr; }
+    .cms-page-card [data-page-edits] { text-align: left; }
+    .cms-content-head { align-items: stretch; flex-direction: column; }
+    .cms-content-head input { width: 100%; }
+  }
+</style>

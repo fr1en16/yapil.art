@@ -1,0 +1,265 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import { getPortfolioWorks } from '../lib/portfolio-gallery';
+import { getCollection } from 'astro:content';
+import { serviceTags } from '../data/service-tags';
+import ProjectFilters from '../components/ProjectFilters.astro';
+
+interface PortfolioCard {
+  id: string;
+  title: string;
+  label: string;
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+  isVideo: boolean;
+  tags: string[];
+  sector?: string;
+  caseSlug?: string;
+  anchor?: string;
+  order: number;
+}
+
+const galleryCards: PortfolioCard[] = (await getPortfolioWorks()).map((work) => ({
+  id: `media-${work.name}`,
+  title: work.title,
+  label: work.label,
+  url: work.url,
+  alt: work.alt,
+  width: work.width,
+  height: work.height,
+  isVideo: work.isVideo,
+  tags: work.tags,
+  sector: work.sector,
+  caseSlug: work.caseSlug,
+  anchor: work.anchor,
+  order: work.order,
+}));
+
+const cases = await getCollection('cases');
+const caseCards: PortfolioCard[] = cases
+  .filter((entry) => Boolean(entry.data.cover))
+  .map((entry, index) => ({
+    id: `case-${entry.id}`,
+    title: entry.data.title,
+    label: entry.data.title,
+    url: entry.data.cover,
+    alt: entry.data.summary,
+    width: 1600,
+    height: 1100,
+    isVideo: /\.(mp4|webm)(?:\?|$)/i.test(entry.data.cover),
+    tags: entry.data.tags,
+    sector: entry.data.sector,
+    caseSlug: entry.id.replace(/\.md$/, ''),
+    order: index,
+  }));
+
+const cards = [...caseCards, ...galleryCards].sort((a, b) => a.order - b.order);
+const preferredTagOrder: string[] = [...serviceTags];
+const allTags = Array.from(new Set(cards.flatMap((card) => card.tags)));
+const tags = [
+  ...preferredTagOrder.filter((tag) => allTags.includes(tag)),
+  ...allTags.filter((tag) => !preferredTagOrder.includes(tag)).sort((a, b) => a.localeCompare(b, 'ru')),
+];
+const sectors = Array.from(new Set(cards.map((card) => card.sector).filter((sector): sector is string => Boolean(sector))))
+  .sort((a, b) => a.localeCompare(b, 'ru'));
+---
+
+<Base
+  title="Портфолио"
+  description="Полный архив работ дизайн-агентства Yapil: сайты, айдентика, упаковка, полиграфия, SMM и рекламные материалы."
+  theme="light"
+  navOverlay={false}
+  bodyClass="portfolio-archive-page"
+>
+  <section class="portfolio-archive" aria-labelledby="portfolio-title" data-project-filter-scope>
+    <header class="portfolio-header">
+      <h1 id="portfolio-title">Портфолио</h1>
+      <p>Всё, что мы делали: от сайтов до брошюр и серий постов. Подробные разборы — в <a href="/cases">кейсах</a>.</p>
+    </header>
+
+    <ProjectFilters items={cards} tags={tags} sectors={sectors} class="portfolio-filters" />
+
+    <div class="portfolio-grid" data-portfolio-grid>
+      {cards.map((card, index) => {
+        const content = (
+          <>
+            <span class="portfolio-media" style={`--ratio: ${card.width} / ${card.height}`}>
+              {card.isVideo ? (
+                <video src={card.url} muted loop playsinline preload="metadata" aria-label={card.alt}></video>
+              ) : (
+                <img src={card.url} alt={card.alt} width={card.width} height={card.height} loading={index < 8 ? 'eager' : 'lazy'} decoding="async" />
+              )}
+            </span>
+            <span class="portfolio-card-meta">
+              <strong>{card.label}</strong>
+              <span>{card.tags.join(' · ')}</span>
+            </span>
+          </>
+        );
+        return (
+          <article
+            class:list={['portfolio-card', { 'is-pending': index >= 24 }]}
+            data-tags={card.tags.join('|')}
+            data-sector={card.sector ?? ''}
+            data-card
+            data-batch={Math.floor(index / 24)}
+          >
+            {card.caseSlug ? (
+              <a href={`/case/${card.caseSlug}${card.anchor ? `#${card.anchor}` : ''}`} aria-label={`${card.title}. Открыть кейс`}>{content}</a>
+            ) : (
+              <button type="button" aria-label={card.title} data-preview-url={card.url} data-preview-title={card.title}>{content}</button>
+            )}
+          </article>
+        );
+      })}
+    </div>
+    <div class="portfolio-sentinel" data-portfolio-sentinel aria-hidden="true"></div>
+    <p class="portfolio-empty" data-portfolio-empty hidden>В этой категории пока нет опубликованных работ.</p>
+  </section>
+
+  <dialog class="portfolio-lightbox" data-portfolio-lightbox aria-label="Просмотр работы">
+    <button type="button" class="portfolio-lightbox-close" data-lightbox-close aria-label="Закрыть">×</button>
+    <div data-lightbox-media></div>
+    <p data-lightbox-title></p>
+  </dialog>
+
+  <Footer slot="footer" />
+</Base>
+
+<script>
+  function initPortfolio() {
+    const grid = document.querySelector<HTMLElement>('[data-portfolio-grid]');
+    const filters = document.querySelector<HTMLElement>('[data-project-filters]');
+    const empty = document.querySelector<HTMLElement>('[data-portfolio-empty]');
+    const sentinel = document.querySelector<HTMLElement>('[data-portfolio-sentinel]');
+    const dialog = document.querySelector<HTMLDialogElement>('[data-portfolio-lightbox]');
+    if (!grid || !filters || !empty || !sentinel || !dialog || grid.dataset.ready === 'true') return;
+    grid.dataset.ready = 'true';
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-card]'));
+    const active = { tag: 'all', sector: 'all' };
+    let visibleBatch = 0;
+
+    function updateCards() {
+      let visible = 0;
+      cards.forEach((card) => {
+        const tagMatches = active.tag === 'all' || (card.dataset.tags ?? '').split('|').includes(active.tag);
+        const sectorMatches = active.sector === 'all' || card.dataset.sector === active.sector;
+        const matches = tagMatches && sectorMatches;
+        const filtered = active.tag !== 'all' || active.sector !== 'all';
+        const loaded = filtered || Number(card.dataset.batch ?? 0) <= visibleBatch;
+        card.hidden = !matches || !loaded;
+        card.classList.toggle('is-pending', !loaded);
+        if (matches && loaded) visible += 1;
+      });
+      empty.hidden = visible > 0;
+    }
+
+    filters.addEventListener('click', (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>('[data-filter-kind]');
+      if (!button) return;
+      const kind = button.dataset.filterKind as 'tag' | 'sector';
+      active[kind] = button.dataset.filterValue ?? 'all';
+      visibleBatch = 0;
+      filters.querySelectorAll<HTMLButtonElement>(`[data-filter-kind="${kind}"]`).forEach((item) => {
+        const active = item === button;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      updateCards();
+      const params = new URLSearchParams(location.search);
+      for (const [key, value] of Object.entries(active)) value === 'all' ? params.delete(key) : params.set(key, value);
+      history.replaceState(null, '', `${location.pathname}${params.size ? `?${params}` : ''}`);
+    });
+
+    const params = new URLSearchParams(location.search);
+    (['tag', 'sector'] as const).forEach((kind) => {
+      const value = params.get(kind);
+      if (value) filters.querySelector<HTMLButtonElement>(`[data-filter-kind="${kind}"][data-filter-value="${CSS.escape(value)}"]`)?.click();
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      const maxBatch = Math.max(...cards.map((card) => Number(card.dataset.batch ?? 0)));
+      if (visibleBatch < maxBatch) {
+        visibleBatch += 1;
+        updateCards();
+      }
+    }, { rootMargin: '800px 0px' });
+    observer.observe(sentinel);
+
+    grid.addEventListener('click', (event) => {
+      const trigger = (event.target as Element).closest<HTMLButtonElement>('[data-preview-url]');
+      if (!trigger) return;
+      const mediaRoot = dialog.querySelector<HTMLElement>('[data-lightbox-media]');
+      const title = dialog.querySelector<HTMLElement>('[data-lightbox-title]');
+      if (!mediaRoot || !title) return;
+      const url = trigger.dataset.previewUrl ?? '';
+      const media = /\.(mp4|webm)(?:\?|$)/i.test(url) ? document.createElement('video') : document.createElement('img');
+      media.setAttribute('src', url);
+      if (media instanceof HTMLVideoElement) {
+        media.controls = true;
+        media.autoplay = true;
+        media.loop = true;
+      } else media.alt = trigger.dataset.previewTitle ?? '';
+      mediaRoot.replaceChildren(media);
+      title.textContent = trigger.dataset.previewTitle ?? '';
+      dialog.showModal();
+    });
+    dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => dialog.querySelector('[data-lightbox-media]')?.replaceChildren());
+    updateCards();
+  }
+
+  initPortfolio();
+  document.addEventListener('astro:page-load', initPortfolio);
+</script>
+
+<style>
+  .portfolio-archive { width: min(calc(100% - var(--container-inline-space, 4rem)), 112rem); margin: 0 auto; padding: clamp(150px, 18vh, 240px) 0 100px; color: #fff; }
+  .portfolio-header { display: grid; justify-items: center; gap: 28px; text-align: center; }
+  .portfolio-header h1 { margin: 0; font: 400 clamp(76px, 12vw, 210px)/.78 Oranienbaum, Georgia, serif; letter-spacing: -.045em; }
+  .portfolio-header p { max-width: 45ch; margin: 0; font-size: clamp(17px, 1.35vw, 23px); line-height: 1.25; }
+  .portfolio-header p a { text-decoration: underline; text-underline-offset: .18em; }
+  :global(.portfolio-filters) { --filters-ink: #fff; --filters-muted: rgba(255,255,255,.68); --filters-active: #bff3ff; --filters-rule: rgba(255,255,255,.3); margin: clamp(56px, 7vw, 104px) 0 clamp(38px, 5vw, 72px); }
+  .portfolio-grid { column-count: 6; column-gap: 12px; }
+  .portfolio-card { display: inline-block; width: 100%; margin: 0 0 12px; break-inside: avoid; vertical-align: top; }
+  .portfolio-card[hidden] { display: none; }
+  .portfolio-card > a,
+  .portfolio-card > button { position: relative; display: block; width: 100%; padding: 0; overflow: hidden; border: 0; background: #e4e1dc; color: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+  .portfolio-media { position: relative; display: block; aspect-ratio: var(--ratio); overflow: hidden; }
+  .portfolio-media img,
+  .portfolio-media video { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 650ms cubic-bezier(.2,.7,.2,1); }
+  .portfolio-card > :is(a, button):hover .portfolio-media :is(img, video) { transform: scale(1.025); }
+  .portfolio-card-meta { position: absolute; inset: auto 0 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 42px 14px 13px; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); opacity: 0; transition: opacity 220ms ease; }
+  .portfolio-card > :is(a, button):hover .portfolio-card-meta,
+  .portfolio-card > :is(a, button):focus-visible .portfolio-card-meta { opacity: 1; }
+  .portfolio-card-meta strong { font: 400 23px/1 Oranienbaum, Georgia, serif; }
+  .portfolio-card-meta > span { max-width: 48%; font-size: 10px; line-height: 1.15; text-align: right; text-transform: uppercase; }
+  .portfolio-sentinel { height: 1px; }
+  .portfolio-empty { padding: 80px 0; text-align: center; color: #6b6863; }
+  .portfolio-lightbox { width: 100vw; max-width: none; height: 100vh; max-height: none; margin: 0; padding: 42px; border: 0; background: rgba(8,8,9,.96); color: #fff; }
+  .portfolio-lightbox::backdrop { background: rgba(0,0,0,.75); }
+  .portfolio-lightbox > div { width: 100%; height: calc(100% - 42px); display: grid; place-items: center; }
+  .portfolio-lightbox :global(img),
+  .portfolio-lightbox :global(video) { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .portfolio-lightbox p { margin: 15px 0 0; text-align: center; }
+  .portfolio-lightbox-close { position: fixed; z-index: 2; top: 18px; right: 22px; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: rgba(0,0,0,.28); color: #fff; font-size: 28px; cursor: pointer; }
+  @media (max-width: 1100px) { .portfolio-grid { column-count: 4; } }
+  @media (max-width: 900px) { .portfolio-grid { column-count: 3; } }
+  @media (max-width: 760px) {
+    .portfolio-archive { width: calc(100% - 24px); padding-top: 120px; }
+    .portfolio-header h1 { font-size: clamp(58px, 19vw, 82px); }
+    .portfolio-header p { max-width: 31ch; }
+    :global(.portfolio-filters) { margin-top: 52px; }
+    .portfolio-grid { column-count: 2; column-gap: 8px; }
+    .portfolio-card { margin-bottom: 8px; }
+    .portfolio-card-meta { position: static; display: block; padding: 10px; background: #fff; color: #191919; opacity: 1; }
+    .portfolio-card-meta strong { font-size: 18px; }
+    .portfolio-card-meta > span { display: block; max-width: none; margin-top: 5px; text-align: left; }
+    .portfolio-lightbox { padding: 16px; }
+  }
+</style>

@@ -19,16 +19,16 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
   const homePath = isEn ? "/en" : "/";
 
   const destinations = useMemo(() => ({
-    cases: `${homePath}#cases`,
+    cases: isEn ? `${homePath}#cases` : "/cases",
     reviews: `${homePath}#reviews`,
     contacts: contactsHref || `${homePath}#contacts`,
-  }), [homePath, contactsHref]);
+  }), [homePath, contactsHref, isEn]);
 
   useEffect(() => {
     const updateActiveItem = () => {
       const p = window.location.pathname.replace(/\/$/, "") || "/";
-      if (p !== "/" && p !== "/en" && p !== "/threads") {
-        setActiveId("");
+      if (p !== "/" && p !== "/en" && p !== "/threads" && p !== "/cases") {
+        setActiveId(p.startsWith("/case/") ? "cases" : "");
         return;
       }
 
@@ -40,7 +40,7 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
         return rect.top <= window.innerHeight * 0.48 && rect.bottom > 96;
       });
 
-      setActiveId(active ?? "");
+      setActiveId(active ?? (p === "/cases" ? "cases" : ""));
     };
 
     updateActiveItem();
@@ -50,7 +50,7 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
       window.removeEventListener("scroll", updateActiveItem);
       window.removeEventListener("hashchange", updateActiveItem);
     };
-  }, []);
+  }, [isEn]);
 
   const items = useMemo<ExpandableActionBarItem[]>(() => [
     { id: "cases", label: isEn ? "Cases" : "Кейсы", icon: <BriefcaseBusiness /> },
@@ -97,6 +97,13 @@ export default function PrimaryMenu({ contactsHref, lang = "ru" }: PrimaryMenuPr
           window.clearTimeout(settleTimer);
           alignSection(0.25);
         }, 3000);
+      }
+    } else if (isSamePage) {
+      const lenis = (window as typeof window & { __lenisInstance?: Lenis | null }).__lenisInstance;
+      if (lenis) {
+        lenis.scrollTo(0, { duration: 1 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     } else {
       window.location.assign(href);

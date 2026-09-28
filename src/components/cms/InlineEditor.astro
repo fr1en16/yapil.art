@@ -1,0 +1,280 @@
+<div class="cms-inline-toolbar" data-cms-toolbar data-cms-ignore hidden>
+  <button class="cms-inline-toggle" type="button" data-cms-toggle aria-pressed="false">
+    <span class="cms-inline-dot" aria-hidden="true"></span>
+    <span data-cms-toggle-label>Редактировать</span>
+  </button>
+  <span class="cms-inline-status" data-cms-status aria-live="polite">Локальный режим</span>
+  <a href="/admin" class="cms-inline-admin">CMS</a>
+</div>
+
+<script>
+  interface CmsEntry {
+    route: string;
+    selector: string;
+    textIndex: number;
+    value: string;
+  }
+
+  interface CmsStore {
+    entries: Record<string, CmsEntry>;
+  }
+
+  const API_URL = '/api/cms/local-content';
+  const SKIP_SELECTOR = 'script, style, svg, code, pre, input, textarea, select, option, time, [data-cms-ignore], [data-promo-timer], [aria-live], [aria-hidden="true"]';
+  const toolbar = document.querySelector<HTMLElement>('[data-cms-toolbar]');
+  const toggle = toolbar?.querySelector<HTMLButtonElement>('[data-cms-toggle]');
+  const toggleLabel = toolbar?.querySelector<HTMLElement>('[data-cms-toggle-label]');
+  const status = toolbar?.querySelector<HTMLElement>('[data-cms-status]');
+  let editing = false;
+  let store: CmsStore = { entries: {} };
+
+  const normalizedRoute = () => location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
+
+  function setStatus(message: string, state: 'idle' | 'saving' | 'saved' | 'error' = 'idle') {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.state = state;
+  }
+
+  function escapeCss(value: string): string {
+    return CSS.escape(value);
+  }
+
+  function selectorFor(element: Element): string {
+    const root = document.querySelector('#main-content') ?? document.body;
+    const segments: string[] = [];
+    let current: Element | null = element;
+
+    while (current && current !== root && current !== document.body) {
+      if (current.id) {
+        segments.unshift(`#${escapeCss(current.id)}`);
+        break;
+      }
+      const parent: Element | null = current.parentElement;
+      if (!parent) break;
+      const tag = current.tagName.toLowerCase();
+      const siblings = Array.from(parent.children).filter((child) => child.tagName === current?.tagName);
+      const index = siblings.indexOf(current) + 1;
+      segments.unshift(`${tag}:nth-of-type(${index})`);
+      current = parent;
+    }
+
+    if (current === root) {
+      const rootSelector = root.id ? `#${escapeCss(root.id)}` : root.tagName.toLowerCase();
+      segments.unshift(rootSelector);
+    }
+    return segments.join(' > ');
+  }
+
+  function directTextNodes(element: Element): Text[] {
+    return Array.from(element.childNodes).filter(
+      (node): node is Text => node.nodeType === Node.TEXT_NODE && Boolean(node.textContent?.trim()),
+    );
+  }
+
+  function entryKey(route: string, selector: string, textIndex: number): string {
+    return `${route}::${selector}::text(${textIndex})`;
+  }
+
+  function applyOverrides() {
+    const route = normalizedRoute();
+    Object.values(store.entries).forEach((entry) => {
+      if (entry.route !== route) return;
+      const element = document.querySelector(entry.selector);
+      const textNode = element ? directTextNodes(element)[entry.textIndex] : undefined;
+      if (textNode) textNode.textContent = entry.value;
+    });
+  }
+
+  function unwrapEditors() {
+    document.querySelectorAll<HTMLElement>('[data-cms-inline-field]').forEach((field) => {
+      field.replaceWith(document.createTextNode(field.textContent ?? ''));
+    });
+  }
+
+  function activateEditors() {
+    const route = normalizedRoute();
+    const roots = [document.querySelector('#main-content'), document.querySelector('body > footer')].filter(Boolean) as Element[];
+
+    roots.forEach((root) => {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || !node.textContent?.trim()) return NodeFilter.FILTER_REJECT;
+          if (parent.closest(SKIP_SELECTOR) || parent.closest('[data-cms-inline-field]')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        },
+      });
+
+      const nodes: Text[] = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode as Text);
+
+      const metadata = nodes.map((node) => {
+        const parent = node.parentElement;
+        if (!parent) return null;
+        const selector = selectorFor(parent);
+        const textIndex = directTextNodes(parent).indexOf(node);
+        return textIndex < 0 ? null : { node, parent, selector, textIndex };
+      }).filter(Boolean) as { node: Text; parent: HTMLElement; selector: string; textIndex: number }[];
+
+      metadata.forEach(({ node, selector, textIndex }) => {
+        const key = entryKey(route, selector, textIndex);
+        const field = document.createElement('span');
+        field.dataset.cmsInlineField = key;
+        field.dataset.cmsSelector = selector;
+        field.dataset.cmsTextIndex = String(textIndex);
+        field.contentEditable = 'plaintext-only';
+        field.spellcheck = true;
+        field.textContent = node.textContent;
+        field.dataset.savedValue = node.textContent ?? '';
+        field.setAttribute('role', 'textbox');
+        field.setAttribute('aria-label', 'Редактируемый текст');
+        field.addEventListener('click', (event) => event.stopPropagation());
+        field.addEventListener('keydown', handleFieldKeydown);
+        field.addEventListener('blur', handleFieldBlur);
+        node.replaceWith(field);
+      });
+    });
+  }
+
+  async function saveField(field: HTMLElement) {
+    const key = field.dataset.cmsInlineField;
+    const selector = field.dataset.cmsSelector;
+    const textIndex = Number(field.dataset.cmsTextIndex);
+    const value = (field.textContent ?? '').replace(/\s+/g, ' ').trim();
+    if (!key || !selector || !value) return;
+    if (value === (field.dataset.savedValue ?? '').trim()) return;
+
+    setStatus('Сохраняю…', 'saving');
+    const response = await fetch(API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, route: normalizedRoute(), selector, textIndex, value }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Не удалось сохранить текст.');
+    store.entries[key] = result.entry;
+    field.dataset.savedValue = value;
+    setStatus('Сохранено', 'saved');
+    window.setTimeout(() => setStatus('Режим редактирования'), 1200);
+  }
+
+  function handleFieldKeydown(event: KeyboardEvent) {
+    const field = event.currentTarget as HTMLElement;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      field.textContent = field.dataset.savedValue ?? store.entries[field.dataset.cmsInlineField ?? '']?.value ?? field.textContent;
+      field.blur();
+      return;
+    }
+    if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      field.blur();
+    }
+  }
+
+  async function handleFieldBlur(event: FocusEvent) {
+    const field = event.currentTarget as HTMLElement;
+    try {
+      await saveField(field);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'Ошибка сохранения', 'error');
+    }
+  }
+
+  function setEditing(next: boolean) {
+    editing = next;
+    document.documentElement.classList.toggle('cms-editing', editing);
+    toggle?.setAttribute('aria-pressed', String(editing));
+    if (toggleLabel) toggleLabel.textContent = editing ? 'Завершить' : 'Редактировать';
+    if (editing) {
+      activateEditors();
+      setStatus('Кликните по любому тексту');
+    } else {
+      unwrapEditors();
+      setStatus('Локальный режим');
+    }
+  }
+
+  async function initInlineEditor() {
+    if (!toolbar || !toggle) return;
+    if (toolbar.dataset.initialized === 'true') return;
+    toolbar.dataset.initialized = 'true';
+    toolbar.hidden = false;
+    try {
+      const response = await fetch(API_URL, { headers: { Accept: 'application/json' } });
+      if (response.ok) store = await response.json();
+      applyOverrides();
+    } catch {
+      setStatus('Хранилище недоступно', 'error');
+    }
+    toggle.addEventListener('click', () => setEditing(!editing));
+  }
+
+  initInlineEditor();
+  document.addEventListener('astro:page-load', initInlineEditor);
+</script>
+
+<style is:global>
+  .cms-inline-toolbar {
+    position: fixed;
+    z-index: 2147483600;
+    left: 50%;
+    bottom: max(18px, env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 14px;
+    background: rgba(14, 14, 15, .94);
+    color: #fff;
+    box-shadow: 0 14px 45px rgba(0, 0, 0, .28);
+    backdrop-filter: blur(18px);
+    font: 500 13px/1 'Inter Tight Variable', Arial, sans-serif;
+    transform: translateX(-50%);
+  }
+  .cms-inline-toolbar[hidden] { display: none; }
+  .cms-inline-toggle,
+  .cms-inline-admin {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 13px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .cms-inline-toggle:hover,
+  .cms-inline-admin:hover { background: rgba(255, 255, 255, .1); }
+  .cms-inline-toggle[aria-pressed='true'] { background: #fd4b32; }
+  .cms-inline-dot { width: 7px; height: 7px; border-radius: 50%; background: #6f6f73; }
+  .cms-inline-toggle[aria-pressed='true'] .cms-inline-dot { background: #fff; }
+  .cms-inline-status { min-width: 128px; padding: 0 10px; color: #a9a9ad; text-align: center; }
+  .cms-inline-status[data-state='saving'] { color: #f7c65a; }
+  .cms-inline-status[data-state='saved'] { color: #80efc9; }
+  .cms-inline-status[data-state='error'] { color: #ff7461; }
+  .cms-inline-admin { border-left: 1px solid rgba(255, 255, 255, .12); border-radius: 0 9px 9px 0; }
+  [data-cms-inline-field] {
+    min-width: .35em;
+    border-radius: .12em;
+    outline: 1px dashed rgba(253, 75, 50, .58);
+    outline-offset: 3px;
+    cursor: text;
+    transition: outline-color 150ms ease, background 150ms ease;
+  }
+  [data-cms-inline-field]:hover { outline-color: #fd4b32; background: rgba(253, 75, 50, .08); }
+  [data-cms-inline-field]:focus { outline: 2px solid #fd4b32; background: rgba(253, 75, 50, .1); }
+  .cms-editing a:has([data-cms-inline-field]),
+  .cms-editing button:has([data-cms-inline-field]) { pointer-events: none; }
+  .cms-editing [data-cms-inline-field] { pointer-events: auto; }
+  @media (max-width: 640px) {
+    .cms-inline-toolbar { width: calc(100% - 24px); justify-content: space-between; }
+    .cms-inline-status { display: none; }
+  }
+</style>

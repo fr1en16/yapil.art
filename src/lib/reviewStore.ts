@@ -5,9 +5,7 @@ import { getCrmSettings, isSupabaseConfigured, playLeadChime } from './crmStore'
 const STORAGE_KEY_REVIEWS = 'yapil_crm_reviews_v1';
 const BROADCAST_REVIEWS_CHANNEL = 'yapil_reviews_channel';
 
-// Supabase environment variables
-const SUPABASE_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SUPABASE_URL) || '';
-const SUPABASE_ANON_KEY = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SUPABASE_ANON_KEY) || '';
+// Cloudflare configuration
 
 export const INITIAL_DEMO_REVIEWS: ClientReview[] = [
   {
@@ -253,21 +251,7 @@ export async function submitClientReview(payload: CreateReviewPayload): Promise<
     }
   }
 
-  // Supabase background insertion (Public anon insert via RLS)
-  if (isSupabaseConfigured) {
-    fetch(`${SUPABASE_URL}/rest/v1/reviews`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        Prefer: 'return=minimal',
-      },
-      body: JSON.stringify(reviewToSupabaseRow(newReview)),
-    }).catch((err) => console.warn('Supabase review insert error:', err));
-  }
-
-  // Dispatch to server-side API (Telegram notification using Vercel env vars)
+  // Dispatch to server-side API (Cloudflare D1 persistence + Telegram notification)
   if (typeof window !== 'undefined') {
     fetch('/api/review', {
       method: 'POST',
@@ -298,17 +282,15 @@ export function updateReviewStatus(id: string, status: ReviewStatus): ClientRevi
   reviews[index] = updated;
   saveStoredReviews(reviews);
 
-  // Supabase sync
-  if (isSupabaseConfigured) {
-    fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
+  // Cloudflare D1 sync
+  if (typeof window !== 'undefined') {
+    fetch(`/api/reviews?id=${encodeURIComponent(id)}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       },
-      body: JSON.stringify({ status, updated_at: updated.updatedAt }),
-    }).catch((err) => console.warn('Supabase review patch error:', err));
+      body: JSON.stringify({ status }),
+    }).catch((err) => console.warn('D1 review patch error:', err));
   }
 
   return updated;
@@ -318,15 +300,34 @@ export function deleteReview(id: string): void {
   const reviews = getStoredReviews().filter((r) => r.id !== id);
   saveStoredReviews(reviews);
 
-  if (isSupabaseConfigured) {
-    fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
+  // Cloudflare D1 sync
+  if (typeof window !== 'undefined') {
+    fetch(`/api/reviews?id=${encodeURIComponent(id)}`, {
       method: 'DELETE',
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-    }).catch((err) => console.warn('Supabase review delete error:', err));
+    }).catch((err) => console.warn('D1 review delete error:', err));
   }
+}
+
+// Sync reviews with Cloudflare D1
+export async function syncReviewsFromCloud(): Promise<ClientReview[] | null> {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const res = await fetch('/api/reviews?status=all', {
+      method: 'GET',
+    });
+
+    if (res.ok) {
+      const rows = await res.json();
+      if (Array.isArray(rows) && rows.length > 0) {
+        saveStoredReviews(rows);
+        return rows;
+      }
+    }
+  } catch (err) {
+    console.warn('Cloud reviews fetch error:', err);
+  }
+  return null;
 }
 
 export function calculateReviewStats(reviews: ClientReview[]): ReviewStats {

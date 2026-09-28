@@ -2,6 +2,7 @@
 import { mediaUrl, videoPoster } from '../../lib/media';
 import { getCases, type SanityCase } from '../../lib/sanity';
 import { renderCaseBody } from '../../lib/markdown';
+import { getCaseWorks } from '../../lib/portfolio-gallery';
 import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
@@ -21,6 +22,7 @@ interface Props {
 const { c } = Astro.props;
 const cover = c.cover || '';
 const bodyHtml = renderCaseBody(c.body);
+const works = await getCaseWorks(c.slug);
 const isVideo = /\.(webm|mp4)(?:\?|$)/i.test(c.cover);
 const poster = isVideo
   ? videoPoster(c.cover)
@@ -30,7 +32,7 @@ const caseCoverUrl = cover ? new URL(cover, Astro.site).href : c.socialImage;
 const metaDescriptionParts = [
   `Кейс ${c.title}: ${c.summary.replace(/[.!?]+$/, '')}.`,
   c.task?.replace(/[.!?]+$/, ''),
-  `Услуги: ${c.services.join(', ')}.`,
+  `Теги: ${c.tags.join(', ')}.`,
   `Проект ${c.year} года из портфолио дизайн-студии Yapil.`,
   'Смотрите задачу, визуальное решение и материалы проекта.',
 ].filter(Boolean).join(' ');
@@ -48,7 +50,7 @@ const creativeWorkJsonLd = {
       dateCreated: c.year,
       image: caseCoverUrl,
       inLanguage: 'ru',
-      keywords: c.services.join(', '),
+      keywords: c.tags.join(', '),
       creator: {
         '@type': 'Organization',
         name: 'Yapil',
@@ -89,7 +91,7 @@ const creativeWorkJsonLd = {
 ---
 
 <Base
-  title={`${c.title} · ${c.services.join(' / ')}`}
+  title={`${c.title} · ${c.tags.join(' / ')}`}
   description={metaDescription}
   image={ogImage}
   type="article"
@@ -180,6 +182,23 @@ const creativeWorkJsonLd = {
       <Fragment set:html={bodyHtml} />
       {c.slug === 'yatut' && <InstagramCarousels />}
       <PdfSlider />
+      {works.length > 0 && (
+        <section class="case-works" id="works" aria-labelledby="works-title">
+          <h2 id="works-title">Макеты</h2>
+          <div class="media-grid media-grid-2">
+            {works.map((work) => (
+              <figure id={work.anchor}>
+                {work.isVideo ? (
+                  <video src={work.url} width={work.width} height={work.height} muted loop playsinline controls preload="metadata" aria-label={work.alt}></video>
+                ) : (
+                  <img src={work.url} alt={work.alt} width={work.width} height={work.height} loading="lazy" decoding="async" />
+                )}
+                <figcaption>{work.title}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
 
     <Contacts
@@ -362,6 +381,7 @@ const creativeWorkJsonLd = {
 
   .case-body {
     max-width: 54rem;
+    padding-bottom: clamp(4rem, 9vw, 9rem);
   }
 
   .case-body :global(:first-child) {
@@ -542,6 +562,15 @@ const creativeWorkJsonLd = {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.7);
     line-height: 1.35;
+  }
+
+  .case-works figure {
+    scroll-margin-top: 6rem;
+  }
+
+  .case-works figure:target :is(img, video) {
+    outline: 2px solid var(--accent, #fd4b32);
+    outline-offset: 4px;
   }
 
   .case-body :global(.video-container) {
