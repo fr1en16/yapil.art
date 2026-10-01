@@ -3,6 +3,7 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import ArticlePage from '../../components/ArticlePage.astro';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
+import reviewedArticles from '../../data/article-catalog-copy.json';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
@@ -72,6 +73,7 @@ const articleJsonLd = {
   type="article"
   jsonLd={articleJsonLd}
   theme="light"
+  bodyClass={Object.hasOwn(reviewedArticles, slug) ? 'reviewed-article' : undefined}
   noindex={article.data.status !== 'published'}
 >
   <ArticlePage {article} {headings} {slug} {readingMinutes}>
@@ -79,3 +81,12 @@ const articleJsonLd = {
   </ArticlePage>
   <Footer slot="footer" />
 </Base>
+
+<style>
+  :global(.reviewed-article .article-hero h1) { min-width: 0; overflow-wrap: anywhere; }
+  :global(.reviewed-article .site-header.theme-light .brand),
+  :global(.reviewed-article .site-header.theme-light .brand-text) { color: #171717; }
+  @media (max-width: 47.99rem) {
+    :global(.reviewed-article .article-hero h1) { font-size: clamp(2.5rem, 10.5vw, 3.5rem); line-height: 1; }
+  }
+</style>

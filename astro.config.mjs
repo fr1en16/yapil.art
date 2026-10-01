@@ -52,6 +52,8 @@ export default defineConfig({
         const pathname = new URL(page).pathname;
         const normalizedPath = pathname.replace(/\/$/, '') || '/';
 
+        if (['/ads/corporate-site', '/ads/landing', '/ads/online-store'].includes(normalizedPath)) return false;
+
         if (normalizedPath === '/articles') return publishedArticlePaths.size > 0;
         if (normalizedPath.startsWith('/articles/')) return publishedArticlePaths.has(normalizedPath);
 

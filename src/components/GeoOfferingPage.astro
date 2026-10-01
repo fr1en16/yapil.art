@@ -21,6 +21,7 @@ if (!geoCopy) {
 const locationPrepositional = district?.prepositional ?? city.prepositional;
 const locationGenitive = district?.genitive ?? city.genitive;
 const localContext = district?.context ?? city.context;
+const revisedWebsiteCity = service.slug === 'websites' && !district && ['aktobe', 'atyrau', 'karaganda', 'kyzylorda', 'pavlodar', 'semey', 'turkestan'].includes(city.slug);
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const serviceUrl = new URL(`/services/${service.slug}`, Astro.site).href;
@@ -29,7 +30,9 @@ const cityUrl = new URL(`/services/${service.slug}/${city.slug}`, Astro.site).hr
 const title = `${geoCopy.titleName ?? geoCopy.searchName} в ${locationPrepositional} — Yapil`;
 const description = `${geoCopy.action} для бизнеса ${locationGenitive}. ${geoCopy.metaResult}`;
 const heroH1 = `${geoCopy.searchName} в ${locationPrepositional}`;
-const heroLead = `${localContext} ${geoCopy.localValue}`;
+const heroLead = revisedWebsiteCity
+  ? `Разрабатываем сайты для компаний ${locationGenitive}: лендинг для одного предложения, корпоративный сайт для услуг или магазин с каталогом и оформлением заказа. До старта согласуем страницы, материалы, формы и интеграции; стоимость и срок считаем по этому составу. ${city.workFormat}`
+  : `${localContext} ${geoCopy.localValue}`;
 const ctaTitle = `${service.ctaTitle} Работаем с компаниями ${locationGenitive}.`;
 const whatsappContext = `для бизнеса ${locationGenitive}`;
 
@@ -44,7 +47,7 @@ const localFaq = [
   },
   {
     question: `Сколько стоит ${geoCopy.priceObject} для компании ${locationGenitive}?`,
-    answer: 'Стоимость зависит от объёма, количества форматов, глубины исследования и сроков. После короткого брифа мы предложим состав работ, календарь и прозрачную смету без обязательства заказывать лишние этапы.',
+    answer: revisedWebsiteCity ? 'Стоимость разработки сайта зависит от числа страниц, готовности текстов и фотографий, дизайна, каталога, форм и интеграций. Пришлите задачу, примеры и список функций: после брифа согласуем состав, срок и смету. Домен, хостинг и платные сервисы учитываем отдельно.' : 'Стоимость зависит от объёма, количества форматов, глубины исследования и сроков. После короткого брифа мы предложим состав работ, календарь и прозрачную смету без обязательства заказывать лишние этапы.',
   },
   ...service.faq,
 ];
@@ -125,5 +128,11 @@ const jsonLd = {
   ctaLead={service.ctaLead}
   {whatsappContext}
 >
-  <ProcessWork slot="process-work" embedded autoplay steps={service.steps} />
+  <Fragment slot="process-work">
+    <ProcessWork embedded autoplay steps={service.steps} />
+    {revisedWebsiteCity && <style is:inline>
+      .step-copy .step-title { overflow-wrap: anywhere; }
+      @media (min-width: 901px) { .step-copy .step-title { font-size: clamp(24px, 2vw, 38px); } }
+    </style>}
+  </Fragment>
 </OfferingDetailTemplate>

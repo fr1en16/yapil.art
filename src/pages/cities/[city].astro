@@ -13,6 +13,7 @@ export function getStaticPaths() {
 
 interface Props { city: CityData; }
 const { city } = Astro.props;
+const revisedWebsiteCity = ['aktobe', 'astana', 'atyrau', 'karaganda', 'kyzylorda', 'pavlodar', 'shymkent', 'ust-kamenogorsk'].includes(city.slug);
 const title = `Услуги дизайн-студии в ${city.prepositional} — Yapil`;
 const description = `Разработка сайтов, айдентики, упаковки, презентаций, SMM-дизайна и дизайн-сопровождения для компаний ${city.genitive}.`;
 const jsonLd = {
@@ -49,7 +50,7 @@ const jsonLd = {
         <nav class="city-breadcrumbs" aria-label="Хлебные крошки"><a href="/cities">Города</a><span>/</span><span>{city.name}</span></nav>
         <div class="editorial-title-wrap"><h1>Услуги дизайн-студии в {city.prepositional}</h1></div>
         <div class="editorial-cover__bottom">
-          <p class="editorial-lead">{city.context} {city.workFormat}</p>
+          <p class="editorial-lead">{revisedWebsiteCity ? `Yapil разрабатывает сайты и визуальные материалы для компаний ${city.genitive}. Для сайта сначала выбираем формат: лендинг для одного предложения, корпоративный сайт для услуг или магазин с каталогом и заказом.` : city.context} {city.workFormat}</p>
           <dl class="editorial-meta">
             <div><dt>Направления</dt><dd>{city.businessFocus.join(' / ')}</dd></div>
             <div><dt>Услуги</dt><dd>{servicesList.length}</dd></div>
@@ -82,7 +83,7 @@ const jsonLd = {
         </header>
         <ol class="editorial-list">
           <li class="editorial-row"><span class="editorial-row__number">01</span><h3>Формат</h3><p>{city.workFormat}</p></li>
-          <li class="editorial-row"><span class="editorial-row__number">02</span><h3>Контекст</h3><p>Учитываем специфику направлений: {city.businessFocus.join(', ')}.</p></li>
+          <li class="editorial-row"><span class="editorial-row__number">02</span><h3>{revisedWebsiteCity ? 'Для разработки сайта' : 'Контекст'}</h3><p>{revisedWebsiteCity ? 'Подготовьте список услуг или товаров, географию работы, контакты для заявок и имеющиеся тексты и фотографии. Отдельно укажите нужные языки, оплату и доставку: их состав и интеграции согласуем до оценки.' : `Учитываем специфику направлений: ${city.businessFocus.join(', ')}.`}</p></li>
           <li class="editorial-row"><span class="editorial-row__number">03</span><h3>Результат</h3><p>До старта фиксируем состав работ, календарь, точки согласования и комплект передаваемых материалов.</p></li>
         </ol>
       </section>

@@ -3,12 +3,17 @@ import { getCollection } from 'astro:content';
 import Contacts from '../../components/Contacts.astro';
 import Footer from '../../components/Footer.astro';
 import Base from '../../layouts/Base.astro';
+import savedCatalogCopy from '../../data/article-catalog-copy.json';
+
+// Keep the unselected article catalog unchanged during this scoped content update.
+const catalogCopy = savedCatalogCopy as Record<string, { title: string; h1: string; description: string; readingMinutes: number }>;
+const cardCopy = (id: string) => catalogCopy[id.split('/').at(-1) ?? id];
 
 const allArticles = await getCollection('articles');
 const publishedArticles = allArticles.filter((article) => article.data.status === 'published');
 const isEditorialPreview = publishedArticles.length === 0;
 const visibleArticles = (isEditorialPreview ? allArticles : publishedArticles).sort((a, b) =>
-  a.data.title.localeCompare(b.data.title, 'ru'),
+  (cardCopy(a.id)?.title ?? a.data.title).localeCompare(cardCopy(b.id)?.title ?? b.data.title, 'ru'),
 );
 
 const serviceOrder = ['Сайты', 'Айдентика', 'Полиграфия', 'Презентации', 'SMM', 'Сопровождение'];
@@ -39,7 +44,7 @@ const collectionJsonLd = {
       inLanguage: 'ru',
       hasPart: visibleArticles.map((article) => ({
         '@type': 'Article',
-        headline: article.data.h1,
+        headline: cardCopy(article.id)?.h1 ?? article.data.h1,
         url: new URL(`/articles/${getSlug(article.id)}`, Astro.site).href,
       })),
     },
@@ -97,11 +102,11 @@ const collectionJsonLd = {
                   />
                 )}
                 <div class="article-card__content">
-                  <h3>{article.data.h1}</h3>
-                  <p>{article.data.description}</p>
+                  <h3>{cardCopy(article.id)?.h1 ?? article.data.h1}</h3>
+                  <p>{cardCopy(article.id)?.description ?? article.data.description}</p>
                 </div>
                 <div class="article-card__meta">
-                  <span>{getReadingMinutes(article.body)} мин</span>
+                  <span>{cardCopy(article.id)?.readingMinutes ?? getReadingMinutes(article.body)} мин</span>
                   <span aria-hidden="true">↗</span>
                 </div>
               </a>
