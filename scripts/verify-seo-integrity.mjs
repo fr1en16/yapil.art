@@ -29,6 +29,17 @@ const sitemapEntry = relativeFiles.has('sitemap.xml')
   : '';
 if (!sitemapEntry.includes(`${siteOrigin}/sitemap-0.xml`)) errors.push('sitemap.xml does not reference sitemap-0.xml');
 
+const redirects = relativeFiles.has('_redirects')
+  ? await readFile(path.join(buildRoot, '_redirects'), 'utf8')
+  : '';
+if (!/^\/sitemap-index\.xml\s+\/sitemap\.xml\s+301\s*$/m.test(redirects)) {
+  errors.push('/sitemap-index.xml must permanently redirect to /sitemap.xml');
+}
+const generatedWrangler = JSON.parse(await readFile(path.join(projectRoot, 'dist/server/wrangler.json'), 'utf8'));
+if (generatedWrangler.assets?.html_handling !== 'drop-trailing-slash') {
+  errors.push('Cloudflare assets.html_handling must be drop-trailing-slash');
+}
+
 const sitemapXml = (await Promise.all(sitemapFiles.map((file) => readFile(file, 'utf8')))).join('\n');
 const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 const sitemapPaths = new Set(sitemapUrls.map((url) => new URL(url).pathname));
@@ -40,6 +51,7 @@ if (!/^Sitemap:\s+https:\/\/yapil\.art\/sitemap\.xml\s*$/m.test(robots)) {
 const disallowed = [...robots.matchAll(/^Disallow:\s*(\S+)/gm)].map((match) => match[1]);
 
 const forbiddenSitemapPatterns = [
+  /^\/ads(?:\/|$)/,
   /^\/(?:404|500|anal|archive\/shanding|brief|crm|en|kp(?:\/|$)|light|review|shanding-3d|site-map|threads)(?:\/|$)/,
   /^\/services\/[^/]+\/[^/]+\/[^/]+$/,
   /^\/cities\/(?:petropavlovsk|taldykorgan)$/,
@@ -47,6 +59,7 @@ const forbiddenSitemapPatterns = [
 ];
 
 for (const pathname of sitemapPaths) {
+  if (pathname !== '/' && pathname.endsWith('/')) errors.push(`Trailing slash in sitemap: ${pathname}`);
   if (forbiddenSitemapPatterns.some((pattern) => pattern.test(pathname))) {
     errors.push(`Forbidden URL in sitemap: ${pathname}`);
   }
@@ -122,7 +135,7 @@ for (const url of sitemapUrls) {
     seenCanonicals.set(canonical, pathname);
   }
 
-  if (/^\/(?:services|solutions|cities|case|articles)(?:\/|$)/.test(pathname)) {
+  if (/^\/(?:services|solutions|cities|case|articles|websites)(?:\/|$)/.test(pathname)) {
     checkedSchemaPages += 1;
     const types = collectSchemaTypes(html);
     for (const required of ['WebSite', 'BreadcrumbList']) {
@@ -132,6 +145,9 @@ for (const url of sitemapUrls) {
       errors.push(`Missing Organization schema: ${pathname}`);
     }
     if (/^\/services\/[^/]+(?:\/[^/]+)?$/.test(pathname) && !types.has('Service')) {
+      errors.push(`Missing Service schema: ${pathname}`);
+    }
+    if (/^\/websites\/[^/]+(?:\/[^/]+)?$/.test(pathname) && !types.has('Service')) {
       errors.push(`Missing Service schema: ${pathname}`);
     }
     if (/^\/articles\//.test(pathname) && !types.has('Article')) {
@@ -146,6 +162,9 @@ for (const url of sitemapUrls) {
     if (linkedPath.startsWith('/api/')) continue;
 
     const normalizedLinkedPath = linkedPath.length > 1 ? linkedPath.replace(/\/$/, '') : linkedPath;
+    if (linkedPath.length > 1 && linkedPath.endsWith('/')) {
+      errors.push(`Trailing slash in internal link on ${pathname}: ${href}`);
+    }
     const assetPath = normalizedLinkedPath.slice(1);
     if (!htmlByPath.has(normalizedLinkedPath) && !relativeFiles.has(assetPath)) {
       errors.push(`Broken internal link on ${pathname}: ${href}`);
@@ -171,14 +190,15 @@ for (const directory of serviceDirectories) {
   for (const file of entries) {
     const source = await readFile(path.join(directoryPath, file), 'utf8');
     const status = source.match(/^status:\s*["']?([^"'\n]+)["']?\s*$/m)?.[1];
-    if (file.startsWith('trend-')) {
+    if (status === 'draft') {
       generatedDrafts += 1;
-      if (status !== 'draft') errors.push(`Generated article is not draft: ${directory.name}/${file}`);
       const draftPath = `/articles/${file.replace(/\.md$/, '')}`;
       if (htmlByPath.has(draftPath)) errors.push(`Draft article was built as a public route: ${draftPath}`);
       else excludedDraftRoutes += 1;
     } else if (status === 'published') {
       publishedArticles += 1;
+    } else {
+      errors.push(`Unsupported article status: ${directory.name}/${file} (${status ?? 'missing'})`);
     }
   }
 }

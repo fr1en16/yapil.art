@@ -156,7 +156,7 @@ const schemaJsonLd = {
     <link rel="preload" href="https://media.yapil.art/fonts/oranienbaum-cyrillic.076ad3ef04f90d2d.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="https://media.yapil.art/hero-cover/dm-sans.468d56b6b25b05b7.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
     <meta property="og:type" content={type} />
     <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ru_RU'} />
     <meta property="og:site_name" content="Yapil" />
@@ -196,8 +196,11 @@ const schemaJsonLd = {
     {import.meta.env.DEV && <InlineEditor />}
     <script>
       import { getFirstTouch } from '../utils/leadAttribution';
+      import { installContactClickTracking } from '../utils/analytics';
       getFirstTouch();
+      installContactClickTracking();
       document.addEventListener('astro:page-load', getFirstTouch);
+      document.addEventListener('astro:page-load', installContactClickTracking);
       import { installTypographyRules } from '../scripts/typography';
 
       installTypographyRules();

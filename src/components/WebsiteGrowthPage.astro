@@ -8,6 +8,7 @@ import '../styles/website-growth.css';
 import { sectionCopy, topicOffer, topicCase, formatBoundary, cityRequirements } from '../data/websiteContent';
 import pageCopy from '../data/website-zero-impression-copy.json';
 import {websiteAdOffers} from '../data/websiteAdOffers';
+import { websiteSeoOverrides } from '../data/websiteSeoOverrides';
 interface Props { topic: WebsiteTopic; city?: CityData; }
 const {topic,city}=Astro.props;
 type PageCopy = { intro?: string; scopeHeading?: string; acceptance?: string; contactIntro?: string; faq?: { question: string; answer: string }[]; local?: { title: string; context: string; questions: string[]; check: string; scenario: string } };
@@ -16,7 +17,9 @@ const offer=topicOffer(topic);
 const proof=topicCase(topic);
 const local=city?(copy?.local ?? cityRequirements(topic,city)):undefined;
 const heading=websiteHeading(topic,city);
-const description=websiteDescription(topic,city);
+const seoOverride=websiteSeoOverrides[websitePath(topic,city)];
+const title=seoOverride?.title ?? heading;
+const description=seoOverride?.description ?? websiteDescription(topic,city);
 const faq=copy?.faq ?? websiteFaq(topic,city);
 const url=new URL(websitePath(topic,city),Astro.site).href;
 const related=websiteTopics.filter(t=>t.slug!==topic.slug&&t.group===topic.group);
@@ -27,7 +30,7 @@ const jsonLd={'@context':'https://schema.org','@graph':[
   {'@type':'FAQPage',mainEntity:faq.map(f=>({'@type':'Question',name:f.question,acceptedAnswer:{'@type':'Answer',text:f.answer}}))},
 ]};
 ---
-<Base title={heading} {description} {jsonLd} theme="light" bodyClass="wg-page" whatsappMessage={message}>
+<Base {title} {description} {jsonLd} theme="light" bodyClass="wg-page" whatsappMessage={message}>
   <article class="wg">
     <header class="wg-hero">
       <h1>{heading}</h1>

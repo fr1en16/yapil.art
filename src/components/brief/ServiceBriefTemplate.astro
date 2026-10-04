@@ -131,6 +131,7 @@ const groups = [
 
 <script>
   import { submitLead } from '../../lib/crmStore';
+  import { trackAnalyticsEvent } from '../../utils/analytics';
 
   const form = document.querySelector<HTMLFormElement>('[data-brief-form]');
   if (form) {
@@ -199,11 +200,14 @@ const groups = [
         lines.push(`${label}: ${values.join(', ')}`);
       }
       try {
-        await submitLead({
+        const lead = await submitLead({
           name: String(data.get('name') ?? ''), phone: String(data.get('phone') ?? ''), email: String(data.get('email') ?? ''),
           services: [form.dataset.service ?? 'Консультация'], budget: String(data.get('budget') ?? ''),
           message: lines.join('\n\n'), source: 'service_modal', sourceDetails: `Подробный бриф: ${form.dataset.service ?? ''}`,
         });
+        const eventParams = { form_id: 'service_brief_detail', service: form.dataset.service ?? 'Консультация', lead_source: 'brief', lead_id: lead.id };
+        trackAnalyticsEvent('generate_lead', eventParams);
+        trackAnalyticsEvent('brief_submit', eventParams);
         window.location.assign('/thanks');
       } catch {
         if (submit) { submit.disabled = false; submit.textContent = 'Повторить отправку'; }

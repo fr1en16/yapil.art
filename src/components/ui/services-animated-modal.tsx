@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight, ChevronRight, Check, X, RotateCcw, Clock, UserCheck, ShieldCheck } from 'lucide-react';
 import { submitLead } from '../../lib/crmStore';
+import { trackAnalyticsEvent } from '../../utils/analytics';
 import { CoverflowCarousel } from './coverflow-carousel';
 import './homepage-services.css';
 
@@ -741,7 +742,7 @@ function ServiceApplicationModal({
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { name?: string; phone?: string; privacy?: string } = {};
 
@@ -764,35 +765,23 @@ function ServiceApplicationModal({
 
     setIsSubmitting(true);
 
-    submitLead({
-      name: name.trim(),
-      phone: phone.trim(),
-      services: selectedServices.length > 0 ? selectedServices : [service.title],
-      message: message.trim(),
-      source: 'service_modal',
-      sourceDetails: `Modal: ${service.title} (${lang})`,
-    }).catch((err) => {
-      console.error('CRM submit error:', err);
-    });
-
+    const services = selectedServices.length > 0 ? selectedServices : [service.title];
     try {
-      const stored = JSON.parse(localStorage.getItem('yapil_inquiries') || '[]');
-      stored.push({
+      const lead = await submitLead({
         name: name.trim(),
         phone: phone.trim(),
-        services: selectedServices.length > 0 ? selectedServices : [service.title],
+        services,
         message: message.trim(),
-        sourceService: service.title,
-        date: new Date().toISOString(),
+        source: 'service_modal',
+        sourceDetails: `Modal: ${service.title} (${lang})`,
       });
-      localStorage.setItem('yapil_inquiries', JSON.stringify(stored));
-    } catch {
-      // ignore localStorage errors
-    }
-
-    setTimeout(() => {
+      trackAnalyticsEvent('generate_lead', { form_id: 'service_modal', service: services.join('|'), lead_source: 'service_modal', lead_id: lead.id });
       window.location.assign('/thanks');
-    }, 450);
+    } catch (err) {
+      console.error('CRM submit error:', err);
+      setErrors({ phone: isEn ? 'Could not send the request. Please try again.' : 'Не удалось отправить заявку. Попробуйте ещё раз.' });
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {

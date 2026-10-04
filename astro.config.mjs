@@ -26,6 +26,15 @@ const publishedArticles = articleEntries
   });
 const publishedArticleDates = new Map(publishedArticles);
 const publishedArticlePaths = new Set(publishedArticleDates.keys());
+const casesRoot = new URL('./src/content/cases/', import.meta.url);
+const legacyEnglishCaseRedirects = Object.fromEntries(
+  readdirSync(casesRoot)
+    .filter((entry) => entry.endsWith('.md'))
+    .map((entry) => {
+      const slug = entry.replace(/\.md$/, '');
+      return [`/en/case/${slug}`, { destination: `/case/${slug}`, status: 301 }];
+    }),
+);
 
 // https://astro.build/config
 export default defineConfig({
@@ -37,6 +46,9 @@ export default defineConfig({
   },
   adapter: cloudflare(),
   redirects: {
+    '/en': { destination: '/', status: 301 },
+    '/en/privacy': { destination: '/privacy', status: 301 },
+    ...legacyEnglishCaseRedirects,
     '/brief/ready-food': { destination: '/brief/identity', status: 301 },
     '/бриф/айдентика': { destination: '/brief/identity', status: 301 },
     ...buildPermanentRedirects(),

@@ -3,6 +3,9 @@
   "name": "yapil-astro",
   "compatibility_date": "2025-02-01",
   "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "html_handling": "drop-trailing-slash"
+  },
   "d1_databases": [
     {
       "binding": "DB",

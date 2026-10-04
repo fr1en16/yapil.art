@@ -65,6 +65,7 @@ const idBase = `${offer.slug}-${instance}`;
 
 <script>
   import { getFirstTouch } from '../../utils/leadAttribution';
+  import { trackAnalyticsEvent } from '../../utils/analytics';
   const initAdLeadForms = () => {
     document.querySelectorAll<HTMLFormElement>('[data-ad-lead-form]').forEach((form) => {
       if (form.dataset.ready === 'true') return;
@@ -81,10 +82,13 @@ const idBase = `${offer.slug}-${instance}`;
 
       const track = (name: string, params: Record<string, unknown> = {}) => {
         const eventParams = { first_landing_page: getFirstTouch().landingPage, city: form.dataset.city || 'unspecified', offer: form.dataset.offer, platform: platform.value || 'unset', ...params };
-        const analyticsWindow = window as typeof window & {
-          gtag?: (...args: unknown[]) => void;
-        };
-        analyticsWindow.gtag?.('event', name, eventParams);
+        trackAnalyticsEvent(name, {
+          ...eventParams,
+          page_type: 'ad_landing',
+          service: form.dataset.offer || form.dataset.offerName || 'websites',
+          form_id: form.dataset.websiteContext ? 'website_contact_form' : 'ad_lead_form',
+          lead_source: form.dataset.websiteContext ? 'contacts_form' : 'ad_landing_form',
+        });
       };
 
       const formatPhone = () => {

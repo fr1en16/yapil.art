@@ -167,6 +167,7 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
 <script>
   import { submitLead } from '../lib/crmStore';
   import type { LeadSource } from '../lib/crmTypes';
+  import { trackAnalyticsEvent } from '../utils/analytics';
 
   function setupPhoneMask(phoneInput: HTMLInputElement) {
     const formatPhone = () => {
@@ -257,7 +258,7 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
         privacyCheckbox?.classList.remove('has-error');
       }
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearErrors();
 
@@ -297,30 +298,27 @@ const displaySourceDetails = sourceDetails ?? (isEn ? 'Contact form' : 'Форм
         const source = (form.dataset.source || 'contacts_form') as LeadSource;
         const sourceDetails = form.dataset.sourceDetails || (isEn ? 'Contact form' : 'Форма контактов на странице');
 
-        // Submit to central CRM lead receiver
-        submitLead({
-          name,
-          phone,
-          services: services.length > 0 ? services : [isEn ? 'Consultation' : 'Консультация'],
-          message,
-          source,
-          sourceDetails,
-        }).catch((err) => {
-          console.error('CRM submit error:', err);
-        });
-
-        // Legacy storage fallback
         try {
-          const stored = JSON.parse(localStorage.getItem('yapil_inquiries') || '[]');
-          stored.push({ name, phone, services, message, date: new Date().toISOString() });
-          localStorage.setItem('yapil_inquiries', JSON.stringify(stored));
-        } catch {
-          // ignore localStorage errors
-        }
-
-        setTimeout(() => {
+          const selectedServices = services.length > 0 ? services : [isEn ? 'Consultation' : 'Консультация'];
+          const lead = await submitLead({ name, phone, services: selectedServices, message, source, sourceDetails });
+          trackAnalyticsEvent('generate_lead', {
+            form_id: 'contact_form',
+            service: selectedServices.join('|'),
+            lead_source: source,
+            lead_id: lead.id,
+          });
           window.location.assign('/thanks');
-        }, 400);
+        } catch (err) {
+          console.error('CRM submit error:', err);
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+            const btnText = submitBtn.querySelector('.btn-text');
+            if (btnText) btnText.textContent = isEn ? 'Try again' : 'Повторить отправку';
+          }
+          if (phoneError) phoneError.textContent = isEn
+            ? 'Could not send the request. Please try again.'
+            : 'Не удалось отправить заявку. Попробуйте ещё раз.';
+        }
       });
 
       if (resetBtn && successState) {

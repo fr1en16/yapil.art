@@ -444,14 +444,19 @@ export async function submitLead(payload: CreateLeadPayload): Promise<Lead> {
     }
   }
 
-  // Dispatch to server-side API (D1 persistence + Telegram + Webhooks)
+  // Dispatch to server-side API (D1 persistence + Telegram + Webhooks).
+  // Resolve only after the server confirms at least one delivery channel.
   if (typeof window !== 'undefined') {
-    fetch('/api/lead', {
+    const response = await fetch('/api/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newLead),
       keepalive: true,
-    }).catch((err) => console.warn('[submitLead] /api/lead request failed:', err));
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'lead_delivery_failed');
+    }
   }
 
   // Send external notifications from client settings if configured

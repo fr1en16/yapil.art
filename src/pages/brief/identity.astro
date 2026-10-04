@@ -59,6 +59,8 @@ const questions: { name: string; label: string; hint: string; service?: string }
 </Base>
 
 <script>
+  import { trackAnalyticsEvent } from '../../utils/analytics';
+
   function initIdentityBrief() {
     const form = document.querySelector<HTMLFormElement>('[data-identity-brief]');
     if (!form || form.dataset.initialized) return;
@@ -107,6 +109,9 @@ const questions: { name: string; label: string; hint: string; service?: string }
         });
         const result = await response.json();
         if (!response.ok || !result.success) throw new Error('Delivery failed');
+        const eventParams = { form_id: 'identity_brief', service: services.join('|'), lead_source: 'brief' };
+        trackAnalyticsEvent('generate_lead', eventParams);
+        trackAnalyticsEvent('brief_submit', eventParams);
         status.textContent = 'Бриф отправлен. Спасибо!';
         button.querySelector('.button-text')!.textContent = 'Отправлено';
       } catch {

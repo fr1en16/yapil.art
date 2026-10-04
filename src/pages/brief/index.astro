@@ -76,6 +76,7 @@ const contactQuestions: BriefQuestion[] = [
 
 <script>
   import { submitLead } from '../../lib/crmStore';
+  import { trackAnalyticsEvent } from '../../utils/analytics';
 
   const form = document.querySelector<HTMLFormElement>('[data-brief-form]');
   if (form) {
@@ -162,10 +163,13 @@ const contactQuestions: BriefQuestion[] = [
       }
       const service = activePanel?.dataset.serviceName ?? 'Консультация';
       try {
-        await submitLead({
+        const lead = await submitLead({
           name: String(data.get('name') ?? ''), phone: String(data.get('phone') ?? ''), email: String(data.get('email') ?? ''),
           services: [service], budget: String(data.get('budget') ?? ''), message: lines.join('\n\n'), source: 'service_modal', sourceDetails: `Подробный бриф: ${service}`,
         });
+        const eventParams = { form_id: 'service_brief', service, lead_source: 'brief', lead_id: lead.id };
+        trackAnalyticsEvent('generate_lead', eventParams);
+        trackAnalyticsEvent('brief_submit', eventParams);
         window.location.assign('/thanks');
       } catch {
         if (submit) { submit.disabled = false; submit.textContent = 'Повторить отправку'; }

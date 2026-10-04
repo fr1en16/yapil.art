@@ -1749,7 +1749,7 @@ export function CrmApp() {
                 }).then(() => {
                   setLeads(getLeads());
                   setIsNewLeadModalOpen(false);
-                });
+                }).catch((error) => console.error('Manual lead creation failed:', error));
               }}
               className="space-y-4 text-xs"
             >

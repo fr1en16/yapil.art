@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { submitLead } from '../../lib/crmStore';
+import { trackAnalyticsEvent } from '../../utils/analytics';
 
 type BranchKey = 'A' | 'B' | 'C' | 'D';
 
@@ -223,7 +224,7 @@ export default function AiCalculator() {
     setErrors({});
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const digits = phone.replace(/\D/g, '');
     if (!phone.trim() || digits.length < 11) {
@@ -237,19 +238,24 @@ export default function AiCalculator() {
     const materialsLabel = MATERIALS_OPTIONS.find((m) => m.id === materials)?.label || '';
     const summary = `Проект: ${result.projectName}\nСрок: ${result.days[0]}–${result.days[1]} дн.\nБюджет: ${result.budget[0].toLocaleString('ru-RU')}–${result.budget[1].toLocaleString('ru-RU')} ₸\nИсходники: ${materialsLabel}`;
 
-    submitLead({
-      name: 'Заявка из калькулятора',
-      phone: phone.trim(),
-      services: [MAIN_TASKS.find((t) => t.key === branch)?.branchTitle || 'Сайт'],
-      message: summary,
-      budget: `${result.budget[0].toLocaleString('ru-RU')} – ${result.budget[1].toLocaleString('ru-RU')} ₸`,
-      source: 'calculator',
-      sourceDetails: `Калькулятор: ${result.projectName}`,
-    }).catch((err) => console.error('CRM submit error:', err));
-
-    setTimeout(() => {
+    const service = MAIN_TASKS.find((t) => t.key === branch)?.branchTitle || 'Сайт';
+    try {
+      const lead = await submitLead({
+        name: 'Заявка из калькулятора',
+        phone: phone.trim(),
+        services: [service],
+        message: summary,
+        budget: `${result.budget[0].toLocaleString('ru-RU')} – ${result.budget[1].toLocaleString('ru-RU')} ₸`,
+        source: 'calculator',
+        sourceDetails: `Калькулятор: ${result.projectName}`,
+      });
+      trackAnalyticsEvent('generate_lead', { form_id: 'website_calculator', service, lead_source: 'calculator', lead_id: lead.id });
       window.location.assign('/thanks');
-    }, 400);
+    } catch (err) {
+      console.error('CRM submit error:', err);
+      setErrors({ phone: 'Не удалось отправить заявку. Попробуйте ещё раз.' });
+      setIsSubmitting(false);
+    }
   };
 
   const visualStep = Math.min(step, TOTAL_STEPS);
