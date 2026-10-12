@@ -82,90 +82,102 @@ const {
 </section>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-hero-ripple]').forEach((button) => {
-    if (button.dataset.rippleReady === 'true') return;
-    button.dataset.rippleReady = 'true';
-
-    const playRipple = (clientX?: number, clientY?: number) => {
-      const bounds = button.getBoundingClientRect();
-      const x = clientX === undefined ? bounds.width / 2 : clientX - bounds.left;
-      const y = clientY === undefined ? bounds.height / 2 : clientY - bounds.top;
-      button.style.setProperty('--ripple-x', `${x}px`);
-      button.style.setProperty('--ripple-y', `${y}px`);
-      button.classList.remove('is-rippling');
-      void button.offsetWidth;
-      button.classList.add('is-rippling');
-    };
-
-    button.addEventListener('pointerdown', (event) => playRipple(event.clientX, event.clientY));
-    button.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') playRipple();
-    });
-    button.addEventListener('animationend', () => button.classList.remove('is-rippling'));
-  });
-
-  const hero = document.querySelector<HTMLElement>('[data-hero-cover]');
-  if (hero && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
+  let cleanupHero = () => {};
+  const initHero = () => {
+    cleanupHero();
+    const controller = new AbortController();
     let frame = 0;
-    let previousTime = 0;
-
-    const render = (time: number) => {
-      const delta = previousTime ? Math.min((time - previousTime) / 16.67, 2) : 1;
-      previousTime = time;
-      const inertia = 1 - Math.pow(0.93, delta);
-
-      currentX += (targetX - currentX) * inertia;
-      currentY += (targetY - currentY) * inertia;
-
-      hero.style.setProperty('--hero-rotate-x', `${currentY * -10}deg`);
-      hero.style.setProperty('--hero-rotate-y', `${currentX * 12}deg`);
-
-      const isMoving =
-        Math.abs(targetX - currentX) > 0.001 ||
-        Math.abs(targetY - currentY) > 0.001;
-
-      if (isMoving) {
-        frame = requestAnimationFrame(render);
-      } else {
-        currentX = targetX;
-        currentY = targetY;
-        previousTime = 0;
-        frame = 0;
-      }
+    cleanupHero = () => {
+      controller.abort();
+      cancelAnimationFrame(frame);
     };
+    document.querySelectorAll<HTMLElement>('[data-hero-ripple]').forEach((button) => {
+      if (button.dataset.rippleReady === 'true') return;
+      button.dataset.rippleReady = 'true';
 
-    const requestRender = () => {
-      if (!frame) frame = requestAnimationFrame(render);
-    };
+      const playRipple = (clientX?: number, clientY?: number) => {
+        const bounds = button.getBoundingClientRect();
+        const x = clientX === undefined ? bounds.width / 2 : clientX - bounds.left;
+        const y = clientY === undefined ? bounds.height / 2 : clientY - bounds.top;
+        button.style.setProperty('--ripple-x', `${x}px`);
+        button.style.setProperty('--ripple-y', `${y}px`);
+        button.classList.remove('is-rippling');
+        void button.offsetWidth;
+        button.classList.add('is-rippling');
+      };
 
-    window.addEventListener('pointermove', (event) => {
-      const bounds = hero.getBoundingClientRect();
-      const isOverCover =
-        event.clientX >= bounds.left &&
-        event.clientX <= bounds.right &&
-        event.clientY >= bounds.top &&
-        event.clientY <= bounds.bottom;
+      button.addEventListener('pointerdown', (event) => playRipple(event.clientX, event.clientY));
+      button.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') playRipple();
+      });
+      button.addEventListener('animationend', () => button.classList.remove('is-rippling'));
+    });
 
-      if (isOverCover) {
-        targetX = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width) * 2 - 1));
-        targetY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height) * 2 - 1));
-      } else {
+    const hero = document.querySelector<HTMLElement>('[data-hero-cover]');
+    if (hero && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let targetX = 0;
+      let targetY = 0;
+      let currentX = 0;
+      let currentY = 0;
+      let previousTime = 0;
+
+      const render = (time: number) => {
+        const delta = previousTime ? Math.min((time - previousTime) / 16.67, 2) : 1;
+        previousTime = time;
+        const inertia = 1 - Math.pow(0.93, delta);
+
+        currentX += (targetX - currentX) * inertia;
+        currentY += (targetY - currentY) * inertia;
+
+        hero.style.setProperty('--hero-rotate-x', `${currentY * -10}deg`);
+        hero.style.setProperty('--hero-rotate-y', `${currentX * 12}deg`);
+
+        const isMoving =
+          Math.abs(targetX - currentX) > 0.001 ||
+          Math.abs(targetY - currentY) > 0.001;
+
+        if (isMoving) {
+          frame = requestAnimationFrame(render);
+        } else {
+          currentX = targetX;
+          currentY = targetY;
+          previousTime = 0;
+          frame = 0;
+        }
+      };
+
+      const requestRender = () => {
+        if (!frame) frame = requestAnimationFrame(render);
+      };
+
+      window.addEventListener('pointermove', (event) => {
+        const bounds = hero.getBoundingClientRect();
+        const isOverCover =
+          event.clientX >= bounds.left &&
+          event.clientX <= bounds.right &&
+          event.clientY >= bounds.top &&
+          event.clientY <= bounds.bottom;
+
+        if (isOverCover) {
+          targetX = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width) * 2 - 1));
+          targetY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height) * 2 - 1));
+        } else {
+          targetX = 0;
+          targetY = 0;
+        }
+        requestRender();
+      }, { signal: controller.signal });
+
+      window.addEventListener('blur', () => {
         targetX = 0;
         targetY = 0;
-      }
-      requestRender();
-    });
-
-    window.addEventListener('blur', () => {
-      targetX = 0;
-      targetY = 0;
-      requestRender();
-    });
-  }
+        requestRender();
+      }, { signal: controller.signal });
+    }
+  };
+  initHero();
+  document.addEventListener('astro:page-load', initHero);
+  document.addEventListener('astro:before-swap', () => cleanupHero());
 </script>
 
 <style>

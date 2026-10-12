@@ -142,7 +142,7 @@ const jsonLd = {
   navOverlay
   hideNav
   noindex
-  bodyClass="website-service-page ad-website-page website-service-page--websites ad-website-page--reference"
+  bodyClass="website-service-page offer-website-page website-service-page--websites offer-website-page--reference"
   {whatsappMessage}
 >
   <article
@@ -169,21 +169,21 @@ const jsonLd = {
     />
     <AboutCompact theme="light" websites cards={presentation.cards} />
 
-    <div class="ad-paper">
-      <section class="ad-section container" id="cases" aria-labelledby="cases-title">
-        <header class="ad-heading">
+    <div class="offer-paper">
+      <section class="offer-section container" id="cases" aria-labelledby="cases-title">
+        <header class="offer-heading">
           <h2 id="cases-title">Задача, работа и результат</h2>
         </header>
 
-        <div class="ad-cases">
+        <div class="offer-cases">
           {offer.cases.map((item, index) => (
-            <article class="ad-case">
-              <div class="ad-case__media">
+            <article class="offer-case">
+              <div class="offer-case__media">
                 <img src={item.image} alt={`Проект ${item.title}`} width="1200" height="720" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
               </div>
-              <div class="ad-case__content">
-                <div class="ad-case__title-row"><h3>{item.title}</h3></div>
-                <p class="ad-case__type">{item.type}</p>
+              <div class="offer-case__content">
+                <div class="offer-case__title-row"><h3>{item.title}</h3></div>
+                <p class="offer-case__type">{item.type}</p>
                 <dl>
                   <div><dt>Задача</dt><dd>{item.task}</dd></div>
                   <div><dt>Что сделали</dt><dd>{item.work}</dd></div>
@@ -194,139 +194,139 @@ const jsonLd = {
           ))}
         </div>
 
-        <div class="ad-inline-cta"><a class="ad-text-link" href="#estimate" data-estimate-cta data-cta-id="cases">Получить расчёт стоимости <span aria-hidden="true">→</span></a></div>
+        <div class="offer-inline-cta"><a class="offer-text-link" href="#estimate" data-estimate-cta data-cta-id="cases">Получить расчёт стоимости <span aria-hidden="true">→</span></a></div>
       </section>
 
-      <section class="ad-section container" id="price" aria-labelledby="price-title">
-        <header class="ad-heading">
+      <section class="offer-section container" id="price" aria-labelledby="price-title">
+        <header class="offer-heading">
           <h2 id="price-title">Стоимость, комплектация и платформа</h2>
         </header>
 
-        <div class="ad-platforms" role="radiogroup" aria-labelledby="price-title">
-          <article class="ad-platform-card ad-platform-card--tilda">
-            <label class="ad-platform-card__choice">
+        <div class="offer-platforms" role="radiogroup" aria-labelledby="price-title">
+          <article class="offer-platform-card offer-platform-card--tilda">
+            <label class="offer-platform-card__choice">
               <input type="radio" name="page-platform" value="tilda" data-platform-choice data-price={offer.tildaPrice} />
-              <span class="ad-platform-card__control" aria-hidden="true"></span>
-              <span class="ad-platform-card__title">Tilda</span>
+              <span class="offer-platform-card__control" aria-hidden="true"></span>
+              <span class="offer-platform-card__title">Tilda</span>
               <strong>от {formatKzt(offer.tildaPrice)}</strong>
-              <span class="ad-platform-card__summary">Для быстрого запуска и минимального бюджета.</span>
-              <span class="ad-platform-card__label">Входит</span>
-              <ul class="ad-platform-card__included">{offer.included.map((item) => <li>{item}</li>)}</ul>
-              <span class="ad-platform-card__label">Плюсы</span>
-              <span class="ad-platform-card__text">Быстрее, базовая цена ниже, простой магазин можно вести через штатный каталог.</span>
-              <span class="ad-platform-card__label">Минусы</span>
-              <span class="ad-platform-card__text">Сложными Zero Block-страницами неудобно управлять; есть ограничения и зависимость от тарифа.</span>
+              <span class="offer-platform-card__summary">Для быстрого запуска и минимального бюджета.</span>
+              <span class="offer-platform-card__label">Входит</span>
+              <ul class="offer-platform-card__included">{offer.included.map((item) => <li>{item}</li>)}</ul>
+              <span class="offer-platform-card__label">Плюсы</span>
+              <span class="offer-platform-card__text">Быстрее, базовая цена ниже, простой магазин можно вести через штатный каталог.</span>
+              <span class="offer-platform-card__label">Минусы</span>
+              <span class="offer-platform-card__text">Сложными Zero Block-страницами неудобно управлять; есть ограничения и зависимость от тарифа.</span>
             </label>
-            <div class="ad-platform-card__actions">
-              <button class="ad-button ad-button--primary" type="button" data-platform-estimate="tilda">Рассчитать стоимость <span aria-hidden="true">→</span></button>
-              <a class="ad-platform-whatsapp" href={tildaWhatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-platform-context="tilda" data-cta-id="platform-tilda" aria-label={`Написать в WhatsApp: ${offer.name} на Tilda`}>
+            <div class="offer-platform-card__actions">
+              <button class="offer-button offer-button--primary" type="button" data-platform-estimate="tilda">Рассчитать стоимость <span aria-hidden="true">→</span></button>
+              <a class="offer-platform-whatsapp" href={tildaWhatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-platform-context="tilda" data-cta-id="platform-tilda" aria-label={`Написать в WhatsApp: ${offer.name} на Tilda`}>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d={whatsappIconPath} /></svg>
               </a>
             </div>
           </article>
 
-          <article class="ad-platform-card ad-platform-card--code">
-            <label class="ad-platform-card__choice">
+          <article class="offer-platform-card offer-platform-card--code">
+            <label class="offer-platform-card__choice">
               <input type="radio" name="page-platform" value="code" data-platform-choice data-price={offer.codePrice} />
-              <span class="ad-platform-card__control" aria-hidden="true"></span>
-              <span class="ad-platform-card__title">Чистый код + CMS</span>
+              <span class="offer-platform-card__control" aria-hidden="true"></span>
+              <span class="offer-platform-card__title">Чистый код + CMS</span>
               <strong>от {formatKzt(offer.codePrice)}</strong>
-              <span class="ad-platform-card__summary">Для удобного управления и развития проекта.</span>
-              <span class="ad-platform-card__label">Входит</span>
-              <ul class="ad-platform-card__included">{offer.included.map((item) => <li>{item}</li>)}</ul>
-              <span class="ad-platform-card__label">Плюсы</span>
-              <span class="ad-platform-card__text">Понятные поля CMS, больше свободы в дизайне, SEO, скорости и интеграциях.</span>
-              <span class="ad-platform-card__label">Минусы</span>
-              <span class="ad-platform-card__text">Для изменения функционала нужен разработчик.</span>
+              <span class="offer-platform-card__summary">Для удобного управления и развития проекта.</span>
+              <span class="offer-platform-card__label">Входит</span>
+              <ul class="offer-platform-card__included">{offer.included.map((item) => <li>{item}</li>)}</ul>
+              <span class="offer-platform-card__label">Плюсы</span>
+              <span class="offer-platform-card__text">Понятные поля CMS, больше свободы в дизайне, SEO, скорости и интеграциях.</span>
+              <span class="offer-platform-card__label">Минусы</span>
+              <span class="offer-platform-card__text">Для изменения функционала нужен разработчик.</span>
             </label>
-            <div class="ad-platform-card__actions">
-              <button class="ad-button ad-button--primary" type="button" data-platform-estimate="code">Рассчитать стоимость <span aria-hidden="true">→</span></button>
-              <a class="ad-platform-whatsapp" href={codeWhatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-platform-context="code" data-cta-id="platform-code" aria-label={`Написать в WhatsApp: ${offer.name} на чистом коде`}>
+            <div class="offer-platform-card__actions">
+              <button class="offer-button offer-button--primary" type="button" data-platform-estimate="code">Рассчитать стоимость <span aria-hidden="true">→</span></button>
+              <a class="offer-platform-whatsapp" href={codeWhatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-platform-context="code" data-cta-id="platform-code" aria-label={`Написать в WhatsApp: ${offer.name} на чистом коде`}>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d={whatsappIconPath} /></svg>
               </a>
             </div>
           </article>
 
-          <article class="ad-platform-card ad-platform-card--compact">
-            <label class="ad-platform-card__choice">
+          <article class="offer-platform-card offer-platform-card--compact">
+            <label class="offer-platform-card__choice">
               <input type="radio" name="page-platform" value="recommendation" data-platform-choice />
-              <span class="ad-platform-card__control" aria-hidden="true"></span>
-              <span class="ad-platform-card__title">Нужна рекомендация</span>
-              <span class="ad-platform-card__text">Уточним задачу и предложим вариант без переплаты за ненужные возможности.</span>
+              <span class="offer-platform-card__control" aria-hidden="true"></span>
+              <span class="offer-platform-card__title">Нужна рекомендация</span>
+              <span class="offer-platform-card__text">Уточним задачу и предложим вариант без переплаты за ненужные возможности.</span>
             </label>
-            <div class="ad-platform-card__actions">
-              <button class="ad-button ad-button--primary" type="button" data-platform-estimate="recommendation">Получить рекомендацию <span aria-hidden="true">→</span></button>
-              <a class="ad-platform-whatsapp" href={recommendationWhatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-platform-context="recommendation" data-cta-id="platform-recommendation" aria-label="Написать в WhatsApp для выбора платформы">
+            <div class="offer-platform-card__actions">
+              <button class="offer-button offer-button--primary" type="button" data-platform-estimate="recommendation">Получить рекомендацию <span aria-hidden="true">→</span></button>
+              <a class="offer-platform-whatsapp" href={recommendationWhatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-platform-context="recommendation" data-cta-id="platform-recommendation" aria-label="Написать в WhatsApp для выбора платформы">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d={whatsappIconPath} /></svg>
               </a>
             </div>
           </article>
         </div>
 
-        <div class="ad-extras">
+        <div class="offer-extras">
           <h3>Оплачивается отдельно</h3>
           <ul>{offer.extras.map((item) => <li>{item}</li>)}</ul>
         </div>
       </section>
 
-      <section class="ad-section container" id="conditions" aria-labelledby="conditions-title">
-        <header class="ad-heading">
+      <section class="offer-section container" id="conditions" aria-labelledby="conditions-title">
+        <header class="offer-heading">
           <h2 id="conditions-title">Условия работы</h2>
         </header>
-        <div class="ad-condition-grid">
+        <div class="offer-condition-grid">
           {conditions.map((item) => (
             <article><h3>{item.title}</h3><p>{item.text}</p></article>
           ))}
         </div>
       </section>
 
-      <section class="ad-section container" id="process" aria-labelledby="process-title">
-        <header class="ad-heading">
+      <section class="offer-section container" id="process" aria-labelledby="process-title">
+        <header class="offer-heading">
           <h2 id="process-title">Как проходит работа</h2>
         </header>
-        <ol class="ad-process">
+        <ol class="offer-process">
           {process.map((item) => <li><h3>{item.title}</h3><p>{item.text}</p></li>)}
         </ol>
       </section>
     </div>
 
-    <section class="ad-reviews-shell">
-      <div class="container ad-reviews-heading"><h2>Отзывы о разработке сайтов</h2></div>
+    <section class="offer-reviews-shell">
+      <div class="container offer-reviews-heading"><h2>Отзывы о разработке сайтов</h2></div>
       <ReviewsSlider theme="light" />
     </section>
 
-    <div class="ad-paper">
-      <section class="ad-section container" id="faq" aria-labelledby="faq-title">
-        <header class="ad-heading"><h2 id="faq-title">Ответы на вопросы</h2></header>
-        <div class="ad-faq">
+    <div class="offer-paper">
+      <section class="offer-section container" id="faq" aria-labelledby="faq-title">
+        <header class="offer-heading"><h2 id="faq-title">Ответы на вопросы</h2></header>
+        <div class="offer-faq">
           {offer.faq.map((item, index) => (
-            <details open={index === 0}><summary><span>{item.question}</span><span aria-hidden="true">+</span></summary><div class="ad-faq__answer"><div><p>{item.answer}</p></div></div></details>
+            <details open={index === 0}><summary><span>{item.question}</span><span aria-hidden="true">+</span></summary><div class="offer-faq__answer"><div><p>{item.answer}</p></div></div></details>
           ))}
         </div>
       </section>
 
-      <section class="ad-section ad-estimate container" id="estimate" aria-labelledby="estimate-title">
-        <header class="ad-heading"><h2 id="estimate-title">Получите расчёт стоимости</h2></header>
-        <div class="ad-estimate__grid">
-          <div class="ad-estimate__copy">
+      <section class="offer-section offer-estimate container" id="estimate" aria-labelledby="estimate-title">
+        <header class="offer-heading"><h2 id="estimate-title">Получите расчёт стоимости</h2></header>
+        <div class="offer-estimate__grid">
+          <div class="offer-estimate__copy">
             <p>Свяжемся в течение 10 минут, уточним задачу и подготовим стоимость и сроки.</p>
             <dl>
               <div><dt>Услуга</dt><dd>{offer.name}</dd></div>
               <div><dt>Стоимость</dt><dd data-current-price>Tilda — от {formatKzt(offer.tildaPrice)} · Код + CMS — от {formatKzt(offer.codePrice)}</dd></div>
               <div><dt>Срок</dt><dd>{offer.term}</dd></div>
             </dl>
-            <a class="ad-text-link" href={whatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-contextual-whatsapp data-cta-id="form">Написать в WhatsApp <span aria-hidden="true">↗</span></a>
+            <a class="offer-text-link" href={whatsappHref} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-contextual-whatsapp data-cta-id="form">Написать в WhatsApp <span aria-hidden="true">↗</span></a>
           </div>
           <AdLeadForm {offer} instance="estimate" />
         </div>
       </section>
     </div>
 
-    <dialog class="ad-lead-dialog" data-lead-dialog aria-labelledby="ad-lead-dialog-title">
-      <button class="ad-lead-dialog__close" type="button" data-close-lead-dialog aria-label="Закрыть форму">×</button>
-      <div class="container ad-lead-dialog__inner">
-        <div class="ad-lead-dialog__copy">
-          <h2 id="ad-lead-dialog-title">{presentation.dialogTitle}</h2>
+    <dialog class="offer-lead-dialog" data-lead-dialog aria-labelledby="offer-lead-dialog-title">
+      <button class="offer-lead-dialog__close" type="button" data-close-lead-dialog aria-label="Закрыть форму">×</button>
+      <div class="container offer-lead-dialog__inner">
+        <div class="offer-lead-dialog__copy">
+          <h2 id="offer-lead-dialog-title">{presentation.dialogTitle}</h2>
           <p>Оставьте номер телефона. Свяжемся в течение 10 минут, уточним задачу и подготовим стоимость и сроки.</p>
           <dl>
             <div><dt>Стоимость</dt><dd data-current-price>Tilda — от {formatKzt(offer.tildaPrice)} · Код + CMS — от {formatKzt(offer.codePrice)}</dd></div>
@@ -382,7 +382,7 @@ const jsonLd = {
     const openLeadDialog = (source: string) => {
       if (!leadDialog) return;
       if (!leadDialog.open) leadDialog.showModal();
-      document.body.classList.add('ad-dialog-open');
+      document.body.classList.add('offer-dialog-open');
       track('lead_dialog_open', { source, platform: formPlatform?.value || 'unset' });
       window.setTimeout(() => leadDialog.querySelector<HTMLElement>('input[name="phone"]')?.focus(), 50);
     };
@@ -390,7 +390,7 @@ const jsonLd = {
     const closeLeadDialog = () => {
       if (!leadDialog?.open) return;
       leadDialog.close();
-      document.body.classList.remove('ad-dialog-open');
+      document.body.classList.remove('offer-dialog-open');
     };
 
     document.querySelectorAll<HTMLInputElement>('[data-platform-choice]').forEach((choice) => {
@@ -460,7 +460,7 @@ const jsonLd = {
     leadDialog?.addEventListener('click', (event) => {
       if (event.target === leadDialog) closeLeadDialog();
     });
-    leadDialog?.addEventListener('close', () => document.body.classList.remove('ad-dialog-open'));
+    leadDialog?.addEventListener('close', () => document.body.classList.remove('offer-dialog-open'));
 
     document.querySelectorAll<HTMLAnchorElement>('[data-whatsapp-link]').forEach((link) => {
       link.addEventListener('click', () => track('whatsapp_click', {
