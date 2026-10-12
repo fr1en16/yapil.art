@@ -1,4 +1,5 @@
 ---
+import 'lenis/dist/lenis.css';
 ---
 
 <script>
@@ -12,7 +13,13 @@
     );
   }
 
+  let cleanupLenis = () => {};
+  let cleanupParallax = () => {};
+  let lenisGeneration = 0;
+
   async function initLenis() {
+    const generation = ++lenisGeneration;
+    cleanupLenis();
     if (isMobileOrReducedMotion()) {
       if ((window as any).__lenisInstance) {
         (window as any).__lenisInstance.destroy();
@@ -22,10 +29,9 @@
       return;
     }
 
-    const [{ default: Lenis }] = await Promise.all([
-      import('lenis'),
-      import('lenis/dist/lenis.css'),
-    ]);
+    const { default: Lenis } = await import('lenis');
+    if (generation !== lenisGeneration) return;
+    const controller = new AbortController();
 
     // Prevent duplicate instances on page reloads/transitions
     if ((window as any).__lenisInstance) {
@@ -86,7 +92,7 @@
           lenis.scrollTo(el as HTMLElement, { offset: -20, duration: 1.2 });
         }
       }
-    });
+    }, { signal: controller.signal });
 
     // Pause momentum when lightbox or full-screen dialogs open
     const observer = new MutationObserver(() => {
@@ -103,9 +109,18 @@
 
     observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
+    cleanupLenis = () => {
+      cancelAnimationFrame(rafId);
+      controller.abort();
+      observer.disconnect();
+      lenis.destroy();
+      (window as any).__lenisInstance = null;
+      (window as any).lenis = null;
+    };
   }
 
   function initParallax() {
+    cleanupParallax();
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
     }
@@ -155,6 +170,13 @@
 
     items.forEach((it) => observer.observe(it.container));
 
+    const controller = new AbortController();
+    let frame = 0;
+    cleanupParallax = () => {
+      controller.abort();
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
     let isRunning = false;
     const lerpFactor = 0.085; // Organic physical inertia smoothing
 
@@ -186,7 +208,7 @@
       }
 
       if (isMoving) {
-        requestAnimationFrame(update);
+        frame = requestAnimationFrame(update);
       } else {
         isRunning = false;
       }
@@ -195,45 +217,46 @@
     function requestTick() {
       if (!isRunning) {
         isRunning = true;
-        requestAnimationFrame(update);
+        frame = requestAnimationFrame(update);
       }
     }
 
-    window.addEventListener('scroll', requestTick, { passive: true });
-    window.addEventListener('resize', requestTick, { passive: true });
-
-    // Connect with Lenis instance
-    const checkLenis = () => {
-      const lenis = (window as any).lenis;
-      if (lenis?.on) {
-        lenis.on('scroll', requestTick);
-      } else {
-        setTimeout(checkLenis, 250);
-      }
-    };
-    checkLenis();
+    window.addEventListener('scroll', requestTick, { passive: true, signal: controller.signal });
+    window.addEventListener('resize', requestTick, { passive: true, signal: controller.signal });
 
     requestTick();
   }
 
+  let effectsGeneration = 0;
+  const stopEffects = () => {
+    effectsGeneration++;
+    lenisGeneration++;
+    cleanupLenis();
+    cleanupParallax();
+  };
   const startEffects = () => {
+    stopEffects();
+    const generation = effectsGeneration;
     initParallax();
+    const startLenis = () => {
+      if (generation === effectsGeneration) void initLenis();
+    };
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => initLenis(), { timeout: 1000 });
+      requestIdleCallback(startLenis, { timeout: 1000 });
     } else {
-      setTimeout(initLenis, 100);
+      setTimeout(startLenis, 100);
     }
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startEffects);
+    document.addEventListener('DOMContentLoaded', startEffects, { once: true });
   } else {
     startEffects();
   }
 
-  window.addEventListener('resize', () => {
-    initLenis();
-  }, { passive: true });
-
+  ['(prefers-reduced-motion: reduce)', '(max-width: 768px)', '(pointer: coarse)'].forEach((query) => {
+    window.matchMedia(query).addEventListener('change', startEffects);
+  });
+  document.addEventListener('astro:before-swap', stopEffects);
   document.addEventListener('astro:page-load', startEffects);
 </script>

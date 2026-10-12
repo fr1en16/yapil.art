@@ -48,3 +48,9 @@ gallery/
 inspiring-home/
 Пример SEO оптимизации/
 .env*
+!.env.example
+
+# Cloudflare local state and credentials
+.wrangler/
+.dev.vars
+.dev.vars.*

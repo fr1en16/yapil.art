@@ -129,6 +129,7 @@
           const darkBrandColors = new Float32Array(['#FF6044', '#FD4B32', '#A32A17', '#310B06'].flatMap(hexToRgb));
           const lightServiceColors = new Float32Array(['#FF6044', '#FD4B32', '#FF9A87', '#FFE3DD'].flatMap(hexToRgb));
           const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          let sectionsVisible = true;
           let shaderFrame = 0;
           let lastFrameTime = 0;
           let cachedWidth = 1;
@@ -146,10 +147,11 @@
           };
 
           const draw = (time: number) => {
+            shaderFrame = 0;
             const minFrameDelta = isMobileDevice ? 40 : 16; // ~25fps on mobile, 60fps on desktop
 
-            if (time - lastFrameTime < minFrameDelta) {
-              if (!document.hidden && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
+            if (time !== 0 && time - lastFrameTime < minFrameDelta) {
+              if (!document.hidden && sectionsVisible && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
               return;
             }
             lastFrameTime = time;
@@ -163,11 +165,11 @@
             gl.uniform3fv(colorsLocation, isServicePage ? lightServiceColors : darkBrandColors);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-            if (!document.hidden && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
+            if (!document.hidden && sectionsVisible && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
           };
 
           const startShader = () => {
-            if (!shaderFrame && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
+            if (!shaderFrame && !document.hidden && sectionsVisible && !reduceMotion) shaderFrame = requestAnimationFrame(draw);
           };
 
           const stopShader = () => {
@@ -176,6 +178,7 @@
           };
 
           window.addEventListener('resize', () => {
+            stopShader();
             resize();
             draw(0);
           }, { passive: true });
@@ -185,27 +188,27 @@
             else startShader();
           });
 
-          // Pause shader when not in view of transparent background sections to save GPU/CPU
-          const visibleSections = document.querySelectorAll('.hero-cover, #reviews, #contacts');
-          if (visibleSections.length > 0 && 'IntersectionObserver' in window) {
-            const activeMap = new Map();
-            const bgObserver = new IntersectionObserver(
-              (entries) => {
-                entries.forEach((entry) => {
-                  activeMap.set(entry.target, entry.isIntersecting);
-                });
-                const anyVisible = Array.from(activeMap.values()).some(Boolean);
-                if (anyVisible) {
-                  startShader();
-                } else {
-                  stopShader();
-                }
-              },
-              { threshold: 0.01 }
-            );
-            visibleSections.forEach((el) => bgObserver.observe(el));
-          }
+          // The canvas persists across navigation; observed sections do not.
+          const activeMap = new Map<Element, boolean>();
+          const bgObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => activeMap.set(entry.target, entry.isIntersecting));
+            sectionsVisible = Array.from(activeMap.values()).some(Boolean);
+            if (sectionsVisible) startShader();
+            else stopShader();
+          }, { threshold: 0.01 });
+          const observeSections = () => {
+            bgObserver.disconnect();
+            activeMap.clear();
+            const sections = document.querySelectorAll('.hero-cover, #reviews, #contacts');
+            sectionsVisible = sections.length === 0;
+            stopShader();
+            sections.forEach((el) => bgObserver.observe(el));
+            startShader();
+          };
+          document.addEventListener('astro:page-load', observeSections);
+          observeSections();
 
+          stopShader();
           resize();
           draw(0);
 
@@ -315,8 +318,9 @@
           };
 
           const draw = (time: number) => {
-            if (time - lastFrameTime < 24) {
-              if (!reduceMotion) frame = requestAnimationFrame(draw);
+            frame = 0;
+            if (time !== 0 && time - lastFrameTime < 24) {
+              if (!document.hidden && !reduceMotion) frame = requestAnimationFrame(draw);
               return;
             }
             lastFrameTime = time;
@@ -327,12 +331,12 @@
             gl.uniform3f(backgroundLocation, ...neutralBackground);
             gl.uniform3fv(colorsLocation, neutralColors);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            if (!reduceMotion) frame = requestAnimationFrame(draw);
+            if (!document.hidden && !reduceMotion) frame = requestAnimationFrame(draw);
           };
 
           syncServiceShader = () => {
             updateClip();
-            if (document.body.classList.contains('website-service-page')) {
+            if (!document.hidden && document.body.classList.contains('website-service-page')) {
               if (!frame && !reduceMotion) frame = requestAnimationFrame(draw);
               if (reduceMotion) draw(0);
             } else if (frame) {
@@ -341,6 +345,7 @@
             }
           };
 
+          document.addEventListener('visibilitychange', () => syncServiceShader());
           window.addEventListener('scroll', updateClip, { passive: true });
           window.addEventListener('resize', resize, { passive: true });
           resize();
