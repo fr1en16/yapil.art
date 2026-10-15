@@ -1,3 +1,5 @@
+import { initScrollMotion } from "./scroll-motion";
+
 export function initSite() {
   const menu = document.querySelector<HTMLDialogElement>("#site-menu");
   const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
@@ -20,24 +22,7 @@ export function initSite() {
       .querySelectorAll("a")
       .forEach((link) => link.addEventListener("click", closeMenu));
   }
-  const header = document.querySelector("#site-header");
-  const updateHeader = () =>
-    header?.classList.toggle("is-scrolled", scrollY > 40);
-  updateHeader();
-  window.addEventListener("scroll", updateHeader, { passive: true });
-  const observer = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      }),
-    { threshold: 0.15 },
-  );
-  document
-    .querySelectorAll("[data-reveal]")
-    .forEach((element) => observer.observe(element));
+  initScrollMotion(document.querySelector("#site-header"));
 
   const tabs = [
     ...document.querySelectorAll<HTMLButtonElement>("[data-format]"),

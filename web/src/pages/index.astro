@@ -1,9 +1,11 @@
 ---
 import WebLayout from '../layouts/WebLayout.astro';
 import HeroBackground from '../components/HeroBackground.astro';
+import CapabilityVisual from '../components/CapabilityVisual.astro';
+import '../styles/home.css';
 import { projects, formats, steps, faq } from '../data/site';
 ---
-<WebLayout title="Yapil — дизайн и разработка сайтов для бизнеса" description="Лендинги, сайты компаний, интернет-магазины и веб-сервисы. Проектируем структуру, создаём дизайн и разрабатываем сайты под задачи бизнеса.">
+<WebLayout home title="Yapil — дизайн и разработка сайтов для бизнеса" description="Лендинги, сайты компаний, интернет-магазины и веб-сервисы. Проектируем структуру, создаём дизайн и разрабатываем сайты под задачи бизнеса.">
   <section class="hero" aria-labelledby="hero-title">
     <HeroBackground />
     <div class="hero-shade" aria-hidden="true"></div>
@@ -15,31 +17,76 @@ import { projects, formats, steps, faq } from '../data/site';
     <a class="hero-scroll" href="#intro" aria-label="Далее о подходе"><span>Дальше — по делу</span><span aria-hidden="true">↓</span></a>
   </section>
 
-  <section class="intro section" id="intro">
-    <div class="offset-content"><h2 class="statement" data-reveal>Сайт — место, где<br>о вашем бизнесе<br>становится <span>понятно.</span></h2><p class="intro-text">Что вы делаете. Почему вам можно доверять. Как стать вашим клиентом. Мы собираем ответы в сайт, который удобно смотреть и легко использовать.</p></div>
-    <div class="capabilities">
+  <section class="intro section" id="intro" aria-labelledby="intro-title">
+    <div class="offset-content">
+      <h2 id="intro-title" class="statement" data-scrub aria-label="Сайт — место, где о вашем бизнесе становится понятно.">
+        {['Сайт', '—', 'место,', 'где', 'о', 'вашем', 'бизнесе', 'становится', 'понятно.'].map(word => <Fragment><span data-word aria-hidden="true">{word}</span>{' '}</Fragment>)}
+      </h2>
+      <p class="intro-text" data-reveal>Что вы делаете. Почему вам можно доверять. Как стать вашим клиентом. Мы собираем ответы в сайт, который удобно смотреть и легко использовать.</p>
+    </div>
+    <div class="capabilities" data-stagger>
       {[
         ['Структура', 'Находим главное в продукте. Продумываем страницы, содержание и путь к обращению.'],
         ['Дизайн', 'Создаём визуальный язык под характер бизнеса. Прорабатываем каждый экран и состояние.'],
         ['Разработка', 'Превращаем дизайн в быстрый адаптивный сайт. Подключаем формы, CMS и нужные сервисы.'],
         ['Развитие', 'Готовим сайт к поиску и аналитике. После запуска помогаем с обновлениями и новыми задачами.'],
-      ].map(([title, text], i) => <article class="capability" data-reveal><span class="index">0{i+1}</span><h3>{title}</h3><p>{text}</p></article>)}
+      ].map(([title, text], i) => <article class="capability" data-reveal>
+        <CapabilityVisual kind={i} />
+        <div class="capability-copy"><h3><span class="index">0{i+1}</span>{title}</h3><p>{text}</p></div>
+      </article>)}
     </div>
   </section>
 
-  <section class="works section" id="works" aria-labelledby="works-title">
-    <div class="section-heading"><h2 id="works-title" data-reveal>Сделано<br>для бизнеса.</h2><p>Разные задачи, рынки и масштабы.<br>В каждом проекте — свой ответ.</p></div>
-    <div class="project-grid">{projects.map(project => <a class="project-card" href={`/projects/${project.slug}`}><div class="project-image"><img src={project.image} alt={project.imageAlt} loading="lazy" decoding="async" width="900" height="675" /><span class="project-open" aria-hidden="true">↗</span></div><h3>{project.name}</h3><div class="project-meta"><span>{project.format}</span><span>{project.year}</span></div><p>{project.summary}</p></a>)}</div>
+  <section class="works section light-section" id="works" aria-labelledby="works-title" data-theme="light">
+    <div class="section-heading" data-stagger>
+      <h2 id="works-title" data-reveal>Сделано<br>для бизнеса.</h2>
+      <p data-reveal>Разные задачи, рынки и масштабы.<br>В каждом проекте — свой ответ.</p>
+    </div>
+    <div class="project-grid">
+      {projects.map(project => <a class="project-card" href={`/projects/${project.slug}`} data-reveal="row">
+        <div class="project-image"><img src={project.image} alt={project.imageAlt} loading="lazy" decoding="async" width="900" height="675" /></div>
+        <div class="project-meta"><span>{project.year}</span><span>{project.format}</span></div>
+        <div class="project-copy"><h3>{project.name}</h3><p>{project.summary}</p></div>
+        <span class="project-open" aria-hidden="true">↗</span>
+      </a>)}
+    </div>
   </section>
 
   <section class="solutions section" id="solutions" aria-labelledby="solutions-title">
-    <div class="section-heading"><h2 id="solutions-title" data-reveal>Под задачу.<br>Под ваш масштаб.</h2><p>Начинаем с того, что нужно бизнесу.<br>Формат и технологии выбираем следом.</p></div>
-    <div class="format-layout" data-formats><div class="format-tabs" role="tablist" aria-label="Формат сайта" aria-orientation="vertical">{formats.map((format,i) => <button id={`tab-${format.id}`} type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`panel-${format.id}`} tabindex={i === 0 ? 0 : -1} data-format={format.id}><span class="index">0{i+1}</span><span>{format.name}</span><span aria-hidden="true">↗</span></button>)}</div><div class="format-panels">{formats.map((format,i) => <div id={`panel-${format.id}`} role="tabpanel" aria-labelledby={`tab-${format.id}`} hidden={i !== 0}><h3>{format.title}</h3><p>{format.text}</p><ul>{format.items.map(item=><li>{item}</li>)}</ul><a class="text-link" href={`/contact?format=${format.id}`}>Обсудить {format.name.toLowerCase()} <span aria-hidden="true">↗</span></a></div>)}</div></div>
+    <div class="section-heading" data-stagger>
+      <h2 id="solutions-title" data-reveal>Под задачу.<br>Под ваш масштаб.</h2>
+      <p data-reveal>Начинаем с того, что нужно бизнесу.<br>Формат и технологии выбираем следом.</p>
+    </div>
+    <div class="format-layout" data-formats data-reveal>
+      <div class="format-tabs" role="tablist" aria-label="Формат сайта" aria-orientation="vertical">
+        {formats.map((format,i) => <button id={`tab-${format.id}`} type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`panel-${format.id}`} tabindex={i === 0 ? 0 : -1} data-format={format.id}><span class="index">0{i+1}</span><span>{format.name}</span><span aria-hidden="true">↗</span></button>)}
+      </div>
+      <div class="format-panels">
+        {formats.map((format,i) => <div id={`panel-${format.id}`} role="tabpanel" aria-labelledby={`tab-${format.id}`} hidden={i !== 0}>
+          <div class:list={['format-preview', `format-preview-${format.id}`]} aria-hidden="true"><div class="preview-browser"><div class="preview-toolbar"><i></i><i></i><i></i><span></span></div><div class="preview-body"><div class="preview-nav"><i></i><span></span></div><div class="preview-heading"><i></i><i></i></div><div class="preview-blocks"><i></i><i></i><i></i></div><div class="preview-lines"><i></i><i></i></div></div></div></div>
+          <div class="format-copy"><h3>{format.title}</h3><p>{format.text}</p><ul>{format.items.map(item=><li>{item}</li>)}</ul><a class="text-link" href={`/contact?format=${format.id}`}>Обсудить {format.name.toLowerCase()} <span aria-hidden="true">↗</span></a></div>
+        </div>)}
+      </div>
+    </div>
   </section>
 
-  <section class="process section" id="process" aria-labelledby="process-title"><div class="section-heading"><h2 id="process-title" data-reveal>Понятный процесс.<br>На каждом этапе.</h2><p>Сначала договариваемся о результате.<br>Потом последовательно к нему идём.</p></div><div class="process-grid">{steps.map((step,i)=><article data-reveal><span class="index">0{i+1}</span><h3>{step.name}</h3><p>{step.text}</p></article>)}</div><div class="process-note"><span class="status-dot" aria-hidden="true"></span><p>Структура, дизайн и разработка — в одной команде. Вы видите промежуточные результаты и понимаете следующий шаг.</p></div></section>
+  <section class="process section light-section" id="process" aria-labelledby="process-title" data-theme="light">
+    <div class="process-visual" data-reveal="image">
+      <div class="process-image" data-parallax>
+        <img src={projects[0].gallery[1].src} alt="Интерфейс Compass Directors, разработанный Yapil" width="1200" height="1800" loading="lazy" decoding="async" />
+      </div>
+    </div>
+    <div class="process-content">
+      <div class="section-heading" data-stagger><h2 id="process-title" data-reveal>Понятный процесс.<br>На каждом этапе.</h2><p data-reveal>Сначала договариваемся о результате.<br>Потом последовательно к нему идём.</p></div>
+      <div class="process-grid" data-stagger>{steps.map((step,i)=><article data-reveal><h3><span class="index">0{i+1}</span>{step.name}</h3><p>{step.text}</p></article>)}</div>
+      <div class="process-note" data-reveal><span class="status-dot" aria-hidden="true"></span><p>Структура, дизайн и разработка — в одной команде. Вы видите промежуточные результаты и понимаете следующий шаг.</p></div>
+    </div>
+  </section>
 
-  <section class="faq section" id="faq" aria-labelledby="faq-title"><div class="faq-heading"><h2 id="faq-title" data-reveal>До первого<br>разговора.</h2><p>О цене, сроках и том,<br>как всё устроено.</p><a class="text-link" href="/contact">Задать свой вопрос <span aria-hidden="true">↗</span></a></div><div class="faq-list">{faq.map((item,i)=><details open={i===0}><summary><h3>{item.question}</h3><span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div></section>
+  <section class="faq section light-section" id="faq" aria-labelledby="faq-title" data-theme="light">
+    <div class="faq-heading"><h2 id="faq-title" data-reveal>До первого<br>разговора.</h2><div data-reveal><p>О цене, сроках и том,<br>как всё устроено.</p><a class="text-link" href="/contact">Задать свой вопрос <span aria-hidden="true">↗</span></a></div></div>
+    <div class="faq-list" data-stagger>{faq.map((item,i)=><details open={i===0} data-reveal><summary><h3>{item.question}</h3><span aria-hidden="true">+</span></summary><div class="faq-answer"><p>{item.answer}</p></div></details>)}</div>
+  </section>
 
-  <section class="contact-cta section"><div class="cta-grid"><h2 data-reveal>Что должен<br>делать <em>ваш сайт?</em></h2><div><p>Расскажите о задаче. Вместе определим формат, объём работ и первый шаг.</p><a class="button" href="/contact"><span class="button-symbol" aria-hidden="true">↗</span><span>Начать разговор</span></a></div></div></section>
+  <section class="contact-cta section" aria-labelledby="contact-title"><div class="cta-grid"><h2 id="contact-title" data-reveal>Что должен<br>делать ваш сайт?</h2><div data-reveal><p>Расскажите о задаче. Вместе определим формат, объём работ и первый шаг.</p><a class="button" href="/contact"><span class="button-symbol" aria-hidden="true">↗</span><span>Начать разговор</span></a></div></div></section>
 </WebLayout>
