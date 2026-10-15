@@ -1,0 +1,23 @@
+---
+import WebLayout from '../layouts/WebLayout.astro';
+import { formats, whatsappUrl } from '../data/site';
+---
+<WebLayout title="Обсудить сайт — Yapil" description="Расскажите о бизнесе и задаче сайта. Обсудим формат, объём работ, сроки и первый шаг.">
+  <div class="inner-page">
+    <div class="inner-hero"><a class="breadcrumb" href="/">← На главную</a><h1>Начнём<br>с вашей задачи.</h1></div>
+    <div class="contact-layout">
+      <div class="contact-info"><p>Можно коротко: что за бизнес, какой сайт нужен и когда планируете запуск. Остальное выясним в разговоре.</p><div class="contact-links"><a href="mailto:hi@yapil.art">hi@yapil.art</a><a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Написать в WhatsApp ↗</a><a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer">Написать в Telegram ↗</a></div></div>
+      <form class="lead-form" data-lead-form>
+        <label>Как к вам обращаться<input name="name" type="text" placeholder="Имя" autocomplete="name" minlength="2" maxlength="100" required /></label>
+        <div class="form-row"><label>Телефон или WhatsApp<input name="phone" type="tel" placeholder="+7 ___ ___ __ __" autocomplete="tel" minlength="10" maxlength="30" required /></label><label>Почта, если удобнее<input name="email" type="email" placeholder="you@company.kz" autocomplete="email" maxlength="200" /></label></div>
+        <label>Какой сайт нужен<select name="format"><option value="unsure">Обсудим вместе</option>{formats.map(format=><option value={format.id}>{format.name}</option>)}</select></label>
+        <label>Пара слов о задаче<textarea name="message" placeholder="О бизнесе, будущем сайте и планах" rows="3" maxlength="4000"></textarea></label>
+        <div class="honeypot" aria-hidden="true"><label>Company<input type="text" name="company" tabindex="-1" autocomplete="off" /></label></div>
+        <label class="consent"><input type="checkbox" name="consent" required /><span>Согласен на обработку данных для ответа на обращение по <a href="https://yapil.art/privacy" target="_blank" rel="noopener noreferrer">политике конфиденциальности</a>.</span></label>
+        <button class="button" type="submit"><span class="button-symbol" aria-hidden="true">↗</span><span>Отправить задачу</span></button>
+        <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+        <noscript><p>Для отправки формы нужен JavaScript. Вы также можете написать на <a href="mailto:hi@yapil.art">hi@yapil.art</a> или в <a href={whatsappUrl}>WhatsApp</a>.</p></noscript>
+      </form>
+    </div>
+  </div>
+</WebLayout>

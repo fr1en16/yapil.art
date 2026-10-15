@@ -1,0 +1,40 @@
+# web.yapil.art
+
+Отдельный сайт веб-направления Yapil, визуальный ориентир — https://armory.framer.ai/.
+Собирается независимо от основного сайта. Общие шрифты, логотип и уже опубликованные
+медиа используются из существующего проекта и `https://media.yapil.art`.
+Клавиатура на обложке рисуется WebGL, с CSS-версией при недоступном контексте.
+
+```sh
+npm run dev:web -- --background
+npx astro dev status
+npx astro dev logs
+npx astro dev stop
+npm run build:web
+npx astro check --config astro.web.config.mjs --tsconfig tsconfig.web.json
+node --experimental-strip-types --test web/worker.test.mjs
+```
+
+Просмотр: http://127.0.0.1:4404. В dev-режиме форма проверяет поля, но не отправляет
+тестовые обращения в production. Для проверки доставки используйте тесты с подменённым fetch.
+
+Публикация владельцем при настроенном Cloudflare-доступе:
+
+```sh
+npm run build:web
+npm run deploy:web
+```
+
+`wrangler.web.jsonc` создаёт отдельный Worker `yapil-web` с custom domain `web.yapil.art`.
+Основной Worker `yapil-astro` не заменяется. Нужны права на Workers и custom domain в зоне
+`yapil.art`. Ключи задаются через защищённое окружение или существующую авторизацию Wrangler.
+
+Статика находится в `dist-web`. Worker обслуживает только `/api/*` и передаёт валидные
+обращения из формы в существующий `/api/lead` через service binding `LEADS` на Worker
+`yapil-astro`, сохраняя источник
+`web.yapil.art`. Приватные ключи Telegram и CRM здесь не дублируются. Успех показывается
+только после подтверждения доставки основным сервисом.
+
+Workflow `.github/workflows/web.yml` проверяет изменения в Pull Request и публикует веб-направление
+после слияния в `master`. Использует существующий environment `production` и его
+`CLOUDFLARE_API_TOKEN`; у ключа должны быть права на новый Worker и домен. Основной workflow не изменён.

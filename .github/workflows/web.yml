@@ -1,0 +1,55 @@
+name: Web direction
+
+on:
+  pull_request:
+    branches: [master]
+    paths: ['web/**', 'astro.web.config.mjs', 'wrangler.web.jsonc', 'tsconfig.web.json', 'package.json', 'package-lock.json', '.github/workflows/web.yml']
+  push:
+    branches: [master]
+    paths: ['web/**', 'astro.web.config.mjs', 'wrangler.web.jsonc', 'tsconfig.web.json', 'package.json', 'package-lock.json', '.github/workflows/web.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build web.yapil.art
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx astro check --config astro.web.config.mjs --tsconfig tsconfig.web.json
+      - run: node --experimental-strip-types --test web/worker.test.mjs
+      - run: npm run build:web
+
+  deploy:
+    name: Publish web.yapil.art
+    needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    concurrency:
+      group: yapil-web-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build:web
+      - run: npm run deploy:web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
