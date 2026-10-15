@@ -1,27 +1,8 @@
 import { initScrollMotion } from "./scroll-motion";
+import { initMenu } from "./menu";
 
 export function initSite() {
-  const menu = document.querySelector<HTMLDialogElement>("#site-menu");
-  const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
-  const close = document.querySelector<HTMLButtonElement>(".menu-close");
-  if (menu && toggle) {
-    toggle.addEventListener("click", () => {
-      menu.showModal();
-      toggle.setAttribute("aria-expanded", "true");
-    });
-    const closeMenu = () => {
-      menu.close();
-      toggle.setAttribute("aria-expanded", "false");
-    };
-    close?.addEventListener("click", closeMenu);
-    menu.addEventListener("close", () => {
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.focus();
-    });
-    menu
-      .querySelectorAll("a")
-      .forEach((link) => link.addEventListener("click", closeMenu));
-  }
+  initMenu();
   initScrollMotion(document.querySelector("#site-header"));
 
   const tabs = [

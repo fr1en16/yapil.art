@@ -1,6 +1,36 @@
 .home-page {
   --section-space: clamp(120px, 13vw, 220px);
 }
+
+/* Entrance uses individual translate so service and button hovers stay free. */
+@media (prefers-reduced-motion: no-preference) {
+  .home-page .hero h1 {
+    --enter-distance: 90px;
+    animation: enter-up 1.25s var(--motion-ease) 120ms backwards;
+  }
+  .home-page .hero-copy p {
+    --enter-distance: 45px;
+    animation: enter-up 1.1s var(--motion-ease) 260ms backwards;
+  }
+  .home-page .hero-copy > .button {
+    --enter-distance: 30px;
+    animation: enter-up 1.1s var(--motion-ease) 400ms backwards;
+  }
+  .home-page .hero-services a {
+    animation: enter-right 1.15s var(--motion-ease) 100ms backwards;
+  }
+  .home-page .hero-services a:nth-child(2) { animation-delay: 200ms; }
+  .home-page .hero-services a:nth-child(3) { animation-delay: 300ms; }
+  .home-page .hero-services a:nth-child(4) { animation-delay: 400ms; }
+  .home-page .hero-clients {
+    --enter-distance: 24px;
+    animation: enter-up 1.1s var(--motion-ease) 550ms backwards;
+  }
+  .home-page .hero-scroll {
+    --enter-distance: 16px;
+    animation: enter-up 1s var(--motion-ease) 700ms backwards;
+  }
+}
 /* Services share the header row; its empty area must let their links receive input. */
 .header:not(.is-scrolled) {
   pointer-events: none;

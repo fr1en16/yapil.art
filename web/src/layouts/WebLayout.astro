@@ -39,13 +39,13 @@ const canonical = new URL(Astro.url.pathname, 'https://web.yapil.art');
   <body>
     <a class="skip-link" href="#main">К содержанию</a>
     <div class="page-grid" aria-hidden="true"><i></i><i></i><i></i></div>
-    <header class="header" id="site-header">
+    <header class:list={['header', { 'header-enter': home }]} id="site-header">
       <a class="brand" href="/" aria-label="Yapil — главная"><Logo width={132} height={32} /><span>web</span></a>
       <a class="header-contact" href="/contact">Обсудить сайт <span aria-hidden="true">↗</span></a>
       <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-controls="site-menu" aria-expanded="false"><span></span><span></span></button>
     </header>
     <dialog class="site-menu" id="site-menu" aria-label="Навигация">
-      <div class="menu-top"><a class="brand" href="/" aria-label="Yapil — главная"><Logo width={132} height={32} /><span>web</span></a><button class="menu-close" type="button" aria-label="Закрыть меню">Закрыть <span aria-hidden="true">×</span></button></div>
+      <div class="menu-top"><a class="brand" href="/" aria-label="Yapil — главная"><Logo width={132} height={32} /><span>web</span></a><button class="menu-close" type="button" aria-label="Закрыть меню" autofocus>Закрыть <span aria-hidden="true">×</span></button></div>
       <div class="menu-body"><nav aria-label="Основные разделы"><a href="/#works">Работы</a><a href="/#solutions">Форматы</a><a href="/#process">Процесс</a><a href="/#faq">Вопросы</a><a href="/contact">Обсудить проект</a></nav><div class="menu-aside"><p>Самостоятельное веб-направление<br>дизайн-студии Yapil.</p><a href="mailto:hi@yapil.art">hi@yapil.art</a><a href="https://yapil.art">Все направления студии ↗</a></div></div>
     </dialog>
     <main id="main" class:list={{ 'home-page': home }}><slot /></main>
