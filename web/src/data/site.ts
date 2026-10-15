@@ -20,10 +20,14 @@ export const projects = [
       {
         src: "https://media.yapil.art/case/compass/1.c45b5c33c8eecb94.webp",
         alt: "Главная страница Compass: услуги, опыт и проекты компании",
+        width: 2400,
+        height: 5330,
       },
       {
         src: "https://media.yapil.art/case/compass/3.b847aa58ae609556.webp",
         alt: "Лендинг направления Compass Directors",
+        width: 2400,
+        height: 2530,
       },
     ],
   },
@@ -44,10 +48,14 @@ export const projects = [
       {
         src: "https://media.yapil.art/case/bebble/1.aa69701a4ba41f92.webp",
         alt: "Главная страница Bebble и сценарии ухода",
+        width: 2880,
+        height: 2288,
       },
       {
         src: "https://media.yapil.art/case/bebble/4.f5275476acf72fb8.webp",
         alt: "Мобильный интерфейс Bebble и карточка товара",
+        width: 2880,
+        height: 2946,
       },
     ],
   },
