@@ -1,0 +1,12 @@
+---
+interface Props { kind: number }
+const { kind } = Astro.props;
+---
+<div class:list={['capability-visual', `capability-visual-${kind}`]} aria-hidden="true">
+  <div class="visual-plane">
+    {kind === 0 && <div class="structure-drawing"><i></i><span></span><div><i></i><i></i><i></i></div></div>}
+    {kind === 1 && <div class="design-drawing"><i></i><span></span><div><i></i><i></i></div></div>}
+    {kind === 2 && <div class="code-drawing"><span>&lt;</span><i></i><span>/&gt;</span></div>}
+    {kind === 3 && <div class="growth-drawing"><i></i><i></i><i></i><i></i><i></i></div>}
+  </div>
+</div>

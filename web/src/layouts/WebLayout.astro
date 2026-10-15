@@ -1,0 +1,62 @@
+---
+import Logo from '../../../src/components/Logo.astro';
+import '../styles/web.css';
+import { whatsappUrl } from '../data/site';
+interface Props { title: string; description: string; image?: string; noindex?: boolean; home?: boolean; }
+const { title, description, image = 'https://media.yapil.art/social-cover.9512ed9be1051235.webp', noindex = false, home = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, 'https://web.yapil.art');
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" type="image/webp" href="https://media.yapil.art/favicon-32x32.542324de3abfb085.webp" />
+    <link rel="preconnect" href="https://media.yapil.art" crossorigin />
+    <link rel="preload" href="https://media.yapil.art/fonts/inter-tight-cyrillic-wght-normal.3937173d62f23817.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Yapil — сайты" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <title>{title}</title>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context':'https://schema.org', '@graph':[
+      { '@type':'WebSite', '@id':'https://web.yapil.art/#website', name:'Yapil — сайты', url:'https://web.yapil.art', inLanguage:'ru' },
+      { '@type':'ProfessionalService', '@id':'https://yapil.art/#organization', name:'Yapil', url:'https://yapil.art', email:'hi@yapil.art', telephone:'+77067436197', serviceType:'Дизайн и разработка сайтов' },
+    ] })} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">К содержанию</a>
+    <div class="page-grid" aria-hidden="true"><i></i><i></i><i></i></div>
+    <header class:list={['header', { 'header-enter': home }]} id="site-header">
+      <a class="brand" href="/" aria-label="Yapil — главная"><Logo width={132} height={32} /><span>web</span></a>
+      <a class="header-contact" href="/contact">Обсудить сайт <span aria-hidden="true">↗</span></a>
+      <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-controls="site-menu" aria-expanded="false"><span></span><span></span></button>
+    </header>
+    <dialog class="site-menu" id="site-menu" aria-label="Навигация">
+      <div class="menu-top"><a class="brand" href="/" aria-label="Yapil — главная"><Logo width={132} height={32} /><span>web</span></a><button class="menu-close" type="button" aria-label="Закрыть меню" autofocus>Закрыть <span aria-hidden="true">×</span></button></div>
+      <div class="menu-body"><nav aria-label="Основные разделы"><a href="/#works">Работы</a><a href="/#solutions">Форматы</a><a href="/#process">Процесс</a><a href="/#faq">Вопросы</a><a href="/contact">Обсудить проект</a></nav><div class="menu-aside"><p>Самостоятельное веб-направление<br>дизайн-студии Yapil.</p><a href="mailto:hi@yapil.art">hi@yapil.art</a><a href="https://yapil.art">Все направления студии ↗</a></div></div>
+    </dialog>
+    <main id="main" class:list={{ 'home-page': home }}><slot /></main>
+    <footer class="footer">
+      <div class="footer-top" data-reveal><a href="mailto:hi@yapil.art">hi@yapil.art</a><div><a href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a><a href="https://t.me/yakov_pil" target="_blank" rel="noopener noreferrer">Telegram ↗</a><a href="https://yapil.art">Студия Yapil ↗</a></div></div>
+      <a class="footer-mark" href="/" aria-label="Yapil — на главную" data-reveal="image"><Logo width="100%" height="auto" /></a>
+      <div class="footer-bottom"><span>© {new Date().getFullYear()} Yapil</span><span>Дизайн. Разработка. Развитие.</span><a href="https://yapil.art/privacy">Конфиденциальность</a></div>
+    </footer>
+    <script>
+      import { initSite } from '../scripts/site';
+      initSite();
+    </script>
+  </body>
+</html>

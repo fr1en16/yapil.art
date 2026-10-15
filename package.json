@@ -7,8 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "dev:web": "astro dev --config astro.web.config.mjs",
     "build": "astro build",
+    "build:web": "astro build --config astro.web.config.mjs",
     "deploy": "wrangler deploy dist/server/entry.mjs --config dist/server/wrangler.json",
+    "deploy:web": "wrangler deploy --config wrangler.web.jsonc",
     "seo:generate": "node scripts/generate-seo-library.mjs",
     "seo:generate-how-to": "node scripts/generate-how-to-pages.mjs",
     "seo:verify": "node scripts/verify-seo-library.mjs",
