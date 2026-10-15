@@ -1,6 +1,137 @@
 .home-page {
   --section-space: clamp(120px, 13vw, 220px);
 }
+/* Services share the header row; its empty area must let their links receive input. */
+.header:not(.is-scrolled) {
+  pointer-events: none;
+}
+.header > * {
+  pointer-events: auto;
+}
+.home-page .hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 60px;
+  padding: 44px 0 60px;
+  min-height: 100svh;
+  height: auto;
+  max-height: none;
+}
+.hero-top {
+  order: 1;
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  padding-left: 50%;
+}
+.home-page .hero-services {
+  position: static;
+  width: calc(100% - var(--gutter));
+  gap: 20px;
+}
+.home-page .hero-services a {
+  width: max-content;
+  max-width: 100%;
+  font-size: clamp(24px, 2.65vw, 34px);
+  line-height: 1.2;
+}
+.home-page .hero-clients {
+  position: static;
+  width: min(400px, calc(100% - var(--gutter)));
+  margin-top: 48px;
+  justify-content: flex-start;
+  gap: 32px;
+  font-size: 20px;
+}
+.home-page .hero-clients .client-bebble {
+  font-size: 26px;
+}
+.home-page .hero-copy {
+  order: 2;
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  width: min(600px, calc(50% - var(--gutter) - 5px));
+  max-width: none;
+  margin-left: var(--gutter);
+}
+.home-page .hero h1 {
+  font-size: clamp(44px, 6.2vw, 84px);
+  line-height: 1.02;
+}
+.home-page .hero-copy p {
+  margin: 20px 0 36px;
+  max-width: 560px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.home-page .hero-copy .button {
+  min-height: 40px;
+  min-width: 200px;
+  line-height: 1.5;
+}
+.home-page .hero-copy .button-symbol {
+  width: 32px;
+  height: 32px;
+  font-size: 22px;
+}
+.home-page .hero-copy .button > span:last-child {
+  padding: 8px 24px 8px 56px;
+}
+.home-page .hero-copy .button:is(:hover, :focus-visible) > span:last-child {
+  transform: translateX(-32px);
+}
+.home-page .hero-copy .button:is(:hover, :focus-visible) .button-symbol {
+  left: calc(100% - 35px);
+}
+@media (max-width: 700px) {
+  .home-page .hero {
+    padding: 140px var(--gutter) 60px;
+    gap: 110px;
+  }
+  .home-page .hero-copy {
+    order: 1;
+    width: 100%;
+    margin: 0;
+  }
+  .home-page .hero h1 {
+    font-size: clamp(38px, 11.2vw, 54px);
+    line-height: 1.04;
+  }
+  .home-page .hero-copy p {
+    max-width: 370px;
+    margin: 20px 0 30px;
+    font-size: 15px;
+  }
+  .home-page .hero-copy p br {
+    display: none;
+  }
+  .home-page .hero-top {
+    order: 2;
+    padding: 0;
+  }
+  .home-page .hero-services {
+    width: 100%;
+    gap: 16px;
+  }
+  .home-page .hero-services a {
+    font-size: 22px;
+  }
+  .home-page .hero-clients {
+    width: 100%;
+    margin-top: 44px;
+    gap: clamp(16px, 4vw, 28px);
+    font-size: 16px;
+  }
+  .home-page .hero-clients .client-bebble {
+    font-size: 22px;
+  }
+  .home-page .hero-scroll {
+    display: none;
+  }
+}
 .home-page .section {
   padding: var(--section-space) 0;
 }
