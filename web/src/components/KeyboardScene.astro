@@ -1,9 +1,0 @@
-<div class="keyboard-scene" aria-hidden="true">
-  <canvas data-keyboard></canvas>
-  <div class="keyboard-fallback"><div>{Array.from({length:64}, (_, i) => <span class:list={[{ 'accent-key': i === 5 }]}></span>)}</div></div>
-</div>
-<script>
-  import { initKeyboard } from '../scripts/keyboard';
-  const canvas = document.querySelector<HTMLCanvasElement>('[data-keyboard]');
-  if (canvas) initKeyboard(canvas);
-</script>

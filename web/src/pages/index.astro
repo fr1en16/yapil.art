@@ -1,11 +1,11 @@
 ---
 import WebLayout from '../layouts/WebLayout.astro';
-import KeyboardScene from '../components/KeyboardScene.astro';
+import HeroBackground from '../components/HeroBackground.astro';
 import { projects, formats, steps, faq } from '../data/site';
 ---
 <WebLayout title="Yapil — дизайн и разработка сайтов для бизнеса" description="Лендинги, сайты компаний, интернет-магазины и веб-сервисы. Проектируем структуру, создаём дизайн и разрабатываем сайты под задачи бизнеса.">
   <section class="hero" aria-labelledby="hero-title">
-    <KeyboardScene />
+    <HeroBackground />
     <div class="hero-shade" aria-hidden="true"></div>
     <nav class="hero-services" aria-label="Форматы сайтов">
       <a href="#solutions" data-format-link="landing">Лендинги</a><a href="#solutions" data-format-link="company">Сайты компаний</a><a href="#solutions" data-format-link="store">Магазины и каталоги</a><a href="#solutions" data-format-link="service">Веб-сервисы</a>
