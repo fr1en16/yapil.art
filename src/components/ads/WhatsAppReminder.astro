@@ -4,11 +4,22 @@ interface Props { href: string; tildaPrice: number; codePrice: number }
 const { href, tildaPrice, codePrice } = Astro.props;
 ---
 
-<dialog class="whatsapp-reminder" data-whatsapp-reminder aria-labelledby="whatsapp-reminder-title" aria-describedby="whatsapp-reminder-description">
+<dialog class="whatsapp-reminder" data-whatsapp-reminder aria-labelledby="whatsapp-reminder-title" aria-describedby="whatsapp-reminder-description whatsapp-reminder-terms">
   <button class="whatsapp-reminder__close" type="button" aria-label="Закрыть окно" autofocus>×</button>
   <h2 id="whatsapp-reminder-title">Ваш сайт со скидкой 20%</h2>
-  <p id="whatsapp-reminder-description">Напишите нам в WhatsApp, чтобы получить скидку 20% на разработку корпоративного сайта. Tilda — от {formatKzt(tildaPrice * 0.8)} вместо {formatKzt(tildaPrice)}, код + CMS — от {formatKzt(codePrice * 0.8)} вместо {formatKzt(codePrice)}. Состав работ и итоговую стоимость согласуем до старта.</p>
+  <p id="whatsapp-reminder-description">Напишите в WhatsApp, чтобы обсудить проект и получить скидку.</p>
+  <dl class="whatsapp-reminder__prices">
+    <div>
+      <dt>Tilda</dt>
+      <dd><strong>от {formatKzt(tildaPrice * 0.8)}</strong><span>вместо <del>{formatKzt(tildaPrice)}</del></span></dd>
+    </div>
+    <div>
+      <dt>Код + CMS</dt>
+      <dd><strong>от {formatKzt(codePrice * 0.8)}</strong><span>вместо <del>{formatKzt(codePrice)}</del></span></dd>
+    </div>
+  </dl>
   <a class="offer-button offer-button--primary" href={href} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-cta-id="popup_30s">Написать в WhatsApp <span aria-hidden="true">↗</span></a>
+  <p class="whatsapp-reminder__terms" id="whatsapp-reminder-terms">Состав работ и итоговую стоимость согласуем до старта.</p>
 </dialog>
 
 <style>
@@ -26,8 +37,16 @@ const { href, tildaPrice, codePrice } = Astro.props;
     color: #222;
   }
   .whatsapp-reminder::backdrop { background: rgb(0 0 0 / 55%); }
-  .whatsapp-reminder h2 { margin: 0 0 24px; font-family: 'Oranienbaum', serif; font-size: clamp(32px, 5vw, 44px); font-weight: 400; line-height: 1.1; }
-  .whatsapp-reminder p { margin: 0 0 32px; font-size: 17px; line-height: 1.6; }
+  .whatsapp-reminder h2 { margin: 0 0 20px; font-family: 'Oranienbaum', serif; font-size: clamp(32px, 5vw, 44px); font-weight: 400; line-height: 1.1; }
+  .whatsapp-reminder p { margin: 0; font-size: 16px; line-height: 1.5; }
+  .whatsapp-reminder__prices { margin: 24px 0 32px; font-variant-numeric: tabular-nums; }
+  .whatsapp-reminder__prices > div { padding: 16px 0; border-top: 1px solid rgb(34 34 34 / 12%); }
+  .whatsapp-reminder__prices > div:last-child { border-bottom: 1px solid rgb(34 34 34 / 12%); }
+  .whatsapp-reminder__prices dt { margin-bottom: 8px; font-size: 16px; line-height: 1.25; }
+  .whatsapp-reminder__prices dd { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; margin: 0; }
+  .whatsapp-reminder__prices strong { font-size: 28px; font-weight: 500; line-height: 1.15; white-space: nowrap; }
+  .whatsapp-reminder__prices dd span { color: #68635e; font-size: 14px; line-height: 1.5; white-space: nowrap; }
+  .whatsapp-reminder .whatsapp-reminder__terms { margin-top: 16px; color: #68635e; font-size: 13px; line-height: 1.5; }
   .whatsapp-reminder__close { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: 0; background: transparent; color: inherit; font: 32px/1 sans-serif; cursor: pointer; }
   .whatsapp-reminder__close:focus-visible { outline: 2px solid #fd4b32; outline-offset: -4px; }
   @media (max-width: 480px) {
