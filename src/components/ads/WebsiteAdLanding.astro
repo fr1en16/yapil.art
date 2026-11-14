@@ -176,7 +176,7 @@ const jsonLd = {
           <h2 id="cases-title">Задача, работа и результат</h2>
         </header>
 
-        <div class="offer-cases">
+        <div class:list={["offer-cases", { "offer-cases--four": offer.cases.length === 4 }]}>
           {offer.cases.map((item, index) => (
             <article class="offer-case">
               <div class="offer-case__media">

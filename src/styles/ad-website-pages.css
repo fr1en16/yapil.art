@@ -1467,3 +1467,24 @@ body.offer-dialog-open {
     transition: none;
   }
 }
+
+/* Keep four corporate case studies in balanced rows. */
+.offer-website-page .offer-cases--four {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.offer-website-page .offer-cases--four .offer-case:first-child {
+  display: block;
+  grid-column: auto;
+}
+
+.offer-website-page .offer-cases--four .offer-case:first-child .offer-case__media {
+  height: auto;
+  aspect-ratio: 5 / 3;
+}
+
+@media (max-width: 47.99rem) {
+  .offer-website-page .offer-cases--four {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

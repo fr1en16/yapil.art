@@ -27,7 +27,16 @@ export interface WebsiteAdOffer {
   faq: Array<{ question: string; answer: string }>;
 }
 
-const sharedCases: Record<'taxi' | 'compass' | 'kirpi', WebsiteAdCase> = {
+const sharedCases: Record<'taxi' | 'compass' | 'kirpi' | 'compassManagement', WebsiteAdCase> = {
+  compassManagement: {
+    title: 'Compass Management',
+    type: 'Многоязычный корпоративный сайт',
+    image: 'https://media.yapil.art/cases/compass-management/home-desktop.9fea87053a3cba88.webp',
+    href: '/case/compass-management',
+    task: 'Представить услуги, команду и опыт HR-консалтинговой компании и помочь клиентам и кандидатам найти нужный раздел.',
+    work: 'Разработали структуру и дизайн сайта на трёх языках: услуги, команда, клиентские кейсы, блог и вакансии. Добавили формы обращения и адаптацию под смартфоны.',
+    result: 'Компания получила многостраничный сайт на русском, узбекском и английском с единым фирменным стилем, понятной навигацией и удобными способами связи.',
+  },
   taxi: {
     title: 'Taxi Kolesa',
     type: 'Лендинги под рекламу',
@@ -114,7 +123,7 @@ export const websiteAdOffers: Record<WebsiteAdOfferSlug, WebsiteAdOffer> = {
     scope: 'До 5 страниц в базовой комплектации',
     included: ['Структура и прототип', 'Индивидуальный дизайн', 'Страницы услуг и кейсов', 'Адаптивная разработка', 'Формы и аналитика', 'Базовое SEO и запуск'],
     extras: ['Дополнительные страницы и языки', 'Копирайтинг и фотосъёмка', 'Каталог с фильтрами', 'CRM — от 60 000 ₸, 3D и сложная анимация'],
-    cases: [sharedCases.compass, sharedCases.taxi, sharedCases.kirpi],
+    cases: [sharedCases.compass, sharedCases.taxi, sharedCases.kirpi, sharedCases.compassManagement],
     faq: commonFaq,
   },
   'online-store': {
