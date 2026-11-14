@@ -338,7 +338,7 @@ const jsonLd = {
       </div>
     </dialog>
     {offer.slug === 'corporate-site' && <WhatsAppReminder href={getWhatsAppUrl({
-      message: whatsappMessage,
+      message: `${whatsappMessage} Хочу использовать промокод YAPIL20 на скидку 20%.`,
       pageUrl: Astro.url.href,
       sourceContext: 'ad_popup_30s',
       phone: settings?.whatsappPhone,
