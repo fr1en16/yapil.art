@@ -5,6 +5,7 @@ import Hero from '../Hero.astro';
 import AboutCompact from '../AboutCompact.astro';
 import ReviewsSlider from '../ReviewsSlider.astro';
 import AdLeadForm from './AdLeadForm.astro';
+import WhatsAppReminder from './WhatsAppReminder.astro';
 import { formatKzt, type WebsiteAdOffer } from '../../data/websiteAdOffers';
 import { getSiteSettings } from '../../lib/sanity';
 import { getWhatsAppUrl } from '../../utils/messengerLinks';
@@ -336,6 +337,12 @@ const jsonLd = {
         <AdLeadForm {offer} instance="dialog" />
       </div>
     </dialog>
+    {offer.slug === 'corporate-site' && <WhatsAppReminder href={getWhatsAppUrl({
+      message: whatsappMessage,
+      pageUrl: Astro.url.href,
+      sourceContext: 'ad_popup_30s',
+      phone: settings?.whatsappPhone,
+    })} />}
   </article>
   <Footer slot="footer" theme="dark" />
 </Base>

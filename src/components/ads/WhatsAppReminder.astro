@@ -1,0 +1,86 @@
+---
+interface Props { href: string }
+const { href } = Astro.props;
+---
+
+<dialog class="whatsapp-reminder" data-whatsapp-reminder aria-labelledby="whatsapp-reminder-title" aria-describedby="whatsapp-reminder-description">
+  <button class="whatsapp-reminder__close" type="button" aria-label="Закрыть окно" autofocus>×</button>
+  <h2 id="whatsapp-reminder-title">Обсудим ваш будущий сайт?</h2>
+  <p id="whatsapp-reminder-description">Напишите нам в WhatsApp — расскажите о задаче, а мы подскажем, с чего начать и сколько будет стоить корпоративный сайт.</p>
+  <a class="offer-button offer-button--primary" href={href} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-cta-id="popup_30s">Написать в WhatsApp <span aria-hidden="true">↗</span></a>
+</dialog>
+
+<style>
+  .whatsapp-reminder {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(560px, calc(100% - 32px));
+    max-height: calc(100dvh - 32px);
+    overflow: auto;
+    padding: 56px 40px 40px;
+    border: 0;
+    border-radius: 4px;
+    background: #fff;
+    color: #222;
+  }
+  .whatsapp-reminder::backdrop { background: rgb(0 0 0 / 55%); }
+  .whatsapp-reminder h2 { margin: 0 0 24px; font-family: 'Oranienbaum', serif; font-size: clamp(32px, 5vw, 44px); font-weight: 400; line-height: 1.1; }
+  .whatsapp-reminder p { margin: 0 0 32px; font-size: 17px; line-height: 1.6; }
+  .whatsapp-reminder__close { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: 0; background: transparent; color: inherit; font: 32px/1 sans-serif; cursor: pointer; }
+  .whatsapp-reminder__close:focus-visible { outline: 2px solid #fd4b32; outline-offset: -4px; }
+  @media (max-width: 480px) {
+    .whatsapp-reminder { padding: 56px 24px 32px; }
+    .whatsapp-reminder .offer-button { width: 100%; justify-content: center; }
+  }
+</style>
+
+<script>
+  let cleanupReminder = () => {};
+  const initReminder = () => {
+    cleanupReminder();
+    const dialog = document.querySelector<HTMLDialogElement>('[data-whatsapp-reminder]');
+    if (!dialog) return;
+    const key = 'yapil:corporate-whatsapp-reminder';
+    try { if (sessionStorage.getItem(key)) return; } catch { /* Storage may be disabled. */ }
+    const controller = new AbortController();
+    const { signal } = controller;
+    let timer: ReturnType<typeof setTimeout>;
+    let previousOverflow: string | undefined;
+    const unlockScroll = () => {
+      if (previousOverflow === undefined) return;
+      document.body.style.overflow = previousOverflow;
+      previousOverflow = undefined;
+    };
+    const close = () => dialog.close();
+    const show = () => {
+      if (!dialog.isConnected) return;
+      // Let visitors finish typing or using another dialog before interrupting.
+      if (document.hidden || document.querySelector('dialog[open]') || document.activeElement?.matches('input, textarea, select, [contenteditable="true"]')) {
+        timer = setTimeout(show, 1000);
+        return;
+      }
+      dialog.showModal();
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      try { sessionStorage.setItem(key, 'shown'); } catch { /* Still show once on this page. */ }
+    };
+    dialog.querySelector('button')?.addEventListener('click', close, { signal });
+    dialog.querySelector('a')?.addEventListener('click', close, { signal });
+    dialog.addEventListener('click', (event) => {
+      const bounds = dialog.getBoundingClientRect();
+      if (event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) close();
+    }, { signal });
+    dialog.addEventListener('close', unlockScroll, { signal });
+    timer = setTimeout(show, 30_000);
+    cleanupReminder = () => {
+      clearTimeout(timer);
+      if (dialog.open) close();
+      unlockScroll();
+      controller.abort();
+    };
+  };
+  document.addEventListener('astro:before-swap', () => cleanupReminder());
+  document.addEventListener('astro:page-load', initReminder);
+  initReminder();
+</script>
