@@ -3,10 +3,11 @@ interface Props { href: string }
 const { href } = Astro.props;
 ---
 
-<dialog class="whatsapp-reminder" data-whatsapp-reminder aria-labelledby="whatsapp-reminder-title" aria-describedby="whatsapp-reminder-description">
+<dialog class="whatsapp-reminder" data-whatsapp-reminder aria-labelledby="whatsapp-reminder-title" aria-describedby="whatsapp-reminder-description whatsapp-reminder-promo">
   <button class="whatsapp-reminder__close" type="button" aria-label="Закрыть окно" autofocus>×</button>
   <h2 id="whatsapp-reminder-title">Обсудим ваш будущий сайт?</h2>
   <p id="whatsapp-reminder-description">Напишите нам в WhatsApp — расскажите о задаче, а мы подскажем, с чего начать и сколько будет стоить корпоративный сайт.</p>
+  <p id="whatsapp-reminder-promo">По промокоду <strong>YAPIL20</strong> — скидка 20% на разработку сайта.</p>
   <a class="offer-button offer-button--primary" href={href} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-cta-id="popup_30s">Написать в WhatsApp <span aria-hidden="true">↗</span></a>
 </dialog>
 
