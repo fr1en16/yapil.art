@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "yapil-web",
+  "account_id": "c891123e9e6d83af54961e7ae1208a9b",
+  "main": "web/worker.ts",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./dist-web",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "workers_dev": true,
+  "services": [{ "binding": "LEADS", "service": "yapil-astro" }],
+  "routes": [{ "pattern": "web.yapil.art", "custom_domain": true }]
+}

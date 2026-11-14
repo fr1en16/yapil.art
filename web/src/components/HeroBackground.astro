@@ -1,0 +1,12 @@
+---
+import heroMedia from '../data/hero-media.json';
+---
+<div class="hero-background" aria-hidden="true">
+  <video class="hero-film" data-hero-video data-src={heroMedia.video.url} poster={heroMedia.poster.url} muted loop playsinline preload="none" disablepictureinpicture></video>
+  <img class="hero-poster" src={heroMedia.poster.url} alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+</div>
+<script>
+  import { initHeroVideo } from '../scripts/hero-video';
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+  if (video) initHeroVideo(video);
+</script>

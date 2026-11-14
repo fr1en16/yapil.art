@@ -1,0 +1,19 @@
+{
+  "reference": "https://armory.framer.ai/",
+  "sourceVideo": "https://framerusercontent.com/assets/9PJB6pimDu8LsjZi85rDKOpOc.mp4",
+  "video": {
+    "url": "https://media.yapil.art/web/hero/keyboard.f69076c98f2e2e51.mp4",
+    "sha256": "f69076c98f2e2e519618fc2790bc640cf0e9d0e7219c5320399f32fdb6337147",
+    "bytes": 4782890,
+    "contentType": "video/mp4",
+    "processing": "original-video"
+  },
+  "poster": {
+    "url": "https://media.yapil.art/web/hero/keyboard-poster.da825f4da79c0558.webp",
+    "sha256": "da825f4da79c0558e349cd8a14998033f798d9191dce0bc388b12926527bdbea",
+    "bytes": 16990,
+    "contentType": "image/webp",
+    "processing": "tinify-webp"
+  },
+  "verifiedAt": "2026-10-15T11:29:01.686Z"
+}
