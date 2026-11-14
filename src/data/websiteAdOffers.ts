@@ -4,6 +4,7 @@ export interface WebsiteAdCase {
   title: string;
   type: string;
   image: string;
+  video?: string;
   href: string;
   task: string;
   work: string;
@@ -30,6 +31,7 @@ export interface WebsiteAdOffer {
 const sharedCases: Record<'taxi' | 'compass' | 'kirpi' | 'compassManagement', WebsiteAdCase> = {
   compassManagement: {
     title: 'Compass Management',
+    video: 'https://media.yapil.art/cases/compass-management/cover-video.52bbae8821c11439.mp4',
     type: 'Многоязычный корпоративный сайт',
     image: 'https://media.yapil.art/cases/compass-management/home-desktop.9fea87053a3cba88.webp',
     href: '/case/compass-management',
@@ -114,11 +116,11 @@ export const websiteAdOffers: Record<WebsiteAdOfferSlug, WebsiteAdOffer> = {
     slug: 'corporate-site',
     name: 'Корпоративный сайт',
     title: 'Корпоративный сайт под ключ для бизнеса',
-    description: 'Корпоративный сайт под ключ до 5 страниц: структура, дизайн, разработка, формы, аналитика и запуск. От 400 000 ₸.',
+    description: 'Корпоративный сайт под ключ до 5 страниц: структура, дизайн, разработка, формы, аналитика и запуск. От 300 000 ₸.',
     heroTitle: 'Корпоративный сайт<br />под ключ для бизнеса',
     heroLead: 'Понятно представляем компанию, услуги и кейсы, чтобы сайт усиливал доверие и приводил клиента к обращению.',
-    tildaPrice: 400000,
-    codePrice: 520000,
+    tildaPrice: 300000,
+    codePrice: 390000,
     term: '14–21 рабочий день для сайта до 5 страниц · сложные проекты оцениваются отдельно',
     scope: 'До 5 страниц в базовой комплектации',
     included: ['Структура и прототип', 'Индивидуальный дизайн', 'Страницы услуг и кейсов', 'Адаптивная разработка', 'Формы и аналитика', 'Базовое SEO и запуск'],

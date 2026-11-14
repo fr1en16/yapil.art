@@ -180,7 +180,11 @@ const jsonLd = {
           {offer.cases.map((item, index) => (
             <article class="offer-case">
               <div class="offer-case__media">
-                <img src={item.image} alt={`Проект ${item.title}`} width="1200" height="720" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+                {item.video ? (
+                  <video src={item.video} poster={item.image} autoplay muted loop playsinline preload="metadata" aria-label={`Видеообложка проекта ${item.title}`}></video>
+                ) : (
+                  <img src={item.image} alt={`Проект ${item.title}`} width="1200" height="720" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+                )}
               </div>
               <div class="offer-case__content">
                 <div class="offer-case__title-row"><h3>{item.title}</h3></div>
@@ -328,6 +332,7 @@ const jsonLd = {
       <div class="container offer-lead-dialog__inner">
         <div class="offer-lead-dialog__copy">
           <h2 id="offer-lead-dialog-title">{presentation.dialogTitle}</h2>
+          {offer.slug === 'corporate-site' && <p>Скидка 20% на разработку: Tilda — от {formatKzt(offer.tildaPrice * 0.8)}, код + CMS — от {formatKzt(offer.codePrice * 0.8)}. Состав работ и итоговую стоимость согласуем до старта.</p>}
           <p>Оставьте номер телефона. Свяжемся в течение 10 минут, уточним задачу и подготовим стоимость и сроки.</p>
           <dl>
             <div><dt>Стоимость</dt><dd data-current-price>Tilda — от {formatKzt(offer.tildaPrice)} · Код + CMS — от {formatKzt(offer.codePrice)}</dd></div>
@@ -337,8 +342,8 @@ const jsonLd = {
         <AdLeadForm {offer} instance="dialog" />
       </div>
     </dialog>
-    {offer.slug === 'corporate-site' && <WhatsAppReminder href={getWhatsAppUrl({
-      message: whatsappMessage,
+    {offer.slug === 'corporate-site' && <WhatsAppReminder tildaPrice={offer.tildaPrice} codePrice={offer.codePrice} href={getWhatsAppUrl({
+      message: 'Здравствуйте! Хочу корпоративный сайт со скидкой 20%. Подскажите стоимость и сроки.',
       pageUrl: Astro.url.href,
       sourceContext: 'ad_popup_30s',
       phone: settings?.whatsappPhone,

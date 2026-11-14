@@ -213,7 +213,8 @@
   background: #ddd5cd;
 }
 
-.offer-website-page .offer-case__media img {
+.offer-website-page .offer-case__media img,
+.offer-website-page .offer-case__media video {
   width: 100%;
   height: 100%;
   object-fit: cover;

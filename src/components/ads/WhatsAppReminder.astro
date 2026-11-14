@@ -1,12 +1,13 @@
 ---
-interface Props { href: string }
-const { href } = Astro.props;
+import { formatKzt } from '../../data/websiteAdOffers';
+interface Props { href: string; tildaPrice: number; codePrice: number }
+const { href, tildaPrice, codePrice } = Astro.props;
 ---
 
 <dialog class="whatsapp-reminder" data-whatsapp-reminder aria-labelledby="whatsapp-reminder-title" aria-describedby="whatsapp-reminder-description">
   <button class="whatsapp-reminder__close" type="button" aria-label="Закрыть окно" autofocus>×</button>
-  <h2 id="whatsapp-reminder-title">Обсудим ваш будущий сайт?</h2>
-  <p id="whatsapp-reminder-description">Напишите нам в WhatsApp — расскажите о задаче, а мы подскажем, с чего начать и сколько будет стоить корпоративный сайт.</p>
+  <h2 id="whatsapp-reminder-title">Ваш сайт со скидкой 20%</h2>
+  <p id="whatsapp-reminder-description">Напишите нам в WhatsApp, чтобы получить скидку 20% на разработку корпоративного сайта. Tilda — от {formatKzt(tildaPrice * 0.8)} вместо {formatKzt(tildaPrice)}, код + CMS — от {formatKzt(codePrice * 0.8)} вместо {formatKzt(codePrice)}. Состав работ и итоговую стоимость согласуем до старта.</p>
   <a class="offer-button offer-button--primary" href={href} target="_blank" rel="noopener noreferrer" data-whatsapp-link data-cta-id="popup_30s">Написать в WhatsApp <span aria-hidden="true">↗</span></a>
 </dialog>
 
